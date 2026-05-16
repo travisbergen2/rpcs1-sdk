@@ -17,8 +17,8 @@ import platformsConfig from '../config/platforms.json';
 
 interface PlatformConfig {
   model_recommendations: Record<string, string> | null;
-  temperature_range: [number, number];
-  max_tokens_range: [number, number];
+  temperature_range: number[];
+  max_tokens_range: number[];
   supports_top_p: boolean;
   system_prompt_templates: Record<string, string>;
 }
@@ -27,8 +27,9 @@ interface PlatformConfig {
 // High SG (sharp discrimination) maps to low temperature (crisp outputs).
 // Low SG (broad receptivity) maps to higher temperature (exploratory outputs).
 
-function mapSGToTemperature(SG: number, range: [number, number]): number {
-  const [lo, hi] = range;
+function mapSGToTemperature(SG: number, range: number[]): number {
+  const lo = range[0]!;
+  const hi = range[1]!;
   // SG 100 → temperature lo; SG 0 → temperature hi
   const raw = hi - (SG / 100) * (hi - lo);
   return Math.round(raw * 100) / 100;
@@ -38,8 +39,9 @@ function mapSGToTemperature(SG: number, range: [number, number]): number {
 // High TI (long integration) → more tokens for reasoning.
 // Low TI → shorter, faster outputs.
 
-function mapTIToMaxTokens(TI: number, range: [number, number]): number {
-  const [lo, hi] = range;
+function mapTIToMaxTokens(TI: number, range: number[]): number {
+  const lo = range[0]!;
+  const hi = range[1]!;
   const raw = lo + (TI / 100) * (hi - lo);
   return Math.round(raw / 256) * 256; // Round to nearest 256
 }

@@ -91,7 +91,7 @@ config = recommend_params(
 print(config.platform_parameters.temperature)   `}<span className="text-gray-500"># 0.52</span>{`
 print(config.platform_parameters.model_recommendation) `}<span className="text-gray-500"># claude-sonnet-4-6</span>{`
 print(config.predicted_regime)                  `}<span className="text-gray-500"># stable</span>{`
-print(config.receiver_profile.TI)               `}<span className="text-gray-500"># 30`}</span>
+print(config.receiver_profile.TI)               `}<span className="text-gray-500"># 30</span>
           </pre>
         </div>
       </section>

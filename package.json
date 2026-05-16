@@ -1,18 +1,17 @@
 {
   "name": "rpcs1-sdk",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "build": "turbo run build",
-    "test": "turbo run test",
-    "lint": "turbo run lint",
-    "dev": "turbo run dev"
+    "build": "npm run build --workspace=packages/web",
+    "dev": "npm run dev --workspace=packages/web"
   },
   "devDependencies": {
-    "turbo": "^2.0.0",
     "typescript": "^5.4.0"
   },
-  "packageManager": "pnpm@8.15.6",
   "engines": {
-    "node": ">=18"
+    "node": "20.x"
   }
 }

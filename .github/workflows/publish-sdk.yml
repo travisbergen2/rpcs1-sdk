@@ -1,0 +1,39 @@
+name: Publish Python SDK to PyPI
+
+on:
+  push:
+    tags:
+      - "sdk-v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write  # Required for trusted publishing
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build tools
+        run: pip install build
+
+      - name: Build package
+        working-directory: sdk/python
+        run: python -m build
+
+      - name: Run tests before publish
+        working-directory: sdk/python
+        run: |
+          pip install -e ".[dev]"
+          pytest -x
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: sdk/python/dist/

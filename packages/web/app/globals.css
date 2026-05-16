@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+@layer base {
+  :root {
+    --bg: #0a0f1a;
+    --surface: #111827;
+    --surface-2: #1f2937;
+    --border: #1f2937;
+    --text: #f9fafb;
+    --muted: #9ca3af;
+    --brand: #0ea5e9;
+    --brand-dim: #0284c7;
+  }
+
+  body {
+    @apply bg-[#0a0f1a] text-gray-100 antialiased;
+  }
+
+  * {
+    @apply border-gray-800;
+  }
+}
+
+@layer utilities {
+  .gradient-text {
+    @apply bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent;
+  }
+
+  .glass {
+    @apply bg-white/5 backdrop-blur-sm border border-white/10;
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "_comment": "Pred-09-5 matching principle: stable receivers satisfy TI ~ 1/H. Maps environmental entropy H [0,1] to recommended TI [0,100].",
+  "_source": "IMM Paper 9, RPCS-1",
+  "ti_for_h": [
+    { "H": 0.1,  "TI": 90, "regime_label": "long deep integration" },
+    { "H": 0.25, "TI": 70, "regime_label": "stable integration" },
+    { "H": 0.5,  "TI": 50, "regime_label": "balanced integration" },
+    { "H": 0.75, "TI": 30, "regime_label": "responsive integration" },
+    { "H": 0.95, "TI": 10, "regime_label": "rapid response" }
+  ],
+  "oscillation_threshold": {
+    "_comment": "Paper 9 §oscillatory threshold: SG × TI > max_product_SG_TI triggers oscillation risk warning",
+    "max_product_SG_TI": 7000
+  },
+  "entropy_scalars": {
+    "stable":   0.2,
+    "moderate": 0.5,
+    "dynamic":  0.75,
+    "chaotic":  0.95
+  },
+  "predictability_scalars": {
+    "highly_predictable":    0.9,
+    "somewhat_predictable":  0.55,
+    "unpredictable":         0.2
+  }
+}

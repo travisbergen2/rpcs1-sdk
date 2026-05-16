@@ -1,0 +1,37 @@
+{
+  "_comment": "Cognitive regime profiles from RPCS-1. Used for matching observed agent behavior to receiver regimes. Phase 2 diagnostic feature.",
+  "regimes": {
+    "stable": {
+      "description": "Balanced operation across all primitives — agent is well-matched to its environment.",
+      "ranges": { "TI": [40, 70], "SG": [30, 60], "FT": [30, 60], "UE": [40, 70], "AR": [40, 70] },
+      "typical_symptoms": []
+    },
+    "near_oscillation": {
+      "description": "High TI + high SG — agent risks revisiting decisions and refusing to commit.",
+      "ranges": { "TI": [65, 100], "SG": [55, 100], "FT": [0, 35], "UE": [40, 70], "AR": [20, 55] },
+      "typical_symptoms": [
+        "Agent re-reads the same context repeatedly",
+        "Tool calls are issued, then immediately retried with slight variations",
+        "Agent fails to commit to a conclusion despite sufficient information"
+      ]
+    },
+    "near_overload": {
+      "description": "High SG + low FT + low TI — agent acts on insufficient information.",
+      "ranges": { "TI": [0, 35], "SG": [65, 100], "FT": [0, 35], "UE": [60, 100], "AR": [60, 100] },
+      "typical_symptoms": [
+        "Agent hallucinates tool calls or invents parameters",
+        "Agent reaches confident conclusions far too quickly",
+        "Retry logic triggers on valid outputs"
+      ]
+    },
+    "near_freeze": {
+      "description": "Low UE + high FT — agent refuses to act, hedges endlessly.",
+      "ranges": { "TI": [50, 100], "SG": [0, 45], "FT": [65, 100], "UE": [0, 35], "AR": [0, 35] },
+      "typical_symptoms": [
+        "Agent produces verbose hedging ('I cannot be certain...')",
+        "Agent requests clarification on well-specified tasks",
+        "Tool calls are never issued despite clear instructions"
+      ]
+    }
+  }
+}

@@ -1,0 +1,55 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rpcs1"
+version = "0.1.0"
+description = "RPCS-1 Agent Tuner — configuration framework for AI agents grounded in receiver dynamics"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Travis Bergen", email = "travisbergen2@gmail.com" }]
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.0",
+]
+keywords = ["ai", "agents", "llm", "configuration", "tuning", "rpcs1"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.urls]
+Homepage = "https://rpcs1.dev"
+Documentation = "https://rpcs1.dev/docs"
+Repository = "https://github.com/travisbergen/rpcs1-sdk"
+
+[project.optional-dependencies]
+anthropic = ["anthropic>=0.25"]
+openai    = ["openai>=1.0"]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+    "mypy>=1.10",
+    "pydantic>=2.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rpcs1"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.mypy]
+python_version = "3.10"
+strict = true

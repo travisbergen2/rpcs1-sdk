@@ -8,14 +8,14 @@ import { Label, Select, Textarea, ErrorMessage, FieldHint } from '@/components/u
 import type { RecommendInput } from '@rpcs1/core';
 
 const schema = z.object({
-  task_summary: z.string().min(10, 'Describe the task in at least 10 characters'),
+  task_summary: z.string().min(1, 'Please describe the task'),
   domain: z.string().optional(),
-  entropy: z.enum(['stable', 'moderate', 'dynamic', 'chaotic']),
-  predictability: z.enum(['highly_predictable', 'somewhat_predictable', 'unpredictable']),
-  stakes: z.enum(['low', 'medium', 'high', 'catastrophic']),
-  context_relevance: z.enum(['short', 'medium', 'long']),
-  commitment_style: z.enum(['decisive', 'balanced', 'cautious']),
-  target_platform: z.enum(['anthropic', 'openai', 'open_source', 'generic']),
+  entropy: z.enum(['stable', 'moderate', 'dynamic', 'chaotic']).default('moderate'),
+  predictability: z.enum(['highly_predictable', 'somewhat_predictable', 'unpredictable']).default('somewhat_predictable'),
+  stakes: z.enum(['low', 'medium', 'high', 'catastrophic']).default('medium'),
+  context_relevance: z.enum(['short', 'medium', 'long']).default('medium'),
+  commitment_style: z.enum(['decisive', 'balanced', 'cautious']).default('balanced'),
+  target_platform: z.enum(['anthropic', 'openai', 'open_source', 'generic']).default('anthropic'),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -141,7 +141,7 @@ export function TunerForm({ onSubmit, loading }: Props) {
 
         <div>
           <Label htmlFor="entropy">How often does the environment change?</Label>
-          <Select id="entropy" error={errors.entropy?.message} {...register('entropy')}>
+          <Select id="entropy" defaultValue="moderate" error={errors.entropy?.message} {...register('entropy')}>
             {ENTROPY_OPTIONS.map(o => (
               <option key={o.value} value={o.value}>{o.label} — {o.hint}</option>
             ))}

@@ -113,6 +113,9 @@ export function TunerForm({ onSubmit, loading }: Props) {
             rows={3}
             placeholder="e.g. Customer support agent handling refund requests and billing disputes"
             error={errors.task_summary?.message}
+            data-gramm="false"
+            data-gramm_editor="false"
+            data-enable-grammarly="false"
             {...register('task_summary')}
           />
           {errors.task_summary && <ErrorMessage>{errors.task_summary.message}</ErrorMessage>}

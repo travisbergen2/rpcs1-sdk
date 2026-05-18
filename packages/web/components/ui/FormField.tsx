@@ -21,9 +21,10 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   error?: string;
 }
 
-export function Select({ className, error, children, ...props }: SelectProps) {
-  return (
+export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
+  ({ className, error, children, ...props }, ref) => (
     <select
+      ref={ref}
       className={cn(
         'w-full rounded-lg border bg-gray-900 text-gray-100 px-3 py-2 text-sm',
         'focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent',
@@ -35,16 +36,18 @@ export function Select({ className, error, children, ...props }: SelectProps) {
     >
       {children}
     </select>
-  );
-}
+  ),
+);
+Select.displayName = 'Select';
 
 interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   error?: string;
 }
 
-export function Textarea({ className, error, ...props }: TextareaProps) {
-  return (
+export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ className, error, ...props }, ref) => (
     <textarea
+      ref={ref}
       className={cn(
         'w-full rounded-lg border bg-gray-900 text-gray-100 px-3 py-2 text-sm',
         'focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent',
@@ -54,16 +57,18 @@ export function Textarea({ className, error, ...props }: TextareaProps) {
       )}
       {...props}
     />
-  );
-}
+  ),
+);
+Textarea.displayName = 'Textarea';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
-export function Input({ className, error, ...props }: InputProps) {
-  return (
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, error, ...props }, ref) => (
     <input
+      ref={ref}
       className={cn(
         'w-full rounded-lg border bg-gray-900 text-gray-100 px-3 py-2 text-sm',
         'focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent',
@@ -73,8 +78,9 @@ export function Input({ className, error, ...props }: InputProps) {
       )}
       {...props}
     />
-  );
-}
+  ),
+);
+Input.displayName = 'Input';
 
 export function ErrorMessage({ children }: { children: React.ReactNode }) {
   return <p className="mt-1 text-xs text-red-400">{children}</p>;

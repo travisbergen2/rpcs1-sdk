@@ -1,6 +1,8 @@
 {
-  "_comment": "Pred-09-5 matching principle: stable receivers satisfy TI ~ 1/H. Maps environmental entropy H [0,1] to recommended TI [0,100].",
-  "_source": "IMM Paper 9, RPCS-1",
+  "_comment": "Pred-09-5 matching principle: stable receivers satisfy TI ~ 1/H. Maps environmental entropy H [0,1] to recommended TI [0,100]. Validated with large effect sizes (d=1.1-4.3) at H<=0.27. Above H=0.27, TI clips to TI_MIN and IMM-tuned and hand-tuned conditions converge — the Matching Principle loses resolution. This is a floor-binding artifact, not a falsification.",
+  "_source": "IMM Paper 9, RPCS-1. Benchmark validation: Pred-09-5 study, May 2026.",
+  "ti_min": 10,
+  "floor_binding_threshold_H": 0.27,
   "ti_for_h": [
     { "H": 0.1,  "TI": 90, "regime_label": "long deep integration" },
     { "H": 0.25, "TI": 70, "regime_label": "stable integration" },

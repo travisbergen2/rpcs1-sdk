@@ -88,6 +88,21 @@ export function generateWarnings(
     );
   }
 
+  // TI floor binding: at dynamic/chaotic entropy (H >= 0.27), TI clips to TI_MIN.
+  // Pred-09-5 validated with large effect sizes only at H <= 0.27 (stable entropy).
+  // Above this threshold, IMM-tuned and hand-tuned parameters converge — the
+  // Matching Principle loses resolution. This is a floor-binding artifact, not a
+  // failure of the prediction. (Benchmark study: Pred-09-5 validation, May 2026.)
+  if (input.environment.entropy === 'dynamic' || input.environment.entropy === 'chaotic') {
+    warnings.push(
+      `TI floor binding: at ${input.environment.entropy} entropy (H ≥ 0.27), ` +
+      `TI clips to its minimum value and the Matching Principle (Pred-09-5) operates ` +
+      `near its resolution limit. Recommendations remain valid but effect sizes are ` +
+      `smaller than at stable/moderate entropy. Consider raising K_IMM or increasing ` +
+      `TI_MIN if performance gains are insufficient.`,
+    );
+  }
+
   return warnings;
 }
 

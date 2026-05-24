@@ -37,23 +37,39 @@ export default function HomePage() {
       {/* Hero */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-24 pb-16 text-center">
         <Badge variant="neutral" className="mb-6 text-xs">
-          Built on RPCS-1 receiver dynamics
+          Built on RPCS-1 receiver dynamics · Pred-09-5 validated
         </Badge>
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
           Configure AI agents that don&apos;t{' '}
           <span className="gradient-text">oscillate, overload, or freeze.</span>
         </h1>
-        <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-          Stop debugging agent failures case-by-case. RPCS-1 Agent Tuner translates your
-          agent&apos;s task and environment into specific platform parameters — grounded in the
-          matching principle from cognitive systems research.
+        <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-6 leading-relaxed">
+          Describe your agent&apos;s task and environment. Get exact temperature, context strategy,
+          and model recommendation — derived from your agent&apos;s operating conditions, not guesswork.
         </p>
+
+        {/* Concrete output preview */}
+        <div className="inline-flex flex-wrap gap-3 justify-center mb-10 text-sm font-mono">
+          <span className="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800 text-gray-400">
+            temperature <span className="text-sky-400">0.52</span>
+          </span>
+          <span className="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800 text-gray-400">
+            max_tokens <span className="text-sky-400">4096</span>
+          </span>
+          <span className="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800 text-gray-400">
+            regime <span className="text-emerald-400">stable</span>
+          </span>
+          <span className="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800 text-gray-400">
+            context <span className="text-amber-400">rolling_summary</span>
+          </span>
+        </div>
+
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/tuner"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-sky-500 hover:bg-sky-400 text-white rounded-xl transition-all shadow-lg shadow-sky-500/25"
           >
-            Try the tuner — free →
+            Get your agent&apos;s parameters — free →
           </Link>
           <Link
             href="/docs"
@@ -63,7 +79,7 @@ export default function HomePage() {
           </Link>
         </div>
         <p className="mt-4 text-xs text-gray-600">
-          Free tier: unlimited tuner usage. SDK on paid plans.
+          No sign-up required. Free forever for web tuner access.
         </p>
       </section>
 

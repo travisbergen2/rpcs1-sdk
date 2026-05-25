@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { AgentGuide } from '@/components/AgentGuide';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/Card';
 
@@ -34,6 +35,8 @@ const PRIMITIVES = [
 export default function HomePage() {
   return (
     <div>
+      <AgentGuide />
+
       {/* Hero */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-24 pb-16 text-center">
         <Badge variant="neutral" className="mb-6 text-xs">

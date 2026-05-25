@@ -47,6 +47,10 @@ export default function HomePage() {
           Describe your agent&apos;s task and environment. Get exact temperature, context strategy,
           and model recommendation — derived from your agent&apos;s operating conditions, not guesswork.
         </p>
+        <p className="text-sm text-gray-500 max-w-xl mx-auto mb-8">
+          Start with a filled example if you just want to see whether the framework clicks.
+          No account, email, or payment required.
+        </p>
 
         {/* Concrete output preview */}
         <div className="inline-flex flex-wrap gap-3 justify-center mb-10 text-sm font-mono">
@@ -66,21 +70,33 @@ export default function HomePage() {
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
-            href="/tuner"
+            href="/tuner?preset=support"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-sky-500 hover:bg-sky-400 text-white rounded-xl transition-all shadow-lg shadow-sky-500/25"
           >
-            Get your agent&apos;s parameters — free →
+            Show me a live example
           </Link>
           <Link
-            href="/docs"
+            href="/tuner"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl transition-colors border border-gray-700"
           >
-            Read the docs
+            Tune my own agent
           </Link>
         </div>
         <p className="mt-4 text-xs text-gray-600">
           No sign-up required. Free forever for web tuner access.
         </p>
+        <div className="mt-8 flex flex-wrap justify-center gap-2 text-xs">
+          <span className="text-gray-600 py-2">Popular starts:</span>
+          <Link href="/tuner?preset=support" className="px-3 py-2 rounded-lg border border-gray-800 bg-gray-900/70 text-gray-400 hover:text-white hover:border-gray-700">
+            support agent
+          </Link>
+          <Link href="/tuner?preset=coding" className="px-3 py-2 rounded-lg border border-gray-800 bg-gray-900/70 text-gray-400 hover:text-white hover:border-gray-700">
+            coding agent
+          </Link>
+          <Link href="/tuner?preset=research" className="px-3 py-2 rounded-lg border border-gray-800 bg-gray-900/70 text-gray-400 hover:text-white hover:border-gray-700">
+            research agent
+          </Link>
+        </div>
       </section>
 
       {/* Code preview */}

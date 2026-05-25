@@ -1,11 +1,52 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import type { Recommendation, RecommendInput } from '@rpcs1/core';
 import { TunerForm } from '@/components/TunerForm';
 import { RecommendationOutput } from '@/components/RecommendationOutput';
 
-export default function TunerPage() {
+const PRESETS = {
+  support: {
+    task_summary: 'Customer support agent handling refunds, billing disputes, and policy exceptions',
+    domain: 'customer_support',
+    entropy: 'dynamic',
+    predictability: 'somewhat_predictable',
+    stakes: 'high',
+    context_relevance: 'medium',
+    commitment_style: 'cautious',
+    target_platform: 'anthropic',
+  },
+  coding: {
+    task_summary: 'Coding agent that can inspect a repo, edit files, run tests, and open pull requests',
+    domain: 'coding',
+    entropy: 'moderate',
+    predictability: 'somewhat_predictable',
+    stakes: 'medium',
+    context_relevance: 'long',
+    commitment_style: 'balanced',
+    target_platform: 'openai',
+  },
+  research: {
+    task_summary: 'Research agent synthesizing conflicting technical sources into a cautious recommendation',
+    domain: 'research',
+    entropy: 'stable',
+    predictability: 'highly_predictable',
+    stakes: 'medium',
+    context_relevance: 'long',
+    commitment_style: 'cautious',
+    target_platform: 'generic',
+  },
+} satisfies Record<string, Partial<Parameters<typeof TunerForm>[0]['defaultValues']>>;
+
+function isPresetKey(value: string | null): value is keyof typeof PRESETS {
+  return value !== null && value in PRESETS;
+}
+
+function TunerPageContent() {
+  const searchParams = useSearchParams();
+  const preset = searchParams.get('preset');
+  const defaultValues = isPresetKey(preset) ? PRESETS[preset] : undefined;
   const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +106,7 @@ export default function TunerPage() {
 
       <div className="grid lg:grid-cols-2 gap-8 items-start">
         <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
-          <TunerForm onSubmit={handleSubmit} loading={loading} />
+          <TunerForm onSubmit={handleSubmit} loading={loading} defaultValues={defaultValues} />
         </div>
 
         <div id="results">
@@ -95,5 +136,13 @@ export default function TunerPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function TunerPage() {
+  return (
+    <Suspense fallback={null}>
+      <TunerPageContent />
+    </Suspense>
   );
 }

@@ -169,7 +169,7 @@ export function assessConfidence(input: RecommendInput): Confidence {
   // All environment fields are required, so they always contribute
   score += 3;
 
-  if (score >= 5) return 'high';
+  if (score >= 4) return 'high';
   if (score >= 3) return 'medium';
   return 'low';
 }

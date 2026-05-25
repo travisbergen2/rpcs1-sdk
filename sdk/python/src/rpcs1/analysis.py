@@ -140,7 +140,7 @@ def assess_confidence(input_data: RecommendInput) -> Confidence:
         score += 1
     score += 3  # all environment fields required
 
-    if score >= 5:
+    if score >= 4:
         return "high"
     if score >= 3:
         return "medium"

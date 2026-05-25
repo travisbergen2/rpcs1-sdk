@@ -23,6 +23,7 @@ type FormValues = z.infer<typeof schema>;
 interface Props {
   onSubmit: (input: RecommendInput) => Promise<void>;
   loading: boolean;
+  defaultValues?: Partial<FormValues>;
 }
 
 const ENTROPY_OPTIONS = [
@@ -64,7 +65,7 @@ const PLATFORM_OPTIONS = [
   { value: 'generic',     label: 'Generic / platform-neutral' },
 ];
 
-export function TunerForm({ onSubmit, loading }: Props) {
+export function TunerForm({ onSubmit, loading, defaultValues }: Props) {
   const {
     register,
     handleSubmit,
@@ -72,12 +73,14 @@ export function TunerForm({ onSubmit, loading }: Props) {
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      entropy:           'moderate',
-      predictability:    'somewhat_predictable',
-      stakes:            'medium',
-      context_relevance: 'medium',
-      commitment_style:  'balanced',
-      target_platform:   'anthropic',
+      task_summary:      defaultValues?.task_summary ?? '',
+      domain:            defaultValues?.domain ?? '',
+      entropy:           defaultValues?.entropy ?? 'moderate',
+      predictability:    defaultValues?.predictability ?? 'somewhat_predictable',
+      stakes:            defaultValues?.stakes ?? 'medium',
+      context_relevance: defaultValues?.context_relevance ?? 'medium',
+      commitment_style:  defaultValues?.commitment_style ?? 'balanced',
+      target_platform:   defaultValues?.target_platform ?? 'anthropic',
     },
   });
 

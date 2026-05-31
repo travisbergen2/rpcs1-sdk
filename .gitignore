@@ -1,9 +1,11 @@
 node_modules/
 dist/
+.next/
 .turbo/
 *.tsbuildinfo
 .env
 .env.local
+dev-server*.log
 __pycache__/
 *.py[cod]
 *.egg-info/

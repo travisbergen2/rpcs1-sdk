@@ -27,7 +27,8 @@ classifiers = [
 [project.urls]
 Homepage = "https://rpcs1.dev"
 Documentation = "https://rpcs1.dev/docs"
-Repository = "https://github.com/travisbergen/rpcs1-sdk"
+Repository = "https://github.com/travisbergen2/rpcs1-sdk"
+Issues = "https://github.com/travisbergen2/rpcs1-sdk/issues"
 
 [project.optional-dependencies]
 anthropic = ["anthropic>=0.25"]

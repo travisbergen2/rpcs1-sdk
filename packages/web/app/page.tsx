@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { AgentFailureDemo } from '@/components/AgentFailureDemo';
 import { AgentGuide } from '@/components/AgentGuide';
+import { ProductionProof } from '@/components/ProductionProof';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/Card';
 
@@ -104,6 +105,7 @@ export default function HomePage() {
       </section>
 
       <AgentFailureDemo />
+      <ProductionProof />
 
       {/* Code preview */}
       <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-20">

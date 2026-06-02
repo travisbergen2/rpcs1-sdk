@@ -17,6 +17,7 @@ Quick start:
 """
 
 from .recommend import recommend_params, recommend_from_input
+from .adapters import to_runtime_config
 from .types import (
     AgentEnvironment,
     TaskDescriptor,
@@ -29,6 +30,7 @@ from .types import (
 __all__ = [
     "recommend_params",
     "recommend_from_input",
+    "to_runtime_config",
     "AgentEnvironment",
     "TaskDescriptor",
     "RecommendInput",

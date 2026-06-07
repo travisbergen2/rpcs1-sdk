@@ -18,22 +18,45 @@ const buckets = new Map<string, Bucket>();
 
 const WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
-export function checkRateLimit(ip: string): { allowed: boolean; remaining: number } {
-  const now = Date.now();
-  const bucket = buckets.get(ip);
-  const limit = env.FREE_TIER_HOURLY_LIMIT;
+interface RateLimitOptions {
+  limit?: number;
+  namespace?: string;
+  windowMs?: number;
+}
 
-  if (!bucket || now - bucket.windowStart > WINDOW_MS) {
-    buckets.set(ip, { count: 1, windowStart: now });
-    return { allowed: true, remaining: limit - 1 };
+export interface RateLimitResult {
+  allowed: boolean;
+  remaining: number;
+  resetAt: number;
+}
+
+export function checkRateLimit(
+  ip: string,
+  {
+    limit = env.FREE_TIER_HOURLY_LIMIT,
+    namespace = 'api',
+    windowMs = WINDOW_MS,
+  }: RateLimitOptions = {},
+): RateLimitResult {
+  const now = Date.now();
+  const key = `${namespace}:${ip}`;
+  const bucket = buckets.get(key);
+
+  if (!bucket || now - bucket.windowStart > windowMs) {
+    buckets.set(key, { count: 1, windowStart: now });
+    return { allowed: true, remaining: limit - 1, resetAt: now + windowMs };
   }
 
   if (bucket.count >= limit) {
-    return { allowed: false, remaining: 0 };
+    return { allowed: false, remaining: 0, resetAt: bucket.windowStart + windowMs };
   }
 
   bucket.count++;
-  return { allowed: true, remaining: limit - bucket.count };
+  return {
+    allowed: true,
+    remaining: limit - bucket.count,
+    resetAt: bucket.windowStart + windowMs,
+  };
 }
 
 export function getClientIp(req: Request): string {

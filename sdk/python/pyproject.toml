@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "rpcs1"
 version = "0.1.0"
-description = "RPCS-1 Agent Tuner — configuration framework for AI agents grounded in receiver dynamics"
+description = "Deterministic context-alignment SDK for configuring AI agents and diagnosing stability regimes"
 readme = "README.md"
 license = { text = "MIT" }
 authors = [{ name = "Travis Bergen", email = "travisbergen2@gmail.com" }]
@@ -13,7 +13,7 @@ requires-python = ">=3.10"
 dependencies = [
     "pydantic>=2.0",
 ]
-keywords = ["ai", "agents", "llm", "configuration", "tuning", "rpcs1"]
+keywords = ["ai", "agents", "llm", "configuration", "tuning", "context-alignment", "mcp", "rpcs1"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",

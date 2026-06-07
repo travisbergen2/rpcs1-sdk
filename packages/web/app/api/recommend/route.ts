@@ -3,20 +3,23 @@ import { recommend } from '@rpcs1/core';
 import type { RecommendInput } from '@rpcs1/core';
 import { getLicenseFromRequest } from '@/lib/license';
 import { checkRateLimit, getClientIp } from '@/lib/ratelimit';
+import { recommendInputSchema } from '@/lib/recommend-schema';
 
 export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json() as RecommendInput;
-
-    // Validate required fields exist
-    if (!body?.task?.task_summary || !body?.environment || !body?.target_platform) {
+    const parsed = recommendInputSchema.safeParse(await req.json());
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: 'Missing required fields: task.task_summary, environment, target_platform' },
+        {
+          error: 'Invalid request body',
+          details: parsed.error.flatten(),
+        },
         { status: 400 },
       );
     }
+    const body: RecommendInput = parsed.data;
 
     // Check for paid license key — bypasses rate limit
     const license = await getLicenseFromRequest(req);

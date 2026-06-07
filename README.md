@@ -1,5 +1,7 @@
 # RPCS-1 SDK — AI Agent Tuner
 
+<!-- mcp-name: io.github.travisbergen2/rpcs1-agent-tuner -->
+
 **Configure AI agents that don't oscillate, overload, or freeze.**
 
 A configuration framework for AI agents that translates environmental characteristics (entropy, stakes, predictability) into specific LLM parameter recommendations — grounded in RPCS-1 receiver dynamics.
@@ -88,7 +90,40 @@ Every parameter recommendation traces back to this principle or the basin stabil
 
 ## Web App
 
-Interactive tuner: [https://rpcs1.dev](https://rpcs1.dev) *(Phase 2)*
+Interactive tuner: [https://rpcs1.dev](https://rpcs1.dev)
+
+## MCP Server
+
+RPCS-1 is also available as a public, anonymous, read-only MCP server:
+
+```text
+https://rpcs1.dev/mcp
+```
+
+It exposes one focused tool:
+
+- `recommend_agent_configuration` — use when designing, tuning, or diagnosing an AI agent
+  against environmental entropy, predictability, stakes, context horizon, and commitment style.
+
+The MCP surface intentionally wraps the existing deterministic recommendation engine. Broader
+communication, market, and decision-analysis tools should be added only after their scoring
+contracts are implemented and tested in the core package.
+
+Discovery metadata:
+
+- OpenAPI: [https://rpcs1.dev/openapi.json](https://rpcs1.dev/openapi.json)
+- LLM overview: [https://rpcs1.dev/llms.txt](https://rpcs1.dev/llms.txt)
+- MCP Registry manifest: [`server.json`](./server.json)
+
+Production controls:
+
+- `MCP_HOURLY_LIMIT` controls per-instance MCP throttling (default: `120` requests per IP/hour).
+- `MCP_MAX_BODY_BYTES` limits request bodies (default: `65536` bytes).
+- `MCP_ALLOWED_HOSTS` is a comma-separated production host allowlist.
+- `/api/health` reports deployment and MCP readiness metadata.
+
+For globally consistent abuse protection across Vercel instances, configure a Vercel Firewall
+rate-limit rule for `/mcp`. The in-process limiter is defense in depth, not a distributed quota.
 
 ## License
 

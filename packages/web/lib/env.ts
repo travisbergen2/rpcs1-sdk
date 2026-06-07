@@ -1,14 +1,3 @@
-/**
- * Environment variable validation.
- * Throws at startup if required variables are missing.
- */
-
-function requireEnv(key: string): string {
-  const val = process.env[key];
-  if (!val) throw new Error(`Missing required environment variable: ${key}`);
-  return val;
-}
-
 function optionalEnv(key: string, fallback = ''): string {
   return process.env[key] ?? fallback;
 }
@@ -32,4 +21,9 @@ export const env = {
 
   // Rate limiting (free tier)
   FREE_TIER_HOURLY_LIMIT:   parseInt(optionalEnv('FREE_TIER_HOURLY_LIMIT', '10')),
+
+  // MCP production controls
+  MCP_HOURLY_LIMIT:         parseInt(optionalEnv('MCP_HOURLY_LIMIT', '120')),
+  MCP_MAX_BODY_BYTES:       parseInt(optionalEnv('MCP_MAX_BODY_BYTES', '65536')),
+  MCP_ALLOWED_HOSTS:        optionalEnv('MCP_ALLOWED_HOSTS', 'rpcs1.dev,www.rpcs1.dev'),
 } as const;

@@ -1,0 +1,73 @@
+import { afterEach, describe, expect, it } from 'vitest';
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
+import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { createRpcs1McpServer } from '../lib/mcp-server';
+
+let server: McpServer | undefined;
+let client: Client | undefined;
+
+afterEach(async () => {
+  await client?.close();
+  await server?.close();
+  client = undefined;
+  server = undefined;
+});
+
+describe('RPCS1 MCP server', () => {
+  it('advertises one safe, read-only recommendation tool', async () => {
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    server = createRpcs1McpServer();
+    client = new Client({ name: 'rpcs1-test-client', version: '1.0.0' });
+
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+
+    const { tools } = await client.listTools();
+
+    expect(tools).toHaveLength(1);
+    expect(tools[0].name).toBe('recommend_agent_configuration');
+    expect(tools[0].annotations).toMatchObject({
+      readOnlyHint: true,
+      destructiveHint: false,
+      openWorldHint: false,
+      idempotentHint: true,
+    });
+  });
+
+  it('returns structured recommendations through a real MCP call', async () => {
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    server = createRpcs1McpServer();
+    client = new Client({ name: 'rpcs1-test-client', version: '1.0.0' });
+
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+
+    const result = await client.callTool({
+      name: 'recommend_agent_configuration',
+      arguments: {
+        task: {
+          task_summary: 'Customer support agent handling refund requests',
+          domain: 'customer_support',
+        },
+        environment: {
+          entropy: 'dynamic',
+          predictability: 'somewhat_predictable',
+          stakes: 'high',
+          context_relevance: 'medium',
+          commitment_style: 'cautious',
+        },
+        target_platform: 'openai',
+      },
+    });
+
+    expect(result.isError).not.toBe(true);
+    expect(result.structuredContent).toMatchObject({
+      predicted_regime: 'stable',
+      confidence: 'high',
+      platform_parameters: {
+        tool_use_strategy: 'explicit_confirmation',
+      },
+    });
+  });
+});

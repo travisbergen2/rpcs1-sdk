@@ -6,6 +6,7 @@ dist/
 *.tsbuildinfo
 .env
 .env.local
+.vercel/
 dev-server*.log
 __pycache__/
 *.py[cod]

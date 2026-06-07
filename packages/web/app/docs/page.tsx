@@ -47,6 +47,18 @@ export default function DocsPage() {
         <li><Link href="/docs/platforms">Platform mappings</Link> — Anthropic, OpenAI, open source</li>
       </ul>
 
+      <h2>AI agent integrations</h2>
+      <p>
+        RPCS-1 is available as a public, read-only MCP server at <code>https://rpcs1.dev/mcp</code>.
+        MCP-compatible hosts can call <code>recommend_agent_configuration</code> when a user needs
+        agent settings matched to environmental entropy, predictability, stakes, context horizon,
+        and commitment style.
+      </p>
+      <ul>
+        <li><Link href="/openapi.json">OpenAPI schema</Link> — REST tool contract</li>
+        <li><Link href="/llms.txt">llms.txt</Link> — concise machine-readable product overview</li>
+      </ul>
+
       <h2>Just want to try it?</h2>
       <p>
         The <Link href="/tuner">interactive tuner</Link> requires no installation and no account.

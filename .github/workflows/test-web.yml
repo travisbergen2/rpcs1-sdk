@@ -1,14 +1,23 @@
-name: Test TypeScript Core
+name: Test Web and MCP
 
 on:
   push:
     branches: [main, develop]
     paths:
+      - "package.json"
+      - "package-lock.json"
       - "packages/core/**"
+      - "packages/web/**"
+      - "server.json"
       - ".github/workflows/test-web.yml"
   pull_request:
     paths:
+      - "package.json"
+      - "package-lock.json"
       - "packages/core/**"
+      - "packages/web/**"
+      - "server.json"
+      - ".github/workflows/test-web.yml"
 
 jobs:
   test:
@@ -17,24 +26,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 9
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "pnpm"
+          cache: "npm"
 
       - name: Install dependencies
-        run: pnpm install
-
-      - name: Build core
-        run: pnpm --filter @rpcs1/core build
+        run: npm ci
 
       - name: Test core
-        run: pnpm --filter @rpcs1/core test
+        run: npm run test --workspace=packages/core
 
-      - name: Type-check core
-        run: pnpm --filter @rpcs1/core lint
+      - name: Test MCP contract
+        run: npm run test --workspace=packages/web
+
+      - name: Build production app
+        run: npm run build
+
+      - name: Lint web
+        run: npm run lint --workspace=packages/web

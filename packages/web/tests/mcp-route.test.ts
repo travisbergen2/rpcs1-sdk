@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { POST } from '../app/mcp/route';
+import { GET, POST } from '../app/mcp/route';
 
 const headers = {
   Accept: 'application/json, text/event-stream',
@@ -8,6 +8,16 @@ const headers = {
 };
 
 describe('RPCS1 MCP HTTP route', () => {
+  it('shows a useful status message when opened in a browser', async () => {
+    const response = await GET(new Request('http://localhost/mcp', {
+      headers: { Accept: 'text/html' },
+    }));
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('content-type')).toContain('text/plain');
+    expect(await response.text()).toContain('RPCS1 MCP server is online');
+  });
+
   it('handles MCP initialization over Streamable HTTP', async () => {
     const response = await POST(new Request('http://localhost/mcp', {
       method: 'POST',

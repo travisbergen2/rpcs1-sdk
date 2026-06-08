@@ -5,6 +5,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('.', import.meta.url)),
+      '@rpcs1/core': fileURLToPath(new URL('../core/src/index.ts', import.meta.url)),
     },
   },
   test: {

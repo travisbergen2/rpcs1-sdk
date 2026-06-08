@@ -127,9 +127,37 @@ async function handleMcpRequest(request: Request): Promise<Response> {
   });
 }
 
-export const GET = handleMcpRequest;
 export const POST = handleMcpRequest;
 export const DELETE = handleMcpRequest;
+
+export function GET(request: Request) {
+  const accept = request.headers.get('accept') ?? '';
+
+  if (accept.includes('text/html')) {
+    return new Response(
+      [
+        'RPCS1 MCP server is online.',
+        '',
+        'MCP endpoint: https://rpcs1.dev/mcp',
+        'Transport: Streamable HTTP',
+        'Tool: recommend_agent_configuration',
+        '',
+        'Connect this URL from an MCP-compatible client.',
+        'Health: https://rpcs1.dev/api/health',
+        'Docs: https://rpcs1.dev/docs',
+      ].join('\n'),
+      {
+        status: 200,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'text/plain; charset=utf-8',
+        },
+      },
+    );
+  }
+
+  return handleMcpRequest(request);
+}
 
 export function OPTIONS() {
   return new Response(null, {

@@ -1,0 +1,92 @@
+{
+  "$schema": "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json",
+  "schema_version": 1,
+  "app_info": {
+    "display_name": "RPCS1 Agent Tuner",
+    "subtitle": "Tune AI agent behavior",
+    "description": "RPCS1 Agent Tuner helps developers configure AI agents for their operating environment. It maps entropy, predictability, stakes, context horizon, and commitment style to explainable receiver dynamics, platform parameters, stability warnings, and strategies for avoiding oscillation, overload, and freeze.",
+    "category": "DEVELOPER_TOOLS"
+  },
+  "tools": {
+    "recommend_agent_configuration": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Computes and returns a deterministic recommendation without creating, updating, or storing user data.",
+        "open_world_justification": "Does not contact third-party systems or change publicly visible internet state.",
+        "destructive_justification": "Does not delete, overwrite, send, revoke, purchase, or perform any irreversible action."
+      }
+    }
+  },
+  "test_cases": [
+    {
+      "description": "Configure a high-stakes customer support agent.",
+      "user_prompt": "Use RPCS1 to configure an OpenAI customer support agent that handles refunds in a dynamic, somewhat predictable environment. Mistakes are high stakes, relevant context is medium length, and it should act cautiously.",
+      "file_attachment_urls": null,
+      "tools_triggered": "recommend_agent_configuration",
+      "expected_output": "Returns RPCS1 receiver primitives, OpenAI-oriented runtime parameters, a predicted stability regime, warnings if applicable, confidence, and an explanation tied to the supplied environment.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Tune a coding agent for predictable CI automation.",
+      "user_prompt": "Recommend settings for an OpenAI coding agent that automates a stable and highly predictable CI pipeline. Stakes are low, context relevance is short, and the agent should be decisive.",
+      "file_attachment_urls": null,
+      "tools_triggered": "recommend_agent_configuration",
+      "expected_output": "Returns a configuration suited to a stable environment, including receiver primitives, platform parameters, tool-use and retry strategies, stability regime, and reasoning.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Configure a research agent that needs long context.",
+      "user_prompt": "Use RPCS1 to tune an Anthropic research-summarization agent. The environment is moderately changing and somewhat predictable, mistakes have medium cost, long context matters, and commitment should be balanced.",
+      "file_attachment_urls": null,
+      "tools_triggered": "recommend_agent_configuration",
+      "expected_output": "Returns Anthropic-oriented recommendations that account for the long context horizon, along with the predicted regime, confidence, warnings, and explainable RPCS1 reasoning.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Diagnose an agent operating in a chaotic environment.",
+      "user_prompt": "My generic planning agent works in a chaotic, unpredictable environment but needs long context and cautious decisions under high stakes. Analyze the configuration risk with RPCS1.",
+      "file_attachment_urls": null,
+      "tools_triggered": "recommend_agent_configuration",
+      "expected_output": "Returns a generic configuration and clearly surfaces any context-environment mismatch or stability risk rather than claiming the conditions are automatically safe.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Provide platform-neutral settings for an open-source agent.",
+      "user_prompt": "Tune an open-source data-extraction agent for a dynamic but somewhat predictable environment with medium stakes, medium context relevance, and balanced commitment.",
+      "file_attachment_urls": null,
+      "tools_triggered": "recommend_agent_configuration",
+      "expected_output": "Returns platform-appropriate parameters, all five receiver primitives, a stability classification, warnings, confidence, and a concise explanation.",
+      "expected_output_url": null
+    }
+  ],
+  "negative_test_cases": [
+    {
+      "description": "Do not trigger for unrelated factual questions.",
+      "user_prompt": "What is the capital of France?",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because the request does not involve configuring or diagnosing an AI agent.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Do not trigger for requests to deploy or modify software.",
+      "user_prompt": "Deploy my website to production and update its DNS records.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because it cannot deploy software, modify infrastructure, or change external systems.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Do not trigger for human relationship diagnosis.",
+      "user_prompt": "Why do my partner and I keep arguing, and what should I say next?",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because its current tool configures AI agents and does not diagnose human relationships or provide interpersonal counseling.",
+      "expected_output_url": null
+    }
+  ]
+}

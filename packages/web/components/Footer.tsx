@@ -18,6 +18,7 @@ export function Footer() {
             <Link href="/docs"    className="hover:text-gray-300 transition-colors">Docs</Link>
             <Link href="/pricing" className="hover:text-gray-300 transition-colors">Pricing</Link>
             <Link href="/privacy" className="hover:text-gray-300 transition-colors">Privacy</Link>
+            <Link href="/terms"   className="hover:text-gray-300 transition-colors">Terms</Link>
             <a
               href="https://github.com/travisbergen2/rpcs1-sdk"
               className="hover:text-gray-300 transition-colors"

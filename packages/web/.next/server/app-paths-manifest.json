@@ -1,3 +1,21 @@
 {
-  "/page": "app/page.js"
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/checkout/route": "app/api/checkout/route.js",
+  "/api/health/route": "app/api/health/route.js",
+  "/api/recommend/route": "app/api/recommend/route.js",
+  "/api/webhooks/stripe/route": "app/api/webhooks/stripe/route.js",
+  "/checkout/success/page": "app/checkout/success/page.js",
+  "/docs/getting-started/page": "app/docs/getting-started/page.js",
+  "/docs/matching/page": "app/docs/matching/page.js",
+  "/docs/page": "app/docs/page.js",
+  "/docs/platforms/page": "app/docs/platforms/page.js",
+  "/docs/primitives/page": "app/docs/primitives/page.js",
+  "/docs/regimes/page": "app/docs/regimes/page.js",
+  "/mcp/route": "app/mcp/route.js",
+  "/page": "app/page.js",
+  "/pricing/page": "app/pricing/page.js",
+  "/privacy/page": "app/privacy/page.js",
+  "/terms/page": "app/terms/page.js",
+  "/tuner/page": "app/tuner/page.js"
 }

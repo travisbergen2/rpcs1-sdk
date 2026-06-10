@@ -4,6 +4,7 @@ import { cn } from '@/lib/cn';
 const NAV = [
   { href: '/docs',                   label: 'Overview' },
   { href: '/docs/getting-started',   label: 'Getting started' },
+  { href: '/docs/mcp',               label: 'MCP integration' },
   { href: '/docs/primitives',        label: 'The five primitives' },
   { href: '/docs/matching',          label: 'Matching principle' },
   { href: '/docs/regimes',           label: 'Stability regimes' },

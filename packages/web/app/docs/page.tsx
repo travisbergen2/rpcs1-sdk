@@ -3,7 +3,8 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Documentation',
-  description: 'RPCS-1 Agent Tuner documentation — receiver primitives, matching principle, platform mappings.',
+  description:
+    'RPCS-1 Agent Tuner documentation — MCP integration, receiver primitives, matching principle, and platform mappings.',
 };
 
 export default function DocsPage() {
@@ -41,6 +42,7 @@ export default function DocsPage() {
       <h2>Quick links</h2>
       <ul>
         <li><Link href="/docs/getting-started">Getting started</Link> — install the Python SDK</li>
+        <li><Link href="/docs/mcp">MCP integration</Link> — endpoint, authentication, and client compatibility</li>
         <li><Link href="/docs/primitives">The five primitives</Link> — TI, SG, FT, UE, AR explained</li>
         <li><Link href="/docs/matching">Matching principle</Link> — Pred-09-5: TI ≈ 1/H</li>
         <li><Link href="/docs/regimes">Stability regimes</Link> — oscillation, overload, freeze</li>
@@ -49,10 +51,9 @@ export default function DocsPage() {
 
       <h2>AI agent integrations</h2>
       <p>
-        RPCS-1 is available as a public, read-only MCP server at <code>https://rpcs1.dev/mcp</code>.
-        MCP-compatible hosts can call <code>recommend_agent_configuration</code> when a user needs
-        agent settings matched to environmental entropy, predictability, stakes, context horizon,
-        and commitment style.
+        RPCS-1 is available as a public, anonymous, read-only MCP server. It requires no API key
+        or OAuth authentication. See the <Link href="/docs/mcp">MCP integration guide</Link> for
+        the endpoint, client compatibility, and tool details.
       </p>
       <ul>
         <li><Link href="/openapi.json">OpenAPI schema</Link> — REST tool contract</li>

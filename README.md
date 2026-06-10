@@ -105,6 +105,9 @@ It exposes one focused tool:
 - `recommend_agent_configuration` — use when designing, tuning, or diagnosing an AI agent
   against environmental entropy, predictability, stakes, context horizon, and commitment style.
 
+Connection details and client compatibility notes are available at
+[https://rpcs1.dev/docs/mcp](https://rpcs1.dev/docs/mcp).
+
 The MCP surface intentionally wraps the existing deterministic recommendation engine. Broader
 communication, market, and decision-analysis tools should be added only after their scoring
 contracts are implemented and tested in the core package.

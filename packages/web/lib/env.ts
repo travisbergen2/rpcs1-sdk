@@ -26,4 +26,5 @@ export const env = {
   MCP_HOURLY_LIMIT:         parseInt(optionalEnv('MCP_HOURLY_LIMIT', '120')),
   MCP_MAX_BODY_BYTES:       parseInt(optionalEnv('MCP_MAX_BODY_BYTES', '65536')),
   MCP_ALLOWED_HOSTS:        optionalEnv('MCP_ALLOWED_HOSTS', 'rpcs1.dev,www.rpcs1.dev'),
+  MCP_OAUTH_JWT_SECRET:     optionalEnv('MCP_OAUTH_JWT_SECRET', optionalEnv('LICENSE_JWT_SECRET', 'dev-secret-change-in-prod')),
 } as const;

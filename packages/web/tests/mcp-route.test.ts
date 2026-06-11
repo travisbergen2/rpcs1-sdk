@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { GET, POST } from '../app/mcp/route';
+import { createHash } from 'node:crypto';
+import {
+  exchangeAuthorizationCode,
+  issueAuthorizationCode,
+  MCP_OAUTH_CLIENT_ID,
+  MCP_OAUTH_REDIRECT_URI,
+  MCP_OAUTH_SCOPE,
+  MCP_RESOURCE_URL,
+} from '../lib/mcp-oauth';
 
 const headers = {
   Accept: 'application/json, text/event-stream',
@@ -77,5 +86,65 @@ describe('RPCS1 MCP HTTP route', () => {
       code: -32002,
       message: 'Request body is too large',
     });
+  });
+
+  it('accepts a valid Hyperagent bearer token', async () => {
+    const codeVerifier = 'valid-route-test-verifier-0123456789-abcdefghijklmnopqrstuvwxyz';
+    const codeChallenge = createHash('sha256').update(codeVerifier).digest('base64url');
+    const code = await issueAuthorizationCode(new URLSearchParams({
+      response_type: 'code',
+      client_id: MCP_OAUTH_CLIENT_ID,
+      redirect_uri: MCP_OAUTH_REDIRECT_URI,
+      scope: MCP_OAUTH_SCOPE,
+      code_challenge: codeChallenge,
+      code_challenge_method: 'S256',
+      resource: MCP_RESOURCE_URL,
+    }));
+    const { accessToken } = await exchangeAuthorizationCode({
+      code,
+      clientId: MCP_OAUTH_CLIENT_ID,
+      redirectUri: MCP_OAUTH_REDIRECT_URI,
+      codeVerifier,
+    });
+
+    const response = await POST(new Request('http://localhost/mcp', {
+      method: 'POST',
+      headers: {
+        ...headers,
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 3,
+        method: 'initialize',
+        params: {
+          protocolVersion: '2025-11-25',
+          capabilities: {},
+          clientInfo: { name: 'hyperagent-route-test', version: '1.0.0' },
+        },
+      }),
+    }));
+
+    expect(response.status).toBe(200);
+  });
+
+  it('rejects an invalid bearer token with OAuth discovery metadata', async () => {
+    const response = await POST(new Request('http://localhost/mcp', {
+      method: 'POST',
+      headers: {
+        ...headers,
+        Authorization: 'Bearer invalid-token',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 4,
+        method: 'tools/list',
+      }),
+    }));
+
+    expect(response.status).toBe(401);
+    expect(response.headers.get('www-authenticate')).toContain(
+      'resource_metadata="https://rpcs1.dev/.well-known/oauth-protected-resource/mcp"',
+    );
   });
 });

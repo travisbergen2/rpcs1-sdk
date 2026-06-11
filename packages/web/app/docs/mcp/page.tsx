@@ -26,14 +26,20 @@ export default function McpIntegrationPage() {
 
       <h2>Hyperagent compatibility</h2>
       <p>
-        Hyperagent currently starts an OAuth flow when connecting a custom remote MCP server.
-        RPCS-1 does not yet provide OAuth authorization endpoints, so Hyperagent reports
-        <code>Failed to start MCP OAuth</code> and cannot connect at this time. The form settings
-        cannot bypass this requirement.
+        RPCS-1 provides a fixed public OAuth client for Hyperagent using authorization code flow
+        with PKCE. In Hyperagent, enable <strong>Bring my own OAuth app</strong> and enter:
       </p>
+      <ul>
+        <li><strong>Redirect URI:</strong> <code>https://hyperagent.com/api/mcp-servers/callback</code></li>
+        <li><strong>Client ID:</strong> <code>hyperagent-rpcs1</code></li>
+        <li><strong>Client secret:</strong> leave blank</li>
+        <li><strong>Authorization endpoint:</strong> <code>https://rpcs1.dev/oauth/authorize</code></li>
+        <li><strong>Token endpoint:</strong> <code>https://rpcs1.dev/oauth/token</code></li>
+        <li><strong>Scopes:</strong> <code>mcp:tools</code></li>
+      </ul>
       <p>
-        RPCS-1 can be used from MCP clients that support anonymous Streamable HTTP servers.
-        Hyperagent support requires a future RPCS-1 OAuth implementation.
+        RPCS-1 also publishes OAuth discovery metadata, so the endpoint fields may be left blank
+        when Hyperagent successfully discovers them automatically.
       </p>
 
       <h2>Available tool</h2>

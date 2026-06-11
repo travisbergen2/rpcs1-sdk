@@ -108,6 +108,9 @@ It exposes one focused tool:
 Connection details and client compatibility notes are available at
 [https://rpcs1.dev/docs/mcp](https://rpcs1.dev/docs/mcp).
 
+Hyperagent uses the fixed public OAuth client `hyperagent-rpcs1` with PKCE and the registered
+callback `https://hyperagent.com/api/mcp-servers/callback`. No client secret is required.
+
 The MCP surface intentionally wraps the existing deterministic recommendation engine. Broader
 communication, market, and decision-analysis tools should be added only after their scoring
 contracts are implemented and tested in the core package.
@@ -123,6 +126,7 @@ Production controls:
 - `MCP_HOURLY_LIMIT` controls per-instance MCP throttling (default: `120` requests per IP/hour).
 - `MCP_MAX_BODY_BYTES` limits request bodies (default: `65536` bytes).
 - `MCP_ALLOWED_HOSTS` is a comma-separated production host allowlist.
+- `MCP_OAUTH_JWT_SECRET` signs short-lived OAuth authorization codes and access tokens.
 - `/api/health` reports deployment and MCP readiness metadata.
 
 For globally consistent abuse protection across Vercel instances, configure a Vercel Firewall

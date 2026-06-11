@@ -2,6 +2,7 @@ import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/
 import { createRpcs1McpServer } from '@/lib/mcp-server';
 import { env } from '@/lib/env';
 import { checkRateLimit, getClientIp } from '@/lib/ratelimit';
+import { MCP_OAUTH_SCOPE, MCP_RESOURCE_URL, verifyMcpAccessToken } from '@/lib/mcp-oauth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -34,6 +35,15 @@ function jsonRpcError(status: number, code: number, message: string, headers?: H
   );
 }
 
+function oauthError(message: string) {
+  return jsonRpcError(401, -32004, message, {
+    'WWW-Authenticate':
+      `Bearer error="invalid_token", error_description="${message}", ` +
+      `scope="${MCP_OAUTH_SCOPE}", ` +
+      `resource_metadata="https://rpcs1.dev/.well-known/oauth-protected-resource/mcp"`,
+  });
+}
+
 function isAllowedHost(request: Request): boolean {
   if (process.env.NODE_ENV !== 'production') return true;
 
@@ -61,6 +71,23 @@ async function handleMcpRequest(request: Request): Promise<Response> {
 
   if (!isAllowedHost(request)) {
     return jsonRpcError(403, -32001, 'Host is not allowed');
+  }
+
+  const authorization = request.headers.get('authorization');
+  if (authorization) {
+    const [scheme, token] = authorization.split(' ');
+    if (scheme?.toLowerCase() !== 'bearer' || !token) {
+      return oauthError('Invalid Authorization header');
+    }
+
+    try {
+      const auth = await verifyMcpAccessToken(token);
+      if (!auth.scopes.includes(MCP_OAUTH_SCOPE) || auth.resource !== MCP_RESOURCE_URL) {
+        return oauthError('Token is not valid for this MCP resource');
+      }
+    } catch {
+      return oauthError('Invalid or expired access token');
+    }
   }
 
   if (

@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 const securityHeaders = {
   'Cache-Control': 'no-store',
   'Content-Security-Policy':
-    "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
+    "default-src 'none'; style-src 'unsafe-inline'; form-action 'self' https://hyperagent.com; base-uri 'none'; frame-ancestors 'none'",
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
 };

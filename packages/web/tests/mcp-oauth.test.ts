@@ -67,6 +67,9 @@ describe('RPCS1 Hyperagent OAuth compatibility', () => {
       `http://localhost/oauth/authorize?${authorizationParams()}`,
     ));
     expect(valid.status).toBe(200);
+    expect(valid.headers.get('content-security-policy')).toContain(
+      "form-action 'self' https://hyperagent.com",
+    );
     expect(await valid.text()).toContain('Authorize Hyperagent');
 
     const invalidParams = authorizationParams();

@@ -1,7 +1,8 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { track } from '@vercel/analytics';
 import type { Recommendation, RecommendInput } from '@rpcs1/core';
 import { TunerForm } from '@/components/TunerForm';
 import { RecommendationOutput } from '@/components/RecommendationOutput';
@@ -50,10 +51,21 @@ function TunerPageContent() {
   const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const autoRanPreset = useRef(false);
 
-  async function handleSubmit(input: RecommendInput) {
+  const handleSubmit = useCallback(async (
+    input: RecommendInput,
+    source: 'manual' | 'preset_auto' = 'manual',
+  ) => {
     setLoading(true);
     setError(null);
+    track('Tuner Submitted', {
+      source,
+      preset: isPresetKey(preset) ? preset : 'none',
+      platform: input.target_platform,
+      domain: input.task.domain ?? 'unspecified',
+    });
+
     try {
       const res = await fetch('/api/recommend', {
         method: 'POST',
@@ -62,18 +74,27 @@ function TunerPageContent() {
       });
 
       if (res.status === 429) {
+        track('Tuner Failed', { reason: 'rate_limit', source });
         setError('Rate limit reached. Free tier allows 10 requests per hour. Upgrade to Indie for unlimited access.');
         return;
       }
 
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
+        track('Tuner Failed', { reason: 'api_error', status: res.status, source });
         setError(body.error ?? 'Something went wrong. Please try again.');
         return;
       }
 
       const result: Recommendation = await res.json();
       setRecommendation(result);
+      track('Recommendation Generated', {
+        source,
+        preset: isPresetKey(preset) ? preset : 'none',
+        platform: input.target_platform,
+        regime: result.predicted_regime,
+        confidence: result.confidence,
+      });
 
       // Scroll to results on mobile
       if (window.innerWidth < 768) {
@@ -82,11 +103,33 @@ function TunerPageContent() {
         }, 100);
       }
     } catch {
+      track('Tuner Failed', { reason: 'network_error', source });
       setError('Network error. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
-  }
+  }, [preset]);
+
+  useEffect(() => {
+    if (!isPresetKey(preset) || autoRanPreset.current) return;
+    autoRanPreset.current = true;
+
+    const values = PRESETS[preset];
+    void handleSubmit({
+      task: {
+        task_summary: values.task_summary,
+        domain: values.domain,
+      },
+      environment: {
+        entropy: values.entropy,
+        predictability: values.predictability,
+        stakes: values.stakes,
+        context_relevance: values.context_relevance,
+        commitment_style: values.commitment_style,
+      },
+      target_platform: values.target_platform,
+    }, 'preset_auto');
+  }, [handleSubmit, preset]);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
@@ -96,6 +139,11 @@ function TunerPageContent() {
           Describe your agent&apos;s task and environment. We&apos;ll compute parameter recommendations
           grounded in RPCS-1 receiver dynamics — no guessing, no trial and error.
         </p>
+        {isPresetKey(preset) && (
+          <p className="mt-3 text-sm text-sky-400">
+            Running the {preset} example automatically. You can adjust any field and run it again.
+          </p>
+        )}
       </div>
 
       {error && (

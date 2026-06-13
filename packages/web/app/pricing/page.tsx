@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/Card';
+import { TrackedLink } from '@/components/TrackedLink';
 
 export const metadata: Metadata = {
   title: 'Pricing',
@@ -92,8 +92,10 @@ export default function PricingPage() {
               </div>
               <p className="text-sm text-gray-500 mb-6">{tier.description}</p>
 
-              <Link
+              <TrackedLink
                 href={tier.ctaHref}
+                eventName={tier.name === 'Free' ? 'Pricing Tuner Clicked' : 'Checkout Started'}
+                eventData={{ location: 'pricing_card', tier: tier.name.toLowerCase() }}
                 className={[
                   'block w-full text-center py-2.5 px-4 rounded-lg text-sm font-semibold transition-all mb-6',
                   tier.highlighted
@@ -102,7 +104,7 @@ export default function PricingPage() {
                 ].join(' ')}
               >
                 {tier.cta}
-              </Link>
+              </TrackedLink>
 
               <ul className="space-y-2.5">
                 {tier.features.map((f) => (

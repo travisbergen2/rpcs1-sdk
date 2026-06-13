@@ -116,6 +116,9 @@ export function generateReasoning(
   const { TI, SG, FT, UE, AR } = profile;
   const { entropy, stakes, commitment_style, context_relevance } = input.environment;
   const { temperature, max_tokens, context_strategy } = params;
+  const samplingNote = input.target_platform === 'anthropic'
+    ? ' top_p is omitted because the Anthropic Messages API accepts only one sampling control.'
+    : '';
 
   return (
     `Environment analysis: ${entropy} entropy → Matching Principle (Pred-09-5: TI ~ 1/H) ` +
@@ -125,7 +128,8 @@ export function generateReasoning(
     `${commitment_style} commitment style sets AR = ${AR}; ` +
     `${context_relevance} context relevance + entropy set UE = ${UE}. ` +
     `Platform mapping: temperature = ${temperature} (from SG via 1/SG relationship), ` +
-    `max_tokens = ${max_tokens} (from TI), context_strategy = ${context_strategy}.`
+    `max_tokens = ${max_tokens} (from TI), context_strategy = ${context_strategy}.` +
+    samplingNote
   );
 }
 

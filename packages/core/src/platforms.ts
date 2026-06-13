@@ -138,7 +138,7 @@ export function mapToParameters(
     params.model_recommendation = model_recommendation;
   }
 
-  if (config.supports_top_p) {
+  if (config.supports_top_p && platform !== 'anthropic') {
     // top_p mirrors temperature intent: high SG → low top_p (stays in [0.4, 1.0])
     const rawTopP = (1 - profile.SG / 100) * 0.6 + 0.4;
     params.top_p = Math.round(rawTopP * 100) / 100;

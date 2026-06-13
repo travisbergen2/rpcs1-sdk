@@ -95,6 +95,12 @@ def generate_reasoning(
 ) -> str:
     TI, SG, FT, UE, AR = profile.TI, profile.SG, profile.FT, profile.UE, profile.AR
     env = input_data.environment
+    sampling_note = (
+        " top_p is omitted because the Anthropic Messages API accepts only one "
+        "sampling control."
+        if input_data.target_platform == "anthropic"
+        else ""
+    )
 
     return (
         f"Environment analysis: {env.entropy} entropy → Matching Principle (Pred-09-5: TI ~ 1/H) "
@@ -106,6 +112,7 @@ def generate_reasoning(
         f"Platform mapping: temperature = {params.temperature} (from SG via 1/SG relationship), "
         f"max_tokens = {params.max_tokens} (from TI), "
         f"context_strategy = {params.context_strategy}."
+        f"{sampling_note}"
     )
 
 

@@ -169,5 +169,6 @@ describe('recommend — Phase 1 acceptance tests', () => {
     const rec = recommend(input);
     expect(rec.reasoning).toContain('Matching Principle');
     expect(rec.reasoning).toContain('TI');
+    expect(rec.reasoning).toContain('top_p is omitted');
   });
 });

@@ -7,7 +7,7 @@ export function createRpcs1McpServer() {
     {
       name: 'rpcs1-agent-tuner',
       title: 'RPCS1 Agent Tuner',
-      version: '0.2.0',
+      version: '0.2.1',
       websiteUrl: 'https://rpcs1.dev',
       description:
         'Deterministic context-alignment tools for configuring AI agents and diagnosing stability regimes.',

@@ -72,6 +72,17 @@ describe('mapToParameters', () => {
     expect(p.system_prompt_additions?.length).toBeGreaterThan(0);
   });
 
+  it('anthropic emits temperature without top_p', () => {
+    const p = mapToParameters(balancedProfile, 'anthropic');
+    expect(p.temperature).toBeDefined();
+    expect(p.top_p).toBeUndefined();
+  });
+
+  it('openai retains top_p support', () => {
+    const p = mapToParameters(balancedProfile, 'openai');
+    expect(p.top_p).toBeDefined();
+  });
+
   it('all returned temperature values are within platform range', () => {
     for (const profile of [balancedProfile, aggressiveProfile, conservativeProfile]) {
       const p = mapToParameters(profile, 'anthropic');

@@ -10,7 +10,7 @@ export function GET() {
       mcp: {
         endpoint: '/mcp',
         transport: 'streamable-http',
-        version: '0.2.0',
+        version: '0.2.1',
       },
       deployment: {
         id: process.env.VERCEL_DEPLOYMENT_ID ?? null,

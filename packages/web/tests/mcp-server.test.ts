@@ -70,4 +70,36 @@ describe('RPCS1 MCP server', () => {
       },
     });
   });
+
+  it('does not return conflicting Anthropic sampling controls', async () => {
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    server = createRpcs1McpServer();
+    client = new Client({ name: 'rpcs1-test-client', version: '1.0.0' });
+
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+
+    const result = await client.callTool({
+      name: 'recommend_agent_configuration',
+      arguments: {
+        task: { task_summary: 'Research assistant' },
+        environment: {
+          entropy: 'dynamic',
+          predictability: 'somewhat_predictable',
+          stakes: 'medium',
+          context_relevance: 'long',
+          commitment_style: 'balanced',
+        },
+        target_platform: 'anthropic',
+      },
+    });
+    const structured = result.structuredContent as {
+      platform_parameters: { temperature?: number; top_p?: number };
+      reasoning: string;
+    };
+
+    expect(structured.platform_parameters.temperature).toBeDefined();
+    expect(structured.platform_parameters.top_p).toBeUndefined();
+    expect(structured.reasoning).toContain('top_p is omitted');
+  });
 });

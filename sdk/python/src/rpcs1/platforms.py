@@ -123,7 +123,7 @@ def map_to_parameters(profile: ReceiverProfile, platform: Platform) -> PlatformP
     )
 
     top_p: float | None = None
-    if config.get("supports_top_p"):
+    if config.get("supports_top_p") and platform != "anthropic":
         top_p = round((1 - profile.SG / 100) * 0.6 + 0.4, 2)
 
     return PlatformParameters(

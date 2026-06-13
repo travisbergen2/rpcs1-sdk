@@ -136,6 +136,21 @@ def test_reasoning_always_cites_matching_principle():
     assert "TI" in result.reasoning
 
 
+def test_anthropic_platform_omits_top_p():
+    result = recommend_params(
+        task_description="Research assistant",
+        environment_entropy="dynamic",
+        environment_predictability="somewhat_predictable",
+        stakes="medium",
+        context_relevance="long",
+        commitment_style="balanced",
+        target_platform="anthropic",
+    )
+    assert result.platform_parameters.temperature is not None
+    assert result.platform_parameters.top_p is None
+    assert "top_p is omitted" in result.reasoning
+
+
 def test_all_primitives_in_range():
     """All five primitives must be in [0, 100] for any valid input."""
     result = recommend_params(

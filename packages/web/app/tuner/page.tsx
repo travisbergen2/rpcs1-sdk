@@ -52,6 +52,7 @@ function TunerPageContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const autoRanPreset = useRef(false);
+  const trackedView = useRef(false);
 
   const handleSubmit = useCallback(async (
     input: RecommendInput,
@@ -108,6 +109,14 @@ function TunerPageContent() {
     } finally {
       setLoading(false);
     }
+  }, [preset]);
+
+  useEffect(() => {
+    if (trackedView.current) return;
+    trackedView.current = true;
+    track('Tuner Viewed', {
+      preset: isPresetKey(preset) ? preset : 'none',
+    });
   }, [preset]);
 
   useEffect(() => {
@@ -179,7 +188,7 @@ function TunerPageContent() {
           pip install rpcs1
         </div>
         <p className="mt-3 text-xs text-gray-600">
-          SDK access requires a paid plan. Free tier: 5 calls/day.{' '}
+          Web tuner: 10 recommendations per hour. Python SDK: 5 free calls per day.{' '}
           <a href="/pricing" className="text-sky-500 hover:text-sky-400">See pricing →</a>
         </p>
       </div>

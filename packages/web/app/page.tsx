@@ -233,7 +233,7 @@ print(config.receiver_profile.TI)               `}<span className="text-gray-500
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-32 text-center">
         <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Ready to tune your agent?</h2>
         <p className="text-gray-400 mb-8">
-          Free tier: unlimited web tuner. Paid SDK access starts at $40/month. Team plan at $400/month.
+          Free web tuner: 10 recommendations per hour. Paid SDK access starts at $40/month. Team plan at $400/month.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link

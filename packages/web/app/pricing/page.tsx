@@ -18,7 +18,7 @@ const TIERS = [
     ctaHref: '/tuner',
     variant: 'secondary' as const,
     features: [
-      'Unlimited web tuner usage',
+      '10 web tuner recommendations per hour',
       'All four platforms (Anthropic, OpenAI, open source, generic)',
       'Predicted regime + reasoning',
       'Oscillation / overload / freeze warnings',
@@ -148,7 +148,7 @@ export default function PricingPage() {
             },
             {
               q: 'What is the free tier rate limit?',
-              a: "5 Python SDK calls per day on the free tier. Web tuner is unlimited on all tiers.",
+              a: "The web tuner allows 10 recommendations per hour. The Python SDK includes 5 free calls per day.",
             },
             {
               q: 'Does the SDK send data to your servers?',

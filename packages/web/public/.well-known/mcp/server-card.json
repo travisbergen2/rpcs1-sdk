@@ -1,0 +1,89 @@
+{
+  "serverInfo": {
+    "name": "RPCS1 Agent Tuner",
+    "version": "0.2.1"
+  },
+  "authentication": {
+    "required": false,
+    "schemes": []
+  },
+  "tools": [
+    {
+      "name": "recommend_agent_configuration",
+      "description": "Recommend concrete LLM and agent-runtime settings matched to environmental entropy, predictability, stakes, context horizon, and commitment style. Diagnoses likely oscillation, overload, or freeze regimes.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "task": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "task_summary": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "domain": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "expected_duration_per_call": {
+                "type": "string",
+                "enum": ["short", "medium", "long"]
+              }
+            },
+            "required": ["task_summary"]
+          },
+          "environment": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "entropy": {
+                "type": "string",
+                "enum": ["stable", "moderate", "dynamic", "chaotic"]
+              },
+              "predictability": {
+                "type": "string",
+                "enum": ["highly_predictable", "somewhat_predictable", "unpredictable"]
+              },
+              "stakes": {
+                "type": "string",
+                "enum": ["low", "medium", "high", "catastrophic"]
+              },
+              "context_relevance": {
+                "type": "string",
+                "enum": ["short", "medium", "long"]
+              },
+              "commitment_style": {
+                "type": "string",
+                "enum": ["decisive", "balanced", "cautious"]
+              }
+            },
+            "required": [
+              "entropy",
+              "predictability",
+              "stakes",
+              "context_relevance",
+              "commitment_style"
+            ]
+          },
+          "target_platform": {
+            "type": "string",
+            "enum": ["anthropic", "openai", "open_source", "generic"]
+          }
+        },
+        "required": ["task", "environment", "target_platform"]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": true
+      }
+    }
+  ],
+  "resources": [],
+  "prompts": []
+}

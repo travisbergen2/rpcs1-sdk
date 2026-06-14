@@ -107,6 +107,8 @@ It exposes one focused tool:
 
 Connection details and client compatibility notes are available at
 [https://rpcs1.dev/docs/mcp](https://rpcs1.dev/docs/mcp).
+Practical coding, support, and research examples are available at
+[https://rpcs1.dev/docs/examples](https://rpcs1.dev/docs/examples).
 
 Hyperagent uses the fixed public OAuth client `hyperagent-rpcs1` with PKCE and the registered
 callback `https://hyperagent.com/api/mcp-servers/callback`. No client secret is required.

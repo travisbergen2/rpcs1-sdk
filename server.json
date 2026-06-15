@@ -8,6 +8,16 @@
     "source": "github"
   },
   "version": "0.2.1",
+  "packages": [
+    {
+      "registry_type": "npm",
+      "identifier": "@rpcs1/mcp-server",
+      "version": "0.2.1",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ],
   "remotes": [
     {
       "type": "streamable-http",

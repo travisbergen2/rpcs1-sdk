@@ -5,13 +5,13 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build -w packages/core && npm run build -w packages/web",
+    "build": "npm run build -w packages/core && npm run build -w packages/mcp-server && npm run build -w packages/web",
     "dev": "npm run dev --workspace=packages/web"
   },
   "devDependencies": {
     "typescript": "^5.4.0"
   },
   "engines": {
-    "node": "20.x"
+    "node": ">=20 <27"
   }
 }

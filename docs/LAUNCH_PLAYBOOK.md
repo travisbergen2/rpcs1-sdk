@@ -56,6 +56,16 @@ Lead with the developer problem:
 3. Glama
    - Use the Add Server flow at `https://glama.ai/mcp/servers`.
    - Claim the listing after import.
+   - For automated checks, configure Glama to build the standalone STDIO
+     package:
+     - Build steps:
+       `["npm install","npm run build --workspace=@rpcs1/mcp-server"]`
+     - CMD arguments:
+       `["node","packages/mcp-server/dist/index.js"]`
+     - Environment variables JSON schema:
+       `{"properties":{},"required":[],"type":"object"}`
+     - Placeholder parameters:
+       `{}`
 4. MCP.so and other aggregators
    - Submit the GitHub repository and remote endpoint.
    - Reuse the directory listing copy above.

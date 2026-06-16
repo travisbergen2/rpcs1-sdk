@@ -2,7 +2,7 @@
 
 <!-- mcp-name: io.github.travisbergen2/rpcs1-agent-tuner -->
 
-**Configure AI agents that don't oscillate, overload, or freeze.**
+**Diagnose whether deployed AI agents are matched to their operating environment.**
 
 A configuration framework for AI agents that translates environmental characteristics (entropy, stakes, predictability) into specific LLM parameter recommendations — grounded in RPCS-1 receiver dynamics.
 

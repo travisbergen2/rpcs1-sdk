@@ -6,7 +6,7 @@ import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: {
-    default: 'RPCS-1 Agent Tuner — Configure AI agents that don\'t oscillate, overload, or freeze',
+    default: 'RPCS-1 Agent Tuner - Optimize deployed AI agents',
     template: '%s | RPCS-1 Agent Tuner',
   },
   description:

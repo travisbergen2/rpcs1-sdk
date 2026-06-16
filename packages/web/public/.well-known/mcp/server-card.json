@@ -10,7 +10,7 @@
   "tools": [
     {
       "name": "recommend_agent_configuration",
-      "description": "Recommend concrete LLM and agent-runtime settings matched to environmental entropy, predictability, stakes, context horizon, and commitment style. Diagnoses likely oscillation, overload, or freeze regimes.",
+      "description": "Diagnose whether a deployed AI agent, support copilot, or agent workflow is matched to its operating environment. Recommends concrete LLM and runtime settings from entropy, predictability, stakes, context horizon, and commitment style; returns receiver profile values, platform parameters, confidence, reasoning, warnings, and applied IMM principles. Stateless, read-only, and does not store, list, or update past recommendations.",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,

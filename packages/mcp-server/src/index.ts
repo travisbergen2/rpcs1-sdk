@@ -67,7 +67,7 @@ function createServer() {
       version: '0.2.1',
       websiteUrl: 'https://rpcs1.dev',
       description:
-        'Deterministic context-alignment tools for configuring AI agents and diagnosing stability regimes.',
+        'Deterministic diagnostic tools for optimizing deployed AI agents and diagnosing environment mismatch.',
     },
     {
       instructions:
@@ -83,9 +83,10 @@ function createServer() {
     {
       title: 'Recommend AI agent configuration',
       description:
-        'Use this stateless, read-only tool when a user needs concrete LLM and agent-runtime settings ' +
-        'matched to environmental entropy, predictability, stakes, context horizon, and commitment style. ' +
-        'It diagnoses likely oscillation, overload, or freeze regimes and returns receiver profile values ' +
+        'Use this stateless, read-only tool when a deployed AI agent, support copilot, or agent workflow ' +
+        'needs concrete LLM and runtime settings matched to environmental entropy, predictability, stakes, ' +
+        'context horizon, and commitment style. It diagnoses likely oscillation, overload, freeze, or mismatch ' +
+        'and returns receiver profile values ' +
         '(TI, SG, FT, UE, AR), platform parameters, confidence, reasoning, warnings, and applied IMM principles. ' +
         'It does not store, list, or update past recommendations.',
       inputSchema: recommendInputSchema,

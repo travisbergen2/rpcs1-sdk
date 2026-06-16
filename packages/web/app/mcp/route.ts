@@ -63,6 +63,28 @@ function isAllowedHost(request: Request): boolean {
   return allowedHosts.has(requestHost);
 }
 
+function summarizeMcpPayload(payload: unknown): { rpcMethods: string[]; toolNames: string[] } {
+  const messages = Array.isArray(payload) ? payload : [payload];
+  const rpcMethods = new Set<string>();
+  const toolNames = new Set<string>();
+
+  for (const message of messages) {
+    if (!message || typeof message !== 'object') continue;
+    const record = message as { method?: unknown; params?: unknown };
+    if (typeof record.method === 'string') rpcMethods.add(record.method);
+
+    if (record.method === 'tools/call' && record.params && typeof record.params === 'object') {
+      const params = record.params as { name?: unknown };
+      if (typeof params.name === 'string') toolNames.add(params.name);
+    }
+  }
+
+  return {
+    rpcMethods: [...rpcMethods],
+    toolNames: [...toolNames],
+  };
+}
+
 async function handleMcpRequest(request: Request): Promise<Response> {
   const startedAt = Date.now();
   const requestId = request.headers.get('x-vercel-id') ?? crypto.randomUUID();
@@ -143,6 +165,7 @@ async function handleMcpRequest(request: Request): Promise<Response> {
     event: 'mcp_request',
     requestId,
     method: request.method,
+    ...summarizeMcpPayload(parsedBody),
     status: response.status,
     durationMs: Date.now() - startedAt,
   }));

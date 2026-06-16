@@ -10,13 +10,14 @@ export function createRpcs1McpServer() {
       version: '0.2.1',
       websiteUrl: 'https://rpcs1.dev',
       description:
-        'Deterministic context-alignment tools for configuring AI agents and diagnosing stability regimes.',
+        'Deterministic diagnostic tools for optimizing deployed AI agents and diagnosing environment mismatch.',
     },
     {
       instructions:
         'Use RPCS1 to configure AI agents for their operating environment. ' +
         'Call recommend_agent_configuration when the user is designing, tuning, or diagnosing an AI agent. ' +
-        'The tool is deterministic, read-only, and does not replace domain-specific safety review.',
+        'The tool is deterministic, stateless, read-only, and does not store, list, or update recommendations. ' +
+        'Clients should persist results when history is needed.',
     },
   );
 
@@ -25,9 +26,11 @@ export function createRpcs1McpServer() {
     {
       title: 'Recommend AI agent configuration',
       description:
-        'Use this when a user needs concrete LLM and agent-runtime settings matched to environmental ' +
-        'entropy, predictability, stakes, context horizon, and commitment style. It diagnoses likely ' +
-        'oscillation, overload, or freeze regimes and returns explainable RPCS1 receiver dynamics.',
+        'Use this stateless, read-only tool when a deployed AI agent, support copilot, or agent workflow ' +
+        'needs concrete LLM and runtime settings matched to environmental entropy, predictability, stakes, ' +
+        'context horizon, and commitment style. It diagnoses likely oscillation, overload, freeze, or mismatch ' +
+        'and returns receiver profile values (TI, SG, FT, UE, AR), platform parameters, confidence, reasoning, ' +
+        'warnings, and applied IMM principles. It does not store, list, or update past recommendations.',
       inputSchema: recommendInputSchema,
       outputSchema: recommendationOutputSchema,
       annotations: {

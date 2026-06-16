@@ -9,12 +9,36 @@ export const metadata: Metadata = {
 
 const EXAMPLES = [
   {
+    title: 'Customer support copilot tuning assessment',
+    problem:
+      'A deployed support copilot works in demos but gives inconsistent guidance when refunds, billing disputes, policy ambiguity, and live queue pressure collide.',
+    prompt:
+      'Tune a customer support copilot that assists human agents with refunds, billing disputes, escalation decisions, and policy exceptions. The environment is dynamic, somewhat predictable, high stakes, medium-context, and should be cautious before committing.',
+    preset: 'support',
+    fields: [
+      'Target platform: anthropic',
+      'Entropy: dynamic',
+      'Predictability: somewhat_predictable',
+      'Stakes: high',
+      'Context relevance: medium',
+      'Commitment style: cautious',
+    ],
+  },
+  {
     title: 'Coding agent in a changing repository',
     problem:
       'A coding agent repeatedly changes direction, retries too aggressively, or commits before it has enough repository context.',
     prompt:
       'Tune a coding agent that inspects a changing repository, edits files, runs tests, and opens pull requests. Mistakes have medium stakes and relevant context is long-lived.',
     preset: 'coding',
+    fields: [
+      'Target platform: openai',
+      'Entropy: moderate',
+      'Predictability: somewhat_predictable',
+      'Stakes: medium',
+      'Context relevance: long',
+      'Commitment style: balanced',
+    ],
   },
   {
     title: 'High-stakes customer support agent',
@@ -23,6 +47,14 @@ const EXAMPLES = [
     prompt:
       'Tune a customer support agent handling refunds, billing disputes, and policy exceptions in a dynamic environment with high stakes.',
     preset: 'support',
+    fields: [
+      'Target platform: anthropic',
+      'Entropy: dynamic',
+      'Predictability: somewhat_predictable',
+      'Stakes: high',
+      'Context relevance: medium',
+      'Commitment style: cautious',
+    ],
   },
   {
     title: 'Research agent with conflicting evidence',
@@ -31,6 +63,14 @@ const EXAMPLES = [
     prompt:
       'Tune a research agent that synthesizes conflicting technical sources into a cautious recommendation while retaining long-context evidence.',
     preset: 'research',
+    fields: [
+      'Target platform: generic',
+      'Entropy: stable',
+      'Predictability: highly_predictable',
+      'Stakes: medium',
+      'Context relevance: long',
+      'Commitment style: cautious',
+    ],
   },
 ];
 
@@ -44,6 +84,10 @@ export default function ExamplesPage() {
         decision-making. These examples show when to call{' '}
         <code>recommend_agent_configuration</code>.
       </p>
+      <p>
+        The diagnostic question is fit, not fault: is the deployed agent matched to the
+        task, communication format, timing, environment, and stakes it actually faces?
+      </p>
 
       {EXAMPLES.map((example) => (
         <section key={example.preset}>
@@ -51,6 +95,12 @@ export default function ExamplesPage() {
           <p><strong>Problem:</strong> {example.problem}</p>
           <p><strong>Example request:</strong></p>
           <blockquote>{example.prompt}</blockquote>
+          <p><strong>Assessment inputs:</strong></p>
+          <ul>
+            {example.fields.map((field) => (
+              <li key={field}>{field}</li>
+            ))}
+          </ul>
           <p>
             <Link href={`/tuner?preset=${example.preset}`}>
               Run this example in the tuner

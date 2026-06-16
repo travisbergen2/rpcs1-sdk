@@ -2,15 +2,21 @@
 
 ## Positioning
 
-RPCS1 is a deterministic agent-configuration tool. It turns an agent's operating
-environment into concrete model and runtime settings, then warns when the
-configuration is near oscillation, overload, or freeze.
+RPCS1 is a deterministic diagnostic and optimization layer for deployed AI
+agents. It turns an agent's operating environment into concrete model and
+runtime settings, then warns when the configuration is near oscillation,
+overload, freeze, or environment mismatch.
 
 Lead with the developer problem:
 
-> Stop guessing agent parameters. Describe the environment and get an
+> You deployed AI. Is it actually matched to the environment it runs in?
+> Describe the task, stakes, ambiguity, and context horizon, then get an
 > explainable configuration for Anthropic, OpenAI, open-source, or generic
 > runtimes.
+
+The plain-language frame is: fit, not fault. When an AI agent fails after
+deployment, diagnose the relationship between the agent, task, and operating
+conditions before blaming the model or adding another tool.
 
 ## Directory listing copy
 
@@ -31,7 +37,8 @@ Lead with the developer problem:
 > agent-runtime settings from environmental entropy, predictability, stakes,
 > context horizon, and commitment style. It supports Anthropic, OpenAI,
 > open-source, and generic targets and returns an explainable receiver profile,
-> predicted stability regime, warnings, and parameter recommendations. No API
+> predicted stability regime, warnings, and parameter recommendations. Use it
+> to move deployed AI agents toward optimized, consistent performance. No API
 > key is required.
 
 **Tool:** `recommend_agent_configuration`
@@ -74,10 +81,11 @@ Lead with the developer problem:
 
 Publish one narrowly scoped example at a time:
 
-1. Tune a coding agent that keeps changing direction.
-2. Configure a high-stakes support agent without over-committing.
-3. Diagnose why a research agent overreacts to conflicting evidence.
-4. Avoid conflicting Anthropic sampling controls.
+1. Customer support copilot tuning assessment.
+2. Tune a coding agent that keeps changing direction.
+3. Configure a high-stakes support agent without over-committing.
+4. Diagnose why a research agent overreacts to conflicting evidence.
+5. Avoid conflicting Anthropic sampling controls.
 
 Each article should contain the recognizable failure, exact input, recommendation
 output, before/after configuration, and links to the tuner, examples, and MCP
@@ -87,12 +95,13 @@ endpoint.
 
 ### Hacker News
 
-**Title:** Show HN: RPCS1 - a deterministic MCP server for tuning AI agents
+**Title:** Show HN: RPCS1 - diagnose whether deployed AI agents are tuned for their environment
 
-> I built RPCS1 because agent configuration still involves a lot of guessing.
-> You describe the task environment - entropy, predictability, stakes, context
-> horizon, and commitment style - and it returns model/runtime settings plus a
-> warning if the agent is near oscillation, overload, or freeze.
+> I built RPCS1 because many teams have already deployed AI agents and copilots,
+> but still lack a simple diagnostic for whether those agents are matched to
+> the environment they operate in. You describe entropy, predictability, stakes,
+> context horizon, and commitment style; it returns model/runtime settings plus
+> warnings for oscillation, overload, freeze, and mismatch.
 >
 > It is public, read-only, deterministic, and available as a Streamable HTTP MCP
 > server with no API key:
@@ -108,9 +117,10 @@ endpoint.
 
 ### Developer community
 
-> I made a free MCP tool that recommends agent parameters from the environment
-> the agent operates in. It is aimed at failures like oscillating between plans,
-> retry overload, premature commitment, and agents becoming too cautious to act.
+> I made a free MCP tool for diagnosing whether a deployed AI agent is matched
+> to its operating environment. It is aimed at failures like inconsistent support
+> copilot guidance, oscillating between plans, retry overload, premature
+> commitment, and agents becoming too cautious to act.
 >
 > Endpoint: https://rpcs1.dev/mcp
 >
@@ -121,10 +131,11 @@ endpoint.
 
 ### LinkedIn or X
 
-> Agent parameters should depend on the environment, not a universal preset.
+> Deployed AI is not the same thing as optimized AI.
 >
-> RPCS1 maps entropy, predictability, stakes, context horizon, and commitment
-> style to concrete runtime recommendations and stability warnings.
+> RPCS1 diagnoses whether an agent is matched to its environment, then maps
+> entropy, predictability, stakes, context horizon, and commitment style to
+> concrete runtime recommendations and stability warnings.
 >
 > Public MCP endpoint: https://rpcs1.dev/mcp
 > Examples: https://rpcs1.dev/docs/examples
@@ -132,8 +143,10 @@ endpoint.
 
 ## Weekly operating loop
 
-Track directory listing views, MCP initialization and tool calls, tuner
-recommendations, GitHub stars, SDK installs, and referrals from each launch.
+Track MCP initialization, `tools/list`, successful tool calls, tuner views,
+tuner completions, GitHub stars, SDK installs, directory referrals, and example
+CTA clicks. Treat bounce rate as a weak secondary signal, not the operating
+metric.
 
 Every week, publish one example and make one directory or community submission.
 Do not judge traction from general website bounce rate alone.

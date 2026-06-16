@@ -35,6 +35,13 @@ const PRIMITIVES = [
   { abbr: 'AR', name: 'Ambiguity Resolution', desc: 'How aggressively to commit when uncertain.' },
 ];
 
+const CX_SIGNALS = [
+  'Support copilot gives inconsistent guidance across similar cases',
+  'QA finds tone, policy, or escalation drift after launch',
+  'Agent assistance works in demos but struggles under live queue pressure',
+  'Teams cannot tell whether failures come from model choice, prompt design, or operating conditions',
+];
+
 export default function HomePage() {
   return (
     <div>
@@ -46,11 +53,11 @@ export default function HomePage() {
           Built on RPCS-1 receiver dynamics · Pred-09-5 validated
         </Badge>
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-          Configure AI agents that don&apos;t{' '}
-          <span className="gradient-text">oscillate, overload, or freeze.</span>
+          Turn deployed AI agents into{' '}
+          <span className="gradient-text">optimized AI agents.</span>
         </h1>
         <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-6 leading-relaxed">
-          Describe your agent&apos;s task and environment. Get exact temperature, context strategy,
+          Describe your agent&apos;s task and operating conditions. Get exact temperature,
           and model recommendation — derived from your agent&apos;s operating conditions, not guesswork.
         </p>
         <p className="text-sm text-gray-500 max-w-xl mx-auto mb-8">
@@ -125,6 +132,55 @@ export default function HomePage() {
       </section>
 
       <AgentFailureDemo />
+
+      {/* CX optimization wedge */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
+        <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-8 sm:p-12">
+          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
+            <div>
+              <p className="text-xs text-emerald-400 font-mono mb-3">CX AI optimization</p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+                Already deployed AI in support?
+              </h2>
+              <p className="text-gray-400 leading-relaxed mb-5">
+                RPCS1 is a lightweight diagnostic layer for customer support copilots,
+                QA assistants, knowledge tools, and agent-assistance workflows. It asks
+                whether the agent is matched to the environment it actually runs in:
+                queue pressure, policy ambiguity, stakes, context horizon, and how quickly
+                the system should commit.
+              </p>
+              <p className="text-gray-500 text-sm leading-relaxed">
+                The point is fit, not fault. If a deployed support agent is inconsistent,
+                the first question should be whether the task, model settings, and operating
+                conditions are mismatched.
+              </p>
+            </div>
+
+            <Card className="p-6 bg-gray-950/60">
+              <CardContent className="p-0">
+                <p className="text-sm font-semibold text-gray-200 mb-4">Run this check when:</p>
+                <ul className="space-y-3 mb-6">
+                  {CX_SIGNALS.map((signal) => (
+                    <li key={signal} className="flex gap-3 text-sm text-gray-400">
+                      <span className="text-emerald-400 mt-0.5">-</span>
+                      <span>{signal}</span>
+                    </li>
+                  ))}
+                </ul>
+                <TrackedLink
+                  href="/tuner?preset=support"
+                  eventName="Homepage CTA Clicked"
+                  eventData={{ location: 'cx_section', action: 'support_copilot_assessment', preset: 'support' }}
+                  className="inline-flex w-full items-center justify-center px-4 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-semibold transition-colors"
+                >
+                  Run support copilot assessment
+                </TrackedLink>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       <ProductionProof />
 
       {/* Code preview */}
@@ -160,10 +216,10 @@ print(config.receiver_profile.TI)               `}<span className="text-gray-500
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
         <div className="text-center mb-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-            The problem every agent builder has
+            The problem every deployed agent eventually exposes
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            You ship an agent. It works in testing. In production it starts failing in one of
+            You ship an agent. It works in testing. In production the conditions change. It starts failing in one of
             three structural ways — and you have no framework for diagnosing why.
           </p>
         </div>

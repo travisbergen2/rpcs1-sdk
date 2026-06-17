@@ -134,6 +134,30 @@ Production controls:
 For globally consistent abuse protection across Vercel instances, configure a Vercel Firewall
 rate-limit rule for `/mcp`. The in-process limiter is defense in depth, not a distributed quota.
 
+Glama Docker checks should build and launch the local STDIO server, not connect to the hosted
+`https://rpcs1.dev/mcp` endpoint. Use this build spec:
+
+```json
+{
+  "buildSteps": [
+    "npm ci --include=optional",
+    "npm run build --workspace=@rpcs1/mcp-server"
+  ],
+  "cmdArguments": [
+    "mcp-proxy",
+    "--",
+    "node",
+    "packages/mcp-server/dist/index.js"
+  ],
+  "environmentVariablesJsonSchema": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "placeholderArguments": {}
+}
+```
+
 ## License
 
 MIT

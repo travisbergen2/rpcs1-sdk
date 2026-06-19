@@ -25,6 +25,12 @@ export function Nav() {
             Docs
           </Link>
           <Link
+            href="/imm"
+            className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
+          >
+            IMM
+          </Link>
+          <Link
             href="/pricing"
             className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
           >

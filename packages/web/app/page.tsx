@@ -103,6 +103,17 @@ export default function HomePage() {
         <p className="mt-4 text-xs text-gray-600">
           No sign-up required. Free forever for web tuner access.
         </p>
+        <p className="mt-3 text-xs text-gray-500">
+          AI inspecting the framework?{' '}
+          <Link href="/imm" className="text-sky-400 hover:text-sky-300 underline underline-offset-4">
+            Read the IMM primer
+          </Link>
+          {' '}or{' '}
+          <Link href="/mismatch" className="text-sky-400 hover:text-sky-300 underline underline-offset-4">
+            the mismatch frame
+          </Link>
+          .
+        </p>
         <div className="mt-8 flex flex-wrap justify-center gap-2 text-xs">
           <span className="text-gray-600 py-2">Popular starts:</span>
           <TrackedLink
@@ -133,6 +144,25 @@ export default function HomePage() {
       </section>
 
       <AgentFailureDemo />
+
+      {/* AI-human collaboration frame */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
+        <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-8 sm:p-12">
+          <p className="text-xs text-rose-300 font-mono mb-3">AI-human collaboration</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+            Misunderstanding is often destructive compression.
+          </h2>
+          <p className="text-gray-400 leading-relaxed max-w-3xl mb-5">
+            Humans and AIs both compress reality. The collaboration problem is not always
+            that either side is wrong; often each side preserves different distinctions.
+            RPCS1 uses receiver/environment matching to ask what got collapsed, what needed
+            to be preserved, and what interaction would produce a better match.
+          </p>
+          <Link href="/mismatch" className="text-sm text-rose-200 hover:text-white underline underline-offset-4">
+            Read the AI-human mismatch frame →
+          </Link>
+        </div>
+      </section>
 
       {/* CX optimization wedge */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
@@ -251,6 +281,14 @@ print(config.receiver_profile.TI)               `}<span className="text-gray-500
               mapped to an inference-time tuning hypothesis. All outputs are deterministic
               and traceable — no black-box recommendations.
             </p>
+            <div className="mt-5 rounded-xl border border-sky-500/20 bg-sky-500/5 p-4">
+              <p className="text-xs text-sky-400 font-mono mb-2">Operational order</p>
+              <p className="text-lg text-sky-100 font-mono">FT → TI → AR → SG → UE</p>
+              <p className="mt-2 text-sm text-gray-500">
+                Filter noise first. Integrate over time. Resolve ambiguity. Amplify only
+                the interpreted signal. Then update or act.
+              </p>
+            </div>
           </div>
           <div className="space-y-4">
             {PRIMITIVES.map((p) => (

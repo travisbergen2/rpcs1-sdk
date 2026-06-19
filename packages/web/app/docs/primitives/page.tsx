@@ -66,6 +66,15 @@ export default function PrimitivesPage() {
         in your agent&apos;s environment.
       </p>
 
+      <div className="not-prose my-8 rounded-xl border border-sky-500/20 bg-sky-500/5 p-5">
+        <p className="text-xs text-sky-400 font-mono mb-2">Operational order</p>
+        <p className="text-lg text-sky-100 font-mono">FT → TI → AR → SG → UE</p>
+        <p className="mt-2 text-sm text-gray-400">
+          Filter noise first. Integrate over time. Resolve ambiguity. Amplify only the
+          interpreted signal. Then update or act.
+        </p>
+      </div>
+
       {PRIMITIVES.map((p) => (
         <div key={p.abbr} className="not-prose my-8 rounded-xl border border-gray-800 overflow-hidden">
           <div className="flex items-center gap-3 px-6 py-4 bg-gray-900 border-b border-gray-800">

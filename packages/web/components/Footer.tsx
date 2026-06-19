@@ -10,12 +10,14 @@ export function Footer() {
               RPCS<span className="text-sky-400">-1</span> Agent Tuner
             </p>
             <p className="text-xs text-gray-600 mt-1">
-              Grounded in receiver dynamics from cognitive systems research.
+              Operationalized from receiver dynamics for AI agent pre-tuning.
             </p>
           </div>
           <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-500">
             <Link href="/tuner"   className="hover:text-gray-300 transition-colors">Tuner</Link>
             <Link href="/docs"    className="hover:text-gray-300 transition-colors">Docs</Link>
+            <Link href="/imm"     className="hover:text-gray-300 transition-colors">IMM</Link>
+            <Link href="/mismatch" className="hover:text-gray-300 transition-colors">Mismatch</Link>
             <Link href="/pricing" className="hover:text-gray-300 transition-colors">Pricing</Link>
             <Link href="/privacy" className="hover:text-gray-300 transition-colors">Privacy</Link>
             <Link href="/terms"   className="hover:text-gray-300 transition-colors">Terms</Link>

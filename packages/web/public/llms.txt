@@ -12,6 +12,8 @@ Primary use cases:
 
 Public interfaces:
 - Interactive tuner: https://rpcs1.dev/tuner
+- IMM primer for AI inspection: https://rpcs1.dev/imm
+- AI-human mismatch frame: https://rpcs1.dev/mismatch
 - Documentation: https://rpcs1.dev/docs
 - REST API: POST https://rpcs1.dev/api/recommend
 - OpenAPI schema: https://rpcs1.dev/openapi.json
@@ -26,3 +28,10 @@ The MCP tool is anonymous, deterministic, read-only, and idempotent.
 RPCS1 recommendations support engineering decisions but do not replace
 domain-specific safety, legal, medical, or financial review.
 
+Conceptual bridge:
+IMM -> many-to-one collapse -> receiver/environment matching -> five gates -> AI pre-tuning.
+Operational gate order: FT -> TI -> AR -> SG -> UE.
+
+AI-human collaboration frame:
+Mismatch = destructive many-to-one collapse. Humans and AIs may preserve different distinctions.
+The useful diagnostic question is what distinction was collapsed and what interaction would preserve it next time.

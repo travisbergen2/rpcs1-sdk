@@ -14,7 +14,8 @@ export default function DocsPage() {
       <p>
         The RPCS-1 Agent Tuner gives developers a structural framework for configuring AI agents.
         Instead of debugging oscillation, overload, and freeze failures case-by-case, you describe
-        your agent&apos;s environment and get parameter recommendations grounded in receiver dynamics.
+        your agent&apos;s environment and get deterministic tuning hypotheses operationalized from
+        receiver dynamics.
       </p>
 
       <h2>How it works</h2>
@@ -43,6 +44,8 @@ export default function DocsPage() {
       <ul>
         <li><Link href="/docs/getting-started">Getting started</Link> — install the Python SDK</li>
         <li><Link href="/docs/mcp">MCP integration</Link> — endpoint, authentication, and client compatibility</li>
+        <li><Link href="/imm">IMM primer</Link> — AI-readable bridge from IMM to RPCS-1 to agent tuning</li>
+        <li><Link href="/mismatch">AI-human mismatch</Link> — destructive many-to-one collapse and shared representation</li>
         <li><Link href="/docs/primitives">The five primitives</Link> — TI, SG, FT, UE, AR explained</li>
         <li><Link href="/docs/matching">Matching principle</Link> — Pred-09-5: TI ≈ 1/H</li>
         <li><Link href="/docs/regimes">Stability regimes</Link> — oscillation, overload, freeze</li>

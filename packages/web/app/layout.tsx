@@ -11,9 +11,9 @@ export const metadata: Metadata = {
     template: '%s | RPCS-1 Agent Tuner',
   },
   description:
-    'A configuration framework for AI agents grounded in RPCS-1 receiver dynamics. ' +
+    'A configuration framework for AI agents operationalized from RPCS-1 receiver dynamics. ' +
     'Translate environmental entropy, stakes, and predictability into specific LLM parameters.',
-  keywords: ['ai agents', 'llm configuration', 'agent tuning', 'temperature', 'context window', 'rpcs1'],
+  keywords: ['ai agents', 'llm configuration', 'agent tuning', 'temperature', 'context window', 'rpcs1', 'IMM'],
   openGraph: {
     type: 'website',
     locale: 'en_US',

@@ -2,8 +2,8 @@ import Image from 'next/image';
 
 const METRICS = [
   { label: 'Completion rate', value: '100%', detail: 'vs 79.6% baseline' },
-  { label: 'Token savings', value: '71.5%', detail: '3,861 fewer tokens per trace' },
-  { label: 'Oscillation reduction', value: '81.8%', detail: '2,623 to 478 oscillations' },
+  { label: 'Output budget reduction', value: '71.5%', detail: 'synthetic open-ended suite' },
+  { label: 'Oscillation reduction', value: '81.8%', detail: 'synthetic regime score' },
   { label: 'Synthetic traces', value: '1,000', detail: '500 baseline, 500 RPCS-1' },
 ];
 
@@ -50,14 +50,16 @@ export function ProductionProof() {
   return (
     <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
       <div className="mb-8 text-center">
-        <p className="text-xs font-mono text-emerald-400 mb-3">production proof</p>
+        <p className="text-xs font-mono text-emerald-400 mb-3">validation roadmap</p>
         <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
-          Benchmarked against unstable agent traces.
+          Synthetic benchmarks first. Production traces next.
         </h2>
         <p className="text-gray-400 max-w-3xl mx-auto">
           A 1,000-trace IMM eigenvalue/spectral-gap simulation compares baseline agent behavior
           against RPCS-1 calibrated settings across enterprise RAG, multi-tool, coding, research,
-          support, medical, financial, legal, and safety agents.
+          support, medical, financial, legal, and safety agents. Treat these as directional
+          model-internal results, then validate token use, truncation, quality, and failure rates
+          against your own production traces.
         </p>
       </div>
 
@@ -83,7 +85,7 @@ export function ProductionProof() {
         </div>
         <div className="space-y-5">
           <div className="rounded-2xl border border-gray-800 bg-gray-950 p-5">
-            <h3 className="text-lg font-semibold text-white mb-4">Largest token savings</h3>
+            <h3 className="text-lg font-semibold text-white mb-4">Largest synthetic budget reductions</h3>
             <div className="space-y-3">
               {AGENTS.map(([name, savings, improvement]) => (
                 <div key={name} className="flex items-center justify-between gap-4 rounded-lg border border-gray-800 bg-gray-900/60 px-3 py-2">
@@ -162,8 +164,8 @@ export function ProductionProof() {
       </div>
 
       <p className="mt-4 text-xs text-gray-600 text-center">
-        Benchmark data is synthetic simulation output. Use it as directional evidence, then validate
-        against your own production traces.
+        Benchmark data is synthetic simulation output. Savings reflect regime-appropriate output
+        budgets and must be reported with truncation and task-quality measurements in real deployments.
       </p>
     </section>
   );

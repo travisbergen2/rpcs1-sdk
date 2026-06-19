@@ -1,6 +1,6 @@
 {
-  "_comment": "Pred-09-5 matching principle: stable receivers satisfy TI ~ 1/H. Maps environmental entropy H [0,1] to recommended TI [0,100]. Validated with large effect sizes (d=1.1-4.3) at H<=0.27. Above H=0.27, TI clips to TI_MIN and IMM-tuned and hand-tuned conditions converge — the Matching Principle loses resolution. This is a floor-binding artifact, not a falsification.",
-  "_source": "IMM Paper 9, RPCS-1. Benchmark validation: Pred-09-5 study, May 2026.",
+  "_comment": "Pred-09-5 matching principle: stable receivers satisfy TI ~ 1/H. Maps environmental entropy H [0,1] to recommended TI [0,100]. In RPCS1 this is operationalized as a deterministic engineering rule for AI agents and should be validated against production traces. Above H=0.27, TI clips to TI_MIN and the Matching Principle loses resolution; this is a floor-binding artifact, not a falsification.",
+  "_source": "IMM Paper 9, RPCS-1. AI-agent runtime mapping remains an empirical validation target.",
   "ti_min": 10,
   "floor_binding_threshold_H": 0.27,
   "ti_for_h": [

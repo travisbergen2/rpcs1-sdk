@@ -9,6 +9,9 @@ export default function PlatformsPage() {
       <p>
         After computing the receiver profile, the SDK maps each primitive to
         platform-specific parameters. All mappings are deterministic and config-driven.
+        The mapping from receiver primitives to inference-time LLM knobs is an engineering
+        hypothesis under validation, not a claim that the AI extension has already been
+        empirically settled.
       </p>
 
       <h2>Temperature (from SG)</h2>
@@ -25,8 +28,10 @@ export default function PlatformsPage() {
 
       <h2>Max tokens (from TI)</h2>
       <p>
-        Temporal Integration maps <strong>directly</strong> to max_tokens.
-        Long integration needs more room to reason over more context.
+        Temporal Integration maps directly to context strategy and, as a practical runtime budget,
+        to max_tokens. Long integration often needs more output room, but max_tokens is an output
+        cap rather than a literal context window; validate truncation and answer quality in your
+        own workload.
       </p>
       <pre><code>{`max_tokens = t_min + (TI / 100) × (t_max - t_min), rounded to nearest 256
 

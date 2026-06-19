@@ -13,7 +13,9 @@ export default function MatchingPage() {
 
       <p>
         This is the core structural insight behind every TI recommendation. It comes from
-        IMM Paper 9 and the RPCS-1 receiver dynamics framework.
+        IMM Paper 9 and the RPCS-1 receiver dynamics framework. In the current product it is
+        operationalized as an engineering rule, not presented as a completed validation of
+        the AI-agent extension.
       </p>
 
       <h2>What it means in practice</h2>
@@ -82,7 +84,8 @@ chaotic  → H = 0.95`}</code></pre>
       <p>
         The cross-substrate conjecture (C-12-1 from RPCS-1) holds that the same receiver-dynamics
         framework applies across biological, artificial, and hybrid cognitive systems.
-        Every production deployment of this SDK is a test of that conjecture.
+        Every production deployment of this SDK is a test of that conjecture, so RPCS1 reports
+        deterministic tuning hypotheses that should be measured against production traces.
       </p>
     </div>
   );

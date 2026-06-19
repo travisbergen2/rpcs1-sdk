@@ -19,8 +19,8 @@ const PRIMITIVES = [
     range: '[0, 100]',
     driveBy: 'Stakes (primary), environmental predictability (adjustment)',
     mapsTo: 'temperature (inversely), top_p',
-    low: 'Low amplification — agent is conservative, less responsive to weak signals. Maps to LOWER temperature.',
-    high: 'High amplification — agent responds strongly to all signals. Maps to HIGHER temperature.',
+    low: 'Low amplification — agent is broadly receptive to weak signals. Maps to HIGHER temperature.',
+    high: 'High amplification — agent discriminates sharply between signals. Maps to LOWER temperature.',
     example: 'catastrophic stakes → SG ≈ 20 → temperature ≈ 0.8 (more cautious sampling). low stakes → SG ≈ 75 → temperature ≈ 0.25.',
   },
   {

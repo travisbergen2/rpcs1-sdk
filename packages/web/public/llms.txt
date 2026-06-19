@@ -1,17 +1,17 @@
-# RPCS1 Agent Tuner
+# RPCS1 AI Quality Diagnostics
 
-RPCS1 is a deterministic context-alignment engine for configuring AI agents.
-It maps environmental entropy, predictability, stakes, context horizon, and
-commitment style to receiver dynamics and concrete runtime recommendations.
+RPCS1 is a deterministic configuration-assessment layer for AI agents.
+It reviews whether an agent's runtime posture fits its operating conditions,
+then returns a failure-risk diagnosis and concrete implementation settings.
 
 Primary use cases:
-- Configure a new AI agent for its operating environment
-- Diagnose oscillation, overload, and freeze failure regimes
-- Choose temperature, context, tool-use, and retry strategies
-- Explain agent-environment mismatch using RPCS1 receiver primitives
+- Review an AI agent before rollout
+- Investigate consistency, grounding, escalation, and stalled-resolution risk
+- Turn production symptoms into a configuration hypothesis and next eval
+- Choose context, tool-use, retry, sampling, and handoff posture
 
 Public interfaces:
-- Interactive tuner: https://rpcs1.dev/tuner
+- Interactive assessment: https://rpcs1.dev/tuner
 - IMM primer for AI inspection: https://rpcs1.dev/imm
 - AI-human mismatch frame: https://rpcs1.dev/mismatch
 - Documentation: https://rpcs1.dev/docs

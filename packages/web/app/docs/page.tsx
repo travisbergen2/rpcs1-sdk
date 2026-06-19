@@ -4,18 +4,18 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'Documentation',
   description:
-    'RPCS-1 Agent Tuner documentation — MCP integration, receiver primitives, matching principle, and platform mappings.',
+    'RPCS-1 AI quality diagnostics documentation — assessment workflow, MCP integration, receiver primitives, and platform mappings.',
 };
 
 export default function DocsPage() {
   return (
     <div>
-      <h1>RPCS-1 Agent Tuner — Documentation</h1>
+      <h1>RPCS-1 AI Quality Diagnostics — Documentation</h1>
       <p>
-        The RPCS-1 Agent Tuner gives developers a structural framework for configuring AI agents.
-        Instead of debugging oscillation, overload, and freeze failures case-by-case, you describe
-        your agent&apos;s environment and get deterministic tuning hypotheses operationalized from
-        receiver dynamics.
+        RPCS-1 gives AI teams a structured configuration assessment for deployed agents.
+        Describe the workload and operating conditions to receive a deterministic failure-risk
+        diagnosis, runtime posture, and implementation settings. The technical mechanism is
+        documented below for teams that want the full receiver-dynamics model.
       </p>
 
       <h2>How it works</h2>

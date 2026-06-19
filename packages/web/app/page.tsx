@@ -8,22 +8,22 @@ import { Card, CardContent } from '@/components/ui/Card';
 
 const PROBLEMS = [
   {
-    regime: 'Oscillation',
+    regime: 'Consistency drift',
     badge: 'oscillation' as const,
-    description: 'Agent revisits the same tool calls, refuses to commit. High TI + high SG in a fast-changing environment.',
-    fix: 'Lower SG, shorten context window (TI ↓)',
+    description: 'Similar cases get different answers, or the agent repeats tools without reaching a resolution.',
+    fix: 'RPCS-1 signal: oscillation risk',
   },
   {
-    regime: 'Overload',
+    regime: 'Quality risk',
     badge: 'overload' as const,
-    description: 'Agent acts on insufficient information, hallucinates tool calls. High SG + low FT + short integration.',
-    fix: 'Raise FT, lower SG, add retry strategy',
+    description: 'The agent acts on weak evidence, misses policy context, or invents an unsupported action.',
+    fix: 'RPCS-1 signal: overload risk',
   },
   {
-    regime: 'Freeze',
+    regime: 'Stalled resolution',
     badge: 'freeze' as const,
-    description: 'Agent hedges endlessly, never takes action. Low UE + high FT — stuck in the filter.',
-    fix: 'Lower FT, raise UE, adjust commitment style',
+    description: 'The agent over-refuses, hedges, or escalates cases it should be able to resolve safely.',
+    fix: 'RPCS-1 signal: freeze risk',
   },
 ];
 
@@ -50,35 +50,34 @@ export default function HomePage() {
       {/* Hero */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-24 pb-16 text-center">
         <Badge variant="neutral" className="mb-6 text-xs">
-          Built on RPCS-1 receiver dynamics · Pred-09-5 operationalized
+          AI quality diagnostics for support and agent teams
         </Badge>
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-          Turn deployed AI agents into{' '}
-          <span className="gradient-text">optimized AI agents.</span>
+          Catch AI quality failures{' '}
+          <span className="gradient-text">before customers do.</span>
         </h1>
         <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-6 leading-relaxed">
-          Describe your agent&apos;s task and operating conditions. Get a deterministic tuning
-          hypothesis for temperature, context, tools, and model fit — derived from the
-          environment your agent actually runs in.
+          Review whether your agent&apos;s configuration fits the conditions it actually faces:
+          case complexity, policy ambiguity, risk, context, and handoff needs. Get a clear
+          failure-risk diagnosis and recommended runtime posture.
         </p>
         <p className="text-sm text-gray-500 max-w-xl mx-auto mb-8">
-          Start with a filled example if you just want to see whether the framework clicks.
-          No account, email, or payment required.
+          Start with a customer-support example. No account, email, or payment required.
         </p>
 
         {/* Concrete output preview */}
         <div className="inline-flex flex-wrap gap-3 justify-center mb-10 text-sm font-mono">
           <span className="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800 text-gray-400">
-            temperature <span className="text-sky-400">0.52</span>
+            risk flag <span className="text-sky-400">stable</span>
           </span>
           <span className="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800 text-gray-400">
-            max_tokens <span className="text-sky-400">4096</span>
+            handoff posture <span className="text-sky-400">cautious</span>
           </span>
           <span className="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800 text-gray-400">
-            regime <span className="text-emerald-400">stable</span>
+            implementation <span className="text-emerald-400">settings included</span>
           </span>
           <span className="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800 text-gray-400">
-            context <span className="text-amber-400">rolling_summary</span>
+            context <span className="text-amber-400">frequent grounding</span>
           </span>
         </div>
 
@@ -89,7 +88,7 @@ export default function HomePage() {
             eventData={{ location: 'hero', action: 'live_example', preset: 'support' }}
             className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-sky-500 hover:bg-sky-400 text-white rounded-xl transition-all shadow-lg shadow-sky-500/25"
           >
-            Show me a live example
+            Assess a support copilot
           </TrackedLink>
           <TrackedLink
             href="/tuner"
@@ -97,11 +96,11 @@ export default function HomePage() {
             eventData={{ location: 'hero', action: 'custom_tuner', preset: 'none' }}
             className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl transition-colors border border-gray-700"
           >
-            Tune my own agent
+            Review another agent
           </TrackedLink>
         </div>
         <p className="mt-4 text-xs text-gray-600">
-          No sign-up required. Free forever for web tuner access.
+          Free configuration assessment. Results include technical settings for implementation.
         </p>
         <p className="mt-3 text-xs text-gray-500">
           AI inspecting the framework?{' '}
@@ -148,15 +147,14 @@ export default function HomePage() {
       {/* AI-human collaboration frame */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
         <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-8 sm:p-12">
-          <p className="text-xs text-rose-300 font-mono mb-3">AI-human collaboration</p>
+          <p className="text-xs text-rose-300 font-mono mb-3">customer and agent experience</p>
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-            Misunderstanding is often destructive compression.
+            Find why customers and AI talk past each other.
           </h2>
           <p className="text-gray-400 leading-relaxed max-w-3xl mb-5">
-            Humans and AIs both compress reality. The collaboration problem is not always
-            that either side is wrong; often each side preserves different distinctions.
-            RPCS1 uses receiver/environment matching to ask what got collapsed, what needed
-            to be preserved, and what interaction would produce a better match.
+            A customer may expect empathy, control, or a precise policy distinction while the
+            AI optimizes for a literal answer. RPCS1 helps identify what the interaction lost
+            and what the next response should preserve.
           </p>
           <Link href="/mismatch" className="text-sm text-rose-200 hover:text-white underline underline-offset-4">
             Read the AI-human mismatch frame →
@@ -171,19 +169,16 @@ export default function HomePage() {
             <div>
               <p className="text-xs text-emerald-400 font-mono mb-3">CX AI optimization</p>
               <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-                Already deployed AI in support?
+                Protect resolution quality after launch.
               </h2>
               <p className="text-gray-400 leading-relaxed mb-5">
-                RPCS1 is a lightweight diagnostic layer for customer support copilots,
-                QA assistants, knowledge tools, and agent-assistance workflows. It asks
-                whether the agent is matched to the environment it actually runs in:
-                queue pressure, policy ambiguity, stakes, context horizon, and how quickly
-                the system should commit.
+                RPCS1 gives CX, support engineering, and AI quality teams a structured way
+                to review customer-facing agents. It connects real operating conditions to
+                consistency, grounding, escalation, tool-use, and resolution behavior.
               </p>
               <p className="text-gray-500 text-sm leading-relaxed">
-                The point is fit, not fault. If a deployed support agent is inconsistent,
-                the first question should be whether the task, model settings, and operating
-                conditions are mismatched.
+                Use it before a rollout, after a quality regression, or when an agent works
+                in demos but becomes unreliable under live queue pressure.
               </p>
             </div>
 
@@ -247,11 +242,12 @@ print(config.receiver_profile.TI)               `}<span className="text-gray-500
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
         <div className="text-center mb-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-            The problem every deployed agent eventually exposes
+            The quality problems teams see after launch
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            You ship an agent. It works in testing. In production the conditions change. It starts failing in one of
-            three structural ways — and you have no framework for diagnosing why.
+            The agent passes a demo, then production adds ambiguous policies, long histories,
+            edge cases, and pressure to resolve. Quality becomes inconsistent for reasons that
+            ordinary prompt iteration does not explain.
           </p>
         </div>
         <div className="grid sm:grid-cols-3 gap-5">
@@ -326,16 +322,16 @@ print(config.receiver_profile.TI)               `}<span className="text-gray-500
 
       {/* CTA */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-32 text-center">
-        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Ready to tune your agent?</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Ready to review your agent&apos;s quality risk?</h2>
         <p className="text-gray-400 mb-8">
-          Free web tuner: 10 recommendations per hour. Paid SDK access starts at $40/month. Team plan at $400/month.
+          Start with a free configuration assessment. Use the SDK when you need repeatable reviews across agents and environments.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/tuner"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-sky-500 hover:bg-sky-400 text-white rounded-xl transition-all"
           >
-            Open the tuner →
+            Run an assessment →
           </Link>
           <Link
             href="/pricing"

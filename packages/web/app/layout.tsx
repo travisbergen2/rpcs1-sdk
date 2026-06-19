@@ -7,18 +7,18 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   title: {
-    default: 'RPCS-1 Agent Tuner - Optimize deployed AI agents',
-    template: '%s | RPCS-1 Agent Tuner',
+    default: 'RPCS-1 - AI quality diagnostics for deployed agents',
+    template: '%s | RPCS-1 AI Quality Diagnostics',
   },
   description:
-    'A configuration framework for AI agents operationalized from RPCS-1 receiver dynamics. ' +
-    'Translate environmental entropy, stakes, and predictability into specific LLM parameters.',
-  keywords: ['ai agents', 'llm configuration', 'agent tuning', 'temperature', 'context window', 'rpcs1', 'IMM'],
+    'Review AI agent configuration risk before launch and after quality regressions. ' +
+    'Diagnose consistency, grounding, escalation, and resolution failures.',
+  keywords: ['AI quality', 'AI evaluation', 'agent observability', 'customer support AI', 'agent configuration', 'rpcs1', 'IMM'],
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://rpcs1.dev',
-    siteName: 'RPCS-1 Agent Tuner',
+    siteName: 'RPCS-1 AI Quality Diagnostics',
   },
 };
 

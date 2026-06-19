@@ -7,14 +7,14 @@ export function Footer() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div>
             <p className="text-sm font-semibold text-white">
-              RPCS<span className="text-sky-400">-1</span> Agent Tuner
+              RPCS<span className="text-sky-400">-1</span> AI Quality Diagnostics
             </p>
             <p className="text-xs text-gray-600 mt-1">
-              Operationalized from receiver dynamics for AI agent pre-tuning.
+              Configuration assessment and validation planning for deployed AI agents.
             </p>
           </div>
           <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-500">
-            <Link href="/tuner"   className="hover:text-gray-300 transition-colors">Tuner</Link>
+            <Link href="/tuner"   className="hover:text-gray-300 transition-colors">Assessment</Link>
             <Link href="/docs"    className="hover:text-gray-300 transition-colors">Docs</Link>
             <Link href="/imm"     className="hover:text-gray-300 transition-colors">IMM</Link>
             <Link href="/mismatch" className="hover:text-gray-300 transition-colors">Mismatch</Link>

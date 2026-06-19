@@ -5,7 +5,7 @@ import { TrackedLink } from '@/components/TrackedLink';
 
 export const metadata: Metadata = {
   title: 'Pricing',
-  description: 'RPCS-1 Agent Tuner pricing — free web tuner, $40/month indie SDK, $400/month team.',
+  description: 'RPCS-1 AI quality assessment pricing — free web assessment, indie SDK, and team workflows.',
 };
 
 const TIERS = [
@@ -13,15 +13,15 @@ const TIERS = [
     name: 'Free',
     price: '$0',
     period: 'forever',
-    description: 'Full access to the web tuner. No credit card required.',
-    cta: 'Open the tuner',
+    description: 'Run a configuration risk assessment. No credit card required.',
+    cta: 'Run an assessment',
     ctaHref: '/tuner',
     variant: 'secondary' as const,
     features: [
       '10 web tuner recommendations per hour',
       'All four platforms (Anthropic, OpenAI, open source, generic)',
-      'Predicted regime + reasoning',
-      'Oscillation / overload / freeze warnings',
+      'Failure-risk diagnosis with plain-English reasoning',
+      'Consistency / grounding / stalled-resolution warnings',
       '5 Python SDK calls per day',
       'Community support (GitHub)',
     ],
@@ -30,7 +30,7 @@ const TIERS = [
     name: 'Indie',
     price: '$40',
     period: 'per month',
-    description: 'Full SDK access for solo developers and small projects.',
+    description: 'Repeatable local assessments for builders shipping AI into production.',
     cta: 'Get Indie',
     ctaHref: '/api/checkout?tier=indie',
     variant: 'primary' as const,
@@ -39,7 +39,7 @@ const TIERS = [
       'Everything in Free',
       'Unlimited Python SDK calls',
       'License key delivered by email',
-      'Advanced exports: JSON config, full system prompts, YAML',
+      'Structured exports for eval and implementation workflows',
       'Multi-platform comparison in one call',
       'Email support (2-day response)',
     ],
@@ -48,14 +48,14 @@ const TIERS = [
     name: 'Team',
     price: '$400',
     period: 'per month',
-    description: 'Up to 10 developers. Custom integrations. Slack support.',
+    description: 'For AI product, support engineering, and quality teams.',
     cta: 'Get Team',
     ctaHref: '/api/checkout?tier=team',
     variant: 'secondary' as const,
     features: [
       'Everything in Indie',
       'Up to 10 developer seats',
-      'Multi-agent team composer (Phase 2)',
+      'Multi-agent team composer (planned)',
       'Custom platform integrations (your internal API)',
       'Slack support channel',
       'Priority response (same business day)',
@@ -69,7 +69,7 @@ export default function PricingPage() {
       <div className="text-center mb-14">
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Pricing</h1>
         <p className="text-gray-400 text-lg max-w-xl mx-auto">
-          Start free. Pay when the SDK saves you meaningful debugging time.
+          Start with one assessment. Pay when you need a repeatable quality-review workflow.
         </p>
       </div>
 
@@ -125,7 +125,7 @@ export default function PricingPage() {
       </div>
 
       <div className="mt-12 text-center">
-        <p className="text-gray-500 text-sm mb-2">Need an enterprise contract or custom integration?</p>
+        <p className="text-gray-500 text-sm mb-2">Need procurement support, a security review, or a custom integration?</p>
         <a
           href="mailto:travisbergen2@gmail.com?subject=RPCS-1 Enterprise"
           className="text-sm text-sky-400 hover:text-sky-300 transition-colors"

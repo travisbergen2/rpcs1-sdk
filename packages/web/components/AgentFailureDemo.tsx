@@ -20,11 +20,11 @@ export function AgentFailureDemo() {
       <div className="mb-8 text-center">
         <p className="text-xs font-mono text-sky-400 mb-3">before / after</p>
         <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
-          Same agent. Different operating regime.
+          Same agent. Different production behavior.
         </h2>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          Without tuning, defaults can loop under pressure. With RPCS-1, the same workload gets
-          bounded thresholds, cleaner tool use, and a stable path to action.
+          Defaults that look fine in a demo can fail under live pressure. RPCS-1 turns the
+          operating conditions into a clearer context, tool-use, and handoff posture.
         </p>
       </div>
 
@@ -33,7 +33,7 @@ export function AgentFailureDemo() {
           <div className="absolute inset-x-0 top-0 h-1 bg-red-500/50" />
           <div className="flex items-center justify-between gap-4 mb-5">
             <div>
-              <p className="text-sm font-semibold text-white">Unconfigured agent</p>
+              <p className="text-sm font-semibold text-white">Guessed configuration</p>
               <p className="text-xs text-gray-500">High stakes, dynamic inputs, guessed defaults</p>
             </div>
             <span className="rounded-lg border border-red-500/25 bg-red-500/10 px-3 py-1 text-xs font-mono text-red-300">
@@ -77,8 +77,8 @@ export function AgentFailureDemo() {
           <div className="absolute inset-x-0 top-0 h-1 bg-emerald-400/60" />
           <div className="flex items-center justify-between gap-4 mb-5">
             <div>
-              <p className="text-sm font-semibold text-white">RPCS-1 tuned agent</p>
-              <p className="text-xs text-gray-500">Receiver profile mapped to model settings</p>
+              <p className="text-sm font-semibold text-white">RPCS-1 recommended posture</p>
+              <p className="text-xs text-gray-500">Operating conditions mapped to implementation settings</p>
             </div>
             <span className="rounded-lg border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-xs font-mono text-emerald-300">
               stable
@@ -128,7 +128,7 @@ export function AgentFailureDemo() {
           </div>
 
           <div className="mt-5 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
-            <p className="text-sm text-emerald-100">Result: bounded context, cleaner tool use, final answer delivered.</p>
+            <p className="text-sm text-emerald-100">Result: grounded context, cleaner tool use, and a clear path to resolution.</p>
           </div>
         </div>
       </div>

@@ -1,9 +1,9 @@
 import Image from 'next/image';
 
 const METRICS = [
-  { label: 'Completion rate', value: '100%', detail: 'vs 79.6% baseline' },
+  { label: 'Modeled completion', value: '100%', detail: 'synthetic benchmark' },
   { label: 'Output budget reduction', value: '71.5%', detail: 'synthetic open-ended suite' },
-  { label: 'Oscillation reduction', value: '81.8%', detail: 'synthetic regime score' },
+  { label: 'Modeled loop reduction', value: '81.8%', detail: 'synthetic regime score' },
   { label: 'Synthetic traces', value: '1,000', detail: '500 baseline, 500 RPCS-1' },
 ];
 
@@ -21,28 +21,28 @@ const COMPARISON = [
     examples: 'LangChain, CrewAI, AutoGen',
     focus: 'Build workflows, tools, memory, and agent orchestration.',
     gap: 'Still leaves teams guessing the operating regime and parameter profile.',
-    rpcs: 'Adds a deterministic tuning layer for entropy, stakes, context, and commitment.',
+    rpcs: 'Adds a pre-deployment configuration review tied to the agent operating environment.',
   },
   {
     category: 'Observability',
     examples: 'LangSmith, Langfuse, Helicone',
     focus: 'Trace runs, monitor latency/cost, inspect failures, and debug production behavior.',
     gap: 'Great at showing what happened after the run; less focused on pre-run regime selection.',
-    rpcs: 'Recommends the behavioral settings that reduce oscillation, overload, and freeze before launch.',
+    rpcs: 'Turns operating conditions into a configuration hypothesis to evaluate against production traces.',
   },
   {
     category: 'Evals and experiments',
     examples: 'Braintrust, promptfoo, custom evals',
     focus: 'Score prompts, compare variants, and measure model or workflow quality.',
     gap: 'Teams still need a theory for which knobs to change when an eval fails.',
-    rpcs: 'Maps failure modes to concrete parameter changes and explains why those changes fit.',
+    rpcs: 'Suggests which runtime settings are worth testing when quality changes across environments.',
   },
   {
     category: 'Prompt iteration',
     examples: 'Prompt libraries, playgrounds, manual tuning',
     focus: 'Improve instructions, examples, and output shape.',
     gap: 'Prompt edits can hide structural instability instead of fixing it.',
-    rpcs: 'Tunes the receiver profile under the prompt: TI, SG, FT, UE, and AR.',
+    rpcs: 'Adds configuration fit as a testable hypothesis alongside prompt changes.',
   },
 ];
 
@@ -50,16 +50,15 @@ export function ProductionProof() {
   return (
     <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
       <div className="mb-8 text-center">
-        <p className="text-xs font-mono text-emerald-400 mb-3">validation roadmap</p>
+        <p className="text-xs font-mono text-emerald-400 mb-3">evaluation roadmap</p>
         <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
-          Synthetic benchmarks first. Production traces next.
+          A recommendation is the start. Behavioral verification is the finish line.
         </h2>
         <p className="text-gray-400 max-w-3xl mx-auto">
-          A 1,000-trace IMM eigenvalue/spectral-gap simulation compares baseline agent behavior
-          against RPCS-1 calibrated settings across enterprise RAG, multi-tool, coding, research,
-          support, medical, financial, legal, and safety agents. Treat these as directional
-          model-internal results, then validate token use, truncation, quality, and failure rates
-          against your own production traces.
+          Today&apos;s tuner produces a deterministic configuration hypothesis. Paper 17 defines
+          the research-grade assay battery for measuring the configured agent, checking prompt
+          robustness and stochastic variation, and verifying that a change improves the intended
+          behavior. Until that battery is run, the benchmark below remains directional simulation.
         </p>
       </div>
 
@@ -121,11 +120,12 @@ export function ProductionProof() {
       <div className="mb-8 text-center">
         <p className="text-xs font-mono text-sky-400 mb-3">competitive context</p>
         <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
-          RPCS-1 does not replace your stack. It tells the stack how to behave.
+          RPCS-1 connects production symptoms to the next configuration decision.
         </h2>
         <p className="text-gray-400 max-w-3xl mx-auto">
-          Most AI engineering tools help you build, trace, evaluate, or iterate. RPCS-1 sits one
-          layer lower: it converts operating conditions into a receiver profile and runtime posture.
+          Frameworks build the agent. Observability shows what happened. Evals score the result.
+          RPCS-1 adds a structured hypothesis for why quality failed, what runtime posture to change,
+          and which behavior should be re-tested.
         </p>
       </div>
 

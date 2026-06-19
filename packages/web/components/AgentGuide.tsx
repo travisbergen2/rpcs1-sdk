@@ -17,25 +17,25 @@ const QUESTIONS: Record<
   what: {
     label: 'What does this do?',
     answer:
-      'Describe your agent and RPCS-1 turns the operating conditions into concrete settings: temperature, context strategy, model fit, tool behavior, and the likely failure regime.',
-    cta: { href: '/tuner?preset=support', label: 'Run an example' },
+      'RPCS-1 reviews whether an AI agent is configured for the conditions it faces. It flags likely consistency, grounding, escalation, and resolution risks, then recommends a safer runtime posture.',
+    cta: { href: '/tuner?preset=support', label: 'Assess a support copilot' },
   },
   why: {
     label: 'Why not just prompt better?',
     answer:
-      'Prompting helps content. RPCS-1 targets behavior. It looks at entropy, stakes, ambiguity, and commitment style so the agent is less likely to loop, rush, or stall.',
+      'Prompting changes instructions. RPCS-1 reviews operating risk: case variability, ambiguity, stakes, context, and when the agent should act or hand off. That helps explain failures that prompt edits alone do not fix.',
     cta: { href: '/docs/matching', label: 'See the framework' },
   },
   time: {
     label: 'How fast is it?',
     answer:
-      'The web tuner takes about a minute. Start from a support, coding, or research preset, adjust the conditions, then copy the recommended configuration.',
-    cta: { href: '/tuner', label: 'Tune my agent' },
+      'The assessment takes about a minute. Start from a support, coding, or research preset, describe the operating conditions, then review the diagnosis and implementation settings.',
+    cta: { href: '/tuner', label: 'Review my agent' },
   },
   price: {
     label: 'Is it free?',
     answer:
-      'Yes. The web tuner is free and does not require an account. Paid plans are for SDK access and team workflows after you know the framework is useful.',
+      'Yes. The web assessment is free and does not require an account. Paid plans are for repeatable SDK-based reviews and team workflows.',
     cta: { href: '/pricing', label: 'View pricing' },
   },
 };
@@ -76,7 +76,7 @@ export function AgentGuide() {
             <ReceiverMascot active={open} />
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between gap-3">
-                <p className="text-sm font-semibold text-white">Ask the tuner</p>
+                <p className="text-sm font-semibold text-white">Ask about the assessment</p>
                 <button
                   type="button"
                   onClick={() => setOpen(false)}

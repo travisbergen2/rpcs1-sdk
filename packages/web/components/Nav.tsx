@@ -8,7 +8,7 @@ export function Nav() {
           <span className="text-lg font-bold text-white tracking-tight">
             RPCS<span className="text-sky-400">-1</span>
           </span>
-          <span className="text-xs text-gray-500 font-mono hidden sm:block">Agent Tuner</span>
+          <span className="text-xs text-gray-500 font-mono hidden sm:block">AI Quality Diagnostics</span>
         </Link>
 
         <nav className="flex items-center gap-1">
@@ -16,7 +16,7 @@ export function Nav() {
             href="/tuner"
             className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
           >
-            Tuner
+            Assessment
           </Link>
           <Link
             href="/docs"

@@ -143,10 +143,10 @@ function TunerPageContent() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Agent Parameter Tuner</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">AI Agent Configuration Assessment</h1>
         <p className="text-gray-400 max-w-2xl">
-          Describe your agent&apos;s task and environment. We&apos;ll compute parameter recommendations
-          grounded in RPCS-1 receiver dynamics — no guessing, no trial and error.
+          Describe the workload and operating conditions. RPCS-1 will flag likely quality risks,
+          recommend a runtime posture, and show the implementation settings behind it.
         </p>
         {isPresetKey(preset) && (
           <p className="mt-3 text-sm text-sky-400">
@@ -172,10 +172,10 @@ function TunerPageContent() {
           ) : (
             <div className="border border-dashed border-gray-800 rounded-xl p-12 text-center text-gray-600">
               <div className="text-4xl mb-3">⟳</div>
-              <p className="text-sm">Fill in the form and submit to see recommendations.</p>
+              <p className="text-sm">Complete the assessment to see the diagnosis and recommendations.</p>
               <p className="text-xs mt-2 text-gray-700">
-                Results include receiver profile (TI, SG, FT, UE, AR),
-                platform parameters, predicted regime, and reasoning.
+                Results include likely failure mode, plain-English reasoning, receiver profile,
+                and platform-specific implementation settings.
               </p>
             </div>
           )}

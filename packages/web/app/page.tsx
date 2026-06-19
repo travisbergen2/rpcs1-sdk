@@ -50,15 +50,16 @@ export default function HomePage() {
       {/* Hero */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-24 pb-16 text-center">
         <Badge variant="neutral" className="mb-6 text-xs">
-          Built on RPCS-1 receiver dynamics · Pred-09-5 validated
+          Built on RPCS-1 receiver dynamics · Pred-09-5 operationalized
         </Badge>
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
           Turn deployed AI agents into{' '}
           <span className="gradient-text">optimized AI agents.</span>
         </h1>
         <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-6 leading-relaxed">
-          Describe your agent&apos;s task and operating conditions. Get exact temperature,
-          and model recommendation — derived from your agent&apos;s operating conditions, not guesswork.
+          Describe your agent&apos;s task and operating conditions. Get a deterministic tuning
+          hypothesis for temperature, context, tools, and model fit — derived from the
+          environment your agent actually runs in.
         </p>
         <p className="text-sm text-gray-500 max-w-xl mx-auto mb-8">
           Start with a filled example if you just want to see whether the framework clicks.
@@ -247,8 +248,8 @@ print(config.receiver_profile.TI)               `}<span className="text-gray-500
             </h2>
             <p className="text-gray-400 leading-relaxed">
               Every recommendation is driven by five receiver primitives from RPCS-1, each
-              mapping to a specific LLM parameter. All outputs are deterministic and
-              traceable — no black-box recommendations.
+              mapped to an inference-time tuning hypothesis. All outputs are deterministic
+              and traceable — no black-box recommendations.
             </p>
           </div>
           <div className="space-y-4">
@@ -275,9 +276,9 @@ print(config.receiver_profile.TI)               `}<span className="text-gray-500
             The Matching Principle: TI ≈ 1 / H
           </h3>
           <p className="text-gray-400 max-w-xl mx-auto leading-relaxed mb-6">
-            Agents in high-entropy environments need short attention windows. Agents in stable
-            environments benefit from long integration. This single principle drives the core
-            of every parameter recommendation.
+            Agents in high-entropy environments are assigned short integration windows. Agents
+            in stable environments are assigned longer integration. RPCS1 operationalizes this
+            untested prediction as a practical tuning rule to validate against production traces.
           </p>
           <Link href="/docs/matching" className="text-sm text-sky-400 hover:text-sky-300 transition-colors underline underline-offset-4">
             Read the full explanation →

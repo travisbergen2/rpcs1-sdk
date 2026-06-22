@@ -29,57 +29,86 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
 
-  // Handle checkout.session.completed — this is when money changes hands
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.Checkout.Session;
-
-    const customerEmail = session.customer_details?.email ?? session.customer_email;
-    const customerId    = session.customer as string;
-    const subId         = session.subscription as string;
-    const tier          = (session.metadata?.tier ?? 'indie') as Tier;
-
-    if (!customerEmail) {
-      console.error('[webhook] No customer email on session', session.id);
-      return NextResponse.json({ ok: true }); // Acknowledge but log
+  // ── Issue / re-issue the license key on every PAID invoice ──────────────────
+  // invoice.paid fires for the first payment (billing_reason = 'subscription_create')
+  // AND for every renewal ('subscription_cycle'). Each key carries
+  // exp = subscription.current_period_end, so on cancellation no further invoice
+  // fires and the last key simply expires at period end — no revocation list,
+  // no database.
+  //
+  // NOTE: the field paths below (invoice.subscription, subscription.current_period_end)
+  // are correct for the pinned Stripe apiVersion '2024-04-10'. If you bump the API
+  // version, re-check them — they moved in later versions.
+  //
+  // Requires the 'invoice.paid' event to be enabled on this webhook endpoint in the
+  // Stripe dashboard (Developers → Webhooks). 'checkout.session.completed' is no
+  // longer used for key issuance.
+  if (event.type === 'invoice.paid') {
+    const invoice = event.data.object as Stripe.Invoice;
+    const subId = invoice.subscription as string | null;
+    if (!subId) {
+      return NextResponse.json({ ok: true }); // not a subscription invoice
     }
 
     try {
-      // Generate license key
+      const subscription = await stripe.subscriptions.retrieve(subId);
+      const periodEnd = subscription.current_period_end;            // unix seconds → exp
+      const tier = (subscription.metadata?.tier ?? 'indie') as Tier;
+
+      // Resolve the customer email (invoice usually carries it; fall back to Customer)
+      let email = invoice.customer_email;
+      if (!email) {
+        const cust = await stripe.customers.retrieve(invoice.customer as string);
+        if (!('deleted' in cust)) email = cust.email;
+      }
+      if (!email) {
+        console.error('[webhook] No customer email for invoice', invoice.id);
+        return NextResponse.json({ ok: true }); // acknowledge but log
+      }
+
       const licenseKey = await generateLicenseKey({
-        email:                  customerEmail,
+        email,
         tier,
-        stripeCustomerId:       customerId,
-        stripeSubscriptionId:   subId,
-        issuedAt:               Math.floor(Date.now() / 1000),
+        stripeCustomerId:     invoice.customer as string,
+        stripeSubscriptionId: subId,
+        issuedAt:             Math.floor(Date.now() / 1000),
+        expiresAt:            periodEnd,
       });
 
-      // Send email with license key
+      const isRenewal = invoice.billing_reason === 'subscription_cycle';
+
       if (env.RESEND_API_KEY) {
         const resend = new Resend(env.RESEND_API_KEY);
         await resend.emails.send({
           from:    env.EMAIL_FROM,
-          to:      customerEmail,
-          subject: 'Your RPCS-1 Agent Tuner license key',
-          html:    buildEmailHtml({ tier, licenseKey, customerEmail }),
+          to:      email,
+          subject: isRenewal
+            ? 'Your RPCS-1 Agent Tuner license key (renewed)'
+            : 'Your RPCS-1 Agent Tuner license key',
+          html:    buildEmailHtml({ tier, licenseKey, customerEmail: email, isRenewal }),
         });
-        console.log(`[webhook] License key sent to ${customerEmail} (${tier})`);
+        console.log(`[webhook] License key ${isRenewal ? 're-issued' : 'sent'} to ${email} (${tier})`);
       } else {
         // In dev/test, log the key so it's not lost
-        console.log(`[webhook] RESEND not configured — license key for ${customerEmail}:`, licenseKey);
+        console.log(`[webhook] RESEND not configured — license key for ${email}:`, licenseKey);
       }
     } catch (err) {
       console.error('[webhook] Failed to generate/send license key:', err);
-      // Don't return 500 — Stripe will retry and we'd generate duplicate keys
-      // TODO Phase 3+: idempotency key storage in DB
+      // Return 5xx so Stripe retries. The throw happens before (or during) the email
+      // send, so a retry does not double-deliver a key. Stripe's at-least-once delivery
+      // can still re-send a *successful* invoice.paid; that would email a second, equally
+      // valid key for the same period (harmless). Add event-id idempotency storage if/when
+      // a datastore exists.
+      return NextResponse.json({ error: 'key issuance failed' }, { status: 500 });
     }
   }
 
-  // Handle subscription cancellations (future: revoke key, send confirmation email)
+  // ── Cancellations ───────────────────────────────────────────────────────────
+  // No action needed: the customer's current key already carries
+  // exp = period end, so access lapses automatically when the paid period ends.
   if (event.type === 'customer.subscription.deleted') {
     const sub = event.data.object as Stripe.Subscription;
-    console.log(`[webhook] Subscription cancelled: ${sub.id}`);
-    // No DB to update — key will still be valid until expiry
-    // Phase 3+: add key to a revocation list
+    console.log(`[webhook] Subscription cancelled: ${sub.id} — key expires at period end`);
   }
 
   return NextResponse.json({ ok: true });
@@ -89,12 +118,17 @@ function buildEmailHtml({
   tier,
   licenseKey,
   customerEmail,
+  isRenewal,
 }: {
   tier: string;
   licenseKey: string;
   customerEmail: string;
+  isRenewal?: boolean;
 }): string {
   const tierLabel = tier === 'indie' ? 'Indie ($40/month)' : 'Team ($400/month)';
+  const intro = isRenewal
+    ? 'Your RPCS-1 Agent Tuner subscription renewed — here is your license key for the new billing period. It replaces the previous one.'
+    : 'Your RPCS-1 Agent Tuner license key is ready. Keep this email — the key is your entitlement record and is not stored on our servers.';
   return `
 <!DOCTYPE html>
 <html>
@@ -104,8 +138,7 @@ function buildEmailHtml({
   <p style="color: #6b7280; margin-top: 0;">Plan: ${tierLabel}</p>
 
   <p>Hi ${customerEmail},</p>
-  <p>Your RPCS-1 Agent Tuner license key is ready. Keep this email — the key is your
-  entitlement record and is not stored on our servers.</p>
+  <p>${intro}</p>
 
   <div style="background: #0f172a; border-radius: 8px; padding: 16px; margin: 24px 0;">
     <p style="color: #94a3b8; font-size: 11px; margin: 0 0 8px; font-family: monospace;">LICENSE KEY</p>

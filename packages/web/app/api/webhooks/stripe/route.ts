@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
       }
       if (!email) {
         console.error('[webhook] No customer email for invoice', invoice.id);
-        return NextResponse.json({ ok: true }); // acknowledge but log
+        return NextResponse.json({ error: 'customer email unavailable' }, { status: 500 });
       }
 
       const licenseKey = await generateLicenseKey({

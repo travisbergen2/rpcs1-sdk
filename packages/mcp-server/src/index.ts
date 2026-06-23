@@ -2,7 +2,7 @@
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { recommend } from '../../core/src/index';
+import { recommend } from '@rpcs1/core';
 import { z } from 'zod';
 
 const recommendInputSchema = {

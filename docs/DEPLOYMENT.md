@@ -112,6 +112,7 @@ Streamable HTTP endpoint. Use the same config shown in the README:
 {
   "buildSteps": [
     "npm ci --include=optional",
+    "npm run build --workspace=@rpcs1/core",
     "npm run build --workspace=@rpcs1/mcp-server"
   ],
   "cmdArguments": [
@@ -134,7 +135,7 @@ For directory health checks, confirm:
 - A stable GitHub release exists for the current release, such as `v0.2.1`.
 - The listing has recent successful MCP usage.
 - `server.json` and README discovery metadata match the live endpoint.
-- Any Glama-specific metadata file, if added later, points to the STDIO build
+- `glama.json` points to the STDIO build
   path above.
 
 ## 7. Analytics Checklist

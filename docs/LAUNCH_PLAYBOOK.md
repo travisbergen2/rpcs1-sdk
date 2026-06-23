@@ -67,7 +67,7 @@ conditions before blaming the model or adding another tool.
    - For automated checks, configure Glama to build the standalone STDIO
      package:
      - Build steps:
-       `["npm ci --include=optional","npm run build --workspace=@rpcs1/mcp-server"]`
+       `["npm ci --include=optional","npm run build --workspace=@rpcs1/core","npm run build --workspace=@rpcs1/mcp-server"]`
      - CMD arguments:
        `["mcp-proxy","--","node","packages/mcp-server/dist/index.js"]`
      - Environment variables JSON schema:

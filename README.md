@@ -138,6 +138,7 @@ Glama Docker checks should build and launch the local STDIO server, not connect 
 {
   "buildSteps": [
     "npm ci --include=optional",
+    "npm run build --workspace=@rpcs1/core",
     "npm run build --workspace=@rpcs1/mcp-server"
   ],
   "cmdArguments": [

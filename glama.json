@@ -1,0 +1,20 @@
+{
+  "baseImage": "debian:trixie-slim",
+  "buildSteps": [
+    "npm ci --include=optional",
+    "npm run build --workspace=@rpcs1/core",
+    "npm run build --workspace=@rpcs1/mcp-server"
+  ],
+  "cmdArguments": [
+    "mcp-proxy",
+    "--",
+    "node",
+    "packages/mcp-server/dist/index.js"
+  ],
+  "environmentVariablesJsonSchema": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "placeholderArguments": {}
+}

@@ -135,8 +135,8 @@ For directory health checks, confirm:
 - A stable GitHub release exists for the current release, such as `v0.2.1`.
 - The listing has recent successful MCP usage.
 - `server.json` and README discovery metadata match the live endpoint.
-- `glama.json` points to the STDIO build
-  path above.
+- `glama.json` contains Glama ownership metadata with `travisbergen2` listed as
+  a maintainer.
 
 ## 7. Analytics Checklist
 

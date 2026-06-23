@@ -1,13 +1,14 @@
 {
   "name": "rpcs1-sdk",
+  "version": "0.2.1",
   "private": true,
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
     "build": "npm run build:web",
-    "build:web": "npm run build -w packages/core && npm run build -w packages/web",
-    "build:all": "npm run build -w packages/core && npm run build -w packages/mcp-server && npm run build -w packages/web",
+    "build:web": "npm run build --workspace=packages/core && npm run build --workspace=packages/web",
+    "build:all": "node scripts/build-all.mjs",
     "dev": "npm run dev --workspace=packages/web"
   },
   "devDependencies": {

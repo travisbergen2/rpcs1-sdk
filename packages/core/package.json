@@ -1,6 +1,6 @@
 {
   "name": "@rpcs1/core",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "RPCS-1 Agent Tuner core recommendation engine",
   "license": "MIT",
   "type": "module",

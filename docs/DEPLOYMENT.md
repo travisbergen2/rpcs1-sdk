@@ -1,107 +1,170 @@
-# Deployment Guide
+# Release and Deployment Guide
 
-## Step 1 — Buy rpcs1.dev
+Current release line: `0.2.1`.
 
-Purchase `rpcs1.dev` from a domain registrar. Ionos works fine; Namecheap and Cloudflare Registrar are also good options. You don't need to transfer your other domains.
+This guide assumes the production site is already hosted at `https://rpcs1.dev`
+and the public MCP endpoint is `https://rpcs1.dev/mcp`.
 
-## Step 2 — Set up Vercel
+## 1. Sync Version Metadata
 
-1. Push the repo to GitHub.
-2. Go to [vercel.com](https://vercel.com) → Import Project → select your repo.
-3. Set the **Root Directory** to `packages/web`.
-4. Framework: Next.js (auto-detected).
-5. Add all environment variables from `packages/web/.env.example`.
-6. Deploy.
+Before publishing a release, keep these files on the same version:
 
-## Step 3 — Connect rpcs1.dev to Vercel
+- `package.json`
+- `packages/core/package.json`
+- `packages/web/package.json`
+- `packages/mcp-server/package.json`
+- `sdk/python/pyproject.toml`
+- `sdk/python/src/rpcs1/__init__.py`
+- `server.json`
+- `packages/web/public/openapi.json`
+- `packages/web/app/api/health/route.ts`
+- `packages/web/lib/mcp-server.ts`
+- `packages/mcp-server/src/index.ts`
 
-In Vercel → Project Settings → Domains → Add `rpcs1.dev` and `www.rpcs1.dev`.
-
-Vercel will give you nameservers or A/CNAME records. In Ionos:
-
-**Option A — Change nameservers (easier)**
-1. Ionos Control Panel → Domains → `rpcs1.dev` → Nameservers.
-2. Replace with Vercel's nameservers (shown in Vercel dashboard).
-3. Propagation: 15 min – 48 hours.
-
-**Option B — Keep Ionos DNS, add records**
-1. Ionos Control Panel → Domains → `rpcs1.dev` → DNS.
-2. Add an A record: `@` → `76.76.21.21` (Vercel IP).
-3. Add a CNAME: `www` → `cname.vercel-dns.com`.
-
-## Step 4 — Set up Stripe
-
-1. Create a Stripe account at [stripe.com](https://stripe.com).
-2. Create two products:
-   - **RPCS-1 Indie** — $40/month recurring → copy the Price ID → `STRIPE_INDIE_PRICE_ID`
-   - **RPCS-1 Team** — $400/month recurring → copy the Price ID → `STRIPE_TEAM_PRICE_ID`
-3. API Keys → copy Secret Key → `STRIPE_SECRET_KEY`
-4. Webhooks → Add endpoint: `https://rpcs1.dev/api/webhooks/stripe`
-   - Events to listen for: `checkout.session.completed`, `customer.subscription.deleted`
-   - Copy the signing secret → `STRIPE_WEBHOOK_SECRET`
-
-## Step 5 — Set up Resend
-
-1. Create account at [resend.com](https://resend.com).
-2. Add your domain `rpcs1.dev` (they'll give you DNS records to add in Ionos).
-3. Create an API key → `RESEND_API_KEY`.
-4. Set `EMAIL_FROM=noreply@rpcs1.dev`.
-
-## Step 6 — Generate LICENSE_JWT_SECRET
+After package metadata changes, refresh the npm lockfile:
 
 ```bash
-openssl rand -hex 32
+npm install --package-lock-only --ignore-scripts
 ```
 
-Paste result into `LICENSE_JWT_SECRET`. This secret signs all license keys — **never change it after going live** (existing keys would become invalid).
-
-## Step 7 — Publish Python SDK to PyPI
+## 2. Validate the Release Locally
 
 ```bash
-# Reserve the package name
-pip install twine
+npm ci --include=optional
+npm run build:all
+npm run test --workspace=packages/core
+npm run test --workspace=packages/web
+```
 
+Validate the Python SDK:
+
+```bash
 cd sdk/python
+python -m pip install -e ".[dev]"
+python -m pytest -q
 python -m build
-
-# Test upload first
-twine upload --repository testpypi dist/*
-
-# Then live
-twine upload dist/*
 ```
 
-Or trigger the GitHub Action by pushing a tag:
+## 3. Deploy the Web and MCP Endpoint
+
+Vercel deploys `packages/web`. Confirm these settings before promoting:
+
+- Root directory: `packages/web`
+- Framework: Next.js
+- Node runtime: compatible with `>=20 <27`
+- Production domains: `rpcs1.dev`, `www.rpcs1.dev`
+- Required environment variables from the project settings are present.
+
+After deployment, verify:
+
 ```bash
-git tag sdk-v0.1.0
-git push origin sdk-v0.1.0
+curl https://rpcs1.dev/api/health
+curl https://rpcs1.dev/openapi.json
+curl https://rpcs1.dev/llms.txt
 ```
 
-Set `PYPI_API_TOKEN` in GitHub repository secrets.
+Verify `https://rpcs1.dev/mcp` with an MCP client or inspector. A browser `GET`
+can return `406`; that alone does not mean the MCP endpoint is broken.
 
-## Step 8 — Switch Stripe to live mode
+## 4. Publish MCP Registry Metadata
 
-1. Stripe Dashboard → toggle from **Test** to **Live**.
-2. Re-create the two products in live mode.
-3. Update `STRIPE_SECRET_KEY`, `STRIPE_INDIE_PRICE_ID`, `STRIPE_TEAM_PRICE_ID`, `STRIPE_WEBHOOK_SECRET` in Vercel env vars.
+The registry source of truth is `server.json`. After every `server.json` version
+change, run the `Publish MCP Registry Metadata` GitHub Action.
 
-## Pre-launch checklist
+Local fallback, if needed:
 
-- [ ] `rpcs1.dev` resolves and shows the landing page
-- [ ] SSL/HTTPS active (Vercel handles this automatically)
-- [ ] Test Stripe checkout in test mode: pay → check email → verify license key validates
-- [ ] `pip install rpcs1` works from a clean machine
-- [ ] Webhook fires correctly (check Stripe webhook logs)
-- [ ] Rate limiting works (make 11 requests from same IP, 11th should 429)
-- [ ] Plausible analytics installed (add script tag to layout.tsx)
-- [ ] Sentry error tracking installed (`npm install @sentry/nextjs`)
-
-## Your other Ionos domains
-
-You own 4 domains. The others can be used as redirects if desired:
-
-```
-fractalyouniverse.org → redirect to rpcs1.dev (set up in Ionos redirect manager)
+```bash
+./mcp-publisher login github-oidc
+./mcp-publisher publish
 ```
 
-Or park them for future products.
+Then check the listing:
+
+```text
+https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.travisbergen2/rpcs1-agent-tuner
+```
+
+Do not call the server publicly listed until the registry search returns the
+RPCS1 listing.
+
+## 5. Publish SDK Packages
+
+The Python SDK publish workflow is triggered by `sdk-v*` tags. For the current
+release:
+
+```bash
+git tag sdk-v0.2.1
+git push origin sdk-v0.2.1
+```
+
+The workflow builds `sdk/python`, runs tests, and publishes to PyPI using trusted
+publishing. Confirm the GitHub `pypi` environment is configured before tagging.
+
+If publishing npm packages later, publish `@rpcs1/core` before
+`@rpcs1/mcp-server`, because the MCP package depends on the core package.
+
+## 6. Glama and Directory Checks
+
+Glama should build and launch the standalone STDIO MCP server, not the hosted
+Streamable HTTP endpoint. Use the same config shown in the README:
+
+```json
+{
+  "buildSteps": [
+    "npm ci --include=optional",
+    "npm run build --workspace=@rpcs1/mcp-server"
+  ],
+  "cmdArguments": [
+    "mcp-proxy",
+    "--",
+    "node",
+    "packages/mcp-server/dist/index.js"
+  ],
+  "environmentVariablesJsonSchema": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "placeholderArguments": {}
+}
+```
+
+For directory health checks, confirm:
+
+- A stable GitHub release exists for the current release, such as `v0.2.1`.
+- The listing has recent successful MCP usage.
+- `server.json` and README discovery metadata match the live endpoint.
+- Any Glama-specific metadata file, if added later, points to the STDIO build
+  path above.
+
+## 7. Analytics Checklist
+
+Vercel Analytics and Speed Insights are already installed in
+`packages/web/app/layout.tsx`.
+
+After every production deploy, confirm:
+
+- Vercel Analytics shows page views for `/`, `/tuner`, `/docs`, and `/docs/mcp`.
+- Speed Insights is receiving Web Vitals for the production domain.
+- Custom client events appear: `Tuner Viewed`, `Tuner Submitted`,
+  `Recommendation Generated`, and `Tuner Failed`.
+- API logs show `recommend_completed`, `recommend_rejected`, and
+  `recommend_failed` events when exercising `/api/recommend`.
+- MCP logs show `mcp_request` events after an MCP `initialize`, `tools/list`,
+  and `tools/call` verification.
+- Directory referrals from Glama, Smithery, MCP Registry, and other listings are
+  visible in Vercel Analytics when those listings send traffic.
+
+## 8. Stripe and Email
+
+Before enabling paid flows in production:
+
+- Stripe live products exist for Indie and Team.
+- `STRIPE_SECRET_KEY`, `STRIPE_INDIE_PRICE_ID`, `STRIPE_TEAM_PRICE_ID`, and
+  `STRIPE_WEBHOOK_SECRET` are set in Vercel production env vars.
+- Stripe webhook endpoint is `https://rpcs1.dev/api/webhooks/stripe`.
+- Resend domain verification for `rpcs1.dev` is complete.
+- `RESEND_API_KEY`, `EMAIL_FROM`, and `LICENSE_JWT_SECRET` are set.
+
+Never rotate `LICENSE_JWT_SECRET` after production keys have been issued unless
+you intend to invalidate existing license keys.

@@ -31,6 +31,9 @@ export async function GET(req: NextRequest) {
       success_url: `${env.NEXT_PUBLIC_APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url:  `${env.NEXT_PUBLIC_APP_URL}/pricing`,
       metadata:    { tier },
+      // Propagate tier onto the Subscription (and therefore its invoices) so the
+      // invoice.paid webhook can read subscription.metadata.tier when issuing keys.
+      subscription_data: { metadata: { tier } },
       allow_promotion_codes: true,
     });
 

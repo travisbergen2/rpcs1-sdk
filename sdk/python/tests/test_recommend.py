@@ -4,7 +4,6 @@ Phase 1 acceptance tests — Python SDK.
 Mirror the TypeScript test cases in packages/core/tests/recommend.test.ts.
 When both test suites pass with the same expectations, parity is confirmed.
 """
-import pytest
 from rpcs1 import recommend_params
 
 

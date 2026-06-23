@@ -85,9 +85,7 @@ print(message.content[0].text)`}</code></pre>
         After payment you receive a license key by email. Pass it in your environment:
       </p>
       <pre><code>{`export RPCS1_LICENSE_KEY="your-license-key"
-
-# Or pass it directly (coming in v0.2):
-# recommend_params(..., license_key=os.environ["RPCS1_LICENSE_KEY"])`}</code></pre>
+`}</code></pre>
 
       <p>
         See <a href="/pricing">pricing</a> for full tier comparison.

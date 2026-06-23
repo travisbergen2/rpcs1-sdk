@@ -8,7 +8,7 @@
     "rpcs1-mcp-server": "./dist/index.js"
   },
   "scripts": {
-    "build": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\" && tsup src/index.ts --format esm --platform node --target node20 --out-dir dist",
+    "build": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.json",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
@@ -17,7 +17,6 @@
     "zod": "^3.23.6"
   },
   "devDependencies": {
-    "tsup": "^8.0.0",
     "typescript": "^5.4.0"
   },
   "optionalDependencies": {

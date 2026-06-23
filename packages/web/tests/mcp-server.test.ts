@@ -33,6 +33,27 @@ describe('RPCS1 MCP server', () => {
       openWorldHint: false,
       idempotentHint: true,
     });
+    expect(tools[0].inputSchema.properties).toMatchObject({
+      task: {
+        properties: {
+          task_summary: {
+            default: 'Customer support agent handling refunds, billing disputes, and policy exceptions',
+          },
+          domain: { default: 'customer_support' },
+          expected_duration_per_call: { default: 'medium' },
+        },
+      },
+      environment: {
+        properties: {
+          entropy: { default: 'dynamic' },
+          predictability: { default: 'somewhat_predictable' },
+          stakes: { default: 'high' },
+          context_relevance: { default: 'medium' },
+          commitment_style: { default: 'cautious' },
+        },
+      },
+      target_platform: { default: 'anthropic' },
+    });
   });
 
   it('returns structured recommendations through a real MCP call', async () => {

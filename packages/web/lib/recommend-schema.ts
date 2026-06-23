@@ -3,24 +3,31 @@ import { z } from 'zod';
 export const recommendInputSchema = z.object({
   task: z.object({
     task_summary: z.string().trim().min(1).max(2000)
+      .default('Customer support agent handling refunds, billing disputes, and policy exceptions')
       .describe('Plain-language description of what the AI agent does.'),
-    domain: z.string().trim().min(1).max(100).optional()
+    domain: z.string().trim().min(1).max(100).default('customer_support').optional()
       .describe('Optional domain such as coding, research, or support.'),
-    expected_duration_per_call: z.enum(['short', 'medium', 'long']).optional(),
+    expected_duration_per_call: z.enum(['short', 'medium', 'long']).default('medium').optional(),
   }).strict(),
   environment: z.object({
     entropy: z.enum(['stable', 'moderate', 'dynamic', 'chaotic'])
+      .default('dynamic')
       .describe('How often the operating environment changes.'),
     predictability: z.enum(['highly_predictable', 'somewhat_predictable', 'unpredictable'])
+      .default('somewhat_predictable')
       .describe('How predictable changes are when they occur.'),
     stakes: z.enum(['low', 'medium', 'high', 'catastrophic'])
+      .default('high')
       .describe('The cost of an incorrect agent action.'),
     context_relevance: z.enum(['short', 'medium', 'long'])
+      .default('medium')
       .describe('How far back relevant context usually extends.'),
     commitment_style: z.enum(['decisive', 'balanced', 'cautious'])
+      .default('cautious')
       .describe('How quickly the agent should commit to an action.'),
   }).strict(),
   target_platform: z.enum(['anthropic', 'openai', 'open_source', 'generic'])
+    .default('anthropic')
     .describe('The platform whose runtime parameters should be recommended.'),
 }).strict();
 

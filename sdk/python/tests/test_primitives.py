@@ -1,6 +1,5 @@
 """Unit tests for the five receiver primitive computations."""
-import pytest
-from rpcs1.matching import matching_principle_ti, entropy_to_scalar
+from rpcs1.matching import matching_principle_ti
 from rpcs1.primitives import compute_sg, compute_ft, compute_ue, compute_ar, compute_receiver_profile
 from rpcs1.types import AgentEnvironment, TaskDescriptor
 

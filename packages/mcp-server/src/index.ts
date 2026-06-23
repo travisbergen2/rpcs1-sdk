@@ -13,7 +13,11 @@ const recommendInputSchema = {
     domain: z.string().trim().min(1).max(100).default('customer_support').optional()
       .describe('Optional domain such as coding, research, or support.'),
     expected_duration_per_call: z.enum(['short', 'medium', 'long']).default('medium').optional(),
-  }).strict(),
+  }).strict().default({
+    task_summary: 'Customer support agent handling refunds, billing disputes, and policy exceptions',
+    domain: 'customer_support',
+    expected_duration_per_call: 'medium',
+  }),
   environment: z.object({
     entropy: z.enum(['stable', 'moderate', 'dynamic', 'chaotic'])
       .default('dynamic')
@@ -30,7 +34,13 @@ const recommendInputSchema = {
     commitment_style: z.enum(['decisive', 'balanced', 'cautious'])
       .default('cautious')
       .describe('How quickly the agent should commit to an action.'),
-  }).strict(),
+  }).strict().default({
+    entropy: 'dynamic',
+    predictability: 'somewhat_predictable',
+    stakes: 'high',
+    context_relevance: 'medium',
+    commitment_style: 'cautious',
+  }),
   target_platform: z.enum(['anthropic', 'openai', 'open_source', 'generic'])
     .default('anthropic')
     .describe('The platform whose runtime parameters should be recommended.'),

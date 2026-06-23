@@ -35,6 +35,11 @@ describe('RPCS1 MCP server', () => {
     });
     expect(tools[0].inputSchema.properties).toMatchObject({
       task: {
+        default: {
+          task_summary: 'Customer support agent handling refunds, billing disputes, and policy exceptions',
+          domain: 'customer_support',
+          expected_duration_per_call: 'medium',
+        },
         properties: {
           task_summary: {
             default: 'Customer support agent handling refunds, billing disputes, and policy exceptions',
@@ -44,6 +49,13 @@ describe('RPCS1 MCP server', () => {
         },
       },
       environment: {
+        default: {
+          entropy: 'dynamic',
+          predictability: 'somewhat_predictable',
+          stakes: 'high',
+          context_relevance: 'medium',
+          commitment_style: 'cautious',
+        },
         properties: {
           entropy: { default: 'dynamic' },
           predictability: { default: 'somewhat_predictable' },
@@ -88,6 +100,31 @@ describe('RPCS1 MCP server', () => {
       confidence: 'high',
       platform_parameters: {
         tool_use_strategy: 'explicit_confirmation',
+      },
+    });
+  });
+
+  it('can run from schema defaults with only target platform supplied', async () => {
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    server = createRpcs1McpServer();
+    client = new Client({ name: 'rpcs1-test-client', version: '1.0.0' });
+
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+
+    const result = await client.callTool({
+      name: 'recommend_agent_configuration',
+      arguments: {
+        target_platform: 'anthropic',
+      },
+    });
+
+    expect(result.isError).not.toBe(true);
+    expect(result.structuredContent).toMatchObject({
+      predicted_regime: 'stable',
+      confidence: 'high',
+      platform_parameters: {
+        model_recommendation: 'claude-sonnet-4-6',
       },
     });
   });

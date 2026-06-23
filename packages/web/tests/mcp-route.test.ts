@@ -53,6 +53,28 @@ describe('RPCS1 MCP HTTP route', () => {
     });
   });
 
+  it('accepts JSON-only clients when JSON responses are enabled', async () => {
+    const response = await POST(new Request('http://localhost/mcp', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 2,
+        method: 'tools/list',
+        params: {},
+      }),
+    }));
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.result.tools[0]).toMatchObject({
+      name: 'recommend_agent_configuration',
+    });
+  });
+
   it('rejects malformed JSON before it reaches the MCP transport', async () => {
     const response = await POST(new Request('http://localhost/mcp', {
       method: 'POST',

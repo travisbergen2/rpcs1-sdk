@@ -90,6 +90,7 @@ async function handleMcpRequest(request: Request): Promise<Response> {
   const requestId = request.headers.get('x-vercel-id') ?? crypto.randomUUID();
   const contentLength = Number(request.headers.get('content-length') ?? '0');
   let parsedBody: unknown;
+  let rawBody: string | undefined;
 
   if (!isAllowedHost(request)) {
     return jsonRpcError(403, -32001, 'Host is not allowed');
@@ -135,7 +136,7 @@ async function handleMcpRequest(request: Request): Promise<Response> {
       });
     }
 
-    const rawBody = await request.text();
+    rawBody = await request.text();
     if (new TextEncoder().encode(rawBody).byteLength > env.MCP_MAX_BODY_BYTES) {
       return jsonRpcError(413, -32002, 'Request body is too large');
     }
@@ -151,9 +152,10 @@ async function handleMcpRequest(request: Request): Promise<Response> {
     enableJsonResponse: true,
   });
   const server = createRpcs1McpServer();
+  const transportRequest = normalizeTransportRequest(request, rawBody);
 
   await server.connect(transport);
-  const response = await transport.handleRequest(request, { parsedBody });
+  const response = await transport.handleRequest(transportRequest, { parsedBody });
   const headers = new Headers(response.headers);
 
   for (const [key, value] of Object.entries(corsHeaders)) {
@@ -173,6 +175,29 @@ async function handleMcpRequest(request: Request): Promise<Response> {
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
+    headers,
+  });
+}
+
+function normalizeTransportRequest(request: Request, rawBody?: string): Request {
+  const accept = request.headers.get('accept') ?? '';
+  if (accept.includes('application/json') && accept.includes('text/event-stream')) {
+    return request;
+  }
+
+  const headers = new Headers(request.headers);
+  headers.set('accept', 'application/json, text/event-stream');
+
+  if (request.method === 'POST') {
+    return new Request(request.url, {
+      method: request.method,
+      headers,
+      body: rawBody ?? '',
+    });
+  }
+
+  return new Request(request.url, {
+    method: request.method,
     headers,
   });
 }

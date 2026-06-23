@@ -50,11 +50,12 @@ conditions before blaming the model or adding another tool.
 ## Submission order
 
 1. Official MCP Registry
-   - The server is already listed.
    - Run the `Publish MCP Registry Metadata` GitHub Action after every
      `server.json` version change.
    - Verify:
      `https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.travisbergen2/rpcs1-agent-tuner`
+   - Treat the server as publicly listed only after that registry search
+     returns the RPCS1 listing.
 2. Smithery
    - Submit `https://rpcs1.dev/mcp` at `https://smithery.ai/new`.
    - Claim the listing and complete vendor verification.
@@ -66,9 +67,9 @@ conditions before blaming the model or adding another tool.
    - For automated checks, configure Glama to build the standalone STDIO
      package:
      - Build steps:
-       `["npm install","npm run build --workspace=@rpcs1/mcp-server"]`
+       `["npm ci --include=optional","npm run build --workspace=@rpcs1/mcp-server"]`
      - CMD arguments:
-       `["node","packages/mcp-server/dist/index.js"]`
+       `["mcp-proxy","--","node","packages/mcp-server/dist/index.js"]`
      - Environment variables JSON schema:
        `{"properties":{},"required":[],"type":"object"}`
      - Placeholder parameters:
@@ -144,9 +145,11 @@ endpoint.
 ## Weekly operating loop
 
 Track MCP initialization, `tools/list`, successful tool calls, tuner views,
-tuner completions, GitHub stars, SDK installs, directory referrals, and example
-CTA clicks. Treat bounce rate as a weak secondary signal, not the operating
-metric.
+tuner submissions, recommendation generations, tuner failures, API recommendation
+logs, GitHub stars, SDK installs, directory referrals, and example CTA clicks.
+Use Vercel Analytics for page views, custom tuner events, and referrals; use
+Vercel logs for API and MCP server events. Treat bounce rate as a weak secondary
+signal, not the operating metric.
 
 Every week, publish one example and make one directory or community submission.
 Do not judge traction from general website bounce rate alone.

@@ -2,10 +2,8 @@
  * Matching Principle implementation (Pred-09-5 from RPCS-1).
  *
  * Stable receivers in an environment with entropy H satisfy TI ~ 1/H.
- * This file provides lookup-table interpolation from the matching.json config.
+ * This file provides lookup-table interpolation from the matching config.
  */
-
-import matchingConfig from '../config/matching.json';
 
 interface TiEntry {
   H: number;
@@ -13,15 +11,39 @@ interface TiEntry {
   regime_label: string;
 }
 
+const matchingConfig = {
+  ti_for_h: [
+    { H: 0.1, TI: 90, regime_label: 'long deep integration' },
+    { H: 0.25, TI: 70, regime_label: 'stable integration' },
+    { H: 0.5, TI: 50, regime_label: 'balanced integration' },
+    { H: 0.75, TI: 30, regime_label: 'responsive integration' },
+    { H: 0.95, TI: 10, regime_label: 'rapid response' },
+  ],
+  oscillation_threshold: {
+    max_product_SG_TI: 7000,
+  },
+  entropy_scalars: {
+    stable: 0.2,
+    moderate: 0.5,
+    dynamic: 0.75,
+    chaotic: 0.95,
+  },
+  predictability_scalars: {
+    highly_predictable: 0.9,
+    somewhat_predictable: 0.55,
+    unpredictable: 0.2,
+  },
+} as const;
+
 /**
  * Given environmental entropy H in [0, 1], return the recommended
  * Temporal Integration window TI in [0, 100].
  *
- * Uses linear interpolation between the lookup table entries in matching.json.
+ * Uses linear interpolation between the lookup table entries in the matching config.
  * Clamps at the endpoints for H < 0.1 or H > 0.95.
  */
 export function matchingPrincipleTI(H: number): number {
-  const table: TiEntry[] = matchingConfig.ti_for_h;
+  const table: readonly TiEntry[] = matchingConfig.ti_for_h;
 
   // Clamp below
   if (H <= table[0].H) return table[0].TI;

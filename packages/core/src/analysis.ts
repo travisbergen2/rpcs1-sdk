@@ -11,8 +11,8 @@ import {
   RecommendInput,
   PredictedRegime,
   Confidence,
-} from './types';
-import { OSCILLATION_THRESHOLD } from './matching';
+} from './types.js';
+import { OSCILLATION_THRESHOLD } from './matching.js';
 
 // ─── Regime evaluation ────────────────────────────────────────────────────────
 

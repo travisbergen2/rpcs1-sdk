@@ -1,8 +1,8 @@
-export { recommend } from './recommend';
-export { computeReceiverProfile } from './primitives';
-export { mapToParameters } from './platforms';
-export { evaluateRegime, generateReasoning, generateWarnings, listPrinciplesApplied, assessConfidence } from './analysis';
-export { matchingPrincipleTI, entropyToScalar, predictabilityToScalar, OSCILLATION_THRESHOLD } from './matching';
+export { recommend } from './recommend.js';
+export { computeReceiverProfile } from './primitives.js';
+export { mapToParameters } from './platforms.js';
+export { evaluateRegime, generateReasoning, generateWarnings, listPrinciplesApplied, assessConfidence } from './analysis.js';
+export { matchingPrincipleTI, entropyToScalar, predictabilityToScalar, OSCILLATION_THRESHOLD } from './matching.js';
 export type {
   // Input types
   EnvironmentEntropy,
@@ -23,4 +23,4 @@ export type {
   PredictedRegime,
   Confidence,
   Recommendation,
-} from './types';
+} from './types.js';

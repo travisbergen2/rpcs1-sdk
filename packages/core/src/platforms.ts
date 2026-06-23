@@ -12,8 +12,7 @@ import {
   ToolUseStrategy,
   RetryStrategy,
   ContextStrategy,
-} from './types';
-import platformsConfig from '../config/platforms.json';
+} from './types.js';
 
 interface PlatformConfig {
   model_recommendations: Record<string, string> | null;
@@ -22,6 +21,63 @@ interface PlatformConfig {
   supports_top_p: boolean;
   system_prompt_templates: Record<string, string>;
 }
+
+const systemPromptTemplates = {
+  high_stakes:
+    'Before taking any action, verify your understanding by restating the request. If any aspect is ambiguous, ask for clarification rather than proceeding.',
+  rapid_response:
+    'Be concise. Take action without extensive deliberation when the path is clear.',
+  ambiguity_caution:
+    'When information is incomplete, explicitly acknowledge the uncertainty before proceeding.',
+  high_filter:
+    'Only act on information you are highly confident about. Treat uncertain signals as noise.',
+} satisfies Record<string, string>;
+
+const platformsConfig = {
+  anthropic: {
+    model_recommendations: {
+      default: 'claude-sonnet-4-6',
+      complex_reasoning: 'claude-opus-4-6',
+      speed_priority: 'claude-sonnet-4-6',
+      cheap_high_volume: 'claude-haiku-4-5-20251001',
+    },
+    temperature_range: [0.0, 1.0],
+    max_tokens_range: [256, 8192],
+    supports_top_p: true,
+    system_prompt_templates: systemPromptTemplates,
+  },
+  openai: {
+    model_recommendations: {
+      default: 'gpt-4o',
+      complex_reasoning: 'o1',
+      speed_priority: 'gpt-4o-mini',
+      cheap_high_volume: 'gpt-4o-mini',
+    },
+    temperature_range: [0.0, 2.0],
+    max_tokens_range: [256, 16384],
+    supports_top_p: true,
+    system_prompt_templates: systemPromptTemplates,
+  },
+  open_source: {
+    model_recommendations: {
+      default: 'llama-3-70b',
+      complex_reasoning: 'deepseek-r1',
+      speed_priority: 'llama-3-8b',
+      cheap_high_volume: 'llama-3-8b',
+    },
+    temperature_range: [0.0, 2.0],
+    max_tokens_range: [256, 8192],
+    supports_top_p: true,
+    system_prompt_templates: systemPromptTemplates,
+  },
+  generic: {
+    model_recommendations: null,
+    temperature_range: [0.0, 1.0],
+    max_tokens_range: [256, 4096],
+    supports_top_p: true,
+    system_prompt_templates: systemPromptTemplates,
+  },
+} satisfies Record<Platform, PlatformConfig>;
 
 // ─── Temperature: SG → temperature (inverse) ─────────────────────────────────
 // High SG (sharp discrimination) maps to low temperature (crisp outputs).

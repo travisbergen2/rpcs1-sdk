@@ -5,16 +5,16 @@
  * All steps are deterministic and explainable.
  */
 
-import { RecommendInput, Recommendation } from './types';
-import { computeReceiverProfile } from './primitives';
-import { mapToParameters } from './platforms';
+import { RecommendInput, Recommendation } from './types.js';
+import { computeReceiverProfile } from './primitives.js';
+import { mapToParameters } from './platforms.js';
 import {
   evaluateRegime,
   generateReasoning,
   generateWarnings,
   listPrinciplesApplied,
   assessConfidence,
-} from './analysis';
+} from './analysis.js';
 
 export function recommend(input: RecommendInput): Recommendation {
   // 1. Compute the five RPCS-1 receiver primitives from environment + task

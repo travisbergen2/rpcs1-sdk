@@ -18,12 +18,12 @@ import {
   Stakes,
   CommitmentStyle,
   ContextRelevance,
-} from './types';
+} from './types.js';
 import {
   matchingPrincipleTI,
   entropyToScalar,
   predictabilityToScalar,
-} from './matching';
+} from './matching.js';
 
 // ─── SG: Signal Gain ─────────────────────────────────────────────────────────
 // High stakes → lower SG (don't over-amplify, risk of overload)

@@ -324,7 +324,7 @@ print(config.receiver_profile.TI)               `}<span className="text-gray-500
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-32 text-center">
         <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Ready to review your agent&apos;s quality risk?</h2>
         <p className="text-gray-400 mb-8">
-          Start with a free configuration assessment. Use the SDK when you need repeatable reviews across agents and environments.
+          Start with a free configuration assessment. Founding access is available for early builders who want a full year of SDK and MCP use.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
@@ -337,7 +337,7 @@ print(config.receiver_profile.TI)               `}<span className="text-gray-500
             href="/pricing"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold border border-gray-700 hover:border-gray-600 text-gray-300 hover:text-white rounded-xl transition-colors"
           >
-            View pricing
+            Get founding access
           </Link>
         </div>
       </section>

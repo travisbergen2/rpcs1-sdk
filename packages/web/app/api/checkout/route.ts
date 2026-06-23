@@ -5,8 +5,9 @@ import { env } from '@/lib/env';
 export const runtime = 'nodejs';
 
 const PRICE_IDS: Record<string, string> = {
-  indie: env.STRIPE_INDIE_PRICE_ID,
-  team:  env.STRIPE_TEAM_PRICE_ID,
+  founding: env.STRIPE_FOUNDING_PRICE_ID,
+  indie:    env.STRIPE_INDIE_PRICE_ID,
+  team:     env.STRIPE_TEAM_PRICE_ID,
 };
 
 export async function GET(req: NextRequest) {

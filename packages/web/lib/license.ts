@@ -14,7 +14,7 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { env } from './env';
 
-export type Tier = 'indie' | 'team';
+export type Tier = 'founding' | 'indie' | 'team';
 
 export interface LicenseClaims {
   email: string;

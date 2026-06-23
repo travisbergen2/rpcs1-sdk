@@ -125,7 +125,9 @@ function buildEmailHtml({
   customerEmail: string;
   isRenewal?: boolean;
 }): string {
-  const tierLabel = tier === 'indie' ? 'Indie ($40/month)' : 'Team ($400/month)';
+  const tierLabel = tier === 'founding'
+    ? 'Founding Access ($200/year)'
+    : tier === 'indie' ? 'Indie ($40/month)' : 'Team ($400/month)';
   const intro = isRenewal
     ? 'Your RPCS-1 Agent Tuner subscription renewed — here is your license key for the new billing period. It replaces the previous one.'
     : 'Your RPCS-1 Agent Tuner license key is ready. Keep this email — the key is your entitlement record and is not stored on our servers.';

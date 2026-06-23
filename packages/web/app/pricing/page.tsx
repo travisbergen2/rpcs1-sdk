@@ -73,6 +73,53 @@ export default function PricingPage() {
         </p>
       </div>
 
+      <section className="mb-8 border border-emerald-500/40 bg-gray-900 rounded-xl p-6 sm:p-8">
+        <div className="grid lg:grid-cols-[1fr_auto] gap-6 items-center">
+          <div>
+            <div className="flex items-center gap-3 mb-3">
+              <Badge variant="stable">Limited founding offer</Badge>
+              <span className="text-sm text-gray-500">Early adopter access</span>
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-2">Founding Access</h2>
+            <p className="text-gray-400 max-w-2xl">
+              One year of RPCS1 Agent Tuner for builders tuning deployed AI agents now.
+              Includes the web tuner, MCP tool, Python SDK license, and direct early-support feedback.
+            </p>
+            <ul className="mt-4 grid sm:grid-cols-2 gap-2 text-sm text-gray-400">
+              {[
+                'Annual access for one builder',
+                'License key valid through the paid year',
+                'Direct feedback support during early rollout',
+                'Founding-user pricing before team workflows expand',
+              ].map((feature) => (
+                <li key={feature} className="flex gap-2">
+                  <span className="text-emerald-400">✓</span>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="lg:text-right">
+            <div className="mb-4">
+              <span className="text-4xl font-bold text-white">$200</span>
+              <span className="text-sm text-gray-500 ml-1">per year</span>
+            </div>
+            <TrackedLink
+              href="/api/checkout?tier=founding"
+              eventName="Checkout Started"
+              eventData={{ location: 'founding_offer', tier: 'founding' }}
+              className="inline-flex w-full lg:w-auto justify-center rounded-lg bg-emerald-500 px-5 py-3 text-sm font-semibold text-gray-950 hover:bg-emerald-400 transition-colors"
+            >
+              Get founding access
+            </TrackedLink>
+            <p className="mt-3 text-xs text-gray-500">
+              Cancel anytime. Access remains valid until the end of the paid year.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <div className="grid sm:grid-cols-3 gap-6 items-start">
         {TIERS.map((tier) => (
           <Card

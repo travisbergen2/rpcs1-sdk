@@ -160,8 +160,8 @@ After every production deploy, confirm:
 
 Before enabling paid flows in production:
 
-- Stripe live products exist for Indie and Team.
-- `STRIPE_SECRET_KEY`, `STRIPE_INDIE_PRICE_ID`, `STRIPE_TEAM_PRICE_ID`, and
+- Stripe live products exist for Founding Access, Indie, and Team.
+- `STRIPE_SECRET_KEY`, `STRIPE_FOUNDING_PRICE_ID`, `STRIPE_INDIE_PRICE_ID`, `STRIPE_TEAM_PRICE_ID`, and
   `STRIPE_WEBHOOK_SECRET` are set in Vercel production env vars.
 - Stripe webhook endpoint is `https://rpcs1.dev/api/webhooks/stripe`.
 - Resend domain verification for `rpcs1.dev` is complete.

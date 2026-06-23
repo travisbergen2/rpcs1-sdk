@@ -8,7 +8,7 @@
   "scripts": {
     "build": "npm run build:web",
     "build:web": "npm run build --workspace=packages/core && npm run build --workspace=packages/web",
-    "build:all": "npm run build --workspace=packages/core && npm run build --workspace=packages/mcp-server && npm run build --workspace=packages/web",
+    "build:all": "node scripts/build-all.mjs",
     "dev": "npm run dev --workspace=packages/web"
   },
   "devDependencies": {

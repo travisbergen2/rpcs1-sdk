@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "rpcs1"
-version = "0.1.0"
+version = "0.2.1"
 description = "Deterministic context-alignment SDK for configuring AI agents and diagnosing stability regimes"
 readme = "README.md"
 license = { text = "MIT" }

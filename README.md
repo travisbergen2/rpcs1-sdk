@@ -61,15 +61,12 @@ console.log(rec.predicted_regime);
 ## Development
 
 ```bash
-# Install pnpm
-npm install -g pnpm
-
 # Install dependencies
-pnpm install
+npm ci --include=optional
 
 # Build and test TypeScript core
-pnpm --filter @rpcs1/core build
-pnpm --filter @rpcs1/core test
+npm run build --workspace=@rpcs1/core
+npm run test --workspace=@rpcs1/core
 
 # Test Python SDK
 cd sdk/python

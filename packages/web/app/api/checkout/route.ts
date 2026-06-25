@@ -5,6 +5,7 @@ import { env } from '@/lib/env';
 export const runtime = 'nodejs';
 
 const PRICE_IDS: Record<string, string> = {
+  diagnostic: env.STRIPE_DIAGNOSTIC_ID,
   founding: env.STRIPE_FOUNDING_PRICE_ID,
   indie:    env.STRIPE_INDIE_PRICE_ID,
   team:     env.STRIPE_TEAM_PRICE_ID,
@@ -25,16 +26,21 @@ export async function GET(req: NextRequest) {
   const stripe = new Stripe(env.STRIPE_SECRET_KEY, { apiVersion: '2024-04-10' });
 
   try {
+    const isDiagnostic = tier === 'diagnostic';
     const session = await stripe.checkout.sessions.create({
-      mode: 'subscription',
+      mode: isDiagnostic ? 'payment' : 'subscription',
       payment_method_types: ['card'],
       line_items: [{ price: PRICE_IDS[tier], quantity: 1 }],
-      success_url: `${env.NEXT_PUBLIC_APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${env.NEXT_PUBLIC_APP_URL}/checkout/success?tier=${tier}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url:  `${env.NEXT_PUBLIC_APP_URL}/pricing`,
       metadata:    { tier },
-      // Propagate tier onto the Subscription (and therefore its invoices) so the
-      // invoice.paid webhook can read subscription.metadata.tier when issuing keys.
-      subscription_data: { metadata: { tier } },
+      ...(isDiagnostic
+        ? {}
+        : {
+            // Propagate tier onto the Subscription (and therefore its invoices) so the
+            // invoice.paid webhook can read subscription.metadata.tier when issuing keys.
+            subscription_data: { metadata: { tier } },
+          }),
       allow_promotion_codes: true,
     });
 

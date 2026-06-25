@@ -17,8 +17,8 @@ const QUESTIONS: Record<
   what: {
     label: 'What does this do?',
     answer:
-      'RPCS-1 reviews whether an AI agent is configured for the conditions it faces. It flags likely consistency, grounding, escalation, and resolution risks, then recommends a safer runtime posture.',
-    cta: { href: '/tuner?preset=support', label: 'Assess a support copilot' },
+      'RPCS-1 reviews whether an AI agent is configured for the conditions it faces. It flags likely consistency, grounding, escalation, and resolution risks, then recommends a safer runtime posture. The free sample is a fast way to test the workflow before buying a paid diagnostic.',
+    cta: { href: '/api/checkout?tier=diagnostic', label: 'Buy the diagnostic' },
   },
   why: {
     label: 'Why not just prompt better?',
@@ -29,13 +29,13 @@ const QUESTIONS: Record<
   time: {
     label: 'How fast is it?',
     answer:
-      'The assessment takes about a minute. Start from a support, coding, or research preset, describe the operating conditions, then review the diagnosis and implementation settings.',
-    cta: { href: '/tuner', label: 'Review my agent' },
+      'The free sample takes about a minute. Start from a support, coding, or research preset, then decide whether you want the paid report and implementation guidance.',
+    cta: { href: '/tuner', label: 'Try the free sample' },
   },
   price: {
     label: 'Is it free?',
     answer:
-      'Yes. The web assessment is free and does not require an account. Paid plans are for repeatable SDK-based reviews and team workflows.',
+      'The web sample assessment is free and does not require an account. The paid diagnostic report is $750 one-time, and recurring SDK and team plans are for repeatable reviews and workflows.',
     cta: { href: '/pricing', label: 'View pricing' },
   },
 };

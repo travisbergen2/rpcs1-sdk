@@ -50,19 +50,19 @@ export default function HomePage() {
       {/* Hero */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-24 pb-16 text-center">
         <Badge variant="neutral" className="mb-6 text-xs">
-          AI quality diagnostics for support and agent teams
+          Paid diagnostics for deployed agents
         </Badge>
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
           Catch AI quality failures{' '}
           <span className="gradient-text">before customers do.</span>
         </h1>
         <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-6 leading-relaxed">
-          Review whether your agent&apos;s configuration fits the conditions it actually faces:
-          case complexity, policy ambiguity, risk, context, and handoff needs. Get a clear
-          failure-risk diagnosis and recommended runtime posture.
+          Start with a free sample assessment, then upgrade to a paid diagnostic when you want a
+          written failure-risk score, implementation settings, and a defensible runtime posture
+          for production.
         </p>
         <p className="text-sm text-gray-500 max-w-xl mx-auto mb-8">
-          Start with a customer-support example. No account, email, or payment required.
+          Paid diagnostic report: $750 one-time. Free sample assessment available in the tuner.
         </p>
 
         {/* Concrete output preview */}
@@ -83,24 +83,25 @@ export default function HomePage() {
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <TrackedLink
-            href="/tuner?preset=support"
+            href="/api/checkout?tier=diagnostic"
             eventName="Homepage CTA Clicked"
-            eventData={{ location: 'hero', action: 'live_example', preset: 'support' }}
+            eventData={{ location: 'hero', action: 'paid_diagnostic', preset: 'none' }}
             className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-sky-500 hover:bg-sky-400 text-white rounded-xl transition-all shadow-lg shadow-sky-500/25"
           >
-            Assess a support copilot
+            Request a paid diagnostic
           </TrackedLink>
           <TrackedLink
-            href="/tuner"
+            href="/tuner?preset=support"
             eventName="Homepage CTA Clicked"
-            eventData={{ location: 'hero', action: 'custom_tuner', preset: 'none' }}
+            eventData={{ location: 'hero', action: 'free_sample', preset: 'support' }}
             className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl transition-colors border border-gray-700"
           >
-            Review another agent
+            Try the free sample
           </TrackedLink>
         </div>
         <p className="mt-4 text-xs text-gray-600">
-          Free configuration assessment. Results include technical settings for implementation.
+          Free sample results include a directional diagnosis. Paid diagnostics include a written
+          report, recommended settings, and implementation priorities.
         </p>
         <p className="mt-3 text-xs text-gray-500">
           AI inspecting the framework?{' '}
@@ -322,22 +323,23 @@ print(config.receiver_profile.TI)               `}<span className="text-gray-500
 
       {/* CTA */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-32 text-center">
-        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Ready to review your agent&apos;s quality risk?</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Ready for a paid diagnostic?</h2>
         <p className="text-gray-400 mb-8">
-          Start with a free configuration assessment. Founding access is available for early builders who want a full year of SDK and MCP use.
+          Start with a free sample assessment or request the paid diagnostic if you want a report
+          you can hand to your team.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
-            href="/tuner"
+            href="/api/checkout?tier=diagnostic"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-sky-500 hover:bg-sky-400 text-white rounded-xl transition-all"
           >
-            Run an assessment →
+            Buy the diagnostic →
           </Link>
           <Link
-            href="/pricing"
+            href="/tuner?preset=support"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold border border-gray-700 hover:border-gray-600 text-gray-300 hover:text-white rounded-xl transition-colors"
           >
-            Get founding access
+            Try free sample →
           </Link>
         </div>
       </section>

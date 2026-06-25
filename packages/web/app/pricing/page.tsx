@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/Card';
 import { TrackedLink } from '@/components/TrackedLink';
 
 export const metadata: Metadata = {
   title: 'Pricing',
-  description: 'RPCS-1 AI quality assessment pricing — free web assessment, indie SDK, and team workflows.',
+  description: 'RPCS-1 pricing — free sample assessment, paid diagnostic report, and team workflows.',
 };
 
 const TIERS = [
@@ -13,8 +14,8 @@ const TIERS = [
     name: 'Free',
     price: '$0',
     period: 'forever',
-    description: 'Run a configuration risk assessment. No credit card required.',
-    cta: 'Run an assessment',
+    description: 'Try a sample configuration assessment. No credit card required.',
+    cta: 'Try free sample',
     ctaHref: '/tuner',
     variant: 'secondary' as const,
     features: [
@@ -69,28 +70,29 @@ export default function PricingPage() {
       <div className="text-center mb-14">
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Pricing</h1>
         <p className="text-gray-400 text-lg max-w-xl mx-auto">
-          Start with one assessment. Pay when you need a repeatable quality-review workflow.
+          Start with a free sample assessment. Pay when you want a written diagnostic your team can use.
         </p>
       </div>
 
-      <section className="mb-8 border border-emerald-500/40 bg-gray-900 rounded-xl p-6 sm:p-8">
+      <section id="diagnostic" className="mb-8 border border-sky-500/40 bg-gray-900 rounded-xl p-6 sm:p-8">
         <div className="grid lg:grid-cols-[1fr_auto] gap-6 items-center">
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <Badge variant="stable">Limited founding offer</Badge>
-              <span className="text-sm text-gray-500">Early adopter access</span>
+              <Badge variant="paid">Paid diagnostic</Badge>
+              <span className="text-sm text-gray-500">Best for teams shipping agents now</span>
             </div>
-            <h2 className="text-2xl font-bold text-white mb-2">Founding Access</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">Agent Diagnostic Report</h2>
             <p className="text-gray-400 max-w-2xl">
-              One year of RPCS1 Agent Tuner for builders tuning deployed AI agents now.
-              Includes the web tuner, MCP tool, Python SDK license, and direct early-support feedback.
+              A one-time review for a deployed agent, support copilot, or workflow assistant.
+              You get a failure-risk score, recommended runtime posture, implementation priorities,
+              and a concise report you can share internally.
             </p>
             <ul className="mt-4 grid sm:grid-cols-2 gap-2 text-sm text-gray-400">
               {[
-                'Annual access for one builder',
-                'License key valid through the paid year',
-                'Direct feedback support during early rollout',
-                'Founding-user pricing before team workflows expand',
+                'One workload reviewed by RPCS-1',
+                'Failure-risk diagnosis and stability regime',
+                'Implementation settings and next-test recommendations',
+                '30-minute follow-up call by email request',
               ].map((feature) => (
                 <li key={feature} className="flex gap-2">
                   <span className="text-emerald-400">✓</span>
@@ -102,19 +104,25 @@ export default function PricingPage() {
 
           <div className="lg:text-right">
             <div className="mb-4">
-              <span className="text-4xl font-bold text-white">$200</span>
-              <span className="text-sm text-gray-500 ml-1">per year</span>
+              <span className="text-4xl font-bold text-white">$750</span>
+              <span className="text-sm text-gray-500 ml-1">one-time</span>
             </div>
             <TrackedLink
-              href="/api/checkout?tier=founding"
+              href="/api/checkout?tier=diagnostic"
               eventName="Checkout Started"
-              eventData={{ location: 'founding_offer', tier: 'founding' }}
-              className="inline-flex w-full lg:w-auto justify-center rounded-lg bg-emerald-500 px-5 py-3 text-sm font-semibold text-gray-950 hover:bg-emerald-400 transition-colors"
+              eventData={{ location: 'diagnostic_offer', tier: 'diagnostic' }}
+              className="inline-flex w-full lg:w-auto justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition-colors"
             >
-              Get founding access
+              Buy the diagnostic
             </TrackedLink>
+            <Link
+              href="/diagnostic"
+              className="mt-3 inline-flex w-full lg:w-auto justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-semibold text-gray-200 hover:bg-gray-800 transition-colors"
+            >
+              Submit the intake brief
+            </Link>
             <p className="mt-3 text-xs text-gray-500">
-              Cancel anytime. Access remains valid until the end of the paid year.
+              Start with one review. If you need recurring checks, move to the SDK or team plan.
             </p>
           </div>
         </div>
@@ -186,20 +194,20 @@ export default function PricingPage() {
         <div className="grid sm:grid-cols-2 gap-6">
           {[
             {
-              q: 'What is a license key?',
-              a: "After payment, you receive a JWT license key by email. Pass it as Authorization: Bearer <key> or x-license-key in API requests. No account login needed.",
+              q: 'What do I get with the diagnostic?',
+              a: 'A written scorecard, failure-risk diagnosis, recommended runtime posture, and implementation priorities for the agent you submit.',
             },
             {
-              q: 'Can I cancel anytime?',
-              a: "Yes. Cancel in Stripe's customer portal. Your key remains valid until the end of the billing period.",
+              q: 'Can I start free?',
+              a: 'Yes. The web tuner includes a free sample assessment. Use it to test the workflow before paying for a report.',
             },
             {
               q: 'What is the free tier rate limit?',
-              a: "The web tuner allows 10 recommendations per hour. The Python SDK includes 5 free calls per day.",
+              a: 'The web tuner allows 10 recommendations per hour. The Python SDK includes 5 free calls per day.',
             },
             {
               q: 'Does the SDK send data to your servers?',
-              a: "License key validation is a local JWT check — no network call. The recommend() function is pure computation. Nothing is sent to rpcs1.dev at call time.",
+              a: 'License key validation is a local JWT check — no network call. The recommend() function is pure computation. Nothing is sent to rpcs1.dev at call time.',
             },
           ].map(({ q, a }) => (
             <div key={q}>

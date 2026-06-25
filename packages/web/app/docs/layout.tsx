@@ -11,6 +11,7 @@ const NAV = [
   { href: '/docs/matching',          label: 'Matching principle' },
   { href: '/docs/regimes',           label: 'Stability regimes' },
   { href: '/docs/platforms',         label: 'Platform mappings' },
+  { href: '/docs/translation-layer', label: 'Translation layer' },
 ];
 
 export default function DocsLayout({ children }: { children: React.ReactNode }) {

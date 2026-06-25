@@ -50,6 +50,7 @@ export default function DocsPage() {
         <li><Link href="/docs/matching">Matching principle</Link> — Pred-09-5: TI ≈ 1/H</li>
         <li><Link href="/docs/regimes">Stability regimes</Link> — oscillation, overload, freeze</li>
         <li><Link href="/docs/platforms">Platform mappings</Link> — Anthropic, OpenAI, open source</li>
+        <li><Link href="/docs/translation-layer">Translation layer</Link> — face-preserving prompt and reply posture</li>
       </ul>
 
       <h2>AI agent integrations</h2>

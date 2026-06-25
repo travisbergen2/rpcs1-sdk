@@ -206,6 +206,59 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Translation layer */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
+        <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-8 sm:p-12">
+          <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-8 items-start">
+            <div>
+              <p className="text-xs text-sky-400 font-mono mb-3">translation layer</p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+                Reduce prompt friction before it becomes offense, rework, or token waste.
+              </h2>
+              <p className="text-gray-400 leading-relaxed mb-5">
+                People often ask one thing, mean another, and feel disrespected when the reply
+                corrects the wrong layer. RPCS-1 can add a translation posture that preserves face,
+                states assumptions plainly, and bridges from social language to technical intent.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link
+                  href="/docs/translation-layer"
+                  className="inline-flex items-center justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition-colors"
+                >
+                  See the rule set
+                </Link>
+                <Link
+                  href="/tuner?preset=research"
+                  className="inline-flex items-center justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-semibold text-gray-200 hover:bg-gray-800 transition-colors"
+                >
+                  Try a careful response
+                </Link>
+              </div>
+            </div>
+
+            <Card className="p-6 bg-gray-950/60">
+              <CardContent className="p-0">
+                <p className="text-sm font-semibold text-gray-200 mb-4">Translation posture</p>
+                <div className="space-y-3 text-sm text-gray-400">
+                  <div className="rounded-lg border border-gray-800 bg-gray-900/70 px-3 py-2">
+                    <span className="text-sky-300 font-mono text-xs">assume-and-proceed</span>
+                    <p className="mt-1">State the most likely meaning, then move forward.</p>
+                  </div>
+                  <div className="rounded-lg border border-gray-800 bg-gray-900/70 px-3 py-2">
+                    <span className="text-sky-300 font-mono text-xs">face-preserving</span>
+                    <p className="mt-1">Avoid sounding like a correction when a bridge will do.</p>
+                  </div>
+                  <div className="rounded-lg border border-gray-800 bg-gray-900/70 px-3 py-2">
+                    <span className="text-sky-300 font-mono text-xs">minimal-clarifying</span>
+                    <p className="mt-1">Ask one question only when the assumption would be risky.</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       <ProductionProof />
 
       {/* Code preview */}

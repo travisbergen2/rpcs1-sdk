@@ -1,10 +1,14 @@
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { AgentFailureDemo } from '@/components/AgentFailureDemo';
-import { AgentGuide } from '@/components/AgentGuide';
 import { ProductionProof } from '@/components/ProductionProof';
-import { TrackedLink } from '@/components/TrackedLink';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/Card';
+
+const AgentGuide = dynamic(
+  () => import('@/components/AgentGuide').then((mod) => mod.AgentGuide),
+  { loading: () => null }
+);
 
 const PROBLEMS = [
   {
@@ -82,22 +86,18 @@ export default function HomePage() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <TrackedLink
+          <Link
             href="/api/checkout?tier=diagnostic"
-            eventName="Homepage CTA Clicked"
-            eventData={{ location: 'hero', action: 'paid_diagnostic', preset: 'none' }}
             className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-sky-500 hover:bg-sky-400 text-white rounded-xl transition-all shadow-lg shadow-sky-500/25"
           >
             Request a paid diagnostic
-          </TrackedLink>
-          <TrackedLink
+          </Link>
+          <Link
             href="/tuner?preset=support"
-            eventName="Homepage CTA Clicked"
-            eventData={{ location: 'hero', action: 'free_sample', preset: 'support' }}
             className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl transition-colors border border-gray-700"
           >
             Try the free sample
-          </TrackedLink>
+          </Link>
         </div>
         <p className="mt-4 text-xs text-gray-600">
           Free sample results include a directional diagnosis. Paid diagnostics include a written
@@ -116,30 +116,24 @@ export default function HomePage() {
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-2 text-xs">
           <span className="text-gray-600 py-2">Popular starts:</span>
-          <TrackedLink
+          <Link
             href="/tuner?preset=support"
-            eventName="Homepage Preset Clicked"
-            eventData={{ preset: 'support' }}
             className="px-3 py-2 rounded-lg border border-gray-800 bg-gray-900/70 text-gray-400 hover:text-white hover:border-gray-700"
           >
             support agent
-          </TrackedLink>
-          <TrackedLink
+          </Link>
+          <Link
             href="/tuner?preset=coding"
-            eventName="Homepage Preset Clicked"
-            eventData={{ preset: 'coding' }}
             className="px-3 py-2 rounded-lg border border-gray-800 bg-gray-900/70 text-gray-400 hover:text-white hover:border-gray-700"
           >
             coding agent
-          </TrackedLink>
-          <TrackedLink
+          </Link>
+          <Link
             href="/tuner?preset=research"
-            eventName="Homepage Preset Clicked"
-            eventData={{ preset: 'research' }}
             className="px-3 py-2 rounded-lg border border-gray-800 bg-gray-900/70 text-gray-400 hover:text-white hover:border-gray-700"
           >
             research agent
-          </TrackedLink>
+          </Link>
         </div>
       </section>
 
@@ -194,14 +188,12 @@ export default function HomePage() {
                     </li>
                   ))}
                 </ul>
-                <TrackedLink
+                <Link
                   href="/tuner?preset=support"
-                  eventName="Homepage CTA Clicked"
-                  eventData={{ location: 'cx_section', action: 'support_copilot_assessment', preset: 'support' }}
                   className="inline-flex w-full items-center justify-center px-4 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-semibold transition-colors"
                 >
                   Run support copilot assessment
-                </TrackedLink>
+                </Link>
               </CardContent>
             </Card>
           </div>

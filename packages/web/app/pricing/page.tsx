@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/Card';
-import { TrackedLink } from '@/components/TrackedLink';
 
 export const metadata: Metadata = {
   title: 'Pricing',
@@ -107,14 +106,12 @@ export default function PricingPage() {
               <span className="text-4xl font-bold text-white">$750</span>
               <span className="text-sm text-gray-500 ml-1">one-time</span>
             </div>
-            <TrackedLink
+            <Link
               href="/api/checkout?tier=diagnostic"
-              eventName="Checkout Started"
-              eventData={{ location: 'diagnostic_offer', tier: 'diagnostic' }}
               className="inline-flex w-full lg:w-auto justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition-colors"
             >
               Buy the diagnostic
-            </TrackedLink>
+            </Link>
             <Link
               href="/diagnostic"
               className="mt-3 inline-flex w-full lg:w-auto justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-semibold text-gray-200 hover:bg-gray-800 transition-colors"
@@ -147,10 +144,8 @@ export default function PricingPage() {
               </div>
               <p className="text-sm text-gray-500 mb-6">{tier.description}</p>
 
-              <TrackedLink
+              <Link
                 href={tier.ctaHref}
-                eventName={tier.name === 'Free' ? 'Pricing Tuner Clicked' : 'Checkout Started'}
-                eventData={{ location: 'pricing_card', tier: tier.name.toLowerCase() }}
                 className={[
                   'block w-full text-center py-2.5 px-4 rounded-lg text-sm font-semibold transition-all mb-6',
                   tier.highlighted
@@ -159,7 +154,7 @@ export default function PricingPage() {
                 ].join(' ')}
               >
                 {tier.cta}
-              </TrackedLink>
+              </Link>
 
               <ul className="space-y-2.5">
                 {tier.features.map((f) => (

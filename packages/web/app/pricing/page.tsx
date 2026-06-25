@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/Card';
 
 export const metadata: Metadata = {
   title: 'Pricing',
-  description: 'RPCS-1 pricing — free sample assessment, paid diagnostic report, and team workflows.',
+  description: 'RPCS-1 pricing — free sample assessment, a one-time written diagnostic, and team workflows.',
 };
 
 const TIERS = [
@@ -69,7 +69,7 @@ export default function PricingPage() {
       <div className="text-center mb-14">
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Pricing</h1>
         <p className="text-gray-400 text-lg max-w-xl mx-auto">
-          Start with a free sample assessment. Pay when you want a written diagnostic your team can use.
+          Start with the free tuner. Pay only when you want a written diagnostic for one specific agent or workflow.
         </p>
       </div>
 
@@ -78,20 +78,28 @@ export default function PricingPage() {
           <div>
             <div className="flex items-center gap-3 mb-3">
               <Badge variant="paid">Paid diagnostic</Badge>
-              <span className="text-sm text-gray-500">Best for teams shipping agents now</span>
+              <span className="text-sm text-gray-500">Best for teams shipping one agent now</span>
             </div>
-            <h2 className="text-2xl font-bold text-white mb-2">Agent Diagnostic Report</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">Written Agent Diagnostic Report</h2>
             <p className="text-gray-400 max-w-2xl">
               A one-time review for a deployed agent, support copilot, or workflow assistant.
-              You get a failure-risk score, recommended runtime posture, implementation priorities,
-              and a concise report you can share internally.
+              You send one workload, one failure mode, and the context around it. I return a
+              short report with the risk score, recommended runtime posture, and implementation
+              priorities.
             </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {['One agent or workflow', 'One failure mode', 'Written report', 'Implementation settings'].map((item) => (
+                <span key={item} className="rounded-full border border-gray-700 bg-gray-950 px-3 py-1 text-xs text-gray-300">
+                  {item}
+                </span>
+              ))}
+            </div>
             <ul className="mt-4 grid sm:grid-cols-2 gap-2 text-sm text-gray-400">
               {[
-                'One workload reviewed by RPCS-1',
-                'Failure-risk diagnosis and stability regime',
-                'Implementation settings and next-test recommendations',
-                '30-minute follow-up call by email request',
+                'Failure-risk score and stability regime',
+                'Recommended runtime posture',
+                'Next-test recommendations',
+                'Follow-up by email request',
               ].map((feature) => (
                 <li key={feature} className="flex gap-2">
                   <span className="text-emerald-400">✓</span>
@@ -119,7 +127,7 @@ export default function PricingPage() {
               Submit the intake brief
             </Link>
             <p className="mt-3 text-xs text-gray-500">
-              Start with one review. If you need recurring checks, move to the SDK or team plan.
+              After checkout, submit the intake brief. If you need recurring checks, move to the SDK or team plan.
             </p>
           </div>
         </div>
@@ -190,11 +198,11 @@ export default function PricingPage() {
           {[
             {
               q: 'What do I get with the diagnostic?',
-              a: 'A written scorecard, failure-risk diagnosis, recommended runtime posture, and implementation priorities for the agent you submit.',
+              a: 'A written scorecard for one agent or workflow, with the failure mode, recommended runtime posture, and implementation priorities.',
             },
             {
               q: 'Can I start free?',
-              a: 'Yes. The web tuner includes a free sample assessment. Use it to test the workflow before paying for a report.',
+              a: 'Yes. The web tuner includes a free sample assessment. Use it to test the workflow before paying for a written report.',
             },
             {
               q: 'What is the free tier rate limit?',

@@ -4,7 +4,7 @@ import { DiagnosticIntakeForm } from '@/components/DiagnosticIntakeForm';
 
 export const metadata: Metadata = {
   title: 'Diagnostic Brief',
-  description: 'Submit the agent details needed for an RPCS-1 paid diagnostic report.',
+  description: 'Submit the single agent or workflow details needed for an RPCS-1 paid diagnostic report.',
 };
 
 export default function DiagnosticPage() {
@@ -14,12 +14,12 @@ export default function DiagnosticPage() {
         <section>
           <p className="text-xs font-mono text-sky-400 mb-3">paid diagnostic intake</p>
           <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight mb-5">
-            Submit the agent you want diagnosed.
+            Submit one agent or workflow.
           </h1>
           <p className="text-lg text-gray-400 leading-relaxed max-w-2xl mb-8">
-            Use this brief whether you&apos;ve already paid or you want to request the diagnostic
-            first. I use the details to produce a failure-risk score, recommended runtime posture,
-            and implementation priorities for the workload you actually ship.
+            Use this brief whether you&apos;ve already paid or want to buy the report next. I use
+            the details to produce a failure-risk score, recommended runtime posture, and
+            implementation priorities for the workload you actually ship.
           </p>
           <div className="rounded-2xl border border-gray-800 bg-gray-900/50 p-6 sm:p-8 mb-8">
             <h2 className="text-lg font-semibold text-white mb-4">What helps most</h2>
@@ -33,8 +33,8 @@ export default function DiagnosticPage() {
           <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-6 sm:p-8">
             <p className="text-xs font-mono text-sky-400 mb-2">what you get</p>
             <p className="text-gray-300 leading-relaxed">
-              A concise diagnostic report you can hand to your team, plus a clearer decision on
-              whether the agent should be more cautious, more grounded, or less eager to commit.
+              A concise report you can hand to your team, plus a clearer decision on whether the
+              agent should be more cautious, more grounded, or less eager to commit.
             </p>
             <div className="mt-6 flex flex-col sm:flex-row gap-3">
               <Link

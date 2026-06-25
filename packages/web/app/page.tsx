@@ -1,12 +1,18 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { AgentFailureDemo } from '@/components/AgentFailureDemo';
-import { ProductionProof } from '@/components/ProductionProof';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/Card';
 
 const AgentGuide = dynamic(
   () => import('@/components/AgentGuide').then((mod) => mod.AgentGuide),
+  { loading: () => null }
+);
+const AgentFailureDemo = dynamic(
+  () => import('@/components/AgentFailureDemo').then((mod) => mod.AgentFailureDemo),
+  { loading: () => null }
+);
+const ProductionProof = dynamic(
+  () => import('@/components/ProductionProof').then((mod) => mod.ProductionProof),
   { loading: () => null }
 );
 

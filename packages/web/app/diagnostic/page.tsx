@@ -41,13 +41,13 @@ export default function DiagnosticPage() {
                 href="/api/checkout?tier=diagnostic"
                 className="inline-flex items-center justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition-colors"
               >
-                Buy the diagnostic
+                Buy diagnostic, then submit brief
               </Link>
               <Link
                 href="/pricing#diagnostic"
                 className="inline-flex items-center justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-semibold text-gray-200 hover:bg-gray-800 transition-colors"
               >
-                Review pricing
+                Review the report
               </Link>
             </div>
           </div>

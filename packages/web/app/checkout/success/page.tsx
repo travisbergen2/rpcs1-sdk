@@ -42,7 +42,7 @@ export default function CheckoutSuccessPage({ searchParams }: CheckoutSuccessPag
       </div>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <Link href="/diagnostic" className="text-sm text-sky-400 hover:text-sky-300">
-          Submit diagnostic brief →
+          Open intake brief →
         </Link>
         <Link href={isDiagnostic ? '/pricing#diagnostic' : '/docs/getting-started'} className="text-sm text-sky-400 hover:text-sky-300">
           {isDiagnostic ? 'View pricing' : 'Read the getting started guide →'}

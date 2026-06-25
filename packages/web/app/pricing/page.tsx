@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
-import { Card, CardContent } from '@/components/ui/Card';
 
 export const metadata: Metadata = {
   title: 'Pricing',
-  description: 'RPCS-1 pricing — free sample assessment, a one-time written diagnostic, and team workflows.',
+  description: 'RPCS-1 pricing — free sample assessment, a sample report preview, a one-time written diagnostic, and team workflows.',
 };
 
 const TIERS = [
@@ -16,15 +15,6 @@ const TIERS = [
     description: 'Try a sample configuration assessment. No credit card required.',
     cta: 'Try free sample',
     ctaHref: '/tuner',
-    variant: 'secondary' as const,
-    features: [
-      '10 web tuner recommendations per hour',
-      'All four platforms (Anthropic, OpenAI, open source, generic)',
-      'Failure-risk diagnosis with plain-English reasoning',
-      'Consistency / grounding / stalled-resolution warnings',
-      '5 Python SDK calls per day',
-      'Community support (GitHub)',
-    ],
   },
   {
     name: 'Indie',
@@ -33,16 +23,6 @@ const TIERS = [
     description: 'Repeatable local assessments for builders shipping AI into production.',
     cta: 'Get Indie',
     ctaHref: '/api/checkout?tier=indie',
-    variant: 'primary' as const,
-    highlighted: true,
-    features: [
-      'Everything in Free',
-      'Unlimited Python SDK calls',
-      'License key delivered by email',
-      'Structured exports for eval and implementation workflows',
-      'Multi-platform comparison in one call',
-      'Email support (2-day response)',
-    ],
   },
   {
     name: 'Team',
@@ -51,22 +31,13 @@ const TIERS = [
     description: 'For AI product, support engineering, and quality teams.',
     cta: 'Get Team',
     ctaHref: '/api/checkout?tier=team',
-    variant: 'secondary' as const,
-    features: [
-      'Everything in Indie',
-      'Up to 10 developer seats',
-      'Multi-agent team composer (planned)',
-      'Custom platform integrations (your internal API)',
-      'Slack support channel',
-      'Priority response (same business day)',
-    ],
   },
 ];
 
 export default function PricingPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20">
-      <div className="text-center mb-14">
+      <div className="text-center mb-12">
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Pricing</h1>
         <p className="text-gray-400 text-lg max-w-xl mx-auto">
           Start with the free tuner. Pay only when you want a written diagnostic for one specific agent or workflow.
@@ -74,7 +45,7 @@ export default function PricingPage() {
       </div>
 
       <section id="diagnostic" className="mb-8 border border-sky-500/40 bg-gray-900 rounded-xl p-6 sm:p-8">
-        <div className="grid lg:grid-cols-[1fr_auto] gap-6 items-center">
+        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-6 items-start">
           <div>
             <div className="flex items-center gap-3 mb-3">
               <Badge variant="paid">Paid diagnostic</Badge>
@@ -107,79 +78,104 @@ export default function PricingPage() {
                 </li>
               ))}
             </ul>
+            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/api/checkout?tier=diagnostic"
+                className="inline-flex w-full sm:w-auto justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition-colors"
+              >
+                Buy diagnostic, then submit brief
+              </Link>
+              <Link
+                href="/diagnostic"
+                className="inline-flex w-full sm:w-auto justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-semibold text-gray-200 hover:bg-gray-800 transition-colors"
+              >
+                See intake brief
+              </Link>
+            </div>
+            <p className="mt-3 text-xs text-gray-500">
+              After checkout, you’ll land on /diagnostic and submit one brief.
+            </p>
           </div>
 
-          <div className="lg:text-right">
-            <div className="mb-4">
-              <span className="text-4xl font-bold text-white">$750</span>
-              <span className="text-sm text-gray-500 ml-1">one-time</span>
+          <div className="rounded-2xl border border-gray-800 bg-gray-950 p-5">
+            <p className="text-xs font-mono text-sky-400 mb-3">sample report preview</p>
+            <div className="rounded-xl border border-gray-800 bg-gray-900/80 p-4">
+              <div className="flex flex-wrap items-center gap-3 mb-4">
+                <span className="rounded-full border border-gray-700 bg-gray-950 px-3 py-1 text-xs text-gray-300">
+                  risk score <span className="text-sky-400">82</span>
+                </span>
+                <span className="rounded-full border border-gray-700 bg-gray-950 px-3 py-1 text-xs text-gray-300">
+                  posture <span className="text-emerald-400">cautious</span>
+                </span>
+              </div>
+              <div className="space-y-3 text-sm text-gray-400">
+                <div className="rounded-lg border border-gray-800 bg-gray-950 px-3 py-2">
+                  <p className="text-xs text-gray-500 mb-1">Primary failure mode</p>
+                  <p>Oscillation under live queue pressure and incomplete grounding.</p>
+                </div>
+                <div className="rounded-lg border border-gray-800 bg-gray-950 px-3 py-2">
+                  <p className="text-xs text-gray-500 mb-1">Recommended change</p>
+                  <p>Raise filtering, lower commitment pressure, and add a tighter handoff rule.</p>
+                </div>
+                <div className="rounded-lg border border-gray-800 bg-gray-950 px-3 py-2">
+                  <p className="text-xs text-gray-500 mb-1">Next test</p>
+                  <p>Retest with three ambiguous cases and one escalation path.</p>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-gray-800 flex items-end justify-between gap-4">
+                <div>
+                  <p className="text-3xl font-bold text-white">$750</p>
+                  <p className="text-xs text-gray-500">one-time written report</p>
+                </div>
+                <span className="text-xs text-gray-500 text-right">After checkout, submit one brief.</span>
+              </div>
             </div>
-            <Link
-              href="/api/checkout?tier=diagnostic"
-              className="inline-flex w-full lg:w-auto justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition-colors"
-            >
-              Buy the diagnostic
-            </Link>
-            <Link
-              href="/diagnostic"
-              className="mt-3 inline-flex w-full lg:w-auto justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-semibold text-gray-200 hover:bg-gray-800 transition-colors"
-            >
-              Submit the intake brief
-            </Link>
-            <p className="mt-3 text-xs text-gray-500">
-              After checkout, submit the intake brief. If you need recurring checks, move to the SDK or team plan.
-            </p>
           </div>
         </div>
       </section>
 
-      <div className="grid sm:grid-cols-3 gap-6 items-start">
-        {TIERS.map((tier) => (
-          <Card
-            key={tier.name}
-            className={tier.highlighted ? 'border-sky-500/50 bg-gray-900 relative' : ''}
-          >
-            {tier.highlighted && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                <Badge variant="paid">Most popular</Badge>
+      <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 sm:p-8">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-5">
+          <div>
+            <h2 className="text-lg font-semibold text-white mb-1">Recurring access</h2>
+            <p className="text-sm text-gray-500">
+              These are for repeat use after the workflow is already worth running regularly.
+            </p>
+          </div>
+          <span className="text-xs text-gray-500">Secondary path</span>
+        </div>
+        <div className="space-y-3">
+          {TIERS.map((tier) => (
+            <div
+              key={tier.name}
+              className="flex flex-col gap-4 rounded-lg border border-gray-800 bg-gray-950 p-4 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2 mb-1">
+                  <Badge variant={tier.name === 'Free' ? 'neutral' : 'paid'}>{tier.name}</Badge>
+                  <span className="text-sm text-gray-400">
+                    <span className="font-semibold text-white">{tier.price}</span> / {tier.period}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-500">{tier.description}</p>
               </div>
-            )}
-            <CardContent className="p-6">
-              <p className="text-sm font-semibold text-gray-400 mb-1">{tier.name}</p>
-              <div className="flex items-baseline gap-1.5 mb-1">
-                <span className="text-3xl font-bold text-white">{tier.price}</span>
-                <span className="text-sm text-gray-500">{tier.period}</span>
-              </div>
-              <p className="text-sm text-gray-500 mb-6">{tier.description}</p>
 
               <Link
                 href={tier.ctaHref}
                 className={[
-                  'block w-full text-center py-2.5 px-4 rounded-lg text-sm font-semibold transition-all mb-6',
-                  tier.highlighted
-                    ? 'bg-sky-500 hover:bg-sky-400 text-white shadow-lg shadow-sky-500/20'
-                    : 'bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700',
+                  'inline-flex w-full sm:w-auto justify-center rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors',
+                  tier.name === 'Free'
+                    ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700'
+                    : tier.name === 'Indie'
+                      ? 'bg-sky-500 hover:bg-sky-400 text-white shadow-lg shadow-sky-500/20'
+                      : 'bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700',
                 ].join(' ')}
               >
                 {tier.cta}
               </Link>
-
-              <ul className="space-y-2.5">
-                {tier.features.map((f) => (
-                  <li key={f} className="flex gap-2.5 text-sm text-gray-400">
-                    <svg
-                      className="w-4 h-4 text-sky-400 flex-shrink-0 mt-0.5"
-                      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        ))}
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="mt-12 text-center">

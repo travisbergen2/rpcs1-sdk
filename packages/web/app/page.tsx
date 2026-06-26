@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/Card';
+import { HomepageLiveDemo } from '@/components/HomepageLiveDemo';
 
 const AgentGuide = dynamic(
   () => import('@/components/AgentGuide').then((mod) => mod.AgentGuide),
@@ -79,87 +80,76 @@ export default function HomePage() {
       <AgentGuide />
 
       {/* Hero */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-24 pb-16 text-center">
-        <Badge variant="neutral" className="mb-6 text-xs">
-          Paid diagnostics for deployed agents
-        </Badge>
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-          Catch AI quality failures{' '}
-          <span className="gradient-text">before customers do.</span>
-        </h1>
-        <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-6 leading-relaxed">
-          Start with the tuner. Upgrade to a $750 written diagnostic for one workflow.
-        </p>
-        <p className="text-sm text-gray-500 max-w-xl mx-auto mb-8">
-          Built for support, collaboration, and ops teams that need the agent to behave under
-          pressure.
-        </p>
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-24 pb-16">
+        <div className="grid lg:grid-cols-[1.08fr_0.92fr] gap-8 items-start">
+          <div className="text-left">
+            <Badge variant="neutral" className="mb-6 text-xs">
+              AI quality diagnostics for deployed agents
+            </Badge>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6 max-w-3xl">
+              Know why one agent will{' '}
+              <span className="gradient-text">fail before rollout.</span>
+            </h1>
+            <p className="text-lg text-gray-400 max-w-2xl mb-6 leading-relaxed">
+              RPCS-1 tells support teams, AI builders, and ops leads whether one workflow is likely
+              to fail, what runtime settings to change, and what to test next.
+            </p>
 
-        {/* Concrete output preview */}
-        <div className="inline-flex flex-wrap gap-3 justify-center mb-10 text-sm font-mono">
-          <span className="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800 text-gray-400">
-            risk flag <span className="text-sky-400">stable</span>
-          </span>
-          <span className="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800 text-gray-400">
-            handoff posture <span className="text-sky-400">cautious</span>
-          </span>
-          <span className="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800 text-gray-400">
-            implementation <span className="text-emerald-400">settings included</span>
-          </span>
-          <span className="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800 text-gray-400">
-            context <span className="text-amber-400">frequent grounding</span>
-          </span>
-        </div>
+            <div className="grid sm:grid-cols-3 gap-3 mb-8">
+              {[
+                {
+                  title: 'What it is',
+                  body: 'A diagnostic for one deployed agent or workflow.',
+                },
+                {
+                  title: 'Who it is for',
+                  body: 'Support, AI, ops, and consultant teams shipping agents.',
+                },
+                {
+                  title: 'Why it is better',
+                  body: 'Less guesswork, clearer next steps, faster rollout decisions.',
+                },
+              ].map((item) => (
+                <div key={item.title} className="rounded-2xl border border-gray-800 bg-gray-950/70 p-4">
+                  <p className="text-xs font-mono text-sky-400 mb-2">{item.title}</p>
+                  <p className="text-sm text-gray-300 leading-relaxed">{item.body}</p>
+                </div>
+              ))}
+            </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link
-            href="/api/checkout?tier=diagnostic"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl transition-all shadow-lg shadow-amber-500/25"
-          >
-            Request a paid diagnostic
-          </Link>
-          <Link
-            href="/tuner?preset=support"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl transition-colors border border-gray-700"
-          >
-            Try the free sample
-          </Link>
-        </div>
-        <p className="mt-4 text-xs text-gray-600">
-          Free sample results include a directional diagnosis. Paid diagnostics include a written
-          report, recommended settings, and implementation priorities.
-        </p>
-        <p className="mt-3 text-xs text-gray-500">
-          AI inspecting the framework?{' '}
-          <Link href="/imm" className="text-sky-400 hover:text-sky-300 underline underline-offset-4">
-            Read the IMM primer
-          </Link>
-          {' '}or{' '}
-          <Link href="/mismatch" className="text-sky-400 hover:text-sky-300 underline underline-offset-4">
-            the mismatch frame
-          </Link>
-          .
-        </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-2 text-xs">
-          <span className="text-gray-600 py-2">Popular starts:</span>
-          <Link
-            href="/tuner?preset=support"
-            className="px-3 py-2 rounded-lg border border-gray-800 bg-gray-900/70 text-gray-400 hover:text-white hover:border-gray-700"
-          >
-            support agent
-          </Link>
-          <Link
-            href="/tuner?preset=coding"
-            className="px-3 py-2 rounded-lg border border-gray-800 bg-gray-900/70 text-gray-400 hover:text-white hover:border-gray-700"
-          >
-            coding agent
-          </Link>
-          <Link
-            href="/tuner?preset=research"
-            className="px-3 py-2 rounded-lg border border-gray-800 bg-gray-900/70 text-gray-400 hover:text-white hover:border-gray-700"
-          >
-            research agent
-          </Link>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/tuner?preset=support"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-sky-500 hover:bg-sky-400 text-white rounded-xl transition-all shadow-lg shadow-sky-500/20"
+              >
+                Start free
+              </Link>
+              <Link
+                href="/api/checkout?tier=diagnostic"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl transition-all shadow-lg shadow-amber-500/25"
+              >
+                Request paid diagnostic
+              </Link>
+            </div>
+
+            <p className="mt-4 text-xs text-gray-600 max-w-xl">
+              Free sample results are directional. Paid diagnostics include a written report,
+              recommended settings, implementation priorities, and a next test to run.
+            </p>
+            <p className="mt-3 text-xs text-gray-500 max-w-xl">
+              AI inspecting the framework?{' '}
+              <Link href="/imm" className="text-sky-400 hover:text-sky-300 underline underline-offset-4">
+                Read the IMM primer
+              </Link>
+              {' '}or{' '}
+              <Link href="/mismatch" className="text-sky-400 hover:text-sky-300 underline underline-offset-4">
+                the mismatch frame
+              </Link>
+              .
+            </p>
+          </div>
+
+          <HomepageLiveDemo />
         </div>
       </section>
 
@@ -532,25 +522,88 @@ print(config.receiver_profile.TI)               `}<span className="text-gray-500
       </section>
 
       {/* CTA */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-32 text-center">
-        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Ready for a paid diagnostic?</h2>
-        <p className="text-gray-400 mb-8">
-          Start with a free sample assessment or request the paid diagnostic if you want a report
-          you can hand to your team.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link
-            href="/api/checkout?tier=diagnostic"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl transition-all shadow-lg shadow-amber-500/20"
-          >
-            Buy the diagnostic →
-          </Link>
-          <Link
-            href="/tuner?preset=support"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold border border-gray-700 hover:border-gray-600 text-gray-300 hover:text-white rounded-xl transition-colors"
-          >
-            Try free sample →
-          </Link>
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-32">
+        <div className="relative overflow-hidden rounded-[2rem] border border-sky-500/20 bg-[#050814] p-6 sm:p-8 lg:p-10">
+          <div
+            className="absolute inset-0 opacity-60"
+            style={{
+              backgroundImage:
+                'radial-gradient(circle at 50% 20%, rgba(56,189,248,0.18), transparent 32%), radial-gradient(circle at 20% 80%, rgba(168,85,247,0.12), transparent 25%), radial-gradient(circle at 80% 75%, rgba(16,185,129,0.08), transparent 25%)',
+            }}
+          />
+          <div className="relative">
+            <div className="mb-6">
+              <p className="text-xs font-mono text-sky-400 mb-3">sales room</p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+                The site gets more immersive as you scroll down.
+              </h2>
+              <p className="text-gray-400 leading-relaxed max-w-3xl">
+                Clarity comes first. Proof comes next. The deeper you go, the more the interface
+                turns into an operating room for buying, inspecting, and rolling out the system.
+              </p>
+            </div>
+
+            <div className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr] items-stretch" style={{ perspective: '1600px' }}>
+              <div className="relative rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6 backdrop-blur-xl shadow-2xl shadow-black/40 transform-gpu lg:translate-y-4 lg:[transform:rotateX(10deg)_rotateY(8deg)]">
+                <p className="text-xs font-mono text-amber-400 mb-3">conversation</p>
+                <h3 className="text-xl sm:text-2xl font-semibold text-white mb-3">What are you trying to build today?</h3>
+                <p className="text-gray-300 leading-relaxed mb-5">
+                  Start free with a live assessment, then upgrade to a written diagnostic when the
+                  workflow needs a decision memo, implementation settings, and a next test.
+                </p>
+                <div className="grid sm:grid-cols-3 gap-3">
+                  <Link
+                    href="/tuner?preset=support"
+                    className="rounded-2xl border border-sky-500/20 bg-sky-500/10 px-4 py-3 text-sm font-semibold text-white hover:bg-sky-500/15 transition-colors"
+                  >
+                    Start free
+                  </Link>
+                  <Link
+                    href="/api/checkout?tier=diagnostic"
+                    className="rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm font-semibold text-amber-200 hover:bg-amber-500/15 transition-colors"
+                  >
+                    Buy the diagnostic
+                  </Link>
+                  <Link
+                    href="mailto:travisbergen2@gmail.com?subject=RPCS-1 Demo"
+                    className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-200 hover:bg-emerald-500/15 transition-colors"
+                  >
+                    Book a demo
+                  </Link>
+                </div>
+              </div>
+
+              <div className="grid gap-4">
+                {[
+                  {
+                    title: 'Buy path',
+                    body: 'Free sample, paid diagnostic, team rollout.',
+                    accent: 'amber',
+                  },
+                  {
+                    title: 'Proof path',
+                    body: 'Before / after, benchmarks, and a live demo.',
+                    accent: 'sky',
+                  },
+                  {
+                    title: 'Room state',
+                    body: 'As you scroll, the interface deepens instead of flattening out.',
+                    accent: 'emerald',
+                  },
+                ].map((item) => (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5 backdrop-blur-md shadow-xl shadow-black/20 transform-gpu lg:[transform:rotateX(12deg)_rotateY(-10deg)]"
+                  >
+                    <p className={`text-xs font-mono mb-2 ${item.accent === 'amber' ? 'text-amber-400' : item.accent === 'sky' ? 'text-sky-400' : 'text-emerald-400'}`}>
+                      {item.title}
+                    </p>
+                    <p className="text-sm text-gray-300 leading-relaxed">{item.body}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>

@@ -72,6 +72,26 @@ describe('mapToParameters', () => {
     expect(p.system_prompt_additions?.length).toBeGreaterThan(0);
   });
 
+  it('support-style task → face-preserving translation posture', () => {
+    const p = mapToParameters(
+      balancedProfile,
+      'anthropic',
+      { task_summary: 'Customer support copilot for escalations and refunds', domain: 'customer_support' },
+    );
+    expect(p.translation_posture).toBe('face_preserving');
+    expect(p.translation_notes?.length).toBeGreaterThan(0);
+    expect(p.system_prompt_additions?.some((s) => s.toLowerCase().includes('face'))).toBe(true);
+  });
+
+  it('technical analysis task → bridging translation posture', () => {
+    const p = mapToParameters(
+      balancedProfile,
+      'anthropic',
+      { task_summary: 'Research agent explaining technical source material', domain: 'research' },
+    );
+    expect(p.translation_posture).toBe('bridging');
+  });
+
   it('anthropic emits temperature without top_p', () => {
     const p = mapToParameters(balancedProfile, 'anthropic');
     expect(p.temperature).toBeDefined();

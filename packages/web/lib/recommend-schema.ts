@@ -63,6 +63,8 @@ export const recommendationOutputSchema = {
     ]).optional(),
     retry_strategy: z.enum(['aggressive', 'moderate', 'minimal']).optional(),
     context_strategy: z.enum(['long_window', 'rolling_summary', 'frequent_grounding']).optional(),
+    translation_posture: z.enum(['direct', 'bridging', 'face_preserving', 'minimal_clarifying']).optional(),
+    translation_notes: z.array(z.string()).optional(),
   }),
   predicted_regime: z.enum(['stable', 'near_oscillation', 'near_overload', 'near_freeze']),
   reasoning: z.string(),

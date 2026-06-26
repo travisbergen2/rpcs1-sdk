@@ -21,7 +21,7 @@ export function recommend(input: RecommendInput): Recommendation {
   const receiver_profile = computeReceiverProfile(input.environment, input.task);
 
   // 2. Map primitives to platform-specific LLM parameters
-  const platform_parameters = mapToParameters(receiver_profile, input.target_platform);
+  const platform_parameters = mapToParameters(receiver_profile, input.target_platform, input.task);
 
   // 3. Evaluate the predicted stability regime
   const predicted_regime = evaluateRegime(receiver_profile);

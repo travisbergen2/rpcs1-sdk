@@ -259,6 +259,68 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Translation case study */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
+        <div className="rounded-2xl border border-gray-800 bg-gray-950 p-8 sm:p-12">
+          <div className="mb-8">
+            <p className="text-xs font-mono text-sky-400 mb-3">buyer case study</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+              The same prompt can sound rude, helpful, or precise.
+            </h2>
+            <p className="text-gray-400 leading-relaxed max-w-3xl">
+              RPCS-1 can add a translation posture that preserves face and bridges intent before
+              the model answers. That matters when users speak in loaded, abstract, or half-formed
+              language and then react to the reply as if it confirmed the wrong story.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-5">
+            <Card className="border-red-500/20 bg-gray-900/50">
+              <CardContent className="p-6">
+                <p className="text-xs font-mono text-red-300 mb-3">before</p>
+                <h3 className="text-lg font-semibold text-white mb-3">Correction-first response</h3>
+                <div className="space-y-3 text-sm text-gray-400 leading-relaxed">
+                  <div className="rounded-lg border border-gray-800 bg-gray-950 px-3 py-2">
+                    <p className="text-xs text-gray-500 mb-1">User</p>
+                    <p>“When I say projection, I mean the Jungian thing.”</p>
+                  </div>
+                  <div className="rounded-lg border border-gray-800 bg-gray-950 px-3 py-2">
+                    <p className="text-xs text-gray-500 mb-1">AI</p>
+                    <p>“Actually, projection usually means something else.”</p>
+                  </div>
+                </div>
+                <p className="mt-4 text-sm text-red-200">
+                  This is technically correct, but it can trigger defensiveness and waste the rest of the exchange.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-emerald-500/20 bg-gray-900/50">
+              <CardContent className="p-6">
+                <p className="text-xs font-mono text-emerald-300 mb-3">after</p>
+                <h3 className="text-lg font-semibold text-white mb-3">Bridge-first response</h3>
+                <div className="space-y-3 text-sm text-gray-400 leading-relaxed">
+                  <div className="rounded-lg border border-gray-800 bg-gray-950 px-3 py-2">
+                    <p className="text-xs text-gray-500 mb-1">AI</p>
+                    <p>
+                      “I think you mean the Jungian sense. If so, here&apos;s the technical mapping
+                      to the lower-dimensional surface problem.”
+                    </p>
+                  </div>
+                  <div className="rounded-lg border border-gray-800 bg-gray-950 px-3 py-2">
+                    <p className="text-xs text-gray-500 mb-1">Result</p>
+                    <p>The user keeps their frame, the answer stays precise, and the model avoids a correction spiral.</p>
+                  </div>
+                </div>
+                <p className="mt-4 text-sm text-emerald-200">
+                  That is the advantage: fewer clarification loops, fewer offense moments, and less token waste.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       <ProductionProof />
 
       {/* Code preview */}

@@ -12,6 +12,8 @@ import {
   ToolUseStrategy,
   RetryStrategy,
   ContextStrategy,
+  TranslationPosture,
+  TaskDescriptor,
 } from './types.js';
 
 interface PlatformConfig {
@@ -31,6 +33,14 @@ const systemPromptTemplates = {
     'When information is incomplete, explicitly acknowledge the uncertainty before proceeding.',
   high_filter:
     'Only act on information you are highly confident about. Treat uncertain signals as noise.',
+  translation_direct:
+    'Respond to the literal request directly, but keep the answer concise and avoid overexplaining.',
+  translation_bridging:
+    'Translate the user\'s likely intent into technical terms, state the assumption once, then answer in both plain and technical language when helpful.',
+  translation_face_preserving:
+    'Preserve the user\'s face. Avoid correction language; state the most likely meaning as an assumption and move forward.',
+  translation_minimal_clarifying:
+    'Ask at most one focused clarification if the assumption would be risky. Otherwise proceed with the best hypothesis and label it.',
 } satisfies Record<string, string>;
 
 const platformsConfig = {
@@ -146,6 +156,7 @@ function selectModel(
 function buildSystemPromptAdditions(
   profile: ReceiverProfile,
   templates: Record<string, string>,
+  task: TaskDescriptor,
 ): string[] {
   const additions: string[] = [];
 
@@ -162,7 +173,45 @@ function buildSystemPromptAdditions(
     additions.push(templates['high_filter']);
   }
 
+  additions.push(selectTranslationTemplate(profile, templates, task));
+
   return [...new Set(additions)]; // deduplicate
+}
+
+function selectTranslationTemplate(
+  profile: ReceiverProfile,
+  templates: Record<string, string>,
+  task: TaskDescriptor,
+): string {
+  const posture = computeTranslationPosture(profile, task);
+
+  switch (posture) {
+    case 'bridging':
+      return templates['translation_bridging'];
+    case 'face_preserving':
+      return templates['translation_face_preserving'];
+    case 'minimal_clarifying':
+      return templates['translation_minimal_clarifying'];
+    case 'direct':
+    default:
+      return templates['translation_direct'];
+  }
+}
+
+function computeTranslationPosture(
+  profile: ReceiverProfile,
+  task: TaskDescriptor,
+): TranslationPosture {
+  const summary = `${task.task_summary} ${task.domain ?? ''}`.toLowerCase();
+  const faceSensitive = /support|customer|client|patient|user|user-facing|handoff|complaint|escalat|refund|billing|policy|conversation|reply|message|relationship|emotion|copy/.test(summary);
+  const explanationHeavy = /explain|translate|summari[sz]e|analysis|research|technical|framework|synthesize|interpret|compare|map/.test(summary);
+  const ambiguityRisk = profile.AR <= 40 && profile.FT >= 55;
+
+  if (faceSensitive && ambiguityRisk) return 'face_preserving';
+  if (faceSensitive) return 'face_preserving';
+  if (ambiguityRisk) return 'minimal_clarifying';
+  if (explanationHeavy) return 'bridging';
+  return 'direct';
 }
 
 // ─── Top-level mapping ────────────────────────────────────────────────────────
@@ -170,6 +219,7 @@ function buildSystemPromptAdditions(
 export function mapToParameters(
   profile: ReceiverProfile,
   platform: Platform,
+  task: TaskDescriptor = { task_summary: 'Unspecified task' },
 ): PlatformParameters {
   const config = (platformsConfig as Record<string, PlatformConfig>)[platform];
 
@@ -179,7 +229,9 @@ export function mapToParameters(
   const tool_use_strategy = mapARToToolStrategy(profile.AR, profile.FT);
   const retry_strategy = mapUEToRetryStrategy(profile.UE);
   const model_recommendation = selectModel(profile, config.model_recommendations);
-  const system_prompt_additions = buildSystemPromptAdditions(profile, config.system_prompt_templates);
+  const translation_posture = computeTranslationPosture(profile, task);
+  const system_prompt_additions = buildSystemPromptAdditions(profile, config.system_prompt_templates, task);
+  const translation_notes = buildTranslationNotes(translation_posture);
 
   const params: PlatformParameters = {
     temperature,
@@ -188,6 +240,8 @@ export function mapToParameters(
     tool_use_strategy,
     retry_strategy,
     system_prompt_additions,
+    translation_posture,
+    translation_notes,
   };
 
   if (model_recommendation) {
@@ -201,4 +255,30 @@ export function mapToParameters(
   }
 
   return params;
+}
+
+function buildTranslationNotes(posture: TranslationPosture): string[] {
+  switch (posture) {
+    case 'bridging':
+      return [
+        'Translate social wording into technical structure before answering.',
+        'State the assumption once, then continue in plain language and technical terms.',
+      ];
+    case 'face_preserving':
+      return [
+        'Preserve the user\'s face before correcting any mismatch.',
+        'Avoid blunt correction language when the user may be protecting status or identity.',
+      ];
+    case 'minimal_clarifying':
+      return [
+        'Ask one focused question only if the assumption would materially change the answer.',
+        'Otherwise continue with the best hypothesis and label it clearly.',
+      ];
+    case 'direct':
+    default:
+      return [
+        'Answer the literal request directly.',
+        'Keep the response concise unless the user needs a bridge into technical language.',
+      ];
+  }
 }

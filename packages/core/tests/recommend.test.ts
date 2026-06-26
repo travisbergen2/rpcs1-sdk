@@ -171,4 +171,21 @@ describe('recommend — Phase 1 acceptance tests', () => {
     expect(rec.reasoning).toContain('TI');
     expect(rec.reasoning).toContain('top_p is omitted');
   });
+
+  it('support-facing prompts get a face-preserving translation posture', () => {
+    const input: RecommendInput = {
+      task: { task_summary: 'Customer support agent handling refund requests', domain: 'customer_support' },
+      environment: {
+        entropy:           'moderate',
+        predictability:    'somewhat_predictable',
+        stakes:            'high',
+        context_relevance: 'medium',
+        commitment_style:  'cautious',
+      },
+      target_platform: 'anthropic',
+    };
+    const rec = recommend(input);
+    expect(rec.platform_parameters.translation_posture).toBe('face_preserving');
+    expect(rec.platform_parameters.translation_notes?.some((n) => n.toLowerCase().includes('face'))).toBe(true);
+  });
 });

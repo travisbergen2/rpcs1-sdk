@@ -64,6 +64,24 @@ export default function TranslationLayerPage() {
       </section>
 
       <section className="rounded-2xl border border-gray-800 bg-gray-950 p-6 mb-8">
+        <h2 className="text-xl font-semibold text-white mb-4">System prompt policy</h2>
+        <div className="space-y-3 text-sm text-gray-400 leading-relaxed">
+          <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-4">
+            <p className="text-xs font-mono text-sky-300 mb-1">face-preserving</p>
+            <p>Use when the user may be protecting status or identity. State the assumption once and avoid correction language.</p>
+          </div>
+          <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-4">
+            <p className="text-xs font-mono text-sky-300 mb-1">bridging</p>
+            <p>Use when the prompt is abstract, loaded, or technical. Translate the likely intent into plain and technical terms.</p>
+          </div>
+          <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-4">
+            <p className="text-xs font-mono text-sky-300 mb-1">minimal-clarifying</p>
+            <p>Use when one missing detail blocks a safe answer. Ask one question, then proceed.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-gray-800 bg-gray-950 p-6 mb-8">
         <h2 className="text-xl font-semibold text-white mb-4">Rule set</h2>
         <div className="grid gap-3">
           {RULES.map((rule) => (

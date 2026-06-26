@@ -76,6 +76,12 @@ export type ContextStrategy =
   | 'rolling_summary'
   | 'frequent_grounding';
 
+export type TranslationPosture =
+  | 'direct'
+  | 'bridging'
+  | 'face_preserving'
+  | 'minimal_clarifying';
+
 export interface PlatformParameters {
   temperature: number;
   top_p?: number;
@@ -85,6 +91,8 @@ export interface PlatformParameters {
   tool_use_strategy?: ToolUseStrategy;
   retry_strategy?: RetryStrategy;
   context_strategy?: ContextStrategy;
+  translation_posture?: TranslationPosture;
+  translation_notes?: string[];
 }
 
 export type PredictedRegime =

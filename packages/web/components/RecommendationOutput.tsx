@@ -11,6 +11,7 @@ interface Props {
 }
 
 type RegimeBadge = 'stable' | 'oscillation' | 'overload' | 'freeze';
+type TranslationBadge = 'stable' | 'oscillation' | 'overload' | 'freeze' | 'neutral';
 
 function getRegimeBadge(regime: string): RegimeBadge {
   if (regime === 'near_oscillation') return 'oscillation';
@@ -83,9 +84,54 @@ function PrimitiveMeter({ label, value, description }: { label: string; value: n
   );
 }
 
+function getTranslationBadge(posture: string | undefined): TranslationBadge {
+  if (posture === 'face_preserving') return 'freeze';
+  if (posture === 'minimal_clarifying') return 'oscillation';
+  if (posture === 'bridging') return 'stable';
+  return 'neutral';
+}
+
+function getTranslationLabel(posture: string | undefined): string {
+  return {
+    direct: 'Direct',
+    bridging: 'Bridging',
+    face_preserving: 'Face-preserving',
+    minimal_clarifying: 'Minimal clarifying',
+  }[posture ?? 'direct'] ?? 'Direct';
+}
+
+function getTranslationExample(posture: string | undefined): { before: string; after: string } {
+  switch (posture) {
+    case 'bridging':
+      return {
+        before: '“Explain projection to me.”',
+        after: '“I think you want the technical mapping first. Here is the plain-language version, then the math.”',
+      };
+    case 'face_preserving':
+      return {
+        before: '“So you think I’m wrong?”',
+        after: '“I think we may be using the same word in different ways. Here is the assumption I’m making.”',
+      };
+    case 'minimal_clarifying':
+      return {
+        before: '“Should I do X or Y?”',
+        after: '“If X and Y lead to different outcomes, I need one detail. Otherwise I’ll proceed with the safest assumption.”',
+      };
+    case 'direct':
+    default:
+      return {
+        before: '“What is the answer?”',
+        after: '“Here is the direct answer, plus a technical version if you want it.”',
+      };
+  }
+}
+
 export function RecommendationOutput({ recommendation: rec }: Props) {
   const [showPrinciples, setShowPrinciples] = useState(false);
   const regime = getRegimeBadge(rec.predicted_regime);
+  const translationPosture = rec.platform_parameters.translation_posture;
+  const translationBadge = getTranslationBadge(translationPosture);
+  const translationExample = getTranslationExample(translationPosture);
 
   return (
     <div className="space-y-5">
@@ -129,6 +175,37 @@ export function RecommendationOutput({ recommendation: rec }: Props) {
           <Param label="context_strategy"   value={rec.platform_parameters.context_strategy} />
         </CardContent>
       </Card>
+
+      {/* Translation posture */}
+      {translationPosture ? (
+        <Card>
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between gap-3 mb-4">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Translation Layer
+              </h3>
+              <Badge variant={translationBadge}>{getTranslationLabel(translationPosture)}</Badge>
+            </div>
+            <div className="space-y-3">
+              {(rec.platform_parameters.translation_notes ?? []).map((note) => (
+                <div key={note} className="rounded-lg border border-gray-800 bg-gray-950 px-3 py-2">
+                  <p className="text-sm text-gray-300 leading-relaxed">{note}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-lg border border-gray-800 bg-gray-950 p-3">
+                <p className="text-xs text-gray-500 mb-1">Before</p>
+                <p className="text-sm text-gray-300 leading-relaxed">{translationExample.before}</p>
+              </div>
+              <div className="rounded-lg border border-gray-800 bg-gray-950 p-3">
+                <p className="text-xs text-gray-500 mb-1">After</p>
+                <p className="text-sm text-gray-300 leading-relaxed">{translationExample.after}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
 
       {/* System prompt additions */}
       {rec.platform_parameters.system_prompt_additions?.length ? (

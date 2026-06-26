@@ -21,7 +21,7 @@ export default function CheckoutSuccessPage({ searchParams }: CheckoutSuccessPag
       </h1>
       <p className="text-gray-400 mb-8">
         {isDiagnostic
-          ? 'Your payment went through. The next step is the brief, not another checkout.'
+          ? 'Your payment went through. You bought a written decision memo for one agent, and the next step is the brief, not another checkout.'
           : 'Your access email is on its way. Check your inbox (and spam folder just in case).'}
       </p>
       <div className="rounded-lg border border-gray-800 bg-gray-900 p-6 text-left mb-8">

@@ -98,9 +98,9 @@ export default function PricingPage() {
             </div>
             <h2 className="text-2xl font-bold text-white mb-2">Written Agent Diagnostic Report</h2>
             <p className="text-gray-400 max-w-2xl">
-              A one-time review for a deployed agent, support copilot, or workflow assistant.
-              Send one workload, one failure mode, and the context around it. Receive a short
-              report with the risk score, recommended runtime posture, and implementation priorities.
+              For $750, you get a written decision memo for one deployed agent, support copilot, or workflow assistant.
+              Send one workload, one failure mode, and the context around it. I return the risk score,
+              recommended runtime posture, implementation priorities, and the next test to run.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               {['One agent or workflow', 'One failure mode', 'Written report', 'Implementation settings'].map((item) => (
@@ -140,7 +140,7 @@ export default function PricingPage() {
               After checkout, you’ll land on /diagnostic and submit one brief. No second purchase step.
             </p>
             <p className="mt-4 text-sm text-gray-400">
-              Good fit for support automation, AI QA, and internal copilots when the team wants a written readout before rollout.
+              Good fit for support automation, AI QA, and internal copilots when the team wants a concrete answer before rollout.
             </p>
           </div>
 

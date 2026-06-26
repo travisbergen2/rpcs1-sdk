@@ -130,7 +130,11 @@ export function HomepageLiveDemo() {
   }
 
   useEffect(() => {
-    void runDemo('support');
+    const timer = window.setTimeout(() => {
+      void runDemo('support');
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
   const active = DEMOS[selected];

@@ -96,7 +96,7 @@ FT -> TI -> AR -> SG -> UE`}
         <h2 className="text-xl font-semibold text-white mb-3">Next</h2>
         <ul className="space-y-2 text-gray-400">
           <li><Link href="/tuner" className="text-sky-400 hover:text-sky-300">Interactive tuner</Link> — run a concrete recommendation.</li>
-          <li><Link href="/pricing#diagnostic" className="text-sky-400 hover:text-sky-300">Paid diagnostic</Link> — get a written report for your team.</li>
+          <li><Link href="/pricing#diagnostic" className="text-amber-400 hover:text-amber-300">Paid diagnostic</Link> — get a written report for your team.</li>
           <li><Link href="/docs/primitives" className="text-sky-400 hover:text-sky-300">Five primitives</Link> — TI, SG, FT, UE, AR.</li>
         </ul>
       </section>

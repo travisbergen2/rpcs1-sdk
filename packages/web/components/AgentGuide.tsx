@@ -115,7 +115,7 @@ export function AgentGuide() {
               <p className="text-sm leading-relaxed text-gray-300">{selectedQuestion.answer}</p>
               <Link
                 href={selectedQuestion.cta.href}
-                className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-sky-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-sky-400"
+                className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-amber-400 shadow-lg shadow-amber-500/20"
               >
                 {selectedQuestion.cta.label}
               </Link>

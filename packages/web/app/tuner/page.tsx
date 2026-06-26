@@ -156,7 +156,7 @@ function TunerPageContent() {
         <div className="mt-6 flex flex-col sm:flex-row gap-3">
           <a
             href="/api/checkout?tier=diagnostic"
-            className="inline-flex items-center justify-center rounded-full bg-sky-500 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-sky-400"
+            className="inline-flex items-center justify-center rounded-full bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-amber-400 shadow-lg shadow-amber-500/20"
           >
             Need the written diagnostic?
           </a>
@@ -201,8 +201,8 @@ function TunerPageContent() {
       </div>
 
       <div className="mt-12 pt-8 border-t border-gray-800">
-        <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-6 sm:p-7">
-          <p className="text-xs font-mono text-sky-400 mb-3">sales tunnel</p>
+        <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-6 sm:p-7">
+          <p className="text-xs font-mono text-amber-400 mb-3">sales tunnel</p>
           <h2 className="text-xl font-semibold text-white mb-3">Need a written diagnosis instead of a quick guess?</h2>
           <p className="text-gray-400 max-w-2xl">
             The free tuner is for fast iteration. The paid diagnostic gives you a report you can
@@ -212,7 +212,7 @@ function TunerPageContent() {
           <div className="mt-5 flex flex-col sm:flex-row gap-3">
             <a
               href="/api/checkout?tier=diagnostic"
-              className="inline-flex items-center justify-center rounded-full bg-sky-500 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-sky-400"
+              className="inline-flex items-center justify-center rounded-full bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-amber-400 shadow-lg shadow-amber-500/20"
             >
               Buy the diagnostic
             </a>

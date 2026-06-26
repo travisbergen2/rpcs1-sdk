@@ -114,7 +114,7 @@ export default function HomePage() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/api/checkout?tier=diagnostic"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-sky-500 hover:bg-sky-400 text-white rounded-xl transition-all shadow-lg shadow-sky-500/25"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl transition-all shadow-lg shadow-amber-500/25"
           >
             Request a paid diagnostic
           </Link>
@@ -541,7 +541,7 @@ print(config.receiver_profile.TI)               `}<span className="text-gray-500
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/api/checkout?tier=diagnostic"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-sky-500 hover:bg-sky-400 text-white rounded-xl transition-all"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl transition-all shadow-lg shadow-amber-500/20"
           >
             Buy the diagnostic →
           </Link>

@@ -41,10 +41,16 @@ export default function CheckoutSuccessPage({ searchParams }: CheckoutSuccessPag
         )}
       </div>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
-        <Link href="/diagnostic" className="text-sm text-sky-400 hover:text-sky-300">
+        <Link
+          href="/diagnostic"
+          className="inline-flex items-center justify-center rounded-lg bg-amber-500 px-4 py-2.5 text-sm font-semibold text-slate-950 hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/20"
+        >
           Start the brief now →
         </Link>
-        <Link href={isDiagnostic ? '/pricing#diagnostic' : '/docs/getting-started'} className="text-sm text-sky-400 hover:text-sky-300">
+        <Link
+          href={isDiagnostic ? '/pricing#diagnostic' : '/docs/getting-started'}
+          className="text-sm text-sky-400 hover:text-sky-300 self-center"
+        >
           {isDiagnostic ? 'View pricing' : 'Read the getting started guide →'}
         </Link>
       </div>

@@ -79,7 +79,7 @@ export function DiagnosticIntakeForm() {
         <div className="flex flex-col sm:flex-row gap-3">
           <a
             href="/pricing#diagnostic"
-            className="inline-flex items-center justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition-colors"
+            className="inline-flex items-center justify-center rounded-lg bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/20"
           >
             Review pricing
           </a>
@@ -215,14 +215,14 @@ export function DiagnosticIntakeForm() {
       {error && <ErrorMessage>{error}</ErrorMessage>}
 
       <div className="flex flex-col sm:flex-row gap-3">
-        <Button type="submit" loading={loading} size="lg" className="w-full sm:w-auto">
+        <Button type="submit" loading={loading} size="lg" variant="cta" className="w-full sm:w-auto">
           Submit diagnostic brief
         </Button>
         <a
           href="/pricing#diagnostic"
           className={cn(
-            'inline-flex items-center justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-semibold text-gray-200 transition-colors',
-            'hover:bg-gray-800'
+            'inline-flex items-center justify-center rounded-lg border border-amber-500/30 bg-amber-500/10 px-5 py-3 text-sm font-semibold text-amber-300 transition-colors',
+            'hover:bg-amber-500/15'
           )}
         >
           View paid diagnostic

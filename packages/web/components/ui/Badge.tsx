@@ -12,7 +12,7 @@ const variantStyles: Record<string, string> = {
   overload:    'bg-orange-500/15 text-orange-400 border border-orange-500/30',
   freeze:      'bg-blue-500/15 text-blue-300 border border-blue-500/30',
   neutral:     'bg-gray-800 text-gray-300 border border-gray-700',
-  paid:        'bg-sky-500/15 text-sky-400 border border-sky-500/30',
+  paid:        'bg-amber-500/15 text-amber-400 border border-amber-500/30',
 };
 
 export function Badge({ children, variant = 'neutral', className }: BadgeProps) {

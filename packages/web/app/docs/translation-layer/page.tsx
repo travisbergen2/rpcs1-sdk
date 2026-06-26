@@ -144,7 +144,7 @@ export default function TranslationLayerPage() {
           </Link>
           <Link
             href="/pricing#diagnostic"
-            className="inline-flex items-center justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-semibold text-gray-200 hover:bg-gray-800 transition-colors"
+            className="inline-flex items-center justify-center rounded-lg bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/20"
           >
             Buy the diagnostic
           </Link>

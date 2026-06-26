@@ -12,7 +12,7 @@ export default function DiagnosticPage() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20">
       <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 items-start">
         <section>
-          <p className="text-xs font-mono text-sky-400 mb-3">paid diagnostic intake</p>
+          <p className="text-xs font-mono text-amber-400 mb-3">paid diagnostic intake</p>
           <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight mb-5">
             Submit one agent or workflow.
           </h1>
@@ -42,7 +42,7 @@ export default function DiagnosticPage() {
             </ul>
           </div>
           <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-5 sm:p-6 mb-8">
-            <p className="text-xs font-mono text-sky-400 mb-2">sales tunnel</p>
+            <p className="text-xs font-mono text-amber-400 mb-2">sales tunnel</p>
             <p className="text-sm text-gray-300 leading-relaxed mb-4">
               The buying path is simple: free tuner first, then the paid report, then this brief.
               If you are already here, you are one step from submitting the diagnostic input.
@@ -50,7 +50,7 @@ export default function DiagnosticPage() {
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/api/checkout?tier=diagnostic"
-                className="inline-flex items-center justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition-colors"
+                className="inline-flex items-center justify-center rounded-lg bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/20"
               >
                 Buy report now
               </Link>
@@ -63,7 +63,7 @@ export default function DiagnosticPage() {
             </div>
           </div>
           <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-6 sm:p-8">
-            <p className="text-xs font-mono text-sky-400 mb-2">what you get</p>
+            <p className="text-xs font-mono text-amber-400 mb-2">what you get</p>
             <p className="text-gray-300 leading-relaxed">
               A concise report you can hand to your team, plus a clearer decision on whether the
               agent should be more cautious, more grounded, or less eager to commit.
@@ -86,7 +86,7 @@ export default function DiagnosticPage() {
             <div className="mt-6 flex flex-col sm:flex-row gap-3">
               <Link
                 href="/api/checkout?tier=diagnostic"
-                className="inline-flex items-center justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition-colors"
+                className="inline-flex items-center justify-center rounded-lg bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/20"
               >
                 Buy report, then submit brief
               </Link>

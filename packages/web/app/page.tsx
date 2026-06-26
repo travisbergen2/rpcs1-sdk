@@ -52,6 +52,27 @@ const CX_SIGNALS = [
   'Teams cannot tell whether failures come from model choice, prompt design, or operating conditions',
 ];
 
+const WIN_AREAS = [
+  {
+    title: 'Support and CX',
+    pain: 'Users are emotional, policies are nuanced, and one blunt reply can cost the relationship.',
+    does: 'Adds a face-preserving translation posture, grounding, and tighter handoff rules.',
+    outcome: 'Fewer offense moments, fewer clarification loops, and more consistent resolution.',
+  },
+  {
+    title: 'Technical collaboration',
+    pain: 'People use abstract, overloaded, or half-formed language when they want a precise answer.',
+    does: 'Bridges from intent to technical structure before answering, then shows the mapping.',
+    outcome: 'Less token waste, fewer “that is not what I meant” loops, and faster alignment.',
+  },
+  {
+    title: 'Internal agent operations',
+    pain: 'Teams need to know whether to trust, retrain, or reconfigure an agent after launch.',
+    does: 'Scores the regime, recommends posture, and points to the next test.',
+    outcome: 'Clearer decisions, faster debugging, and a repeatable review workflow.',
+  },
+];
+
 export default function HomePage() {
   return (
     <div>
@@ -318,6 +339,36 @@ export default function HomePage() {
               </CardContent>
             </Card>
           </div>
+        </div>
+      </section>
+
+      {/* Where it wins */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
+        <div className="mb-8">
+          <p className="text-xs font-mono text-sky-400 mb-3">where it wins</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+            Use RPCS-1 when the cost of being misunderstood is higher than the cost of being precise.
+          </h2>
+          <p className="text-gray-400 leading-relaxed max-w-3xl">
+            The strongest use cases are not generic chat. They are workflows where posture,
+            context, and handoff behavior decide whether the agent feels helpful or brittle.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-5">
+          {WIN_AREAS.map((item) => (
+            <Card key={item.title} className="bg-gray-950/80 border-gray-800">
+              <CardContent className="p-6">
+                <p className="text-xs font-mono text-sky-400 mb-3">{item.title}</p>
+                <p className="text-sm text-gray-300 font-semibold mb-2">Pain</p>
+                <p className="text-sm text-gray-400 leading-relaxed mb-4">{item.pain}</p>
+                <p className="text-sm text-gray-300 font-semibold mb-2">RPCS-1 does</p>
+                <p className="text-sm text-gray-400 leading-relaxed mb-4">{item.does}</p>
+                <p className="text-sm text-gray-300 font-semibold mb-2">Outcome</p>
+                <p className="text-sm text-gray-400 leading-relaxed">{item.outcome}</p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </section>
 

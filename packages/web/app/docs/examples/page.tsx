@@ -108,6 +108,25 @@ Target platform: anthropic`}</code></pre>
         </p>
       </section>
 
+      <section>
+        <h2>Second call to try</h2>
+        <p>
+          The other high-intent case is a coding agent that keeps changing direction or
+          acting before it has enough repository context.
+        </p>
+        <pre><code>{`Use recommend_agent_configuration to diagnose my coding agent.
+
+Task: inspect a changing repository, edit files, run tests, and open a pull request
+Environment: moderate, somewhat_predictable, medium stakes
+Context relevance: long
+Commitment style: balanced
+Target platform: openai`}</code></pre>
+        <p>
+          The output should again lead with the failure-risk score, predicted regime, runtime
+          posture, and next test to run.
+        </p>
+      </section>
+
       {EXAMPLES.map((example) => (
         <section key={example.preset}>
           <h2>{example.title}</h2>

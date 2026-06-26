@@ -113,6 +113,25 @@ The expected value is a plain diagnosis first:
 
 Then the implementation details.
 
+Use this as the second obvious MCP call:
+
+```text
+Use recommend_agent_configuration to diagnose my coding agent.
+
+Task: inspect a changing repository, edit files, run tests, and open a pull request
+Environment: moderate, somewhat_predictable, medium stakes
+Context relevance: long
+Commitment style: balanced
+Target platform: openai
+```
+
+The expected value is the same shape:
+
+- failure-risk score
+- predicted regime
+- runtime posture
+- next test to run
+
 ### Glama top-of-list copy
 
 Use this exact three-line structure at the top of the listing:
@@ -121,7 +140,7 @@ Use this exact three-line structure at the top of the listing:
 >
 > Get a failure-risk score, runtime posture, and next test.
 >
-> Start with one support copilot under live pressure.
+> Start with one support copilot or coding agent.
 
 ## Launch posts
 

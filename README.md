@@ -116,6 +116,21 @@ Target platform: anthropic
 The output should lead with the failure-risk score, predicted regime, runtime posture,
 and next test to run.
 
+The second useful call is a coding agent in a changing repository:
+
+```text
+Use recommend_agent_configuration to diagnose my coding agent.
+
+Task: inspect a changing repository, edit files, run tests, and open a pull request
+Environment: moderate, somewhat_predictable, medium stakes
+Context relevance: long
+Commitment style: balanced
+Target platform: openai
+```
+
+The output should still lead with the failure-risk score, predicted regime, runtime posture,
+and next test to run.
+
 Connection details and client compatibility notes are available at
 [https://rpcs1.dev/docs/mcp](https://rpcs1.dev/docs/mcp).
 Practical coding, support, and research examples are available at

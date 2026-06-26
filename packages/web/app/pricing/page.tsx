@@ -40,7 +40,7 @@ export default function PricingPage() {
       <div className="text-center mb-12">
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Pricing</h1>
         <p className="text-gray-400 text-lg max-w-xl mx-auto">
-          Start with the free tuner. Pay only when you want a written diagnostic for one specific agent or workflow that can move from founder review to team rollout.
+          Start with the free tuner. Pay only when one agent needs a written diagnostic before rollout.
         </p>
       </div>
 
@@ -81,8 +81,7 @@ export default function PricingPage() {
             <div className="mt-5 rounded-xl border border-sky-500/20 bg-sky-500/5 p-4">
               <p className="text-xs font-mono text-sky-400 mb-2">team-friendly</p>
               <p className="text-sm text-gray-400 leading-relaxed">
-                Good fit for support automation, AI QA, internal copilots, and workflow teams that
-                want a written readout before they standardize a rollout.
+                Good fit for support automation, AI QA, and internal copilots before a team rollout.
               </p>
             </div>
             <div className="mt-6 flex flex-col sm:flex-row gap-3">
@@ -190,11 +189,10 @@ export default function PricingPage() {
           <div>
             <p className="text-xs font-mono text-sky-400 mb-2">enterprise rollout</p>
             <h2 className="text-xl font-semibold text-white mb-2">
-              Need a procurement-friendly path for a broader rollout?
+              Need procurement, security, or a custom rollout?
             </h2>
             <p className="text-sm text-gray-400 max-w-2xl">
-              Keep the diagnostic as the entry point, then move to a team workflow with invoice
-              billing, security review support, and custom integration scoping.
+              Keep the diagnostic as the entry point, then move to invoice billing and integration scoping.
             </p>
           </div>
           <a

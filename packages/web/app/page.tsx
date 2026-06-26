@@ -88,8 +88,7 @@ export default function HomePage() {
           <span className="gradient-text">before customers do.</span>
         </h1>
         <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-6 leading-relaxed">
-          Start with the tuner. Upgrade to a $750 written diagnostic when you want a failure
-          score, recommended posture, and implementation settings for one workflow.
+          Start with the tuner. Upgrade to a $750 written diagnostic for one workflow.
         </p>
         <p className="text-sm text-gray-500 max-w-xl mx-auto mb-8">
           Built for support, collaboration, and ops teams that need the agent to behave under
@@ -176,12 +175,11 @@ export default function HomePage() {
               <div className="rounded-2xl border border-sky-500/20 bg-gray-950/70 p-5 mb-5">
                 <p className="text-xs font-mono text-sky-300 mb-2">What a pilot usually reveals</p>
                 <blockquote className="text-lg sm:text-xl text-gray-100 leading-relaxed">
-                  “The model was technically correct, but it still answered in the wrong frame.”
+                  “Correct, but in the wrong frame.”
                 </blockquote>
               </div>
               <p className="text-gray-400 leading-relaxed">
-                RPCS-1 turns that into a repeatable review: state the assumption, preserve the
-                user&apos;s frame, and move toward the answer without triggering a correction spiral.
+                RPCS-1 turns that into a repeatable review: state the assumption, preserve the user&apos;s frame, and move toward the answer without triggering a correction spiral.
               </p>
             </CardContent>
           </Card>

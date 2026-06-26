@@ -17,10 +17,21 @@ export default function DiagnosticPage() {
             Submit one agent or workflow.
           </h1>
           <p className="text-lg text-gray-400 leading-relaxed max-w-2xl mb-8">
-            Use this brief whether you&apos;ve already paid or want to buy the report next. I use
-            the details to produce a failure-risk score, recommended runtime posture, and
-            implementation priorities for the workload you actually ship.
+            After checkout, use this brief to capture one workload, one failure mode, and the
+            context needed for a written report.
           </p>
+          <div className="grid sm:grid-cols-3 gap-3 mb-8">
+            {[
+              { title: '1 workflow', body: 'Focus on the agent people actually ship.' },
+              { title: '1 failure mode', body: 'Show the risk you want caught before launch.' },
+              { title: '1 written report', body: 'Get the score, posture, and next test.' },
+            ].map((item) => (
+              <div key={item.title} className="rounded-xl border border-gray-800 bg-gray-900/50 p-4">
+                <p className="text-sm font-semibold text-white mb-1">{item.title}</p>
+                <p className="text-sm text-gray-400 leading-relaxed">{item.body}</p>
+              </div>
+            ))}
+          </div>
           <div className="rounded-2xl border border-gray-800 bg-gray-900/50 p-6 sm:p-8 mb-8">
             <h2 className="text-lg font-semibold text-white mb-4">What helps most</h2>
             <ul className="space-y-3 text-sm text-gray-400 leading-relaxed">
@@ -29,6 +40,27 @@ export default function DiagnosticPage() {
               <li>• The deployment stage: pre-purchase, post-purchase, or internal review</li>
               <li>• Any context about volume, stakes, policy pressure, or handoff behavior</li>
             </ul>
+          </div>
+          <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-5 sm:p-6 mb-8">
+            <p className="text-xs font-mono text-sky-400 mb-2">sales tunnel</p>
+            <p className="text-sm text-gray-300 leading-relaxed mb-4">
+              The buying path is simple: free tuner first, then the paid report, then this brief.
+              If you are already here, you are one step from submitting the diagnostic input.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/api/checkout?tier=diagnostic"
+                className="inline-flex items-center justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition-colors"
+              >
+                Buy report now
+              </Link>
+              <Link
+                href="/pricing#diagnostic"
+                className="inline-flex items-center justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-semibold text-gray-200 hover:bg-gray-800 transition-colors"
+              >
+                Review pricing
+              </Link>
+            </div>
           </div>
           <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-6 sm:p-8">
             <p className="text-xs font-mono text-sky-400 mb-2">what you get</p>
@@ -41,7 +73,7 @@ export default function DiagnosticPage() {
                 href="/api/checkout?tier=diagnostic"
                 className="inline-flex items-center justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition-colors"
               >
-                Buy diagnostic, then submit brief
+                Buy report, then submit brief
               </Link>
               <Link
                 href="/pricing#diagnostic"

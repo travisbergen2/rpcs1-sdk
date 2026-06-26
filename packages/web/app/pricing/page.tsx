@@ -44,6 +44,34 @@ export default function PricingPage() {
         </p>
       </div>
 
+      <section className="mb-8 rounded-xl border border-gray-800 bg-gray-950/70 p-5 sm:p-6">
+        <div className="grid sm:grid-cols-3 gap-4">
+          {[
+            {
+              step: '01',
+              title: 'Run the free tuner',
+              body: 'Check the likely regime and see whether the workflow is stable, cautious, or overloaded.',
+            },
+            {
+              step: '02',
+              title: 'Buy the written report',
+              body: 'Unlock one $750 diagnostic for one agent or workflow, with posture and next-test guidance.',
+            },
+            {
+              step: '03',
+              title: 'Submit the brief',
+              body: 'Send the workload details once checkout is done so the review can start.',
+            },
+          ].map((item) => (
+            <div key={item.step} className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
+              <p className="text-xs font-mono text-sky-400 mb-2">{item.step}</p>
+              <p className="text-sm font-semibold text-white mb-2">{item.title}</p>
+              <p className="text-sm text-gray-400 leading-relaxed">{item.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section id="diagnostic" className="mb-8 border border-sky-500/40 bg-gray-900 rounded-xl p-6 sm:p-8">
         <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-6 items-start">
           <div>
@@ -89,7 +117,7 @@ export default function PricingPage() {
                 href="/api/checkout?tier=diagnostic"
                 className="inline-flex w-full sm:w-auto justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition-colors"
               >
-                Buy diagnostic, then submit brief
+                Buy report, then submit brief
               </Link>
               <Link
                 href="/diagnostic"
@@ -99,7 +127,7 @@ export default function PricingPage() {
               </Link>
             </div>
             <p className="mt-3 text-xs text-gray-500">
-              After checkout, you’ll land on /diagnostic and submit one brief.
+              After checkout, you’ll land on /diagnostic and submit one brief. No second purchase step.
             </p>
           </div>
 

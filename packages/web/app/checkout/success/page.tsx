@@ -21,13 +21,13 @@ export default function CheckoutSuccessPage({ searchParams }: CheckoutSuccessPag
       </h1>
       <p className="text-gray-400 mb-8">
         {isDiagnostic
-          ? 'Your payment went through. Submit the brief now so I can review one agent or workflow.'
+          ? 'Your payment went through. The next step is the brief, not another checkout.'
           : 'Your access email is on its way. Check your inbox (and spam folder just in case).'}
       </p>
       <div className="rounded-lg border border-gray-800 bg-gray-900 p-6 text-left mb-8">
         {isDiagnostic ? (
           <ol className="space-y-2 text-sm text-gray-400">
-            <li>1. Submit your brief at <Link href="/diagnostic" className="text-sky-300 hover:text-sky-200">/diagnostic</Link></li>
+            <li>1. Open the brief at <Link href="/diagnostic" className="text-sky-300 hover:text-sky-200">/diagnostic</Link></li>
             <li>2. Include one agent or workflow</li>
             <li>3. Add the failure mode you want caught</li>
           </ol>
@@ -42,7 +42,7 @@ export default function CheckoutSuccessPage({ searchParams }: CheckoutSuccessPag
       </div>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <Link href="/diagnostic" className="text-sm text-sky-400 hover:text-sky-300">
-          Open intake brief →
+          Start the brief now →
         </Link>
         <Link href={isDiagnostic ? '/pricing#diagnostic' : '/docs/getting-started'} className="text-sm text-sky-400 hover:text-sky-300">
           {isDiagnostic ? 'View pricing' : 'Read the getting started guide →'}

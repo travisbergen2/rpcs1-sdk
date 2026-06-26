@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Agent Tuning Examples',
+  title: 'Find why an agent fails under pressure',
   description:
-    'Practical RPCS1 examples for coding agents, customer support agents, and research agents.',
+    'Practical RPCS1 examples for support copilots, coding agents, and research agents.',
 };
 
 const EXAMPLES = [
@@ -77,7 +77,7 @@ const EXAMPLES = [
 export default function ExamplesPage() {
   return (
     <div>
-      <h1>Agent tuning examples</h1>
+      <h1>Find why an agent fails under pressure</h1>
       <p>
         RPCS1 is most useful when an agent&apos;s failures look behavioral rather than purely
         factual. These examples show when to call{' '}

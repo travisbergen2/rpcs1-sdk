@@ -144,20 +144,32 @@ export function HomepageLiveDemo() {
       .join(' · ')
     : 'Running...';
 
+  function scrollToProof() {
+    document.getElementById('proof-signal')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   return (
-    <div className="rounded-3xl border border-gray-800 bg-gray-950/90 p-5 sm:p-6 shadow-2xl shadow-black/30 backdrop-blur">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-mono text-sky-400 mb-2">live demo</p>
-          <h3 className="text-xl font-semibold text-white">Try one workflow in under a minute.</h3>
-          <p className="mt-2 text-sm text-gray-400 leading-relaxed">
-            Pick a preset, run RPCS-1, and see the status, configuration, language mode, and next check.
-          </p>
+    <div className="relative overflow-hidden rounded-3xl border border-gray-800 bg-gray-950/90 p-5 sm:p-6 shadow-2xl shadow-black/30 backdrop-blur">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-70"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle at 20% 10%, rgba(56,189,248,0.16), transparent 25%), radial-gradient(circle at 90% 30%, rgba(245,158,11,0.12), transparent 20%), radial-gradient(circle at 50% 100%, rgba(16,185,129,0.08), transparent 20%)',
+        }}
+      />
+      <div className="relative z-10">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-mono text-sky-400 mb-2">live demo</p>
+            <h3 className="text-xl font-semibold text-white">Try one workflow in under a minute.</h3>
+            <p className="mt-2 text-sm text-gray-400 leading-relaxed">
+              Pick a preset, run RPCS-1, and see the status, configuration, language mode, and next check.
+            </p>
+          </div>
+          <span className={cn('rounded-full border px-3 py-1 text-xs font-mono', loading ? 'text-gray-300 border-gray-700 bg-gray-900' : 'text-emerald-300 border-emerald-500/20 bg-emerald-500/10')}>
+            {loading ? 'running' : 'ready'}
+          </span>
         </div>
-        <span className={cn('rounded-full border px-3 py-1 text-xs font-mono', loading ? 'text-gray-300 border-gray-700 bg-gray-900' : 'text-emerald-300 border-emerald-500/20 bg-emerald-500/10')}>
-          {loading ? 'running' : 'ready'}
-        </span>
-      </div>
 
       <div className="mt-4 grid grid-cols-3 gap-2">
         {(Object.keys(DEMOS) as DemoKey[]).map((key) => (
@@ -225,6 +237,15 @@ export function HomepageLiveDemo() {
       <Button type="button" variant="cta" size="lg" className="mt-5 w-full" loading={loading} onClick={() => void runDemo(selected)}>
         Run live demo
       </Button>
+
+        <button
+          type="button"
+          onClick={scrollToProof}
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-sky-500/20 bg-sky-500/10 px-4 py-2 text-xs font-semibold text-sky-200 transition-colors hover:bg-sky-500/15"
+        >
+          Scroll to proof ↓
+        </button>
+      </div>
     </div>
   );
 }

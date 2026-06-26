@@ -91,24 +91,14 @@ export default function HomePage() {
               <span className="gradient-text">fail before rollout.</span>
             </h1>
             <p className="text-lg text-gray-400 max-w-2xl mb-6 leading-relaxed">
-              RPCS-1 tells support teams, AI builders, and ops leads whether one workflow is likely
-              to fail, what runtime settings to change, and what to test next.
+              RPCS-1 tells you whether one workflow is likely to fail, what to change, and what to test next.
             </p>
 
             <div className="grid sm:grid-cols-3 gap-3 mb-8">
               {[
-                {
-                  title: 'What it is',
-                  body: 'A diagnostic for one deployed agent or workflow.',
-                },
-                {
-                  title: 'Who it is for',
-                  body: 'Support, AI, ops, and consultant teams shipping agents.',
-                },
-                {
-                  title: 'Why it is better',
-                  body: 'Less guesswork, clearer next steps, faster rollout decisions.',
-                },
+                { title: 'What it is', body: 'A diagnostic for one deployed agent or workflow.' },
+                { title: 'Who it is for', body: 'Teams shipping support, AI, and ops agents.' },
+                { title: 'Why it is better', body: 'Less guesswork, clearer next steps, faster rollout decisions.' },
               ].map((item) => (
                 <div key={item.title} className="rounded-2xl border border-gray-800 bg-gray-950/70 p-4">
                   <p className="text-xs font-mono text-sky-400 mb-2">{item.title}</p>
@@ -154,7 +144,7 @@ export default function HomePage() {
       </section>
 
       {/* Proof-style signal */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
+      <section id="proof-signal" className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
         <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-5 items-stretch">
           <Card className="border-sky-500/20 bg-sky-500/5">
             <CardContent className="p-6 sm:p-8">
@@ -525,10 +515,10 @@ print(config.receiver_profile.TI)               `}<span className="text-gray-500
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-32">
         <div className="relative overflow-hidden rounded-[2rem] border border-sky-500/20 bg-[#050814] p-6 sm:p-8 lg:p-10">
           <div
-            className="absolute inset-0 opacity-60"
+            className="absolute inset-0 opacity-80"
             style={{
               backgroundImage:
-                'radial-gradient(circle at 50% 20%, rgba(56,189,248,0.18), transparent 32%), radial-gradient(circle at 20% 80%, rgba(168,85,247,0.12), transparent 25%), radial-gradient(circle at 80% 75%, rgba(16,185,129,0.08), transparent 25%)',
+                'radial-gradient(circle at 50% 20%, rgba(56,189,248,0.22), transparent 30%), radial-gradient(circle at 20% 80%, rgba(168,85,247,0.15), transparent 22%), radial-gradient(circle at 80% 75%, rgba(16,185,129,0.12), transparent 22%)',
             }}
           />
           <div className="relative">
@@ -538,13 +528,14 @@ print(config.receiver_profile.TI)               `}<span className="text-gray-500
                 The site gets more immersive as you scroll down.
               </h2>
               <p className="text-gray-400 leading-relaxed max-w-3xl">
-                Clarity comes first. Proof comes next. The deeper you go, the more the interface
-                turns into an operating room for buying, inspecting, and rolling out the system.
+                Clarity comes first. Proof comes next. The deeper you go, the more the interface turns
+                into an operating room for buying, inspecting, and rolling out the system.
               </p>
             </div>
 
             <div className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr] items-stretch" style={{ perspective: '1600px' }}>
-              <div className="relative rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6 backdrop-blur-xl shadow-2xl shadow-black/40 transform-gpu lg:translate-y-4 lg:[transform:rotateX(10deg)_rotateY(8deg)]">
+              <div className="relative rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6 backdrop-blur-2xl shadow-[0_24px_120px_rgba(0,0,0,0.55)] transform-gpu lg:translate-y-4 lg:[transform:rotateX(10deg)_rotateY(8deg)]">
+                <div className="pointer-events-none absolute inset-0 rounded-3xl bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.18),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(245,158,11,0.12),_transparent_28%)]" />
                 <p className="text-xs font-mono text-amber-400 mb-3">conversation</p>
                 <h3 className="text-xl sm:text-2xl font-semibold text-white mb-3">What are you trying to build today?</h3>
                 <p className="text-gray-300 leading-relaxed mb-5">
@@ -593,7 +584,7 @@ print(config.receiver_profile.TI)               `}<span className="text-gray-500
                 ].map((item) => (
                   <div
                     key={item.title}
-                    className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5 backdrop-blur-md shadow-xl shadow-black/20 transform-gpu lg:[transform:rotateX(12deg)_rotateY(-10deg)]"
+                    className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5 backdrop-blur-2xl shadow-[0_18px_90px_rgba(0,0,0,0.42)] transform-gpu lg:[transform:rotateX(12deg)_rotateY(-10deg)]"
                   >
                     <p className={`text-xs font-mono mb-2 ${item.accent === 'amber' ? 'text-amber-400' : item.accent === 'sky' ? 'text-sky-400' : 'text-emerald-400'}`}>
                       {item.title}

@@ -40,7 +40,7 @@ export default function PricingPage() {
       <div className="text-center mb-12">
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Pricing</h1>
         <p className="text-gray-400 text-lg max-w-xl mx-auto">
-          Start with the free tuner. Pay only when you want a written diagnostic for one specific agent or workflow.
+          Start with the free tuner. Pay only when you want a written diagnostic for one specific agent or workflow that can move from founder review to team rollout.
         </p>
       </div>
 
@@ -78,6 +78,13 @@ export default function PricingPage() {
                 </li>
               ))}
             </ul>
+            <div className="mt-5 rounded-xl border border-sky-500/20 bg-sky-500/5 p-4">
+              <p className="text-xs font-mono text-sky-400 mb-2">team-friendly</p>
+              <p className="text-sm text-gray-400 leading-relaxed">
+                Good fit for support automation, AI QA, internal copilots, and workflow teams that
+                want a written readout before they standardize a rollout.
+              </p>
+            </div>
             <div className="mt-6 flex flex-col sm:flex-row gap-3">
               <Link
                 href="/api/checkout?tier=diagnostic"
@@ -139,7 +146,7 @@ export default function PricingPage() {
           <div>
             <h2 className="text-lg font-semibold text-white mb-1">Recurring access</h2>
             <p className="text-sm text-gray-500">
-              These are for repeat use after the workflow is already worth running regularly.
+              These are for repeat use after the workflow is already worth running regularly across a team or workspace.
             </p>
           </div>
           <span className="text-xs text-gray-500">Secondary path</span>
@@ -178,14 +185,46 @@ export default function PricingPage() {
         </div>
       </div>
 
-      <div className="mt-12 text-center">
-        <p className="text-gray-500 text-sm mb-2">Need procurement support, a security review, or a custom integration?</p>
-        <a
-          href="mailto:travisbergen2@gmail.com?subject=RPCS-1 Enterprise"
-          className="text-sm text-sky-400 hover:text-sky-300 transition-colors"
-        >
-          Contact for Enterprise →
-        </a>
+      <div className="mt-12 rounded-xl border border-sky-500/15 bg-sky-500/5 p-6 sm:p-8">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-5">
+          <div>
+            <p className="text-xs font-mono text-sky-400 mb-2">enterprise rollout</p>
+            <h2 className="text-xl font-semibold text-white mb-2">
+              Need a procurement-friendly path for a broader rollout?
+            </h2>
+            <p className="text-sm text-gray-400 max-w-2xl">
+              Keep the diagnostic as the entry point, then move to a team workflow with invoice
+              billing, security review support, and custom integration scoping.
+            </p>
+          </div>
+          <a
+            href="mailto:travisbergen2@gmail.com?subject=RPCS-1 Enterprise"
+            className="inline-flex items-center justify-center rounded-lg border border-sky-500/30 bg-sky-500/10 px-4 py-2.5 text-sm font-semibold text-sky-300 hover:bg-sky-500/15 transition-colors"
+          >
+            Contact for Enterprise →
+          </a>
+        </div>
+        <div className="grid sm:grid-cols-3 gap-3">
+          {[
+            {
+              title: 'Invoice billing',
+              body: 'Keep checkout simple for the founder path, then move procurement to a direct billing conversation.',
+            },
+            {
+              title: 'Security review',
+              body: 'Share the operating model, data handling, and SDK behavior before a broader rollout.',
+            },
+            {
+              title: 'Custom integration',
+              body: 'Scope workspace, workflow, or product integrations once the first diagnostic proves fit.',
+            },
+          ].map((item) => (
+            <div key={item.title} className="rounded-lg border border-sky-500/15 bg-gray-950/60 p-4">
+              <p className="text-sm font-semibold text-white mb-1">{item.title}</p>
+              <p className="text-sm text-gray-400 leading-relaxed">{item.body}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="mt-16 rounded-xl border border-gray-800 p-6 sm:p-8">

@@ -88,12 +88,12 @@ export default function HomePage() {
           <span className="gradient-text">before customers do.</span>
         </h1>
         <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-6 leading-relaxed">
-          Start with a free sample assessment, then upgrade to a paid diagnostic when you want a
-          written failure-risk score, implementation settings, and a defensible runtime posture
-          for production.
+          Start with the tuner. Upgrade to a $750 written diagnostic when you want a failure
+          score, recommended posture, and implementation settings for one workflow.
         </p>
         <p className="text-sm text-gray-500 max-w-xl mx-auto mb-8">
-          Paid diagnostic report: $750 one-time. Free sample assessment available in the tuner.
+          Built for support, collaboration, and ops teams that need the agent to behave under
+          pressure.
         </p>
 
         {/* Concrete output preview */}
@@ -161,6 +161,54 @@ export default function HomePage() {
           >
             research agent
           </Link>
+        </div>
+      </section>
+
+      {/* Proof-style signal */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
+        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-5 items-stretch">
+          <Card className="border-sky-500/20 bg-sky-500/5">
+            <CardContent className="p-6 sm:p-8">
+              <p className="text-xs font-mono text-sky-400 mb-3">proof signal</p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+                The advantage is not softer wording. It is fewer failed assumptions.
+              </h2>
+              <div className="rounded-2xl border border-sky-500/20 bg-gray-950/70 p-5 mb-5">
+                <p className="text-xs font-mono text-sky-300 mb-2">What a pilot usually reveals</p>
+                <blockquote className="text-lg sm:text-xl text-gray-100 leading-relaxed">
+                  “The model was technically correct, but it still answered in the wrong frame.”
+                </blockquote>
+              </div>
+              <p className="text-gray-400 leading-relaxed">
+                RPCS-1 turns that into a repeatable review: state the assumption, preserve the
+                user&apos;s frame, and move toward the answer without triggering a correction spiral.
+              </p>
+            </CardContent>
+          </Card>
+
+          <div className="grid gap-4">
+            {[
+              {
+                title: 'Less clarification churn',
+                body: 'The system proposes the most likely meaning once, then proceeds instead of looping on “what did you mean?”',
+              },
+              {
+                title: 'More usable corrections',
+                body: 'When the reply needs to be precise, it still lands in a way the user can hear without losing face.',
+              },
+              {
+                title: 'Cleaner handoffs',
+                body: 'The output includes posture and next-test guidance, so teams can decide whether to adjust, retrain, or escalate.',
+              },
+            ].map((item) => (
+              <Card key={item.title} className="bg-gray-950/80 border-gray-800">
+                <CardContent className="p-5">
+                  <p className="text-sm font-semibold text-white mb-2">{item.title}</p>
+                  <p className="text-sm text-gray-400 leading-relaxed">{item.body}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 

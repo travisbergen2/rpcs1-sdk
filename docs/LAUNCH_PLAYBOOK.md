@@ -33,7 +33,7 @@ conditions before blaming the model or adding another tool.
 **Long description:**
 
 > RPCS1 is a public, read-only MCP server for deployed AI agents that need a
-> clear failure-risk score and concrete runtime settings. It turns task type,
+> failure-risk score and concrete runtime settings. It turns task type,
 > environmental entropy, predictability, stakes, context horizon, and commitment
 > style into an explainable receiver profile, predicted stability regime,
 > warnings, parameter recommendations, and a next test to run. It supports
@@ -112,6 +112,16 @@ The expected value is a plain diagnosis first:
 - next test to run
 
 Then the implementation details.
+
+### Glama top-of-list copy
+
+Use this exact three-line structure at the top of the listing:
+
+> Find why an agent fails under pressure.
+>
+> Get a failure-risk score, runtime posture, and next test.
+>
+> Start with one support copilot under live pressure.
 
 ## Launch posts
 

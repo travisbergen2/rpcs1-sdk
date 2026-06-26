@@ -4,7 +4,7 @@
 
 **Find why an agent fails under pressure and get the runtime settings to fix it.**
 
-A diagnostic framework for deployed AI agents that turns task type, entropy, stakes, predictability, context horizon, and commitment style into concrete runtime recommendations and a clear next test.
+A diagnostic framework for deployed AI agents that turns task type, entropy, stakes, predictability, context horizon, and commitment style into a failure-risk score, runtime recommendation, and next test.
 
 ## Repository Structure
 
@@ -101,7 +101,7 @@ It exposes one focused tool:
 
 - `recommend_agent_configuration` — use when designing, tuning, or diagnosing an AI agent
   against environmental entropy, predictability, stakes, context horizon, and commitment style.
-  The first useful call is usually a support copilot under live pressure:
+  The first useful call is a support copilot under live pressure:
 
 ```text
 Use recommend_agent_configuration to diagnose my support copilot.

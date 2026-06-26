@@ -10,7 +10,7 @@ export function createRpcs1McpServer() {
       version: '0.2.1',
       websiteUrl: 'https://rpcs1.dev',
       description:
-        'Find why an agent fails under pressure and get the runtime settings to fix it.',
+        'Find why an agent fails under pressure.',
     },
     {
       instructions:

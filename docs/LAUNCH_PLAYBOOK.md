@@ -2,10 +2,8 @@
 
 ## Positioning
 
-RPCS1 is a deterministic diagnostic and optimization layer for deployed AI
-agents. It turns an agent's operating environment into concrete model and
-runtime settings, then warns when the configuration is near oscillation,
-overload, freeze, or environment mismatch.
+RPCS1 finds why a deployed agent fails under pressure and returns concrete
+runtime settings, a failure-risk score, and the next test to run.
 
 Lead with the developer problem:
 
@@ -20,7 +18,7 @@ conditions before blaming the model or adding another tool.
 
 ## Directory listing copy
 
-**Name:** RPCS1 Agent Tuner
+**Name:** RPCS1
 
 **Endpoint:** `https://rpcs1.dev/mcp`
 
@@ -33,11 +31,9 @@ conditions before blaming the model or adding another tool.
 **Long description:**
 
 > RPCS1 is a public, read-only MCP server for deployed AI agents that need a
-> failure-risk score and concrete runtime settings. It turns task type,
-> environmental entropy, predictability, stakes, context horizon, and commitment
-> style into an explainable receiver profile, predicted stability regime,
-> warnings, parameter recommendations, and a next test to run. It supports
-> Anthropic, OpenAI, open-source, and generic targets. No API key is required.
+> failure-risk score, concrete runtime settings, and a next test to run. It
+> supports Anthropic, OpenAI, open-source, and generic targets. No API key is
+> required.
 
 **Tool:** `recommend_agent_configuration`
 

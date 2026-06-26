@@ -1,8 +1,8 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.travisbergen2/rpcs1-agent-tuner",
-  "title": "RPCS1 Agent Tuner",
-  "description": "Find why an agent fails under pressure and get the runtime settings to fix it.",
+  "title": "RPCS1",
+  "description": "Find why an agent fails under pressure.",
   "repository": {
     "url": "https://github.com/travisbergen2/rpcs1-sdk",
     "source": "github"

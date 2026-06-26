@@ -40,35 +40,52 @@ export default function PricingPage() {
       <div className="text-center mb-12">
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Pricing</h1>
         <p className="text-gray-400 text-lg max-w-xl mx-auto">
-          Start with the free tuner. Pay only when one agent needs a written diagnostic before rollout.
+          Start free. Buy a written diagnostic when one workflow needs a clear answer before rollout.
         </p>
       </div>
 
-      <section className="mb-8 rounded-xl border border-gray-800 bg-gray-950/70 p-5 sm:p-6">
-        <div className="grid sm:grid-cols-3 gap-4">
+      <section className="mb-8 grid lg:grid-cols-[1.05fr_0.95fr] gap-4">
+        <div className="rounded-xl border border-gray-800 bg-gray-950/70 p-5 sm:p-6">
+          <p className="text-xs font-mono text-sky-400 mb-3">fast buyer path</p>
           {[
             {
-              step: '01',
               title: 'Run the free tuner',
               body: 'Check the likely regime and see whether the workflow is stable, cautious, or overloaded.',
             },
             {
-              step: '02',
               title: 'Buy the written report',
               body: 'Unlock one $750 diagnostic for one agent or workflow, with posture and next-test guidance.',
             },
             {
-              step: '03',
               title: 'Submit the brief',
               body: 'Send the workload details once checkout is done so the review can start.',
             },
           ].map((item) => (
-            <div key={item.step} className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
-              <p className="text-xs font-mono text-sky-400 mb-2">{item.step}</p>
+            <div key={item.title} className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 mb-3 last:mb-0">
               <p className="text-sm font-semibold text-white mb-2">{item.title}</p>
               <p className="text-sm text-gray-400 leading-relaxed">{item.body}</p>
             </div>
           ))}
+        </div>
+
+        <div className="rounded-xl border border-sky-500/15 bg-sky-500/5 p-5 sm:p-6">
+          <p className="text-xs font-mono text-sky-400 mb-3">team buyer path</p>
+          <h2 className="text-lg font-semibold text-white mb-2">When the buyer is not just you</h2>
+          <p className="text-sm text-gray-400 leading-relaxed mb-4">
+            The diagnostic is still the entry point. After that, teams can move to invoice billing,
+            security review, and scoped integration work without changing the core offer.
+          </p>
+          <div className="grid gap-3">
+            {[
+              'Invoice billing for procurement',
+              'Security review support',
+              'Workspace or product integration scope',
+            ].map((item) => (
+              <div key={item} className="rounded-lg border border-sky-500/15 bg-gray-950/60 px-4 py-3 text-sm text-gray-300">
+                {item}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -77,14 +94,13 @@ export default function PricingPage() {
           <div>
             <div className="flex items-center gap-3 mb-3">
               <Badge variant="paid">Paid diagnostic</Badge>
-              <span className="text-sm text-gray-500">Best for teams shipping one agent now</span>
+              <span className="text-sm text-gray-500">Best for one workflow that needs a written answer now</span>
             </div>
             <h2 className="text-2xl font-bold text-white mb-2">Written Agent Diagnostic Report</h2>
             <p className="text-gray-400 max-w-2xl">
               A one-time review for a deployed agent, support copilot, or workflow assistant.
-              You send one workload, one failure mode, and the context around it. I return a
-              short report with the risk score, recommended runtime posture, and implementation
-              priorities.
+              Send one workload, one failure mode, and the context around it. Receive a short
+              report with the risk score, recommended runtime posture, and implementation priorities.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               {['One agent or workflow', 'One failure mode', 'Written report', 'Implementation settings'].map((item) => (
@@ -106,12 +122,6 @@ export default function PricingPage() {
                 </li>
               ))}
             </ul>
-            <div className="mt-5 rounded-xl border border-sky-500/20 bg-sky-500/5 p-4">
-              <p className="text-xs font-mono text-sky-400 mb-2">team-friendly</p>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                Good fit for support automation, AI QA, and internal copilots before a team rollout.
-              </p>
-            </div>
             <div className="mt-6 flex flex-col sm:flex-row gap-3">
               <Link
                 href="/api/checkout?tier=diagnostic"
@@ -128,6 +138,9 @@ export default function PricingPage() {
             </div>
             <p className="mt-3 text-xs text-gray-500">
               After checkout, you’ll land on /diagnostic and submit one brief. No second purchase step.
+            </p>
+            <p className="mt-4 text-sm text-gray-400">
+              Good fit for support automation, AI QA, and internal copilots when the team wants a written readout before rollout.
             </p>
           </div>
 

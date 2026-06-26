@@ -68,6 +68,21 @@ export default function DiagnosticPage() {
               A concise report you can hand to your team, plus a clearer decision on whether the
               agent should be more cautious, more grounded, or less eager to commit.
             </p>
+            <div className="mt-4 rounded-lg border border-sky-500/15 bg-gray-950/60 p-4">
+              <p className="text-xs font-mono text-sky-400 mb-2">example output</p>
+              <div className="flex flex-wrap gap-2 text-xs mb-3">
+                <span className="rounded-full border border-gray-700 bg-gray-900 px-2.5 py-1 text-gray-300">
+                  regime <span className="text-sky-400">stable</span>
+                </span>
+                <span className="rounded-full border border-gray-700 bg-gray-900 px-2.5 py-1 text-gray-300">
+                  posture <span className="text-emerald-400">cautious</span>
+                </span>
+              </div>
+              <p className="text-sm text-gray-400 leading-relaxed">
+                The report tells you what to change, what to test next, and how likely the current
+                configuration is to fail under pressure.
+              </p>
+            </div>
             <div className="mt-6 flex flex-col sm:flex-row gap-3">
               <Link
                 href="/api/checkout?tier=diagnostic"

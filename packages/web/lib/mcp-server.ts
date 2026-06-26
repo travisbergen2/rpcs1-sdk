@@ -59,10 +59,10 @@ export function createRpcs1McpServer() {
           {
             type: 'text',
             text: [
-              `Regime: ${result.predicted_regime} (${result.confidence} confidence).`,
-              `Posture: temperature ${result.platform_parameters.temperature}, ${result.platform_parameters.context_strategy}, ${result.platform_parameters.tool_use_strategy}.`,
-              `Next test: ${nextTest}.`,
-              postureLine.trim(),
+              `Status: ${result.predicted_regime} (${result.confidence} confidence).`,
+              `Configuration: temperature ${result.platform_parameters.temperature}, ${result.platform_parameters.context_strategy}, ${result.platform_parameters.tool_use_strategy}.`,
+              `Best next check: ${nextTest}.`,
+              postureLine ? postureLine.replace('Translation posture', 'Language mode') : '',
               warningLine,
             ].filter(Boolean).join(' '),
           },

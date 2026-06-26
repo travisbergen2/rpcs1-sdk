@@ -176,6 +176,20 @@ export default function PricingPage() {
                 </div>
                 <span className="text-xs text-gray-500 text-right">After checkout, submit one brief.</span>
               </div>
+              <div className="mt-4 rounded-lg border border-sky-500/15 bg-sky-500/5 p-3">
+                <p className="text-xs font-mono text-sky-400 mb-2">sample output</p>
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <span className="rounded-full border border-gray-700 bg-gray-950 px-2.5 py-1 text-gray-300">
+                    regime <span className="text-sky-400">stable</span>
+                  </span>
+                  <span className="rounded-full border border-gray-700 bg-gray-950 px-2.5 py-1 text-gray-300">
+                    posture <span className="text-emerald-400">cautious</span>
+                  </span>
+                  <span className="rounded-full border border-gray-700 bg-gray-950 px-2.5 py-1 text-gray-300">
+                    next test <span className="text-amber-400">3 ambiguous cases</span>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

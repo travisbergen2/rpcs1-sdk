@@ -48,15 +48,23 @@ export function createRpcs1McpServer() {
     async (input) => {
       const result = recommend(input);
       const structuredContent: Record<string, unknown> = { ...result };
+      const nextTest = suggestNextTest(result.predicted_regime, result.warnings, result.platform_parameters.translation_posture);
+      const posture = result.platform_parameters.translation_posture;
+      const postureLine = posture ? ` Translation posture: ${posture}.` : '';
+      const warningLine = result.warnings[0] ? ` Warning: ${result.warnings[0]}` : '';
 
       return {
         structuredContent,
         content: [
           {
             type: 'text',
-            text:
-              `RPCS1 predicts a ${result.predicted_regime} regime with ${result.confidence} confidence. ` +
-              `Recommended temperature: ${result.platform_parameters.temperature}. ${result.reasoning}`,
+            text: [
+              `Regime: ${result.predicted_regime} (${result.confidence} confidence).`,
+              `Posture: temperature ${result.platform_parameters.temperature}, ${result.platform_parameters.context_strategy}, ${result.platform_parameters.tool_use_strategy}.`,
+              `Next test: ${nextTest}.`,
+              postureLine.trim(),
+              warningLine,
+            ].filter(Boolean).join(' '),
           },
         ],
       };
@@ -64,4 +72,44 @@ export function createRpcs1McpServer() {
   );
 
   return server;
+}
+
+function suggestNextTest(
+  regime: string,
+  warnings: string[],
+  translationPosture?: string,
+): string {
+  const firstWarning = warnings[0] ?? '';
+
+  if (firstWarning.includes('Oscillation risk')) {
+    return 'rerun with one shorter-history case and one ambiguous case';
+  }
+  if (firstWarning.includes('Overload risk')) {
+    return 'rerun with a high-pressure case and lower signal gain';
+  }
+  if (firstWarning.includes('Freeze risk')) {
+    return 'rerun with a policy edge case and lower filtering threshold';
+  }
+  if (firstWarning.includes('High stakes') && firstWarning.includes('AR')) {
+    return 'rerun with the highest-risk exception path and a stricter handoff rule';
+  }
+
+  switch (translationPosture) {
+    case 'face_preserving':
+      return 'rerun on a user-facing prompt where tone and correction style matter';
+    case 'bridging':
+      return 'rerun on one ambiguous prompt and one technical prompt';
+    case 'minimal_clarifying':
+      return 'rerun on a high-ambiguity prompt and check whether one question is enough';
+    case 'direct':
+      return 'rerun on the same workload plus one harder edge case';
+    default:
+      break;
+  }
+
+  if (regime === 'near_oscillation') return 'rerun with a shorter context window';
+  if (regime === 'near_overload') return 'rerun with stricter gating before tool use';
+  if (regime === 'near_freeze') return 'rerun with a lower filtering threshold';
+
+  return 'rerun on the same workload plus one harder edge case';
 }

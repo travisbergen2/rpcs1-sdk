@@ -10,12 +10,13 @@ export function createRpcs1McpServer() {
       version: '0.2.1',
       websiteUrl: 'https://rpcs1.dev',
       description:
-        'Deterministic diagnostic tools for optimizing deployed AI agents and diagnosing environment mismatch.',
+        'Find why an agent fails under pressure and get the runtime settings to fix it.',
     },
     {
       instructions:
-        'Use RPCS1 to configure AI agents for their operating environment. ' +
-        'Call recommend_agent_configuration when the user is designing, tuning, or diagnosing an AI agent. ' +
+        'Use RPCS1 to diagnose whether an agent is matched to its operating environment. ' +
+        'When a user is designing, tuning, or debugging an agent, answer with the failure-risk score first, ' +
+        'then the runtime settings and the next test to run. Keep the result concrete and avoid abstract theory unless asked. ' +
         'The tool is deterministic, stateless, read-only, and does not store, list, or update recommendations. ' +
         'Clients should persist results when history is needed.',
     },
@@ -26,11 +27,11 @@ export function createRpcs1McpServer() {
     {
       title: 'Recommend AI agent configuration',
       description:
-        'Use this stateless, read-only tool when a deployed AI agent, support copilot, or agent workflow ' +
-        'needs concrete LLM and runtime settings matched to environmental entropy, predictability, stakes, ' +
-        'context horizon, and commitment style. It diagnoses likely oscillation, overload, freeze, or mismatch ' +
-        'and returns receiver profile values (TI, SG, FT, UE, AR), platform parameters, confidence, reasoning, ' +
-        'warnings, and applied IMM principles. It does not store, list, or update past recommendations.',
+        'Use this stateless, read-only tool when a deployed support copilot, coding agent, research agent, or workflow assistant ' +
+        'needs a failure-risk score and concrete runtime settings matched to environmental entropy, predictability, stakes, ' +
+        'context horizon, and commitment style. It diagnoses likely oscillation, overload, freeze, or mismatch and returns ' +
+        'receiver profile values (TI, SG, FT, UE, AR), platform parameters, confidence, reasoning, warnings, the next test to run, ' +
+        'and applied IMM principles. It does not store, list, or update past recommendations.',
       inputSchema: recommendInputSchema,
       outputSchema: recommendationOutputSchema,
       annotations: {

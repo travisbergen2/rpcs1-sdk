@@ -89,6 +89,25 @@ export default function ExamplesPage() {
         task, communication format, timing, environment, and stakes it actually faces?
       </p>
 
+      <section>
+        <h2>First call to try</h2>
+        <p>
+          If you only call RPCS1 once, make it this: a support copilot under live pressure
+          with a clear failure mode and a clear platform target.
+        </p>
+        <pre><code>{`Use recommend_agent_configuration to diagnose my support copilot.
+
+Task: refund and billing dispute triage
+Environment: dynamic, somewhat_predictable, high stakes
+Context relevance: medium
+Commitment style: cautious
+Target platform: anthropic`}</code></pre>
+        <p>
+          The output should answer, in order: what regime this is in, how risky it looks,
+          what posture to use, and what test to run next.
+        </p>
+      </section>
+
       {EXAMPLES.map((example) => (
         <section key={example.preset}>
           <h2>{example.title}</h2>

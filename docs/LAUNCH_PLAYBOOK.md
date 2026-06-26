@@ -28,18 +28,16 @@ conditions before blaming the model or adding another tool.
 
 **Short description:**
 
-> Configure AI agents and diagnose oscillation, overload, freeze, and
-> environment mismatch.
+> Find why an agent fails under pressure and get the runtime settings to fix it.
 
 **Long description:**
 
-> RPCS1 is a public, read-only MCP server that recommends concrete LLM and
-> agent-runtime settings from environmental entropy, predictability, stakes,
-> context horizon, and commitment style. It supports Anthropic, OpenAI,
-> open-source, and generic targets and returns an explainable receiver profile,
-> predicted stability regime, warnings, and parameter recommendations. Use it
-> to move deployed AI agents toward optimized, consistent performance. No API
-> key is required.
+> RPCS1 is a public, read-only MCP server for deployed AI agents that need a
+> clear failure-risk score and concrete runtime settings. It turns task type,
+> environmental entropy, predictability, stakes, context horizon, and commitment
+> style into an explainable receiver profile, predicted stability regime,
+> warnings, parameter recommendations, and a next test to run. It supports
+> Anthropic, OpenAI, open-source, and generic targets. No API key is required.
 
 **Tool:** `recommend_agent_configuration`
 
@@ -91,6 +89,29 @@ Publish one narrowly scoped example at a time:
 Each article should contain the recognizable failure, exact input, recommendation
 output, before/after configuration, and links to the tuner, examples, and MCP
 endpoint.
+
+### First call example
+
+Use this as the first obvious MCP call in the listing or example docs:
+
+```text
+Use recommend_agent_configuration to diagnose my support copilot.
+
+Task: refund and billing dispute triage
+Environment: dynamic, somewhat_predictable, high stakes
+Context relevance: medium
+Commitment style: cautious
+Target platform: anthropic
+```
+
+The expected value is a plain diagnosis first:
+
+- failure-risk score
+- predicted regime
+- runtime posture
+- next test to run
+
+Then the implementation details.
 
 ## Launch posts
 

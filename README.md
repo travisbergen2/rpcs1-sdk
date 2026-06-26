@@ -2,9 +2,9 @@
 
 <!-- mcp-name: io.github.travisbergen2/rpcs1-agent-tuner -->
 
-**Diagnose whether deployed AI agents are matched to their operating environment.**
+**Find why an agent fails under pressure and get the runtime settings to fix it.**
 
-A configuration framework for AI agents that translates environmental characteristics (entropy, stakes, predictability) into specific LLM parameter recommendations — grounded in RPCS-1 receiver dynamics.
+A diagnostic framework for deployed AI agents that turns task type, entropy, stakes, predictability, context horizon, and commitment style into concrete runtime recommendations and a clear next test.
 
 ## Repository Structure
 
@@ -101,6 +101,20 @@ It exposes one focused tool:
 
 - `recommend_agent_configuration` — use when designing, tuning, or diagnosing an AI agent
   against environmental entropy, predictability, stakes, context horizon, and commitment style.
+  The first useful call is usually a support copilot under live pressure:
+
+```text
+Use recommend_agent_configuration to diagnose my support copilot.
+
+Task: refund and billing dispute triage
+Environment: dynamic, somewhat_predictable, high stakes
+Context relevance: medium
+Commitment style: cautious
+Target platform: anthropic
+```
+
+The output should lead with the failure-risk score, predicted regime, runtime posture,
+and next test to run.
 
 Connection details and client compatibility notes are available at
 [https://rpcs1.dev/docs/mcp](https://rpcs1.dev/docs/mcp).

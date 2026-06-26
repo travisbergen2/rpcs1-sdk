@@ -80,21 +80,13 @@ export default function ExamplesPage() {
       <h1>Agent tuning examples</h1>
       <p>
         RPCS1 is most useful when an agent&apos;s failures look behavioral rather than purely
-        factual: oscillation, overload, premature commitment, excessive retries, or frozen
-        decision-making. These examples show when to call{' '}
+        factual. These examples show when to call{' '}
         <code>recommend_agent_configuration</code>.
-      </p>
-      <p>
-        The diagnostic question is fit, not fault: is the deployed agent matched to the
-        task, communication format, timing, environment, and stakes it actually faces?
       </p>
 
       <section>
-        <h2>First call to try</h2>
-        <p>
-          If you only call RPCS1 once, make it this: a support copilot under live pressure
-          with a clear failure mode and a clear platform target.
-        </p>
+        <h2>Support copilot</h2>
+        <p>A support copilot under live pressure with refunds and billing disputes.</p>
         <pre><code>{`Use recommend_agent_configuration to diagnose my support copilot.
 
 Task: refund and billing dispute triage
@@ -103,17 +95,14 @@ Context relevance: medium
 Commitment style: cautious
 Target platform: anthropic`}</code></pre>
         <p>
-          The output should answer, in order: what regime this is in, how risky it looks,
-          what posture to use, and what test to run next.
+          The output should lead with the failure-risk score, predicted regime, runtime posture,
+          and next test to run.
         </p>
       </section>
 
       <section>
-        <h2>Second call to try</h2>
-        <p>
-          The other high-intent case is a coding agent that keeps changing direction or
-          acting before it has enough repository context.
-        </p>
+        <h2>Coding agent</h2>
+        <p>A coding agent that keeps changing direction or moving too early.</p>
         <pre><code>{`Use recommend_agent_configuration to diagnose my coding agent.
 
 Task: inspect a changing repository, edit files, run tests, and open a pull request
@@ -122,9 +111,15 @@ Context relevance: long
 Commitment style: balanced
 Target platform: openai`}</code></pre>
         <p>
-          The output should again lead with the failure-risk score, predicted regime, runtime
-          posture, and next test to run.
+          The output should lead with the same four things: failure-risk score, predicted regime,
+          runtime posture, and next test to run.
         </p>
+      </section>
+
+      <section>
+        <h2>Research agent</h2>
+        <p>A research agent that overreacts to new sources or loses earlier evidence.</p>
+        <pre><code>{`Tune a research agent that synthesizes conflicting technical sources into a cautious recommendation while retaining long-context evidence.`}</code></pre>
       </section>
 
       {EXAMPLES.map((example) => (

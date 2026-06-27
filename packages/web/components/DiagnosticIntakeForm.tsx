@@ -73,8 +73,8 @@ export function DiagnosticIntakeForm() {
         <p className="text-xs font-mono text-emerald-400 mb-2">received</p>
         <h2 className="text-2xl font-bold text-white mb-3">Brief received.</h2>
         <p className="text-gray-400 leading-relaxed mb-6">
-          I’ve got the diagnostic brief. If you’ve already purchased Stripe access, I’ll pair this
-          with your checkout email. If not, you can still proceed to payment and use the same brief.
+          I’ve got the diagnostic brief. If you already bought the report, it will be paired with your checkout email.
+          If you arrived here early, go back to pricing and complete payment first.
         </p>
         <div className="flex flex-col sm:flex-row gap-3">
           <a

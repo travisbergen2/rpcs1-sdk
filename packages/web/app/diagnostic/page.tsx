@@ -14,11 +14,10 @@ export default function DiagnosticPage() {
         <section>
           <p className="text-xs font-mono text-amber-400 mb-3">paid diagnostic intake</p>
           <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight mb-5">
-            Submit one agent or workflow.
+            Submit the brief.
           </h1>
           <p className="text-lg text-gray-400 leading-relaxed max-w-2xl mb-8">
-            After checkout, use this brief to capture one workload, one failure mode, and the
-            context needed for a written report.
+            After checkout, send one workflow, one failure mode, and the context needed for your written memo.
           </p>
           <div className="grid sm:grid-cols-3 gap-3 mb-8">
             {[
@@ -32,35 +31,13 @@ export default function DiagnosticPage() {
               </div>
             ))}
           </div>
-          <div className="rounded-2xl border border-gray-800 bg-gray-900/50 p-6 sm:p-8 mb-8">
-            <h2 className="text-lg font-semibold text-white mb-4">What helps most</h2>
-            <ul className="space-y-3 text-sm text-gray-400 leading-relaxed">
-              <li>• One specific agent or workflow, not a whole platform</li>
+          <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-6 sm:p-8 mb-8">
+            <p className="text-xs font-mono text-amber-400 mb-2">what to include</p>
+            <ul className="space-y-3 text-sm text-gray-300 leading-relaxed">
+              <li>• One agent or workflow, not the whole platform</li>
               <li>• The main failure mode you want caught before customers see it</li>
-              <li>• The deployment stage: pre-purchase, post-purchase, or internal review</li>
-              <li>• Any context about volume, stakes, policy pressure, or handoff behavior</li>
+              <li>• The deployment stage and any volume, stakes, or handoff pressure</li>
             </ul>
-          </div>
-          <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-5 sm:p-6 mb-8">
-            <p className="text-xs font-mono text-amber-400 mb-2">sales tunnel</p>
-            <p className="text-sm text-gray-300 leading-relaxed mb-4">
-              The buying path is simple: free tuner first, then the paid report, then this brief.
-              If you are already here, you are one step from submitting the diagnostic input.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link
-                href="/api/checkout?tier=diagnostic"
-                className="inline-flex items-center justify-center rounded-lg bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/20"
-              >
-                Buy report now
-              </Link>
-              <Link
-                href="/pricing#diagnostic"
-                className="inline-flex items-center justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-semibold text-gray-200 hover:bg-gray-800 transition-colors"
-              >
-                Review pricing
-              </Link>
-            </div>
           </div>
           <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-6 sm:p-8">
             <p className="text-xs font-mono text-amber-400 mb-2">what you get</p>
@@ -88,13 +65,13 @@ export default function DiagnosticPage() {
                 href="/api/checkout?tier=diagnostic"
                 className="inline-flex items-center justify-center rounded-lg bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/20"
               >
-                Buy report, then submit brief
+                Buy report now
               </Link>
               <Link
                 href="/pricing#diagnostic"
                 className="inline-flex items-center justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-semibold text-gray-200 hover:bg-gray-800 transition-colors"
               >
-                Review the report
+                Review pricing
               </Link>
             </div>
           </div>

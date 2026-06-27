@@ -17,9 +17,13 @@
     "unrs-resolver@1.12.2": true
   },
   "devDependencies": {
+    "@types/three": "^0.179.0",
     "typescript": "^5.4.0"
   },
   "engines": {
     "node": ">=20 <27"
+  },
+  "dependencies": {
+    "three": "^0.179.1"
   }
 }

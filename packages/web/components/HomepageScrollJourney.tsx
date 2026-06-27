@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/Card';
 import { cn } from '@/lib/cn';
 
-type StageKey = 'browser' | 'bridge' | 'room';
+type StageKey = 'browser' | 'bridge' | 'doorway';
 
 const STAGES: Array<{
   key: StageKey;
@@ -29,11 +29,11 @@ const STAGES: Array<{
     detail: 'Signals, assumptions, and handoffs become visible.',
   },
   {
-    key: 'room',
+    key: 'doorway',
     label: '2050',
-    title: '3D sales room',
-    body: 'Avatar, artifacts, and a buy path in space.',
-    detail: 'The offer becomes a room you can stand inside.',
+    title: 'Doorway to the showroom',
+    body: 'The page opens into a spatial environment.',
+    detail: 'The actual 3D scene lives below this transition.',
   },
 ];
 
@@ -259,7 +259,7 @@ function RoomScene() {
 
               <div className="absolute inset-x-0 bottom-[6%] flex justify-center">
                 <div className="rounded-full border border-white/10 bg-black/35 px-4 py-2 text-[10px] font-mono uppercase tracking-[0.28em] text-white/60 backdrop-blur-md">
-                  3d showroom / artifacts floating in space
+                  doorway / scroll into the showroom below
                 </div>
               </div>
             </div>
@@ -308,7 +308,7 @@ export function HomepageScrollJourney() {
       <div className="mb-8 max-w-3xl">
         <p className="text-xs font-mono text-sky-400 mb-3">scroll journey</p>
         <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-          Flat web first. Spatial room last.
+          Flat web first. Showroom last.
         </h2>
         <p className="text-gray-400 leading-relaxed">
           The page upgrades itself as you move, so the interface explains the product by changing
@@ -350,14 +350,14 @@ export function HomepageScrollJourney() {
           <div className="mb-3 flex items-center gap-2 text-xs font-mono text-gray-500">
             <span className={cn('h-2 w-2 rounded-full transition-colors', active === 'browser' ? 'bg-[#1266ff]' : 'bg-gray-700')} />
             <span className={cn('h-2 w-2 rounded-full transition-colors', active === 'bridge' ? 'bg-[#1266ff]' : 'bg-gray-700')} />
-            <span className={cn('h-2 w-2 rounded-full transition-colors', active === 'room' ? 'bg-[#1266ff]' : 'bg-gray-700')} />
-            <span className="ml-2 uppercase tracking-[0.22em]">browser → bridge → room</span>
-          </div>
+            <span className={cn('h-2 w-2 rounded-full transition-colors', active === 'doorway' ? 'bg-[#1266ff]' : 'bg-gray-700')} />
+            <span className="ml-2 uppercase tracking-[0.22em]">browser → bridge → doorway</span>
+            </div>
           {scene}
           <div className="mt-4 rounded-2xl border border-gray-800 bg-gray-950/80 p-4 text-sm text-gray-400 leading-relaxed">
             {active === 'browser' && 'Flat page. The old web is still in control.'}
             {active === 'bridge' && 'The interface starts lifting, wiring, and translating.'}
-            {active === 'room' && 'The pitch becomes a room with objects and a path to buy.'}
+            {active === 'doorway' && 'The pitch ends at a threshold and hands off to the showroom below.'}
           </div>
         </div>
       </div>
@@ -367,7 +367,7 @@ export function HomepageScrollJourney() {
           href="#sales-room"
           className="inline-flex items-center justify-center rounded-full border border-sky-500/20 bg-sky-500/10 px-5 py-3 text-sm font-semibold text-sky-200 transition-colors hover:bg-sky-500/15"
         >
-          Enter the room ↓
+          Enter the showroom ↓
         </Link>
       </div>
     </section>

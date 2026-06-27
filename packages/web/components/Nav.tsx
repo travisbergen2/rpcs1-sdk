@@ -16,19 +16,7 @@ export function Nav() {
             href="/tuner"
             className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
           >
-            Assessment
-          </Link>
-          <Link
-            href="/docs"
-            className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
-          >
-            Docs
-          </Link>
-          <Link
-            href="/imm"
-            className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
-          >
-            IMM
+            Free sample
           </Link>
           <Link
             href="/pricing"
@@ -37,10 +25,16 @@ export function Nav() {
             Pricing
           </Link>
           <Link
+            href="/docs"
+            className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
+          >
+            Docs
+          </Link>
+          <Link
             href="/api/checkout?tier=diagnostic"
             className="ml-2 px-3 py-1.5 text-sm font-medium bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg transition-colors shadow-lg shadow-amber-500/20"
           >
-            Buy report →
+            Buy memo →
           </Link>
         </nav>
       </div>

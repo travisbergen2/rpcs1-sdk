@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/Badge';
 
 export const metadata: Metadata = {
   title: 'Pricing',
-  description: 'RPCS-1 pricing — free sample assessment, a sample report preview, a one-time written diagnostic, and team workflows.',
+  description: 'RPCS-1 pricing — free sample assessment, one-time written diagnostic, and recurring access for teams.',
 };
 
 const TIERS = [
@@ -44,47 +44,28 @@ export default function PricingPage() {
         </p>
       </div>
 
-      <section className="mb-8 grid lg:grid-cols-[1.05fr_0.95fr] gap-4">
-        <div className="rounded-xl border border-gray-800 bg-gray-950/70 p-5 sm:p-6">
-          <p className="text-xs font-mono text-amber-400 mb-3">fast buyer path</p>
-          {[
-            {
-              title: 'Run the free tuner',
-              body: 'Check the likely regime and see whether the workflow is stable, cautious, or overloaded.',
-            },
-            {
-              title: 'Buy the written report',
-              body: 'Unlock one $750 diagnostic for one agent or workflow, with posture and next-test guidance.',
-            },
-            {
-              title: 'Submit the brief',
-              body: 'Send the workload details once checkout is done so the review can start.',
-            },
-          ].map((item) => (
-            <div key={item.title} className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 mb-3 last:mb-0">
-              <p className="text-sm font-semibold text-white mb-2">{item.title}</p>
-              <p className="text-sm text-gray-400 leading-relaxed">{item.body}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="rounded-xl border border-sky-500/15 bg-sky-500/5 p-5 sm:p-6">
-          <p className="text-xs font-mono text-amber-400 mb-3">team buyer path</p>
-          <h2 className="text-lg font-semibold text-white mb-2">When the buyer is not just you</h2>
-          <p className="text-sm text-gray-400 leading-relaxed mb-4">
-            The diagnostic is still the entry point. After that, teams can move to invoice billing,
-            security review, and scoped integration work without changing the core offer.
-          </p>
-          <div className="grid gap-3">
-            {[
-              'Invoice billing for procurement',
-              'Security review support',
-              'Workspace or product integration scope',
-            ].map((item) => (
-              <div key={item} className="rounded-lg border border-sky-500/15 bg-gray-950/60 px-4 py-3 text-sm text-gray-300">
-                {item}
-              </div>
-            ))}
+      <section className="mb-8 rounded-2xl border border-gray-800 bg-gray-950/70 p-5 sm:p-6">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+          <div>
+            <p className="text-xs font-mono text-amber-400 mb-3">fast buyer path</p>
+            <h2 className="text-2xl font-semibold text-white mb-2">Free sample first. Paid memo when the workflow matters.</h2>
+            <p className="text-sm text-gray-400 leading-relaxed max-w-2xl">
+              The shortest path is simple: check a sample configuration, then buy the written diagnostic if you want a concrete answer before rollout.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              href="/tuner"
+              className="inline-flex items-center justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-sky-400 transition-colors"
+            >
+              Run free sample
+            </Link>
+            <Link
+              href="/api/checkout?tier=diagnostic"
+              className="inline-flex items-center justify-center rounded-lg bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/20"
+            >
+              Buy $750 diagnostic
+            </Link>
           </div>
         </div>
       </section>
@@ -114,7 +95,7 @@ export default function PricingPage() {
                 'Failure-risk score and stability regime',
                 'Recommended runtime posture',
                 'Next-test recommendations',
-                'Follow-up by email request',
+                'One brief, after checkout',
               ].map((feature) => (
                 <li key={feature} className="flex gap-2">
                   <span className="text-emerald-400">✓</span>
@@ -176,11 +157,11 @@ export default function PricingPage() {
                 </div>
                 <span className="text-xs text-gray-500 text-right">After checkout, submit one brief.</span>
               </div>
-              <div className="mt-4 rounded-lg border border-sky-500/15 bg-sky-500/5 p-3">
-                <p className="text-xs font-mono text-sky-400 mb-2">sample output</p>
-                <div className="flex flex-wrap gap-2 text-xs">
-                  <span className="rounded-full border border-gray-700 bg-gray-950 px-2.5 py-1 text-gray-300">
-                    regime <span className="text-sky-400">stable</span>
+            <div className="mt-4 rounded-lg border border-sky-500/15 bg-sky-500/5 p-3">
+              <p className="text-xs font-mono text-sky-400 mb-2">sample output</p>
+              <div className="flex flex-wrap gap-2 text-xs">
+                <span className="rounded-full border border-gray-700 bg-gray-950 px-2.5 py-1 text-gray-300">
+                  regime <span className="text-sky-400">stable</span>
                   </span>
                   <span className="rounded-full border border-gray-700 bg-gray-950 px-2.5 py-1 text-gray-300">
                     posture <span className="text-emerald-400">cautious</span>
@@ -200,7 +181,7 @@ export default function PricingPage() {
           <div>
             <h2 className="text-lg font-semibold text-white mb-1">Recurring access</h2>
             <p className="text-sm text-gray-500">
-              These are for repeat use after the workflow is already worth running regularly across a team or workspace.
+              Secondary path only. Use these once the workflow is already worth running regularly across a team or workspace.
             </p>
           </div>
           <span className="text-xs text-gray-500">Secondary path</span>
@@ -218,7 +199,7 @@ export default function PricingPage() {
                     <span className="font-semibold text-white">{tier.price}</span> / {tier.period}
                   </span>
                 </div>
-                <p className="text-sm text-gray-500">{tier.description}</p>
+                <p className="text-sm text-gray-500 max-w-2xl">{tier.description}</p>
               </div>
 
               <Link
@@ -241,9 +222,7 @@ export default function PricingPage() {
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-5">
           <div>
             <p className="text-xs font-mono text-amber-400 mb-2">enterprise rollout</p>
-            <h2 className="text-xl font-semibold text-white mb-2">
-              Need procurement, security, or a custom rollout?
-            </h2>
+            <h2 className="text-xl font-semibold text-white mb-2">Need procurement, security, or a custom rollout?</h2>
             <p className="text-sm text-gray-400 max-w-2xl">
               Keep the diagnostic as the entry point, then move to invoice billing and integration scoping.
             </p>

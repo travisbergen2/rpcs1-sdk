@@ -189,118 +189,77 @@ function BridgeScene() {
 }
 
 function RoomScene() {
-  const artifacts = [
-    {
-      title: 'Scanner',
-      body: 'Live tuner',
-      accent: 'sky',
-      className: 'left-[10%] top-[18%]',
-      transform: 'rotateX(14deg) rotateY(-18deg)',
-    },
-    {
-      title: 'Memo',
-      body: '$750 written diagnostic',
-      accent: 'amber',
-      className: 'right-[11%] top-[17%]',
-      transform: 'rotateX(16deg) rotateY(16deg)',
-    },
-    {
-      title: 'Portal',
-      body: 'MCP access',
-      accent: 'emerald',
-      className: 'left-[8%] bottom-[16%]',
-      transform: 'rotateX(18deg) rotateY(-10deg)',
-    },
-    {
-      title: 'Prism',
-      body: 'Translation layer',
-      accent: 'fuchsia',
-      className: 'right-[8%] bottom-[14%]',
-      transform: 'rotateX(18deg) rotateY(12deg)',
-    },
-  ] as const;
-
   return (
-    <div className="relative h-full overflow-hidden rounded-[2rem] border border-white/10 bg-[#040711] text-white shadow-[0_32px_140px_rgba(0,0,0,0.65)]">
+    <div className="relative h-full overflow-hidden rounded-[2rem] border border-white/10 bg-[#03060e] text-white shadow-[0_32px_140px_rgba(0,0,0,0.65)]">
       <div
         className="pointer-events-none absolute inset-0 opacity-100"
         style={{
           backgroundImage:
-            'radial-gradient(circle at 50% 18%, rgba(56,189,248,0.28), transparent 24%), radial-gradient(circle at 24% 84%, rgba(168,85,247,0.18), transparent 18%), radial-gradient(circle at 80% 78%, rgba(16,185,129,0.16), transparent 18%), linear-gradient(135deg, rgba(255,255,255,0.05), transparent 34%, rgba(255,255,255,0.03) 68%, transparent 100%)',
+            'radial-gradient(circle at 50% 18%, rgba(56,189,248,0.20), transparent 24%), radial-gradient(circle at 24% 84%, rgba(168,85,247,0.16), transparent 18%), radial-gradient(circle at 80% 78%, rgba(16,185,129,0.14), transparent 18%), linear-gradient(180deg, rgba(255,255,255,0.03), transparent 30%, rgba(255,255,255,0.02) 70%, transparent 100%)',
         }}
       />
-      <div className="relative grid h-full gap-4 p-4 sm:grid-cols-[0.92fr_1.08fr]">
-        <div className="rounded-[1.6rem] border border-white/10 bg-white/5 p-5 backdrop-blur-2xl shadow-[0_24px_100px_rgba(0,0,0,0.45)]">
-          <p className="text-[11px] font-mono text-amber-400">sales room</p>
-          <h3 className="mt-2 text-2xl font-semibold">The room closes the sale.</h3>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/65">
-            The product is no longer a page. It is a place with objects you can inspect.
-          </p>
-          <div className="mt-5 grid gap-3 sm:grid-cols-3">
-            <Link href="/tuner?preset=support" className="rounded-2xl border border-sky-500/20 bg-sky-500/10 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-sky-500/15">
-              Start free
-            </Link>
-            <Link href="/api/checkout?tier=diagnostic" className="rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm font-semibold text-amber-200 transition-colors hover:bg-amber-500/15">
-              Buy memo
-            </Link>
-            <Link href="mailto:travisbergen2@gmail.com?subject=RPCS-1 Demo" className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-200 transition-colors hover:bg-emerald-500/15">
-              Book demo
-            </Link>
-          </div>
-        </div>
-        <div className="relative rounded-[1.6rem] border border-white/10 bg-white/5 p-4 backdrop-blur-2xl shadow-[0_22px_90px_rgba(0,0,0,0.45)]">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(56,189,248,0.22),transparent_24%),radial-gradient(circle_at_50%_65%,rgba(168,85,247,0.18),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(16,185,129,0.12),transparent_18%)]" />
-          <div className="relative grid h-full gap-4 lg:grid-cols-[0.95fr_1.05fr]">
-            <div className="flex items-center justify-center">
-              <div className="relative">
-                <div className="absolute inset-0 rounded-full bg-sky-400/20 blur-3xl" />
-                <div className="relative mx-auto flex h-40 w-40 items-center justify-center rounded-full border border-cyan-300/20 bg-cyan-400/10 shadow-[0_0_70px_rgba(56,189,248,0.24)]">
-                  <div className="relative h-[5.5rem] w-[5.5rem] rounded-[1.7rem] border border-cyan-200/25 bg-[#06111d] shadow-[0_0_28px_rgba(56,189,248,0.4)]">
-                    <div className="absolute left-5 top-6 h-3 w-3 rounded-full bg-cyan-300 shadow-[0_0_18px_rgba(103,232,249,0.9)]" />
-                    <div className="absolute right-5 top-6 h-3 w-3 rounded-full bg-cyan-300 shadow-[0_0_18px_rgba(103,232,249,0.9)]" />
-                    <div className="absolute left-1/2 bottom-5 h-2 w-9 -translate-x-1/2 rounded-full bg-emerald-300/70" />
-                  </div>
-                </div>
-                <p className="mt-3 text-center text-sm text-gray-300">
-                  “Show me the workflow, the risk, and the next step.”
-                </p>
+      <div className="relative h-full p-4 sm:p-5">
+        <div className="relative h-full overflow-hidden rounded-[2rem] border border-white/10 bg-[#050915] shadow-[0_28px_120px_rgba(0,0,0,0.55)]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_12%,rgba(56,189,248,0.18),transparent_22%),radial-gradient(circle_at_15%_80%,rgba(168,85,247,0.12),transparent_18%),radial-gradient(circle_at_82%_78%,rgba(16,185,129,0.12),transparent_18%)]" />
+          <div className="absolute inset-0 opacity-80 [background-image:linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] [background-size:2.8rem_2.8rem]" />
+          <div className="absolute inset-0 [perspective:1600px]">
+            <div className="absolute inset-0 translate-y-[18%] [transform-style:preserve-3d]">
+              <div className="absolute left-1/2 top-[54%] h-[26rem] w-[30rem] -translate-x-1/2 rounded-[2rem] border border-cyan-300/20 bg-[#09111d] shadow-[0_30px_100px_rgba(0,0,0,0.55)] [transform:translateZ(-120px)_rotateX(74deg)]">
+                <div className="absolute inset-0 rounded-[2rem] bg-[radial-gradient(circle_at_50%_18%,rgba(56,189,248,0.16),transparent_25%),radial-gradient(circle_at_50%_85%,rgba(16,185,129,0.12),transparent_18%)] [background-size:100%_100%]" />
+                <div className="absolute inset-5 rounded-[1.5rem] border border-white/10 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:2.8rem_2.8rem]" />
               </div>
-            </div>
 
-            <div className="relative min-h-[22rem] rounded-[1.6rem] border border-white/10 bg-[#06111d] p-4 shadow-[0_24px_100px_rgba(0,0,0,0.35)]">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(56,189,248,0.18),transparent_22%),radial-gradient(circle_at_20%_76%,rgba(168,85,247,0.14),transparent_18%),radial-gradient(circle_at_78%_70%,rgba(16,185,129,0.12),transparent_18%)]" />
-              <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:3rem_3rem] opacity-60" />
-              <div className="relative h-full">
-                <div className="absolute left-1/2 top-10 h-20 w-px -translate-x-1/2 bg-gradient-to-b from-sky-300/80 via-sky-300/30 to-transparent" />
-                <div className="absolute left-1/2 top-7 h-5 w-5 -translate-x-1/2 rounded-full bg-sky-300 shadow-[0_0_28px_rgba(103,232,249,0.85)]" />
+              <div className="absolute left-1/2 top-[28%] h-[21rem] w-[30rem] -translate-x-1/2 rounded-[2rem] border border-sky-300/15 bg-[#0b1321] shadow-[0_20px_80px_rgba(0,0,0,0.45)] [transform:translateZ(-40px)_rotateX(0deg)]">
+                <div className="absolute inset-0 rounded-[2rem] bg-[radial-gradient(circle_at_50%_20%,rgba(56,189,248,0.18),transparent_22%),radial-gradient(circle_at_14%_86%,rgba(168,85,247,0.12),transparent_18%),radial-gradient(circle_at_84%_86%,rgba(16,185,129,0.10),transparent_18%)]" />
+                <div className="absolute inset-5 rounded-[1.5rem] border border-white/10 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] [background-size:2.8rem_2.8rem]" />
+              </div>
 
-                {artifacts.map((artifact) => (
-                  <div
-                    key={artifact.title}
-                    className={`absolute ${artifact.className} h-[4.5rem] w-[8.5rem] rounded-[1.4rem] border border-white/10 bg-white/5 p-3 shadow-[0_18px_60px_rgba(0,0,0,0.35)]`}
-                    style={{ transform: artifact.transform }}
-                  >
-                    <p
-                      className={`text-[10px] font-mono ${
-                        artifact.accent === 'sky'
-                          ? 'text-sky-300'
-                          : artifact.accent === 'amber'
-                            ? 'text-amber-300'
-                            : artifact.accent === 'emerald'
-                              ? 'text-emerald-300'
-                              : 'text-fuchsia-300'
-                      }`}
-                    >
-                      {artifact.title.toLowerCase()}
-                    </p>
-                    <p className="mt-1 text-xs text-white/75">{artifact.body}</p>
-                  </div>
-                ))}
+              <div className="absolute left-1/2 top-[24%] h-[14rem] w-[10rem] -translate-x-1/2 rounded-[1.75rem] border border-cyan-300/25 bg-[#07131d] shadow-[0_0_60px_rgba(56,189,248,0.22)] [transform:translateZ(90px)_translateX(-50%)_rotateX(4deg)]">
+                <div className="absolute inset-3 rounded-[1.15rem] border border-cyan-200/20 bg-[#091624]" />
+                <div className="absolute left-1/2 top-6 h-4 w-4 -translate-x-1/2 rounded-full bg-sky-300 shadow-[0_0_24px_rgba(103,232,249,0.95)]" />
+                <div className="absolute left-1/2 top-20 h-2 w-12 -translate-x-1/2 rounded-full bg-emerald-300/80" />
+                <div className="absolute left-1/2 bottom-6 h-2 w-16 -translate-x-1/2 rounded-full bg-white/30" />
+              </div>
 
-                <div className="absolute left-1/2 top-1/2 h-[7.5rem] w-[7.5rem] -translate-x-1/2 -translate-y-1/2 rounded-[1.6rem] border border-cyan-300/25 bg-[#07131d] shadow-[0_0_38px_rgba(56,189,248,0.22)]" style={{ transform: 'translate(-50%, -50%) rotateX(14deg) rotateY(-8deg)' }}>
-                  <div className="absolute left-5 top-7 h-3 w-3 rounded-full bg-cyan-300 shadow-[0_0_18px_rgba(103,232,249,0.9)]" />
-                  <div className="absolute right-5 top-7 h-3 w-3 rounded-full bg-cyan-300 shadow-[0_0_18px_rgba(103,232,249,0.9)]" />
-                  <div className="absolute left-1/2 bottom-6 h-2 w-10 -translate-x-1/2 rounded-full bg-emerald-300/70" />
+              <div className="absolute left-[16%] top-[31%] h-[6rem] w-[8rem] rounded-[1.25rem] border border-white/10 bg-white/5 shadow-[0_18px_60px_rgba(0,0,0,0.38)] [transform:translateZ(35px)_rotateY(18deg)]">
+                <div className="absolute inset-0 rounded-[1.25rem] bg-gradient-to-br from-sky-400/20 to-transparent" />
+                <div className="absolute inset-3 rounded-[1rem] border border-white/10 bg-[#0f1726]" />
+                <div className="absolute left-3 top-3 rounded-full bg-sky-400/15 px-2 py-1 text-[10px] font-mono text-sky-300">scanner</div>
+                <p className="absolute bottom-3 left-3 text-xs text-white/80">Live tuner</p>
+              </div>
+
+              <div className="absolute right-[14%] top-[26%] h-[6rem] w-[9rem] rounded-[1.25rem] border border-white/10 bg-white/5 shadow-[0_18px_60px_rgba(0,0,0,0.38)] [transform:translateZ(45px)_rotateY(-18deg)]">
+                <div className="absolute inset-0 rounded-[1.25rem] bg-gradient-to-br from-amber-400/20 to-transparent" />
+                <div className="absolute inset-3 rounded-[1rem] border border-white/10 bg-[#0f1726]" />
+                <div className="absolute left-3 top-3 rounded-full bg-amber-400/15 px-2 py-1 text-[10px] font-mono text-amber-300">$750 memo</div>
+                <p className="absolute bottom-3 left-3 text-xs text-white/80">Written diagnostic</p>
+              </div>
+
+              <div className="absolute left-[10%] bottom-[18%] h-[6rem] w-[8.5rem] rounded-[1.25rem] border border-white/10 bg-white/5 shadow-[0_18px_60px_rgba(0,0,0,0.38)] [transform:translateZ(26px)_rotateY(16deg)]">
+                <div className="absolute inset-0 rounded-[1.25rem] bg-gradient-to-br from-emerald-400/18 to-transparent" />
+                <div className="absolute inset-3 rounded-[1rem] border border-white/10 bg-[#0f1726]" />
+                <div className="absolute left-3 top-3 rounded-full bg-emerald-400/15 px-2 py-1 text-[10px] font-mono text-emerald-300">portal</div>
+                <p className="absolute bottom-3 left-3 text-xs text-white/80">MCP access</p>
+              </div>
+
+              <div className="absolute right-[9%] bottom-[16%] h-[6rem] w-[8.5rem] rounded-[1.25rem] border border-white/10 bg-white/5 shadow-[0_18px_60px_rgba(0,0,0,0.38)] [transform:translateZ(32px)_rotateY(-14deg)]">
+                <div className="absolute inset-0 rounded-[1.25rem] bg-gradient-to-br from-fuchsia-400/18 to-transparent" />
+                <div className="absolute inset-3 rounded-[1rem] border border-white/10 bg-[#0f1726]" />
+                <div className="absolute left-3 top-3 rounded-full bg-fuchsia-400/15 px-2 py-1 text-[10px] font-mono text-fuchsia-300">prism</div>
+                <p className="absolute bottom-3 left-3 text-xs text-white/80">Translation layer</p>
+              </div>
+
+              <div className="absolute left-1/2 top-[42%] h-[8rem] w-[8rem] -translate-x-1/2 rounded-[1.6rem] border border-cyan-300/30 bg-[#09141f] shadow-[0_0_60px_rgba(56,189,248,0.35)] [transform:translateZ(120px)_translateX(-50%)_rotateX(8deg)]">
+                <div className="absolute inset-3 rounded-[1.1rem] border border-cyan-200/20 bg-[#07111a]" />
+                <div className="absolute left-1/2 top-6 h-4 w-4 -translate-x-1/2 rounded-full bg-cyan-300 shadow-[0_0_22px_rgba(103,232,249,0.95)]" />
+                <div className="absolute left-[28%] top-11 h-3 w-3 rounded-full bg-cyan-300 shadow-[0_0_18px_rgba(103,232,249,0.9)]" />
+                <div className="absolute right-[28%] top-11 h-3 w-3 rounded-full bg-cyan-300 shadow-[0_0_18px_rgba(103,232,249,0.9)]" />
+                <div className="absolute left-1/2 bottom-6 h-2 w-9 -translate-x-1/2 rounded-full bg-emerald-300/70" />
+              </div>
+
+              <div className="absolute inset-x-0 bottom-[6%] flex justify-center">
+                <div className="rounded-full border border-white/10 bg-black/35 px-4 py-2 text-[10px] font-mono uppercase tracking-[0.28em] text-white/60 backdrop-blur-md">
+                  3d showroom / artifacts floating in space
                 </div>
               </div>
             </div>

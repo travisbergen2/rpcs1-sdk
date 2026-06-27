@@ -143,9 +143,9 @@ function TunerPageContent() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">AI Agent Configuration Assessment</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Run the free sample.</h1>
         <p className="text-gray-400 max-w-2xl">
-          Describe the workload and operating conditions. RPCS-1 will flag likely quality risks,
+          Describe one workflow and its operating conditions. RPCS-1 will flag likely quality risks,
           recommend a runtime posture, and show the implementation settings behind it.
         </p>
         {isPresetKey(preset) && (
@@ -158,7 +158,7 @@ function TunerPageContent() {
             href="/api/checkout?tier=diagnostic"
             className="inline-flex items-center justify-center rounded-full bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-amber-400 shadow-lg shadow-amber-500/20"
           >
-            Need the written diagnostic?
+            Buy the written diagnostic
           </a>
           <a
             href="/diagnostic"
@@ -203,11 +203,10 @@ function TunerPageContent() {
       <div className="mt-12 pt-8 border-t border-gray-800">
         <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-6 sm:p-7">
           <p className="text-xs font-mono text-amber-400 mb-3">sales tunnel</p>
-          <h2 className="text-xl font-semibold text-white mb-3">Need a written diagnosis instead of a quick guess?</h2>
+          <h2 className="text-xl font-semibold text-white mb-3">Need the written memo?</h2>
           <p className="text-gray-400 max-w-2xl">
-            The free tuner is for fast iteration. The paid diagnostic gives you a report you can
-            hand to a team, with the failure mode, recommended posture, and implementation notes
-            already organized.
+            The free tuner is for fast iteration. The paid diagnostic gives you a report you can hand to a team,
+            with the failure mode, recommended posture, and implementation notes already organized.
           </p>
           <div className="mt-5 flex flex-col sm:flex-row gap-3">
             <a

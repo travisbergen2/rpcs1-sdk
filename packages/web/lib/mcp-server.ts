@@ -10,7 +10,7 @@ export function createRpcs1McpServer() {
       version: '0.2.1',
       websiteUrl: 'https://rpcs1.dev',
       description:
-        'Find why an agent fails under pressure.',
+        'Find why an agent fails under pressure and get the runtime settings to fix it.',
     },
     {
       instructions:
@@ -30,8 +30,8 @@ export function createRpcs1McpServer() {
         'Use this stateless, read-only tool when a deployed support copilot, coding agent, research agent, or workflow assistant ' +
         'needs a failure-risk score and concrete runtime settings matched to environmental entropy, predictability, stakes, ' +
         'context horizon, and commitment style. It diagnoses likely oscillation, overload, freeze, or mismatch and returns ' +
-        'receiver profile values (TI, SG, FT, UE, AR), platform parameters, confidence, reasoning, warnings, the next test to run, ' +
-        'and applied IMM principles. It does not store, list, or update past recommendations.',
+        'receiver profile values, platform parameters, confidence, reasoning, warnings, the next test to run, and applied IMM ' +
+        'principles. It does not store, list, or update past recommendations.',
       inputSchema: recommendInputSchema,
       outputSchema: recommendationOutputSchema,
       annotations: {

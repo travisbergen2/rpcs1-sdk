@@ -4,70 +4,61 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'Documentation',
   description:
-    'RPCS-1 AI quality diagnostics documentation — assessment workflow, MCP integration, receiver primitives, and platform mappings.',
+    'RPCS-1 docs — start free, use MCP, or read the minimal technical surface needed to integrate the tuner.',
 };
 
 export default function DocsPage() {
   return (
     <div>
-      <h1>RPCS-1 AI Quality Diagnostics — Documentation</h1>
+      <h1>RPCS-1 Documentation</h1>
       <p>
-        RPCS-1 gives AI teams a structured configuration assessment for deployed agents.
-        Describe the workload and operating conditions to receive a deterministic failure-risk
-        diagnosis, runtime posture, and implementation settings. The technical mechanism is
-        documented below for teams that want the full receiver-dynamics model.
+        RPCS-1 helps teams find why an agent fails under pressure, then tells them what settings to change.
+        If you want a fast start, use the{' '}
+        <Link href="/tuner">interactive tuner</Link> or connect the public MCP server.
       </p>
 
-      <h2>How it works</h2>
+      <h2>Start here</h2>
       <p>
-        Every recommendation flows through three steps:
+        Every recommendation flows through the same three steps:
       </p>
       <ol>
         <li>
-          <strong>Compute receiver primitives</strong> — your environment inputs are translated into
-          five receiver primitives (TI, SG, FT, UE, AR) using the{' '}
-          <Link href="/docs/matching">Matching Principle</Link> and basin stability geometry.
+          <strong>Describe the workload</strong> - use the tuner, or send the same fields through MCP.
         </li>
         <li>
-          <strong>Map to platform parameters</strong> — the primitives are mapped to your target
-          platform&apos;s parameter space (temperature, max_tokens, model, tool strategy, etc.).
+          <strong>Receive the diagnosis</strong> - the output leads with failure-risk score, regime, posture, and next test.
         </li>
         <li>
-          <strong>Evaluate regime</strong> — the resulting profile is checked against the four
-          stability boundaries (stable / near_oscillation / near_overload / near_freeze) and
-          any warnings are surfaced.
+          <strong>Ship the change</strong> - apply the runtime settings, then rerun one harder edge case.
         </li>
       </ol>
-      <p>All steps are deterministic. The same inputs always produce the same outputs.</p>
+      <p>All outputs are deterministic. The same inputs produce the same recommendations.</p>
 
       <h2>Quick links</h2>
       <ul>
-        <li><Link href="/docs/getting-started">Getting started</Link> — install the Python SDK</li>
-        <li><Link href="/docs/mcp">MCP integration</Link> — endpoint, authentication, and client compatibility</li>
-        <li><Link href="/imm">IMM primer</Link> — AI-readable bridge from IMM to RPCS-1 to agent tuning</li>
-        <li><Link href="/mismatch">AI-human mismatch</Link> — destructive many-to-one collapse and shared representation</li>
-        <li><Link href="/docs/primitives">The five primitives</Link> — TI, SG, FT, UE, AR explained</li>
-        <li><Link href="/docs/matching">Matching principle</Link> — Pred-09-5: TI ≈ 1/H</li>
-        <li><Link href="/docs/regimes">Stability regimes</Link> — oscillation, overload, freeze</li>
-        <li><Link href="/docs/platforms">Platform mappings</Link> — Anthropic, OpenAI, open source</li>
-        <li><Link href="/docs/translation-layer">Translation layer</Link> — face-preserving prompt and reply posture</li>
+        <li><Link href="/tuner">Free tuner</Link> - run a sample workflow in under a minute</li>
+        <li><Link href="/pricing#diagnostic">Paid diagnostic</Link> - the written memo and sample preview</li>
+        <li><Link href="/docs/getting-started">Getting started</Link> - install the Python SDK</li>
+        <li><Link href="/docs/mcp">MCP integration</Link> - connect the public read-only server</li>
+        <li><Link href="/docs/examples">Examples</Link> - support, coding, and research calls</li>
+        <li><Link href="/docs/translation-layer">Translation layer</Link> - face-preserving posture</li>
       </ul>
 
       <h2>AI agent integrations</h2>
       <p>
         RPCS-1 is available as a public, anonymous, read-only MCP server. It requires no API key
         or OAuth authentication. See the <Link href="/docs/mcp">MCP integration guide</Link> for
-        the endpoint, client compatibility, and tool details.
+        the endpoint and tool details.
       </p>
       <ul>
-        <li><Link href="/openapi.json">OpenAPI schema</Link> — REST tool contract</li>
-        <li><Link href="/llms.txt">llms.txt</Link> — concise machine-readable product overview</li>
+        <li><Link href="/openapi.json">OpenAPI schema</Link> - REST tool contract</li>
+        <li><Link href="/llms.txt">llms.txt</Link> - machine-readable product overview</li>
       </ul>
 
-      <h2>Just want to try it?</h2>
+      <h2>Try it now</h2>
       <p>
         The <Link href="/tuner">interactive tuner</Link> requires no installation and no account.
-        Describe your agent and get recommendations in under 30 seconds.
+        Start from support, coding, or research and get recommendations in under a minute.
       </p>
     </div>
   );

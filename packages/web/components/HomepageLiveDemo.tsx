@@ -247,7 +247,7 @@ export function HomepageLiveDemo() {
           onClick={scrollToProof}
           className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-sky-500/20 bg-sky-500/10 px-4 py-2 text-xs font-semibold text-sky-200 transition-colors hover:bg-sky-500/15"
         >
-          Scroll the journey ↓
+          See proof ↓
         </button>
       </div>
     </div>

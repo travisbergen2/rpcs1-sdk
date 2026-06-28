@@ -54,7 +54,7 @@ export default function ExamplesPage() {
           High-intent calls to try first.
         </h1>
         <p className="text-gray-400 text-lg leading-relaxed">
-          These are the cases where RPCS-1 is most obvious: a support copilot under pressure, a coding agent in a changing repo, or a research agent handling conflicting evidence.
+          These are the cases where RPCS-1 is most obvious: a support copilot under pressure, a coding agent in a changing repo, or a research agent handling conflicting evidence. The first useful answer should lead with TI, SG, FT, UE, AR, then the failure-risk score and next test.
         </p>
       </div>
 
@@ -86,6 +86,7 @@ export default function ExamplesPage() {
       <div className="mt-10 rounded-2xl border border-sky-500/15 bg-sky-500/5 p-6 sm:p-8">
         <h2 className="text-xl font-semibold text-white mb-3">What the output should lead with</h2>
         <ul className="grid gap-2 text-sm text-gray-400 sm:grid-cols-2">
+          <li>• TI, SG, FT, UE, AR</li>
           <li>• Failure-risk score</li>
           <li>• Predicted regime</li>
           <li>• Runtime posture</li>

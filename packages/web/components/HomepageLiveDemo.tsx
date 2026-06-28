@@ -8,6 +8,14 @@ import { cn } from '@/lib/cn';
 
 type DemoKey = 'support' | 'coding' | 'research';
 
+const PRIMITIVES = [
+  { key: 'TI', label: 'Temporal Integration' },
+  { key: 'SG', label: 'Signal Gain' },
+  { key: 'FT', label: 'Filtering Threshold' },
+  { key: 'UE', label: 'Update Elasticity' },
+  { key: 'AR', label: 'Ambiguity Resolution' },
+] as const;
+
 const DEMOS: Record<
   DemoKey,
   {
@@ -220,6 +228,22 @@ export function HomepageLiveDemo() {
             <p className="text-sm text-gray-300 leading-relaxed">
               {result ? getBestNextCheck(result) : 'Running the live demo now...'}
             </p>
+          </div>
+
+          <div className="rounded-2xl border border-gray-800 bg-gray-900/60 p-4">
+            <p className="text-xs font-mono text-sky-400 mb-3">Five-primitive profile</p>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+              {PRIMITIVES.map((primitive) => {
+                const value = result ? result.receiver_profile[primitive.key] : undefined;
+                return (
+                  <div key={primitive.key} className="rounded-xl border border-gray-800 bg-black/25 px-3 py-2">
+                    <p className="text-[11px] font-mono text-gray-500">{primitive.key}</p>
+                    <p className="mt-1 text-base font-semibold text-white">{value ?? '...'}</p>
+                    <p className="mt-1 text-[11px] leading-snug text-gray-600">{primitive.label}</p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           {result?.warnings?.[0] && (

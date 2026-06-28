@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'MCP Integration',
   description:
-    'Connect MCP-compatible clients to the public RPCS-1 Agent Tuner server.',
+    'Connect MCP-compatible clients to the public RPCS-1 five-primitive battery.',
 };
 
 export default function McpIntegrationPage() {
@@ -12,11 +12,11 @@ export default function McpIntegrationPage() {
       <div className="max-w-3xl mb-12">
         <p className="text-xs font-mono text-sky-400 mb-3">mcp</p>
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-          Connect the public RPCS-1 server.
+          Connect the public RPCS-1 battery.
         </h1>
         <p className="text-gray-400 text-lg leading-relaxed">
-          RPCS-1 provides a public Streamable HTTP MCP server for agent configuration recommendations.
-          It is anonymous, deterministic, read-only, and does not require an API key.
+          RPCS-1 provides a public Streamable HTTP MCP server for measuring TI, SG, FT, UE, and AR in a configured
+          agent. It is anonymous, deterministic, read-only, and does not require an API key.
         </p>
       </div>
 
@@ -33,8 +33,8 @@ export default function McpIntegrationPage() {
           <h2 className="mt-8 text-xl font-semibold text-white mb-4">One tool</h2>
           <p className="text-gray-400 leading-relaxed">
             The server exposes one focused tool: <code>recommend_agent_configuration</code>.
-            Use it when you want a failure-risk score, runtime posture, and a next test for a support copilot,
-            coding agent, research agent, or workflow assistant.
+            Use it when you want a five-primitive profile, a failure-risk score, runtime posture, and a next test
+            for a support copilot, coding agent, research agent, or workflow assistant.
           </p>
 
           <div className="mt-6 flex flex-col sm:flex-row gap-3">
@@ -58,7 +58,7 @@ export default function McpIntegrationPage() {
           <ol className="space-y-4 text-sm text-gray-400 leading-relaxed">
             <li>1. Connect <code>https://rpcs1.dev/mcp</code> in your MCP client.</li>
             <li>2. Send one workflow plus its operating conditions.</li>
-            <li>3. Read the failure-risk score, posture, and next check.</li>
+            <li>3. Read TI, SG, FT, UE, AR, then the failure-risk score and next check.</li>
           </ol>
           <div className="mt-6 rounded-xl border border-gray-800 bg-gray-950/70 p-4">
             <p className="text-xs font-mono text-amber-400 mb-2">best for</p>
@@ -68,6 +68,23 @@ export default function McpIntegrationPage() {
           </div>
         </aside>
       </div>
+
+      <section className="mt-8 rounded-2xl border border-gray-800 bg-gray-950/80 p-6 sm:p-8">
+        <h2 className="text-xl font-semibold text-white mb-3">First call to try</h2>
+        <pre className="overflow-x-auto rounded-xl border border-gray-800 bg-black/40 p-4 text-sm text-gray-300 leading-relaxed">
+{`Use recommend_agent_configuration to diagnose my support copilot.
+
+Task: refund and billing dispute triage
+Environment: dynamic, somewhat_predictable, high stakes
+Context relevance: medium
+Commitment style: cautious
+Target platform: anthropic`}
+        </pre>
+        <p className="mt-4 text-sm text-gray-400 leading-relaxed">
+          The useful first answer is the five-primitive profile, failure-risk score, runtime posture, and the next test
+          to run.
+        </p>
+      </section>
 
       <section className="mt-8 rounded-2xl border border-gray-800 bg-gray-950/80 p-6 sm:p-8">
         <h2 className="text-xl font-semibold text-white mb-3">Hyperagent compatibility</h2>

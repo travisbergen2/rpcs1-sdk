@@ -2,8 +2,8 @@
 
 ## Positioning
 
-RPCS1 finds why a deployed agent fails under pressure and returns concrete
-runtime settings, a failure-risk score, and the next test to run.
+RPCS1 measures TI, SG, FT, UE, and AR in a configured agent, then returns
+concrete runtime settings, a failure-risk score, and the next test to run.
 
 Lead with the developer problem:
 
@@ -31,9 +31,9 @@ conditions before blaming the model or adding another tool.
 **Long description:**
 
 > RPCS1 is a public, read-only MCP server for deployed AI agents that need a
-> failure-risk score, concrete runtime settings, and a next test to run. It
-> supports Anthropic, OpenAI, open-source, and generic targets. No API key is
-> required.
+> five-primitive profile, failure-risk score, concrete runtime settings, and a
+> next test to run. It supports Anthropic, OpenAI, open-source, and generic
+> targets. No API key is required.
 
 **Tool:** `recommend_agent_configuration`
 
@@ -134,7 +134,7 @@ Use this exact three-line structure at the top of the listing:
 
 > Find why an agent fails under pressure.
 >
-> Get a failure-risk score, runtime posture, and next test.
+> Measure TI, SG, FT, UE, and AR, then get a failure-risk score, runtime posture, and next test.
 >
 > Start with one support copilot or coding agent.
 
@@ -147,8 +147,8 @@ Use this exact three-line structure at the top of the listing:
 > I built RPCS1 because many teams have already deployed AI agents and copilots,
 > but still lack a simple diagnostic for whether those agents are matched to
 > the environment they operate in. You describe entropy, predictability, stakes,
-> context horizon, and commitment style; it returns model/runtime settings plus
-> warnings for oscillation, overload, freeze, and mismatch.
+> context horizon, and commitment style; it returns TI, SG, FT, UE, AR plus
+> warnings for oscillation, overload, freeze, and underdetermination.
 >
 > It is public, read-only, deterministic, and available as a Streamable HTTP MCP
 > server with no API key:

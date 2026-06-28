@@ -7,18 +7,17 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   title: {
-    default: 'RPCS-1 - AI quality diagnostics for deployed agents',
-    template: '%s | RPCS-1 AI Quality Diagnostics',
+    default: 'RPCS-1 - five-primitive agent battery',
+    template: '%s | RPCS-1',
   },
   description:
-    'Review AI agent configuration risk before launch and after quality regressions. ' +
-    'Diagnose consistency, grounding, escalation, and resolution failures.',
-  keywords: ['AI quality', 'AI evaluation', 'agent observability', 'customer support AI', 'agent configuration', 'rpcs1', 'IMM'],
+    'Measure TI, SG, FT, UE, and AR in a configured agent, then get the runtime settings and next test.',
+  keywords: ['AI evaluation', 'agent observability', 'agent battery', 'receiver primitives', 'MCP', 'rpcs1', 'IMM'],
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://rpcs1.dev',
-    siteName: 'RPCS-1 AI Quality Diagnostics',
+    siteName: 'RPCS-1',
   },
 };
 

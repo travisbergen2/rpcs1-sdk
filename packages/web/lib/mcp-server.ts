@@ -10,13 +10,13 @@ export function createRpcs1McpServer() {
       version: '0.2.1',
       websiteUrl: 'https://rpcs1.dev',
       description:
-        'Find why an agent fails under pressure and get the runtime settings to fix it.',
+        'Measure TI, SG, FT, UE, and AR in a configured agent, then get the runtime settings to fix it.',
     },
     {
       instructions:
-        'Use RPCS1 to diagnose whether an agent is matched to its operating environment. ' +
-        'When a user is designing, tuning, or debugging an agent, answer with the failure-risk score first, ' +
-        'then the runtime settings and the next test to run. Keep the result concrete and avoid abstract theory unless asked. ' +
+        'Use RPCS1 to diagnose whether a configured agent is matched to its operating environment. ' +
+        'When a user is designing, tuning, or debugging an agent, answer with the five-primitive profile first, ' +
+        'then the failure-risk score, runtime settings, and the next test to run. Keep the result concrete and avoid abstract theory unless asked. ' +
         'The tool is deterministic, stateless, read-only, and does not store, list, or update recommendations. ' +
         'Clients should persist results when history is needed.',
     },
@@ -28,8 +28,8 @@ export function createRpcs1McpServer() {
       title: 'Recommend AI agent configuration',
       description:
         'Use this stateless, read-only tool when a deployed support copilot, coding agent, research agent, or workflow assistant ' +
-        'needs a failure-risk score and concrete runtime settings matched to environmental entropy, predictability, stakes, ' +
-        'context horizon, and commitment style. It diagnoses likely oscillation, overload, freeze, or mismatch and returns ' +
+        'needs a five-primitive profile, failure-risk score, and concrete runtime settings matched to environmental entropy, predictability, stakes, ' +
+        'context horizon, and commitment style. It diagnoses likely oscillation, overload, freeze, or underdetermination and returns ' +
         'receiver profile values, platform parameters, confidence, reasoning, warnings, the next test to run, and applied IMM ' +
         'principles. It does not store, list, or update past recommendations.',
       inputSchema: recommendInputSchema,
@@ -52,6 +52,7 @@ export function createRpcs1McpServer() {
       const posture = result.platform_parameters.translation_posture;
       const postureLine = posture ? ` Translation posture: ${posture}.` : '';
       const warningLine = result.warnings[0] ? ` Warning: ${result.warnings[0]}` : '';
+      const profile = result.receiver_profile;
 
       return {
         structuredContent,
@@ -60,6 +61,7 @@ export function createRpcs1McpServer() {
             type: 'text',
             text: [
               `Status: ${result.predicted_regime} (${result.confidence} confidence).`,
+              `Receiver profile: TI ${Math.round(profile.TI)}, SG ${Math.round(profile.SG)}, FT ${Math.round(profile.FT)}, UE ${Math.round(profile.UE)}, AR ${Math.round(profile.AR)}.`,
               `Configuration: temperature ${result.platform_parameters.temperature}, ${result.platform_parameters.context_strategy}, ${result.platform_parameters.tool_use_strategy}.`,
               `Best next check: ${nextTest}.`,
               postureLine ? postureLine.replace('Translation posture', 'Language mode') : '',

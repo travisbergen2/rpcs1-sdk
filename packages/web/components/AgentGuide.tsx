@@ -17,25 +17,25 @@ const QUESTIONS: Record<
   what: {
     label: 'What is this?',
     answer:
-      'RPCS-1 reviews whether an AI agent is configured for the conditions it faces. It flags likely consistency, grounding, escalation, and resolution risks, then recommends a safer runtime posture. The free sample is a fast way to test the workflow before buying a paid diagnostic.',
+      'RPCS-1 measures TI, SG, FT, UE, and AR for a configured agent. It flags likely overload, oscillation, freeze, and underdetermination risks, then recommends a safer runtime posture. The free sample is a fast way to test the workflow before buying a paid diagnostic.',
     cta: { href: '/api/checkout?tier=diagnostic', label: 'Buy the diagnostic' },
   },
   why: {
     label: 'Why use it?',
     answer:
-      'Prompting changes instructions. RPCS-1 reviews operating risk: case variability, ambiguity, stakes, context, and when the agent should act or hand off. That helps explain failures that prompt edits alone do not fix.',
+      'Prompting changes instructions. RPCS-1 reviews operating risk: task type, entropy, predictability, stakes, context horizon, and commitment style. That helps explain failures that prompt edits alone do not fix.',
     cta: { href: '/docs/matching', label: 'See the framework' },
   },
   time: {
     label: 'How fast?',
     answer:
-      'The free sample takes about a minute. Start from a support, coding, or research preset, then decide whether you want the paid report and implementation guidance.',
+      'The free sample takes about a minute. Start from a support, coding, or research preset, then decide whether you want the paid memo and implementation guidance.',
     cta: { href: '/tuner', label: 'Try the free sample' },
   },
   price: {
     label: 'Free or paid?',
     answer:
-      'The web sample assessment is free and does not require an account. The paid diagnostic report is $750 one-time, and recurring SDK and team plans are for repeatable reviews and workflows.',
+      'The web sample assessment is free and does not require an account. The paid diagnostic memo is $750 one-time, and recurring SDK and team plans are for repeatable reviews and workflows.',
     cta: { href: '/pricing', label: 'View pricing' },
   },
 };

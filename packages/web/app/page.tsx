@@ -5,16 +5,16 @@ import { HomepageLiveDemo } from '@/components/HomepageLiveDemo';
 
 const memoBullets = [
   {
+    title: 'Five-primitive profile',
+    body: 'TI, SG, FT, UE, and AR measured for one configured agent.',
+  },
+  {
     title: 'Failure-risk score',
-    body: 'A fast read on whether the workflow looks stable, cautious, oscillating, or overloaded.',
+    body: 'A fast read on whether the workflow looks stable, oscillating, overloaded, or frozen.',
   },
   {
     title: 'Recommended posture',
     body: 'The runtime settings you should actually change before rollout.',
-  },
-  {
-    title: 'Implementation priorities',
-    body: 'What matters first so the team can ship improvements without guesswork.',
   },
   {
     title: 'Next test',
@@ -50,22 +50,22 @@ export default function HomePage() {
           <div className="grid gap-8 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.56),_transparent_42%)] px-5 py-8 sm:px-8 sm:py-10 lg:grid-cols-[1.06fr_0.94fr]">
             <div className="text-left">
               <p className="mb-4 inline-flex rounded border border-black/20 bg-white/70 px-2 py-1 text-[11px] font-mono uppercase tracking-[0.2em] text-black/60">
-                AI quality diagnostics for deployed agents
+                Five-primitive battery for deployed agents
               </p>
               <h1 className="max-w-3xl text-4xl font-bold leading-tight text-black sm:text-5xl lg:text-6xl">
-                Know why one agent will{' '}
+                Measure why one agent will{' '}
                 <span className="text-[#1266ff]">fail before rollout.</span>
               </h1>
               <p className="mt-5 max-w-2xl text-lg leading-relaxed text-black/75">
-                RPCS-1 gives you a free sample read, then a written diagnostic for one workflow so your team can
-                change the right settings before production gets messy.
+                RPCS-1 turns task, entropy, stakes, predictability, context horizon, and commitment style into a
+                five-primitive profile, a failure-risk score, and a next test for one configured agent.
               </p>
 
               <div className="mt-7 grid gap-3 sm:grid-cols-3">
                 {[
-                  { title: 'What it is', body: 'A diagnostic for one deployed agent or workflow.' },
-                  { title: 'Who it is for', body: 'Teams shipping support, AI, and ops agents.' },
-                  { title: 'Why it is better', body: 'Less guesswork, clearer next steps, faster rollout decisions.' },
+                  { title: 'What it measures', body: 'One configured agent, five primitives, one failure-risk read.' },
+                  { title: 'Who it is for', body: 'Teams shipping support, coding, research, and workflow agents.' },
+                  { title: 'What it catches', body: 'Overload, oscillation, freeze, and underdetermination.' },
                 ].map((item) => (
                   <div
                     key={item.title}
@@ -93,8 +93,8 @@ export default function HomePage() {
               </div>
 
               <p className="mt-4 max-w-xl text-xs leading-relaxed text-black/60">
-                Free results are directional. The paid diagnostic includes a written memo, recommended settings,
-                implementation priorities, and a next test to run.
+                Free results are directional. The paid diagnostic includes a written memo, five-primitive profile,
+                recommended settings, implementation priorities, and a next test to run.
               </p>
             </div>
 
@@ -122,6 +122,9 @@ export default function HomePage() {
             <div className="mt-4 rounded-2xl border border-amber-500/20 bg-black/30 p-5 font-mono text-sm text-white/80">
               <p>
                 <span className="text-sky-300">status:</span> stable
+              </p>
+              <p className="mt-2">
+                <span className="text-sky-300">receiver profile:</span> TI 78 · SG 61 · FT 43 · UE 66 · AR 22
               </p>
               <p className="mt-2">
                 <span className="text-sky-300">configuration:</span> explicit_confirmation · frequent_grounding

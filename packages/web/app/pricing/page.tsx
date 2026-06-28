@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/Badge';
 
 export const metadata: Metadata = {
   title: 'Pricing',
-  description: 'RPCS-1 pricing — free sample assessment, one-time written diagnostic, and recurring access for teams.',
+  description: 'RPCS-1 pricing — free sample, one-time five-primitive memo, and recurring access for teams.',
 };
 
 const TIERS = [

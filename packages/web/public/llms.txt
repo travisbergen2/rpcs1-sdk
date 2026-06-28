@@ -1,13 +1,13 @@
 # RPCS1 AI Quality Diagnostics
 
-RPCS1 is a deterministic configuration-assessment layer for AI agents.
-It reviews whether an agent's runtime posture fits its operating conditions,
-then returns a failure-risk diagnosis and concrete implementation settings.
+RPCS1 is a deterministic five-primitive battery for AI agents.
+It measures TI, SG, FT, UE, and AR for a configured agent, then returns a failure-risk diagnosis,
+runtime posture, and concrete implementation settings.
 
 Primary use cases:
 - Review an AI agent before rollout
 - Investigate consistency, grounding, escalation, and stalled-resolution risk
-- Turn production symptoms into a configuration hypothesis and next eval
+- Turn production symptoms into a five-primitive profile and next eval
 - Choose context, tool-use, retry, sampling, and handoff posture
 
 Public interfaces:
@@ -23,6 +23,21 @@ Public interfaces:
 
 MCP tool:
 - recommend_agent_configuration
+
+First call to try:
+
+```text
+Use recommend_agent_configuration to diagnose my support copilot.
+
+Task: refund and billing dispute triage
+Environment: dynamic, somewhat_predictable, high stakes
+Context relevance: medium
+Commitment style: cautious
+Target platform: anthropic
+```
+
+The most useful answer leads with TI, SG, FT, UE, AR, then failure-risk score,
+runtime posture, and the next test.
 
 The MCP tool is anonymous, deterministic, read-only, and idempotent.
 RPCS1 recommendations support engineering decisions but do not replace

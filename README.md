@@ -2,9 +2,9 @@
 
 <!-- mcp-name: io.github.travisbergen2/rpcs1-agent-tuner -->
 
-**Find why an agent fails under pressure and get the runtime settings to fix it.**
+**Measure TI, SG, FT, UE, and AR in a configured agent, then get the runtime settings to fix it.**
 
-A diagnostic framework for deployed AI agents that turns task type, entropy, stakes, predictability, context horizon, and commitment style into a failure-risk score, runtime recommendation, and next test.
+RPCS-1 is a five-primitive assay battery for deployed AI agents. It turns task type, entropy, stakes, predictability, context horizon, and commitment style into a five-primitive profile, a failure-risk score, a runtime recommendation, and the next test to run.
 
 ## Repository Structure
 
@@ -113,8 +113,8 @@ Commitment style: cautious
 Target platform: anthropic
 ```
 
-The output should lead with the failure-risk score, predicted regime, runtime posture,
-and next test to run.
+The output should lead with the five-primitive profile, failure-risk score, predicted regime,
+runtime posture, and next test to run.
 
 The second useful call is a coding agent in a changing repository:
 
@@ -128,8 +128,8 @@ Commitment style: balanced
 Target platform: openai
 ```
 
-The output should still lead with the failure-risk score, predicted regime, runtime posture,
-and next test to run.
+The output should still lead with the five-primitive profile, failure-risk score, predicted regime,
+runtime posture, and next test to run.
 
 Connection details and client compatibility notes are available at
 [https://rpcs1.dev/docs/mcp](https://rpcs1.dev/docs/mcp).

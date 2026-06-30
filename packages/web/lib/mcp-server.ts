@@ -82,13 +82,32 @@ export function createRpcs1McpServer() {
       annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false, idempotentHint: true },
     },
     async (input) => {
-      const result = interpret(input.text, input.risk);
-      let text = `AR level: ${result.ar_level || 'AR0'} | Confidence: ${result.confidence ?? '?'}\n`;
-      text += `Literal: "${result.literal_summary || input.text}"\n`;
-      if (result.implied_meaning) text += `Implied: ${result.implied_meaning}\n`;
-      if (result.ambiguities?.length) text += `Ambiguities: ${result.ambiguities.join('; ')}\n`;
-      if (result.clarifying_questions?.length) text += `Clarify: ${result.clarifying_questions[0]}\n`;
-      return { structuredContent: { ...result } as Record<string, unknown>, content: [{ type: 'text', text }] };
+            const result = interpret(input.text, input.risk);
+      let lines: string[] = [];
+      lines.push(`INPUT: "${result.original}"`);
+      lines.push('');
+      if (result.recovered_entities.length > 0) {
+        lines.push('\u2500 Recovered Entities \u2500');
+        for (const entity of result.recovered_entities) {
+          lines.push(`  ${entity.original} \u2192 ${entity.candidate.text} (${Math.round(entity.candidate.confidence * 100)}%)`);
+          for (const alt of entity.alternatives) {
+            lines.push(`    (alt: ${alt.text}, ${Math.round(alt.confidence * 100)}%)`);
+          }
+        }
+        lines.push('');
+      }
+      lines.push(`Intent: ${result.recovered_intent.type} (${Math.round(result.recovered_intent.confidence * 100)}%)`);
+      lines.push('');
+      lines.push(`Canonical Translation: "${result.canonical_translation}"`);
+      lines.push('');
+      lines.push(`Translation Integrity: ${result.translation_integrity}%`);
+      lines.push(`Playback: ${result.playback_required ? 'Required' : 'Not Required'}`);
+      lines.push(`AR Level: ${result.ar_level}`);
+      if (result.clarifying_questions.length > 0) {
+        lines.push('');
+        lines.push(`Clarify: ${result.clarifying_questions[0]}`);
+      }
+      return { structuredContent: { ...result } as Record<string, unknown>, content: [{ type: 'text', text: lines.join('\n') }] };
     },
   );
 

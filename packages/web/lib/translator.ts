@@ -26,25 +26,44 @@ interface CandidateInput {
   TI: number;
   ti_penalty_multiplier?: number;
 }
+// ── Translation Pipeline Types ─────────────────────────────────
 
-interface Candidate extends CandidateInput {
-  ti_penalty_multiplier: number;
-  score: number;
+/** A single candidate resolution for an ambiguous reference */
+interface EntityCandidate {
+  text: string;
+  confidence: number;
 }
 
-interface InterpretResult {
-  literal_summary: string;
-  implied_meaning: string | null;
-  ambiguities: string[];
+/** A recovered ambiguous entity with its top candidate and alternatives */
+interface RecoveredEntity {
+  original: string;
+  category: 'pronoun' | 'location' | 'time' | 'action' | 'unspecified';
+  candidate: EntityCandidate;
+  alternatives: EntityCandidate[];
+}
+
+/** Recovered intent classification */
+interface RecoveredIntent {
+  type: 'question' | 'correction' | 'explanation' | 'planning' | 'opinion' | 'instruction' | 'emotional_support' | 'research' | 'general';
   confidence: number;
-  suggested_next_step: string;
-  clean_prompt: string;
-  clarifying_questions: string[];
+}
+
+/** Full pipeline output */
+interface TranslationOutput {
+  original: string;
+  recovered_entities: RecoveredEntity[];
+  recovered_intent: RecoveredIntent;
+  canonical_translation: string;
+  translation_integrity: number;
+  confidence: number;
   ar_level: ARLevel;
-  candidates: Candidate[];
+  playback_required: boolean;
+  clarifying_questions: string[];
+  candidates: EntityCandidate[];
   margin: number;
 }
 
+interface NormalizeResult {
 interface NormalizeResult {
   original: string;
   fragments: string[];
@@ -151,220 +170,229 @@ function resolveAmbiguity(
   };
 }
 
-// ── Ambiguity patterns ─────────────────────────────────────────────
 
-const AMBIGUITY_PATTERNS: Record<string, CandidateInput[]> = {
-  "i'm fine": [
-    { label: 'neutral', IC: 0.80, UE: 0.20, EC: 0.50, NM: 0.50, SG: 0.10, TI: 1.00 },
-    { label: 'frustrated', IC: 0.40, UE: 0.90, EC: 0.50, NM: 0.50, SG: 0.70, TI: 0.90 },
-  ],
-  "i don't know": [
-    { label: 'uncertain', IC: 0.85, UE: 0.30, EC: 0.20, NM: 0.50, SG: 0.10, TI: 1.00 },
-    { label: 'avoiding_answer', IC: 0.20, UE: 0.70, EC: 0.60, NM: 0.50, SG: 0.60, TI: 0.80 },
-    { label: 'thinking', IC: 0.40, UE: 0.50, EC: 0.30, NM: 0.70, SG: 0.40, TI: 0.90 },
-  ],
-  'whatever you think': [
-    { label: 'deferring', IC: 0.70, UE: 0.30, EC: 0.30, NM: 0.50, SG: 0.20, TI: 1.00 },
-    { label: 'apathetic', IC: 0.30, UE: 0.60, EC: 0.80, NM: 0.50, SG: 0.60, TI: 0.90 },
-  ],
-  "it's nothing": [
-    { label: 'literal', IC: 0.75, UE: 0.20, EC: 0.40, NM: 0.50, SG: 0.10, TI: 1.00 },
-    { label: 'dismissive', IC: 0.30, UE: 0.70, EC: 0.70, NM: 0.50, SG: 0.60, TI: 0.85 },
-  ],
-};
 
-// ── interpret ──────────────────────────────────────────────────────
+// ── Translation Pipeline ───────────────────────────────────────
 
-function interpret(text: string, risk: RiskCategory = 'advice'): InterpretResult {
-  const result: InterpretResult = {
-    literal_summary: text,
-    implied_meaning: null,
-    ambiguities: [],
-    confidence: 0,
-    suggested_next_step: 'proceed',
-    clean_prompt: text,
-    clarifying_questions: [],
-    ar_level: 'AR0',
-    candidates: [],
-    margin: 0,
-  };
+// ── Stage 1: Entity Recovery ───────────────────────────────────
 
-  const lower = text.toLowerCase().trim();
-  for (const [pattern, candidatesData] of Object.entries(AMBIGUITY_PATTERNS)) {
-    if (lower.includes(pattern)) {
-      const resolution = resolveAmbiguity(candidatesData, risk);
-      result.candidates = resolution.candidates;
-      result.margin = resolution.margin;
-      result.ar_level = resolution.ar_level;
-      result.confidence = resolution.scores[0] ?? 0;
+/** Known pronouns and ambiguous references for entity recovery */
+const AMBIGUOUS_REFERENCES = [
+  { word: 'they', category: 'pronoun' as const },
+  { word: 'them', category: 'pronoun' as const },
+  { word: 'their', category: 'pronoun' as const },
+  { word: 'he', category: 'pronoun' as const },
+  { word: 'him', category: 'pronoun' as const },
+  { word: 'she', category: 'pronoun' as const },
+  { word: 'her', category: 'pronoun' as const },
+  { word: 'it', category: 'pronoun' as const },
+  { word: 'its', category: 'pronoun' as const },
+  { word: 'there', category: 'location' as const },
+  { word: 'that', category: 'unspecified' as const },
+  { word: 'those', category: 'unspecified' as const },
+  { word: 'this', category: 'unspecified' as const },
+  { word: 'these', category: 'unspecified' as const },
+  { word: 'someone', category: 'pronoun' as const },
+  { word: 'somebody', category: 'pronoun' as const },
+  { word: 'somewhere', category: 'location' as const },
+  { word: 'sometime', category: 'time' as const },
+  { word: 'something', category: 'unspecified' as const },
+];
 
-      if (resolution.should_collapse && resolution.winner) {
-        result.implied_meaning = `Most likely: ${resolution.winner}`;
-        result.suggested_next_step = 'proceed_with_awareness';
-      } else {
-        const labels = resolution.candidates.map((c) => c.label);
-        result.ambiguities = [`Could be interpreted as: ${labels.join(', ')}`];
-        result.suggested_next_step = 'clarify';
-        result.clarifying_questions = [
-          `I see multiple possibilities (${labels.join(', ')}). Can you clarify which one you meant?`,
-        ];
+/** Vague / underspecified language signals */
+const VAGUE_SIGNALS = [
+  'thing', 'stuff', 'somehow', 'kind of', 'sort of', 'type of',
+  'whatever', 'anyway', 'anything', 'anywhere', 'anyone',
+  'you know', 'etc', 'whatever you think',
+];
+
+function recoverEntities(text: string, contextHint?: string): { entities: RecoveredEntity[]; hasAmbiguity: boolean } {
+  const lower = text.toLowerCase();
+  const words = text.split(/\s+/).filter(Boolean);
+  const entities: RecoveredEntity[] = [];
+  let hasAmbiguity = false;
+
+  const seen = new Set<string>();
+
+  for (const ref of AMBIGUOUS_REFERENCES) {
+    // Use word boundary detection
+    const regex = new RegExp('\\b' + ref.word + '\\b', 'i');
+    if (regex.test(lower) && !seen.has(ref.word)) {
+      seen.add(ref.word);
+      hasAmbiguity = true;
+
+      // Generate plausible candidates based on context
+      const defaultCandidates: EntityCandidate[] = [];
+
+      if (ref.word === 'they' || ref.word === 'them' || ref.word === 'their') {
+        defaultCandidates.push(
+          { text: '[unknown group]', confidence: 0.50 },
+          { text: '[the people being discussed]', confidence: 0.35 },
+        );
+      } else if (ref.word === 'he' || ref.word === 'him') {
+        defaultCandidates.push(
+          { text: '[unknown male]', confidence: 0.50 },
+        );
+      } else if (ref.word === 'she' || ref.word === 'her') {
+        defaultCandidates.push(
+          { text: '[unknown female]', confidence: 0.50 },
+        );
+      } else if (ref.word === 'it' || ref.word === 'its') {
+        defaultCandidates.push(
+          { text: '[unknown object/topic]', confidence: 0.50 },
+        );
+      } else if (ref.word === 'there' || ref.word === 'somewhere') {
+        defaultCandidates.push(
+          { text: '[unknown location]', confidence: 0.50 },
+        );
+      } else if (ref.word === 'that' || ref.word === 'those' || ref.word === 'this' || ref.word === 'these') {
+        defaultCandidates.push(
+          { text: '[unspecified referent]', confidence: 0.50 },
+        );
+      } else if (ref.word === 'someone' || ref.word === 'somebody') {
+        defaultCandidates.push(
+          { text: '[unknown person]', confidence: 0.50 },
+        );
+      } else if (ref.word === 'something') {
+        defaultCandidates.push(
+          { text: '[unspecified thing]', confidence: 0.50 },
+        );
       }
-      return result;
+
+      entities.push({
+        original: ref.word,
+        category: ref.category,
+        candidate: defaultCandidates[0] || { text: '[ambiguous]', confidence: 0.50 },
+        alternatives: defaultCandidates.slice(1),
+      });
     }
   }
 
-  // ── Dynamic ambiguity detection (no hardcoded pattern matched) ──
-  // Analyze the actual text for vague/ambiguous language and generate candidates dynamically.
-  const lower2 = text.toLowerCase().trim();
-  const words = text.split(/\s+/).filter(Boolean);
+  return { entities, hasAmbiguity };
+}
 
-  // Vague/ambiguous language signals
-  const vagueWords = ['thing', 'stuff', 'something', 'somehow', 'somewhere', 'someone', 'somebody',
-    'whatever', 'anyway', 'anything', 'anywhere', 'anyone', 'whoever', 'whichever',
-    'kind of', 'sort of', 'type of', 'a bit', 'a little', 'more or less',
-    'maybe', 'perhaps', 'possibly', 'probably', 'might', 'could be',
-    'seems', 'appears', 'feels like', 'looks like', 'sounds like',
-    'that thing', 'that stuff', 'the one', 'the thing', 'that place', 'over there',
-    'you know', 'if you know what i mean', 'etc', 'whatever you think',
-  ];
-  const contextMissingWords = ['it', 'this', 'that', 'there', 'here', 'they', 'them'];
-  const ambiguityWords = ['or', 'maybe', 'either', 'versus', 'vs', 'rather than'];
-  const preferenceWords = ['like', 'want', 'prefer', 'think', 'feel', 'guess', 'suppose',
-    'would', 'could', 'might', 'whichever', 'either way'];
-  const locationWords = ['where', 'find', 'locate', 'search', 'look for', 'looking for',
-    'where is', 'where are', 'where can i', 'where do i'];
+// ── Stage 2: Intent Recovery ───────────────────────────────────
 
-  // Count signals
-  const vagueCount = vagueWords.filter(function(w) { return lower2.includes(w); }).length;
-  const contextMissingCount = contextMissingWords.filter(function(w) {
-    const regex = new RegExp("\\b" + w + "\\b", 'i');
-    return regex.test(lower2);
-  }).length;
-  const hasAmbiguityWords = ambiguityWords.some(function(w) { return lower2.includes(w); });
-  const hasPreferenceSignal = preferenceWords.some(function(w) { return lower2.includes(w); });
-  const hasLocationSignal = locationWords.some(function(w) { return lower2.includes(w); });
-  const isQuestion = lower2.includes('?') || /^(what|where|when|why|how|who|which|whose|whom)\b/i.test(text.trim());
+const INTENT_PATTERNS: Array<{ type: RecoveredIntent['type']; patterns: RegExp[] }> = [
+  { type: 'question', patterns: [/^what\b/i, /^where\b/i, /^when\b/i, /^why\b/i, /^how\b/i, /^who\b/i, /^which\b/i, /\?$/] },
+  { type: 'instruction', patterns: [/^(please |could you |can you |would you |i need you to |make |create |write |find |show )/i] },
+  { type: 'correction', patterns: [/(actually|that's not|you're wrong|incorrect|mistake|error)/i] },
+  { type: 'explanation', patterns: [/(explain|what is |how does |tell me about|describe|define)/i] },
+  { type: 'planning', patterns: [/(plan|prepare|organize|schedule|arrange|strategy|next steps)/i] },
+  { type: 'opinion', patterns: [/(think|believe|opinion|feel about|recommend|suggest|best|better)/i] },
+  { type: 'emotional_support', patterns: [/(feel|feeling|sad|angry|upset|stressed|worried|anxious)/i] },
+  { type: 'research', patterns: [/(research|study|analyze|investigate|find out|learn about|data on)/i] },
+];
 
-  // Build ambiguity list
-  const ambiguities2 = [];
-  if (vagueCount > 0) ambiguities2.push('vague_reference');
-  if (contextMissingCount >= 2) ambiguities2.push('missing_context');
-  if (hasAmbiguityWords) ambiguities2.push('disjunctive_intent');
-  if (hasPreferenceSignal) ambiguities2.push('unexpressed_preference');
-  if (isQuestion && (vagueCount > 0 || contextMissingCount >= 1)) ambiguities2.push('underspecified_query');
-  if (hasLocationSignal) ambiguities2.push('location_ambiguous');
-  if (words.length <= 3) ambiguities2.push('underspecified');
+function recoverIntent(text: string): RecoveredIntent {
+  for (const { type, patterns } of INTENT_PATTERNS) {
+    for (const p of patterns) {
+      if (p.test(text)) {
+        return { type, confidence: 0.85 };
+      }
+    }
+  }
+  if (/\?$/.test(text.trim())) return { type: 'question', confidence: 0.70 };
+  return { type: 'general', confidence: 0.60 };
+}
 
-  // Calculate ambiguity severity (0..1)
-  const totalSignals = vagueCount + contextMissingCount + (hasAmbiguityWords ? 1 : 0) +
-    (hasPreferenceSignal ? 1 : 0) + (hasLocationSignal ? 1 : 0) + (isQuestion ? 1 : 0);
-  const ambiguitySeverity = Math.min(1.0, totalSignals / 6);
+// ── Stage 3: Canonical Translation ─────────────────────────────
 
-  // Build dynamic candidates
-  const dynamicCandidates = [];
-  if (ambiguitySeverity < 0.4 && totalSignals === 0) {
-    // Low ambiguity — literal interpretation likely correct
+function buildCanonicalTranslation(text: string, entities: RecoveredEntity[]): string {
+  if (entities.length === 0) return text;
+  let translated = text;
+  // Replace each entity with its best candidate (bracketed placeholder)
+  for (const entity of entities) {
+    const regex = new RegExp('\\b' + entity.original + '\\b', 'gi');
+    translated = translated.replace(regex, entity.candidate.text);
+  }
+  return translated;
+}
+
+// ── Stage 4-6: combined interpret pipeline ────────────────────
+
+function interpret(text: string, risk: RiskCategory = 'advice', contextHint?: string): TranslationOutput {
+  // Stage 1: Entity Recovery
+  const { entities, hasAmbiguity } = recoverEntities(text, contextHint);
+
+  // Stage 2: Intent Recovery
+  const intent = recoverIntent(text);
+
+  // Stage 3: Canonical Translation
+  const canonical = buildCanonicalTranslation(text, entities);
+
+  // Stage 4: Risk Evaluation (integrated with existing scoring)
+  // Detect vagueness signals
+  const lower = text.toLowerCase().trim();
+  const vagueCount = VAGUE_SIGNALS.filter((s) => lower.includes(s)).length;
+  const totalSignals = (hasAmbiguity ? 1 : 0) + vagueCount;
+  const ambiguitySeverity = Math.min(1.0, totalSignals / 4);
+
+  // Build candidates for scoring
+  const dynamicCandidates: CandidateInput[] = [];
+  if (!hasAmbiguity && vagueCount === 0) {
+    // Low ambiguity — literal interpretation
     dynamicCandidates.push({ label: 'literal', IC: 0.85, UE: 0.80, EC: 0.80, NM: 0.70, SG: 0.10, TI: 1.00 });
   } else {
-    // Literal interpretation
     const literalIC = Math.max(0.3, 0.8 - ambiguitySeverity * 0.5);
     dynamicCandidates.push({ label: 'literal', IC: literalIC, UE: 0.70, EC: 0.60, NM: 0.60, SG: 0.20, TI: 0.95 });
 
-    // Vague — user might be unsure or underspecifying
+    if (hasAmbiguity) {
+      dynamicCandidates.push({ label: 'ambiguous_reference', IC: 0.30, UE: 0.40, EC: 0.50, NM: 0.60, SG: 0.75, TI: 0.55, ti_penalty_multiplier: 1.5 });
+    }
     if (vagueCount > 0) {
       dynamicCandidates.push({ label: 'underspecified', IC: 0.35, UE: 0.40, EC: 0.50, NM: 0.60, SG: 0.70, TI: 0.60, ti_penalty_multiplier: 1.5 });
     }
-
-    // Requesting guidance/preference
-    if (hasPreferenceSignal || isQuestion) {
-      dynamicCandidates.push({ label: 'seeking_guidance', IC: 0.30, UE: 0.50, EC: 0.30, NM: 0.70, SG: 0.60, TI: 0.70 });
-    }
-
-    // Missing context — implied referent
-    if (contextMissingCount >= 1 || hasLocationSignal) {
-      dynamicCandidates.push({ label: 'implied_referent', IC: 0.25, UE: 0.30, EC: 0.40, NM: 0.60, SG: 0.80, TI: 0.50, ti_penalty_multiplier: 2.0 });
-    }
   }
 
-  // Ensure we always have at least 2 candidates to enable ambiguity scoring
+  // Ensure we have at least 2 candidates
   if (dynamicCandidates.length === 1) {
-    dynamicCandidates.push({ label: 'literal_alt', IC: dynamicCandidates[0].IC - 0.2, UE: dynamicCandidates[0].UE - 0.1, EC: dynamicCandidates[0].EC - 0.1, NM: dynamicCandidates[0].NM, SG: dynamicCandidates[0].SG + 0.1, TI: dynamicCandidates[0].TI - 0.1 });
+    dynamicCandidates.push({ label: 'alt', IC: dynamicCandidates[0].IC - 0.2, UE: dynamicCandidates[0].UE - 0.1, EC: dynamicCandidates[0].EC - 0.1, NM: dynamicCandidates[0].NM, SG: dynamicCandidates[0].SG + 0.1, TI: dynamicCandidates[0].TI - 0.1 });
   }
 
-  // Risk-adjusted threshold: at higher risk, we're more sensitive to ambiguity
   const effectiveRisk = ambiguitySeverity > 0.3 && risk === 'casual' ? 'advice' : risk;
+  const resolution = resolveAmbiguity(dynamicCandidates, effectiveRisk);
+  const ti = resolution.candidates[0]?.TI ?? 0.5;
 
-  const resolution2 = resolveAmbiguity(dynamicCandidates, effectiveRisk);
+  // Stage 5: Playback Decision
+  const playbackRequired = ti < 0.95 || (risk === 'safety-critical' && hasAmbiguity);
 
-  // Generate clarifying questions based on detected ambiguities
-  const clarifyingQuestions2 = [];
-  if (ambiguities2.includes('vague_reference')) {
-    clarifyingQuestions2.push('You mentioned something vague. Can you be more specific about what you’re referring to?');
+  // Stage 6: Clarifying questions
+  const questions: string[] = [];
+  if (hasAmbiguity) {
+    for (const entity of entities) {
+      questions.push(`What does "${entity.original}" refer to?`);
+    }
   }
-  if (ambiguities2.includes('missing_context')) {
-    clarifyingQuestions2.push('Can you provide more context about what you’re referring to?');
-  }
-  if (ambiguities2.includes('underspecified_query') || ambiguities2.includes('location_ambiguous')) {
-    clarifyingQuestions2.push('What specific information are you looking for?');
-  }
-  if (ambiguities2.includes('unexpressed_preference')) {
-    clarifyingQuestions2.push('Do you have a preference, or would you like a recommendation?');
-  }
-  if (ambiguities2.includes('underspecified')) {
-    clarifyingQuestions2.push('Can you elaborate on what you need?');
-  }
-  // At higher risk levels, always add a verification question
   if (risk === 'safety-critical' || risk === 'high-stakes') {
-    if (!clarifyingQuestions2.length) {
-      clarifyingQuestions2.push('I want to verify — is this exactly what you mean, or should I ask clarifying questions first?');
-    }
-    // Make the threshold stricter for safety-critical
-    if (risk === 'safety-critical' && ambiguities2.length === 0 && !isQuestion) {
-      clarifyingQuestions2.push('Given the safety-critical context, should I proceed or ask more questions first?');
+    if (questions.length === 0) {
+      questions.push('I want to verify — is this exactly what you mean?');
     }
   }
 
-  // Determine suggested next step
-  let suggestedNextStep2;
-  if (resolution2.ar_level === 'AR0' || resolution2.ar_level === 'AR1') {
-    suggestedNextStep2 = 'proceed_with_awareness';
-  } else if (resolution2.ar_level === 'AR4' || resolution2.ar_level === 'AR5') {
-    suggestedNextStep2 = 'clarify';
-  } else {
-    suggestedNextStep2 = ambiguities2.length > 0 ? 'clarify' : 'proceed';
+  // Build candidate display list
+  const displayCandidates = entities.map((e) => e.candidate);
+  if (displayCandidates.length === 0 && resolution.candidates.length > 0) {
+    displayCandidates.push({ text: resolution.candidates[0].label, confidence: resolution.candidates[0].score });
   }
 
-  // If we're at safety-critical and ANY ambiguity exists, refuse to collapse
-  if (risk === 'safety-critical' && ambiguities2.length > 0) {
-    suggestedNextStep2 = 'refuse';
-  }
+  const integrityPct = Math.round(ti * 100);
+  const confidence = Math.round((resolution.candidates[0]?.score ?? 0.5) * 100) / 100;
 
-  result.literal_summary = text;
-  result.ambiguities = ambiguities2;
-  result.confidence = Math.round((resolution2.candidates[0]?.score ?? 0.5) * 100) / 100;
-  result.suggested_next_step = suggestedNextStep2;
-  result.clean_prompt = text;
-  result.clarifying_questions = clarifyingQuestions2;
-  result.ar_level = resolution2.ar_level;
-  result.candidates = resolution2.candidates;
-  result.margin = resolution2.margin;
-
-  if (resolution2.should_collapse && resolution2.winner) {
-    result.implied_meaning = 'Most likely: ' + resolution2.winner;
-  } else {
-    const labels2 = resolution2.candidates.map(function(c) { return c.label; });
-    result.implied_meaning = 'Could be: ' + labels2.join(', ');
-    if (!result.clarifying_questions.length) {
-      result.clarifying_questions = [
-        'I see multiple possibilities (' + labels2.join(', ') + '). Can you clarify which one you meant?',
-      ];
-    }
-  }
-
-  return result;
+  return {
+    original: text,
+    recovered_entities: entities,
+    recovered_intent: intent,
+    canonical_translation: canonical,
+    translation_integrity: integrityPct,
+    confidence,
+    ar_level: resolution.ar_level,
+    playback_required: playbackRequired,
+    clarifying_questions: questions,
+    candidates: displayCandidates,
+    margin: resolution.margin,
+  };
 }
-
-// ── normalize ──────────────────────────────────────────────────────
 
 function normalizeText(text: string): NormalizeResult {
   const fragments = text
@@ -549,7 +577,7 @@ export {
   scoreCandidates as score,
   resolveAmbiguity,
 };
-export type { InterpretResult, NormalizeResult, SplitResult, RewriteResult, RouteResult, ScoreResult, CandidateInput, RiskCategory };
+export type { TranslationOutput, NormalizeResult, SplitResult, RewriteResult, RouteResult, ScoreResult, CandidateInput, RiskCategory, RecoveredEntity, EntityCandidate, RecoveredIntent };
 
 // ── Diagnostic Report Generator ────────────────────────────────────
 

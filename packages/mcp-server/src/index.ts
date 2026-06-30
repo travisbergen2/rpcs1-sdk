@@ -151,25 +151,38 @@ function createServer() {
     },
     async (input) => {
       const result = interpret(input.text, input.risk);
-      const summary = result.literal_summary || input.text;
-      const arLevel = result.ar_level || 'AR0';
-      const candidates = result.candidates || [];
-      let text = `AR level: ${arLevel} | Confidence: ${result.confidence ?? '?'}\n`;
-      text += `Literal: "${summary}"\n`;
-      if (result.implied_meaning) text += `Implied: ${result.implied_meaning}\n`;
-      if (result.ambiguities?.length) text += `Ambiguities: ${result.ambiguities.join('; ')}\n`;
-      if (result.clarifying_questions?.length) text += `Clarify: ${result.clarifying_questions[0]}\n`;
-      if (candidates.length) {
-        text += `\nCandidates:\n`;
-        for (const c of candidates) {
-          text += `  ${c.label}: score=${c.score?.toFixed(3)} IC=${c.IC} UE=${c.UE} TI=${c.TI}\n`;
+      let lines: string[] = [];
+      lines.push('INPUT: "' + result.original + '"');
+      lines.push('');
+      if (result.recovered_entities.length > 0) {
+        lines.push('\u2500 Recovered Entities \u2500');
+        for (const entity of result.recovered_entities) {
+          lines.push('  ' + entity.original + ' \u2192 ' + entity.candidate.text + ' (' + Math.round(entity.candidate.confidence * 100) + '%)');
+          for (const alt of entity.alternatives) {
+            lines.push('    (alt: ' + alt.text + ', ' + Math.round(alt.confidence * 100) + '%)');
+          }
         }
+        lines.push('');
+      }
+      lines.push('Intent: ' + result.recovered_intent.type + ' (' + Math.round(result.recovered_intent.confidence * 100) + '%)');
+      lines.push('');
+      lines.push('Canonical Translation: "' + result.canonical_translation + '"');
+      lines.push('');
+      lines.push('Translation Integrity: ' + result.translation_integrity + '%');
+      lines.push('Playback: ' + (result.playback_required ? 'Required' : 'Not Required'));
+      lines.push('AR Level: ' + result.ar_level);
+      if (result.clarifying_questions.length > 0) {
+        lines.push('');
+        lines.push('Clarify: ' + result.clarifying_questions[0]);
       }
       return {
         structuredContent: { ...result } as Record<string, unknown>,
-        content: [{ type: 'text', text }],
+        content: [{ type: 'text', text: lines.join('\n') }],
       };
     },
+  );
+
+  // ── Tool: normalize    },
   );
 
   // ── Tool: normalize ────────────────────────────────────────────

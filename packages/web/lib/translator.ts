@@ -318,7 +318,7 @@ function buildCanonicalTranslation(text: string, entities: RecoveredEntity[]): s
 
 function interpret(text: string, risk: RiskCategory = 'advice', _contextHint?: string): TranslationOutput {
   // Stage 1: Entity Recovery
-  const { entities, hasAmbiguity } = recoverEntities(text, contextHint);
+  const { entities, hasAmbiguity } = recoverEntities(text);
 
   // Stage 2: Intent Recovery
   const intent = recoverIntent(text);

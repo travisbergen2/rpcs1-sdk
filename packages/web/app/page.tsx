@@ -162,6 +162,59 @@ export default function HomePage() {
         <div className="rounded-[2rem] border border-sky-500/15 bg-[linear-gradient(180deg,rgba(18,102,255,0.12),rgba(255,176,0,0.08))] p-6 shadow-[0_32px_120px_rgba(0,0,0,0.4)] sm:p-8">
           <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
             <div>
+
+      {/* Translator Hub section */}
+      <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
+        <div className="rounded-[2rem] border border-sky-500/15 bg-[linear-gradient(180deg,rgba(18,102,255,0.08),rgba(99,102,241,0.04))] p-6 sm:p-8 shadow-[0_24px_100px_rgba(0,0,0,0.35)]">
+          <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+            <div>
+              <p className="text-xs font-mono uppercase tracking-[0.24em] text-sky-400 mb-3">free tool</p>
+              <h2 className="text-3xl font-bold text-white mb-3">RPCS-1 Translator Hub</h2>
+              <p className="text-base leading-relaxed text-white/75 max-w-2xl mb-4">
+                Interpret ambiguous messages, normalize fragmented text, split mixed intents, rewrite
+                for any audience, and score candidate interpretations — all powered by the HF-HATP v1.9
+                protocol.
+              </p>
+              <div className="grid sm:grid-cols-3 gap-3 mb-6">
+                {[
+                  { title: 'Interpret', body: 'Detect ambiguity, extract intent, assess confidence' },
+                  { title: 'Rewrite', body: '6 styles: plain, technical, gentle, concise, detailed, direct' },
+                  { title: 'Score', body: 'RPCS-1 Signature Ambiguity Framework with AR scale' },
+                ].map((item) => (
+                  <div key={item.title} className="rounded-xl border border-white/10 bg-white/5 p-3">
+                    <p className="text-xs font-mono text-sky-300">{item.title}</p>
+                    <p className="mt-1 text-sm text-white/65">{item.body}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href="/translator"
+                  className="inline-flex items-center justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-sky-400 transition-colors"
+                >
+                  Open Translator Hub
+                </Link>
+                <Link
+                  href="/docs/translation-layer"
+                  className="inline-flex items-center justify-center rounded-lg border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+                >
+                  Protocol docs
+                </Link>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-sky-500/20 bg-black/30 p-5 font-mono text-sm">
+              <p className="text-xs text-sky-300 mb-3">{"// Live example — ambiguous input"}</p>
+              <p><span className="text-gray-500">{"$"}</span> python -m rpcs1.translator.server interpret <span className="text-emerald-300">{"\"I'm fine\""}</span></p>
+              <p className="mt-2 text-gray-400">{"{"}</p>
+              <p className="ml-3 text-gray-400">ar_level: <span className="text-amber-300">"AR5"</span><span className="text-gray-600">,</span></p>
+              <p className="ml-3 text-gray-400">ambiguities: <span className="text-amber-300">["neutral", "frustrated"]</span><span className="text-gray-600">,</span></p>
+              <p className="ml-3 text-gray-400">margin: <span className="text-amber-300">0.015</span><span className="text-gray-600">,</span></p>
+              <p className="ml-3 text-gray-400">suggested: <span className="text-amber-300">"clarify"</span></p>
+              <p className="text-gray-400">{"}"}</p>
+            </div>
+          </div>
+        </div>
+      </section>
               <p className="text-xs font-mono uppercase tracking-[0.24em] text-sky-300">Buy path</p>
               <h2 className="mt-3 text-3xl font-bold text-white">Start free. Upgrade when one workflow needs a clear answer.</h2>
               <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/75">

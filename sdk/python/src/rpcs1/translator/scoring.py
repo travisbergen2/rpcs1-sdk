@@ -105,17 +105,19 @@ def resolve_ambiguity(
 
     margin = sorted_scores[0] - (sorted_scores[1] if len(sorted_scores) > 1 else 0.0)
     threshold = RISK_THRESHOLDS[risk]
-    should_collapse = margin > threshold
 
-    if should_collapse:
+    if len(candidates) == 1:
+        should_collapse = True
+        ar_level: ARLevel = "AR0"
+    elif margin > threshold:
+        should_collapse = True
         if risk in ("safety-critical", "high-stakes") and margin < threshold + 0.1:
-            ar_level: ARLevel = "AR4"
+            ar_level = "AR4"
         else:
             ar_level = "AR0" if margin > threshold + 0.3 else "AR1"
     else:
-        if len(candidates) == 1:
-            ar_level = "AR0"
-        elif margin > threshold * 0.8:
+        should_collapse = False
+        if margin > threshold * 0.8:
             ar_level = "AR4"
         elif margin > threshold * 0.5:
             ar_level = "AR3"

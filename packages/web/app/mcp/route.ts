@@ -208,6 +208,11 @@ export const DELETE = handleMcpRequest;
 export function GET(request: Request) {
   const accept = request.headers.get('accept') ?? '';
 
+  // For MCP Streamable HTTP session initialization, require MCP headers
+  if (accept.includes('application/json')) {
+    return handleMcpRequest(request);
+  }
+
   if (accept.includes('text/html')) {
     return new Response(
       [
@@ -215,7 +220,7 @@ export function GET(request: Request) {
         '',
         'MCP endpoint: https://rpcs1.dev/mcp',
         'Transport: Streamable HTTP',
-        'Tool: recommend_agent_configuration',
+        'Tools: recommend_agent_configuration, interpret, normalize, rewrite',
         '',
         'Connect this URL from an MCP-compatible client.',
         'Health: https://rpcs1.dev/api/health',
@@ -231,7 +236,13 @@ export function GET(request: Request) {
     );
   }
 
-  return handleMcpRequest(request);
+  return new Response('MCP endpoint is at https://rpcs1.dev/mcp. Use POST with MCP protocol headers.', {
+    status: 200,
+    headers: {
+      ...corsHeaders,
+      'Content-Type': 'text/plain; charset=utf-8',
+    },
+  });
 }
 
 export function OPTIONS() {

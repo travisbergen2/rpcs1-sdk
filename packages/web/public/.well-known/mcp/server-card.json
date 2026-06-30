@@ -1,7 +1,7 @@
 {
   "serverInfo": {
     "name": "RPCS1 Agent Tuner",
-    "version": "0.2.1"
+    "version": "0.2.2"
   },
   "authentication": {
     "required": false,
@@ -10,71 +10,165 @@
   "tools": [
     {
       "name": "recommend_agent_configuration",
-      "description": "Diagnose whether a deployed AI agent, support copilot, or agent workflow is matched to its operating environment. Recommends concrete LLM and runtime settings from entropy, predictability, stakes, context horizon, and commitment style; returns receiver profile values, platform parameters, confidence, reasoning, warnings, and applied IMM principles. Stateless, read-only, and does not store, list, or update past recommendations.",
+      "description": "Diagnose whether a deployed AI agent is matched to its operating environment. Returns receiver profile values, platform parameters, confidence, reasoning, and warnings.",
       "inputSchema": {
         "type": "object",
-        "additionalProperties": false,
         "properties": {
           "task": {
             "type": "object",
-            "additionalProperties": false,
             "properties": {
               "task_summary": {
                 "type": "string",
-                "minLength": 1,
-                "maxLength": 2000
+                "description": "Description of what the AI agent does"
               },
               "domain": {
                 "type": "string",
-                "minLength": 1,
-                "maxLength": 100
+                "description": "Optional domain"
               },
               "expected_duration_per_call": {
                 "type": "string",
-                "enum": ["short", "medium", "long"]
+                "enum": [
+                  "short",
+                  "medium",
+                  "long"
+                ]
               }
-            },
-            "required": ["task_summary"]
+            }
           },
           "environment": {
             "type": "object",
-            "additionalProperties": false,
             "properties": {
               "entropy": {
                 "type": "string",
-                "enum": ["stable", "moderate", "dynamic", "chaotic"]
+                "enum": [
+                  "stable",
+                  "moderate",
+                  "dynamic",
+                  "chaotic"
+                ]
               },
               "predictability": {
                 "type": "string",
-                "enum": ["highly_predictable", "somewhat_predictable", "unpredictable"]
+                "enum": [
+                  "highly_predictable",
+                  "somewhat_predictable",
+                  "unpredictable"
+                ]
               },
               "stakes": {
                 "type": "string",
-                "enum": ["low", "medium", "high", "catastrophic"]
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "catastrophic"
+                ]
               },
               "context_relevance": {
                 "type": "string",
-                "enum": ["short", "medium", "long"]
+                "enum": [
+                  "short",
+                  "medium",
+                  "long"
+                ]
               },
               "commitment_style": {
                 "type": "string",
-                "enum": ["decisive", "balanced", "cautious"]
+                "enum": [
+                  "decisive",
+                  "balanced",
+                  "cautious"
+                ]
               }
-            },
-            "required": [
-              "entropy",
-              "predictability",
-              "stakes",
-              "context_relevance",
-              "commitment_style"
-            ]
+            }
           },
           "target_platform": {
             "type": "string",
-            "enum": ["anthropic", "openai", "open_source", "generic"]
+            "enum": [
+              "anthropic",
+              "openai",
+              "open_source",
+              "generic"
+            ]
           }
-        },
-        "required": ["task", "environment", "target_platform"]
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": true
+      }
+    },
+    {
+      "name": "interpret",
+      "description": "Detect ambiguity in user messages. Returns AR level (AR0-AR5), confidence, candidate interpretations, clarifying questions.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "The message to interpret"
+          },
+          "risk": {
+            "type": "string",
+            "enum": [
+              "casual",
+              "advice",
+              "high-stakes",
+              "safety-critical"
+            ]
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": true
+      }
+    },
+    {
+      "name": "normalize",
+      "description": "Clean up fragmented human input with ellipses and run-on thoughts into coherent prose.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Fragmented text to normalize"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": true
+      }
+    },
+    {
+      "name": "rewrite",
+      "description": "Get rewrite instructions for adapting text to a target audience style: technical, plain, gentle, concise, detailed, or direct.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text to rewrite"
+          },
+          "style": {
+            "type": "string",
+            "enum": [
+              "technical",
+              "plain",
+              "socially_gentle",
+              "concise",
+              "detailed",
+              "direct"
+            ]
+          }
+        }
       },
       "annotations": {
         "readOnlyHint": true,

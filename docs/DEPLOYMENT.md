@@ -1,6 +1,6 @@
 # Release and Deployment Guide
 
-Current release line: `0.2.1`.
+Current release line: `0.2.2`.
 
 This guide assumes the production site is already hosted at `https://rpcs1.dev`
 and the public MCP endpoint is `https://rpcs1.dev/mcp`.
@@ -93,8 +93,8 @@ The Python SDK publish workflow is triggered by `sdk-v*` tags. For the current
 release:
 
 ```bash
-git tag sdk-v0.2.1
-git push origin sdk-v0.2.1
+git tag sdk-v0.2.2
+git push origin sdk-v0.2.2
 ```
 
 The workflow builds `sdk/python`, runs tests, and publishes to PyPI using trusted
@@ -132,7 +132,7 @@ Streamable HTTP endpoint. Use the same config shown in the README:
 
 For directory health checks, confirm:
 
-- A stable GitHub release exists for the current release, such as `v0.2.1`.
+- A stable GitHub release exists for the current release, such as `v0.2.2`.
 - The listing has recent successful MCP usage.
 - `server.json` and README discovery metadata match the live endpoint.
 - `glama.json` contains Glama ownership metadata with `travisbergen2` listed as
@@ -159,9 +159,14 @@ After every production deploy, confirm:
 ## 8. Stripe and Email
 
 Before enabling paid flows in production:
+- `STRIPE_DIAGNOSTIC_ID` (price ID for the $750 one-time diagnostic)
 
 - Stripe live products exist for Founding Access, Indie, and Team.
 - `STRIPE_SECRET_KEY`, `STRIPE_FOUNDING_PRICE_ID`, `STRIPE_INDIE_PRICE_ID`, `STRIPE_TEAM_PRICE_ID`, and
+- Python SDK (`rpcs1`) must be installed in Vercel.
+  The `vercel.json` build command now runs `pip3 install -e ./sdk/python` before the Next.js build.
+- Translator tools (`interpret`, `normalize`, `rewrite`) call Python via subprocess.
+  They will fail until `rpcs1` is installed in the deployment environment.
   `STRIPE_WEBHOOK_SECRET` are set in Vercel production env vars.
 - Stripe webhook endpoint is `https://rpcs1.dev/api/webhooks/stripe`.
 - Resend domain verification for `rpcs1.dev` is complete.

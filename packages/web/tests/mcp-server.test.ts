@@ -15,7 +15,7 @@ afterEach(async () => {
 });
 
 describe('RPCS1 MCP server', () => {
-  it('advertises one safe, read-only recommendation tool', async () => {
+  it('advertises four safe, read-only tools', async () => {
     const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
     server = createRpcs1McpServer();
     client = new Client({ name: 'rpcs1-test-client', version: '1.0.0' });
@@ -25,7 +25,7 @@ describe('RPCS1 MCP server', () => {
 
     const { tools } = await client.listTools();
 
-    expect(tools).toHaveLength(1);
+    expect(tools).toHaveLength(4);
     expect(tools[0].name).toBe('recommend_agent_configuration');
     expect(tools[0].annotations).toMatchObject({
       readOnlyHint: true,

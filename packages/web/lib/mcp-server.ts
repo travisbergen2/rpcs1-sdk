@@ -1,20 +1,10 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { recommend } from '@rpcs1/core';
-import { execSync } from 'child_process';
+import { interpret, normalize, rewrite } from '@/lib/translator';
 import { z } from 'zod';
 import { recommendInputSchema, recommendationOutputSchema } from './recommend-schema';
 
-const PYTHON = process.env.RPCS1_PYTHON ?? 'python3';
 
-function callTranslator(tool: string, args: string[]): any {
-  try {
-    const cmd = [PYTHON, '-m', 'rpcs1.translator.server', tool, ...args].join(' ');
-    const output = execSync(cmd, { encoding: 'utf-8', timeout: 10000, maxBuffer: 1024 * 1024 });
-    return JSON.parse(output.trim());
-  } catch {
-    return { error: `Translator call failed for ${tool}` };
-  }
-}
 
 export function createRpcs1McpServer() {
   const server = new McpServer(
@@ -92,13 +82,13 @@ export function createRpcs1McpServer() {
       annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false, idempotentHint: true },
     },
     async (input) => {
-      const result = callTranslator('interpret', [input.text, '--risk', input.risk]);
+      const result = interpret(input.text, input.risk);
       let text = `AR level: ${result.ar_level || 'AR0'} | Confidence: ${result.confidence ?? '?'}\n`;
       text += `Literal: "${result.literal_summary || input.text}"\n`;
       if (result.implied_meaning) text += `Implied: ${result.implied_meaning}\n`;
       if (result.ambiguities?.length) text += `Ambiguities: ${result.ambiguities.join('; ')}\n`;
       if (result.clarifying_questions?.length) text += `Clarify: ${result.clarifying_questions[0]}\n`;
-      return { structuredContent: result, content: [{ type: 'text', text }] };
+      return { structuredContent: { ...result } as Record<string, unknown>, content: [{ type: 'text', text }] };
     },
   );
 
@@ -117,9 +107,9 @@ export function createRpcs1McpServer() {
       annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false, idempotentHint: true },
     },
     async (input) => {
-      const result = callTranslator('normalize', [input.text]);
+      const result = normalize(input.text);
       return {
-        structuredContent: result,
+        structuredContent: { ...result } as Record<string, unknown>,
         content: [{ type: 'text', text: result.normalized || input.text }],
       };
     },
@@ -142,9 +132,9 @@ export function createRpcs1McpServer() {
       annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false, idempotentHint: true },
     },
     async (input) => {
-      const result = callTranslator('rewrite', [input.text, '--style', input.style]);
+      const result = rewrite(input.text, input.style);
       return {
-        structuredContent: result,
+        structuredContent: { ...result } as Record<string, unknown>,
         content: [{
           type: 'text',
           text: result.rewrite_instructions

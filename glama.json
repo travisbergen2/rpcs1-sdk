@@ -2,5 +2,32 @@
   "$schema": "https://glama.ai/mcp/schemas/server.json",
   "maintainers": [
     "travisbergen2"
+  ],
+  "name": "io.github.travisbergen2/rpcs1-agent-tuner",
+  "title": "RPCS-1 Agent Tuner & Translator",
+  "description": "Diagnose why your AI agent will fail before rollout AND translate ambiguous human input. Two capabilities in one MCP server: (1) recommend_agent_configuration tunes temperature, top_p, and strategy for your agent's environment. (2) interpret, normalize, and rewrite help LLMs understand what users actually mean using the HF-HATP v1.9 protocol.",
+  "categories": [
+    "agent-configuration",
+    "agent-diagnostics",
+    "translation-layer",
+    "ai-agents"
+  ],
+  "tools": [
+    {
+      "name": "recommend_agent_configuration",
+      "description": "Diagnose why a deployed AI agent may fail. Takes environmental entropy, predictability, stakes, context horizon, and commitment style, then returns receiver profile values (TI, SG, FT, UE, AR), platform parameters (temperature, top_p, strategy), regime prediction, reasoning, and warnings."
+    },
+    {
+      "name": "interpret",
+      "description": "Detect ambiguity in user messages using the RPCS-1 Signature Ambiguity Framework. Returns AR level (AR0-AR5), confidence, candidate interpretations with scores, clarifying questions, and suggested next step."
+    },
+    {
+      "name": "normalize",
+      "description": "Clean up text with ellipses, fragments, and run-on thoughts into coherent prose. Returns the number of fragments detected and the joined version."
+    },
+    {
+      "name": "rewrite",
+      "description": "Get rewrite instructions for adapting text to a specific style: technical, plain, socially_gentle, concise, detailed, or direct."
+    }
   ]
 }

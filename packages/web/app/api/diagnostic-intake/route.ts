@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { execSync } from 'child_process';
+import { generateDiagnosticReport } from '@/lib/translator';
 import { Resend } from 'resend';
 import { z } from 'zod';
 import { env } from '@/lib/env';
@@ -21,24 +21,9 @@ const DiagnosticIntakeSchema = z.object({
 
 const DIAGNOSTIC_RECIPIENT = 'travisbergen2@gmail.com';
 const PYTHON = process.env.RPCS1_PYTHON ?? 'python3';
-
 function generateReport(brief: Record<string, any>): any {
   try {
-    const json = JSON.stringify(brief).replace(/'/g, "'\\''");
-    const script = `
-import json, sys
-sys.path.insert(0, 'sdk/python/src')
-from rpcs1.translator.diagnostic_report import generate_report
-brief = json.loads('''${json}''')
-report = generate_report(brief)
-print(json.dumps(report))
-    `.trim();
-    const output = execSync(`${PYTHON} -c '${script}'`, {
-      encoding: 'utf-8',
-      timeout: 15000,
-      maxBuffer: 1024 * 1024,
-    });
-    return JSON.parse(output.trim());
+    return generateDiagnosticReport(brief);
   } catch (err: any) {
     console.error('[diagnostic] Report generation failed:', err.message);
     return null;

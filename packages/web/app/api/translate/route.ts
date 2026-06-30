@@ -1,35 +1,16 @@
 /**
- * RPCS-1 Translator API — wraps the Python SDK translator module.
+ * RPCS-1 Translator API — native TypeScript implementation.
  *
  * POST /api/translate
  * Body: { tool: "interpret"|"normalize"|"split"|"rewrite"|"route"|"score", ...params }
  *
- * In production with Vercel, this calls the Python SDK via subprocess.
- * For local dev, same approach works if `rpcs1` is installed.
+ * No Python dependency. Runs natively in the Next.js API route.
  */
 import { NextResponse } from 'next/server';
-import { execSync } from 'child_process';
+import { interpret, normalize, split, rewrite, route, score } from '@/lib/translator';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
-
-const PYTHON = process.env.RPCS1_PYTHON ?? 'python3';
-
-function callTranslator(tool: string, args: string[]): any {
-  try {
-    const cmd = [PYTHON, '-m', 'rpcs1.translator.server', tool, ...args].join(' ');
-    const output = execSync(cmd, {
-      encoding: 'utf-8',
-      timeout: 15000,
-      maxBuffer: 1024 * 1024,
-    });
-    return JSON.parse(output.trim());
-  } catch (err: any) {
-    // Fallback: return a structured error
-    const message = err.stderr?.toString() || err.message || 'Unknown error';
-    return { error: `Translator error: ${message}`, tool };
-  }
-}
 
 export async function POST(request: Request) {
   try {
@@ -38,56 +19,48 @@ export async function POST(request: Request) {
 
     switch (tool) {
       case 'interpret': {
-        const result = callTranslator('interpret', [
-          params.text || '',
-          '--risk', params.risk || 'advice',
-        ]);
+        const result = interpret(params.text || '', params.risk || 'advice');
         return NextResponse.json(result);
       }
       case 'normalize': {
-        const result = callTranslator('normalize', [params.text || '']);
+        const result = normalize(params.text || '');
         return NextResponse.json(result);
       }
       case 'split': {
-        const result = callTranslator('split', [params.text || '']);
+        const result = split(params.text || '');
         return NextResponse.json(result);
       }
       case 'rewrite': {
-        const result = callTranslator('rewrite', [
-          params.text || '',
-          '--style', params.style || 'plain',
-        ]);
+        const result = rewrite(params.text || '', params.style || 'plain');
         return NextResponse.json(result);
       }
       case 'route': {
-        const args = [params.task_type || 'chat'];
-        if (params.objective) args.push('--objective', params.objective);
-        if (params.allow_multi_model) args.push('--allow-multi-model');
-        const result = callTranslator('route', args);
+        const result = route(params.task_type || 'chat', params.objective, params.allow_multi_model);
         return NextResponse.json(result);
       }
       case 'score': {
-        const candidates = JSON.stringify(params.candidates || []);
-        const result = callTranslator('score', [
-          candidates,
-          '--risk', params.risk || 'advice',
-        ]);
+        const candidates = Array.isArray(params.candidates) ? params.candidates : [];
+        const result = score(candidates, params.risk || 'casual');
         return NextResponse.json(result);
       }
       case 'manifest': {
-        const result = callTranslator('manifest', []);
-        return NextResponse.json(result);
+        return NextResponse.json({
+          protocol: 'RPCS-1 / HF-HATP v1.9',
+          version: '1.9.0',
+          tools: {
+            interpret: { description: 'Interpret a message using RPCS-1', parameters: { text: 'string (required)', risk: 'casual|advice|high-stakes|safety-critical' } },
+            normalize: { description: 'Normalize fragmented human input' },
+            split: { description: 'Split mixed intents' },
+            rewrite: { description: 'Rewrite for a target audience', styles: ['technical', 'plain', 'socially_gentle', 'concise', 'detailed', 'direct'] },
+            route: { description: 'Route a task to a model family', types: ['code', 'creative_writing', 'analysis', 'chat', 'translation', 'reasoning', 'planning', 'emotional'] },
+            score: { description: 'Score candidates with the Signature Ambiguity Framework' },
+          },
+        });
       }
       default:
-        return NextResponse.json(
-          { error: `Unknown tool: ${tool}` },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: `Unknown tool: ${tool}` }, { status: 400 });
     }
   } catch (err: any) {
-    return NextResponse.json(
-      { error: `Request error: ${err.message}` },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: `Request error: ${err.message}` }, { status: 500 });
   }
 }

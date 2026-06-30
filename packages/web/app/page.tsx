@@ -206,10 +206,10 @@ export default function HomePage() {
               <p className="text-xs text-sky-300 mb-3">{"// Live example — ambiguous input"}</p>
               <p><span className="text-gray-500">{"$"}</span> curl -X POST /api/translate <span className="text-emerald-300">{`{"tool":"interpret","text":"I'm fine","risk":"advice"}`}</span></p>
               <p className="mt-2 text-gray-400">{"{"}</p>
-              <p className="ml-3 text-gray-400">ar_level: <span className="text-amber-300">"AR5"</span><span className="text-gray-600">,</span></p>
-              <p className="ml-3 text-gray-400">ambiguities: <span className="text-amber-300">["neutral", "frustrated"]</span><span className="text-gray-600">,</span></p>
+              <p className="ml-3 text-gray-400">ar_level: <span className="text-amber-300">{"\"AR5\""}</span><span className="text-gray-600">,</span></p>
+              <p className="ml-3 text-gray-400">ambiguities: <span className="text-amber-300">{"[\"neutral\", \"frustrated\"]"}</span><span className="text-gray-600">,</span></p>
               <p className="ml-3 text-gray-400">margin: <span className="text-amber-300">0.015</span><span className="text-gray-600">,</span></p>
-              <p className="ml-3 text-gray-400">suggested: <span className="text-amber-300">"clarify"</span></p>
+              <p className="ml-3 text-gray-400">suggested: <span className="text-amber-300">{"\"clarify\""}</span></p>
               <p className="text-gray-400">{"}"}</p>
             </div>
           </div>

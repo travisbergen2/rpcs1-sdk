@@ -237,7 +237,7 @@ function interpret(text: string, risk: RiskCategory = 'advice'): InterpretResult
   // Count signals
   const vagueCount = vagueWords.filter(function(w) { return lower2.includes(w); }).length;
   const contextMissingCount = contextMissingWords.filter(function(w) {
-    var regex = new RegExp("\\b" + w + "\\b", 'i');
+    const regex = new RegExp("\\b" + w + "\\b", 'i');
     return regex.test(lower2);
   }).length;
   const hasAmbiguityWords = ambiguityWords.some(function(w) { return lower2.includes(w); });
@@ -325,7 +325,7 @@ function interpret(text: string, risk: RiskCategory = 'advice'): InterpretResult
   }
 
   // Determine suggested next step
-  var suggestedNextStep2;
+  let suggestedNextStep2;
   if (resolution2.ar_level === 'AR0' || resolution2.ar_level === 'AR1') {
     suggestedNextStep2 = 'proceed_with_awareness';
   } else if (resolution2.ar_level === 'AR4' || resolution2.ar_level === 'AR5') {
@@ -352,7 +352,7 @@ function interpret(text: string, risk: RiskCategory = 'advice'): InterpretResult
   if (resolution2.should_collapse && resolution2.winner) {
     result.implied_meaning = 'Most likely: ' + resolution2.winner;
   } else {
-    var labels2 = resolution2.candidates.map(function(c) { return c.label; });
+    const labels2 = resolution2.candidates.map(function(c) { return c.label; });
     result.implied_meaning = 'Could be: ' + labels2.join(', ');
     if (!result.clarifying_questions.length) {
       result.clarifying_questions = [

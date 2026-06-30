@@ -1,19 +1,12 @@
 """
-RPCS-1 Agent Tuner — Python SDK.
+RPCS-1 Agent Tuner & Translator — Python SDK.
 
 Quick start:
     from rpcs1 import recommend_params
+    from rpcs1.translator import interpret
 
-    config = recommend_params(
-        task_description="Customer support agent",
-        environment_entropy="dynamic",
-        environment_predictability="somewhat_predictable",
-        stakes="high",
-        target_platform="anthropic",
-    )
-    print(config.platform_parameters.temperature)
-    print(config.predicted_regime)
-    print(config.reasoning)
+    config = recommend_params(...)
+    result = interpret("I'm fine")
 """
 
 from .recommend import recommend_params, recommend_from_input

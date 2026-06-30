@@ -149,6 +149,17 @@ export default function TranslationLayerPage() {
             Buy the diagnostic
           </Link>
         </div>
+      {/* Live tool CTA */}
+      <section className="rounded-2xl border border-sky-500/20 bg-sky-500/10 p-6 mt-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-semibold text-white mb-1">Try the live translator</h2>
+            <p className="text-gray-400 text-sm">Interpret ambiguous messages, normalize fragmented text, rewrite for any audience — powered by the HF-HATP v1.9 engine.</p>
+          </div>
+          <a href="/translator" className="inline-flex items-center justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-sky-400 transition-colors whitespace-nowrap">
+            Open Translator Hub →
+          </a>
+        </div>
       </section>
     </div>
   );

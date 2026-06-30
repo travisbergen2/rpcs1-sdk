@@ -25,10 +25,10 @@ export function Nav() {
             Pricing
           </Link>
           <Link
-            href="/docs"
+            href="/translator"
             className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
           >
-            Docs
+            Translator
           </Link>
           <Link
             href="/api/checkout?tier=diagnostic"

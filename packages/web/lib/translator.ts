@@ -26,6 +26,12 @@ interface CandidateInput {
   TI: number;
   ti_penalty_multiplier?: number;
 }
+
+interface Candidate extends CandidateInput {
+  ti_penalty_multiplier: number;
+  score: number;
+}
+
 // ── Translation Pipeline Types ─────────────────────────────────
 
 /** A single candidate resolution for an ambiguous reference */

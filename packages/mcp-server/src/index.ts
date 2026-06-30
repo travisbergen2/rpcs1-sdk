@@ -3,7 +3,24 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { recommend } from '@rpcs1/core';
+import { execSync } from 'child_process';
 import { z } from 'zod';
+
+// ── Helpers ──────────────────────────────────────────────────────
+
+const PYTHON = process.env.RPCS1_PYTHON ?? 'python3';
+
+function callTranslator(tool: string, args: string[]): any {
+  try {
+    const cmd = [PYTHON, '-m', 'rpcs1.translator.server', tool, ...args].join(' ');
+    const output = execSync(cmd, { encoding: 'utf-8', timeout: 10000, maxBuffer: 1024 * 1024 });
+    return JSON.parse(output.trim());
+  } catch {
+    return { error: `Translator call failed for ${tool}` };
+  }
+}
+
+// ── Schemas ──────────────────────────────────────────────────────
 
 const recommendInputSchema = {
   task: z.object({
@@ -61,10 +78,7 @@ const recommendationOutputSchema = {
     model_recommendation: z.string().optional(),
     system_prompt_additions: z.array(z.string()).optional(),
     tool_use_strategy: z.enum([
-      'explicit_confirmation',
-      'cautious_chaining',
-      'aggressive',
-      'fail_fast',
+      'explicit_confirmation', 'cautious_chaining', 'aggressive', 'fail_fast',
     ]).optional(),
     retry_strategy: z.enum(['aggressive', 'moderate', 'minimal']).optional(),
     context_strategy: z.enum(['long_window', 'rolling_summary', 'frequent_grounding']).optional(),
@@ -76,44 +90,41 @@ const recommendationOutputSchema = {
   confidence: z.enum(['high', 'medium', 'low']),
 };
 
+// ── Server ───────────────────────────────────────────────────────
+
 function createServer() {
   const server = new McpServer(
     {
       name: 'rpcs1-agent-tuner',
-      title: 'RPCS1 Agent Tuner',
-      version: '0.2.1',
+      title: 'RPCS-1 Agent Tuner & Translator',
+      version: '0.2.2',
       websiteUrl: 'https://rpcs1.dev',
       description:
-        'Deterministic diagnostic tools for optimizing deployed AI agents and diagnosing environment mismatch.',
+        'Two tools in one: (1) Diagnose why your AI agent will fail before rollout — get the right temperature, ' +
+        'top_p, and strategy settings. (2) Translate ambiguous human input — interpret intent, normalize fragmented ' +
+        'text, and rewrite for any audience.',
     },
     {
       instructions:
-        'Use RPCS1 to configure AI agents for their operating environment. ' +
-        'Call recommend_agent_configuration when the user is designing, tuning, or diagnosing an AI agent. ' +
-        'The tool is deterministic, stateless, read-only, and does not store, list, or update recommendations. ' +
-        'Clients should persist results when history is needed.',
+        'Use this server for two things: (1) Call recommend_agent_configuration when tuning or diagnosing ' +
+        'an AI agent. (2) Call interpret, normalize, or rewrite when handling ambiguous human input.',
     },
   );
+
+  // ── Tool: recommend_agent_configuration ────────────────────────
 
   server.registerTool(
     'recommend_agent_configuration',
     {
       title: 'Recommend AI agent configuration',
       description:
-        'Use this stateless, read-only tool when a deployed AI agent, support copilot, or agent workflow ' +
-        'needs concrete LLM and runtime settings matched to environmental entropy, predictability, stakes, ' +
-        'context horizon, and commitment style. It diagnoses likely oscillation, overload, freeze, or mismatch ' +
-        'and returns receiver profile values ' +
-        '(TI, SG, FT, UE, AR), platform parameters, confidence, reasoning, warnings, and applied IMM principles. ' +
-        'It does not store, list, or update past recommendations.',
+        'Diagnose why a deployed AI agent may fail. Takes environmental entropy, predictability, stakes, ' +
+        'context horizon, and commitment style, then returns receiver profile values (TI, SG, FT, UE, AR), ' +
+        'platform parameters (temperature, top_p, strategy), regime prediction, reasoning, and warnings. ' +
+        'Deterministic, stateless, read-only — does not store past recommendations.',
       inputSchema: recommendInputSchema,
       outputSchema: recommendationOutputSchema,
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-        openWorldHint: false,
-        idempotentHint: true,
-      },
+      annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false, idempotentHint: true },
       _meta: {
         'openai/toolInvocation/invoking': 'Analyzing agent-environment fit',
         'openai/toolInvocation/invoked': 'Agent configuration ready',
@@ -121,23 +132,122 @@ function createServer() {
     },
     async (input) => {
       const result = recommend(input);
-
       return {
         structuredContent: { ...result },
-        content: [
-          {
-            type: 'text',
-            text:
-              `RPCS1 predicts a ${result.predicted_regime} regime with ${result.confidence} confidence. ` +
-              `Recommended temperature: ${result.platform_parameters.temperature}. ${result.reasoning}`,
-          },
-        ],
+        content: [{
+          type: 'text',
+          text: `RPCS1 predicts a ${result.predicted_regime} regime with ${result.confidence} confidence. ` +
+                `Recommended temperature: ${result.platform_parameters.temperature}. ${result.reasoning}`,
+        }],
+      };
+    },
+  );
+
+  // ── Tool: interpret ────────────────────────────────────────────
+
+  server.registerTool(
+    'interpret',
+    {
+      title: 'Interpret ambiguous human input',
+      description:
+        'Detect ambiguity in a user message and score candidate interpretations using the RPCS-1 Signature ' +
+        'Ambiguity Framework. Returns literal summary, implied meaning, confidence, AR level (AR0-AR5), ' +
+        'ambiguities, clarifying questions, and per-candidate scores (IC, UE, EC, NM, SG, TI). ' +
+        'Use when a user says something vague, passive-aggressive, or underspecified.',
+      inputSchema: {
+        text: z.string().min(1).max(5000).describe('The message to interpret.'),
+        risk: z.enum(['casual', 'advice', 'high-stakes', 'safety-critical'])
+          .default('advice').describe('Risk category for ambiguity threshold.'),
+      },
+      annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false, idempotentHint: true },
+    },
+    async (input) => {
+      const result = callTranslator('interpret', [input.text, '--risk', input.risk]);
+      const summary = result.literal_summary || input.text;
+      const arLevel = result.ar_level || 'AR0';
+      const candidates = result.candidates || [];
+      let text = `AR level: ${arLevel} | Confidence: ${result.confidence ?? '?'}\n`;
+      text += `Literal: "${summary}"\n`;
+      if (result.implied_meaning) text += `Implied: ${result.implied_meaning}\n`;
+      if (result.ambiguities?.length) text += `Ambiguities: ${result.ambiguities.join('; ')}\n`;
+      if (result.clarifying_questions?.length) text += `Clarify: ${result.clarifying_questions[0]}\n`;
+      if (candidates.length) {
+        text += `\nCandidates:\n`;
+        for (const c of candidates) {
+          text += `  ${c.label}: score=${c.score?.toFixed(3)} IC=${c.IC} UE=${c.UE} TI=${c.TI}\n`;
+        }
+      }
+      return {
+        structuredContent: result,
+        content: [{ type: 'text', text }],
+      };
+    },
+  );
+
+  // ── Tool: normalize ────────────────────────────────────────────
+
+  server.registerTool(
+    'normalize',
+    {
+      title: 'Normalize fragmented human input',
+      description:
+        'Clean up text with ellipses, fragments, and run-on thoughts into coherent prose. ' +
+        'Returns the number of fragments detected and the joined version. ' +
+        'Use when a user types stream-of-consciousness or fragmented input.',
+      inputSchema: {
+        text: z.string().min(1).max(5000).describe('Fragmented text to normalize.'),
+      },
+      annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false, idempotentHint: true },
+    },
+    async (input) => {
+      const result = callTranslator('normalize', [input.text]);
+      return {
+        structuredContent: result,
+        content: [{
+          type: 'text',
+          text: result.fragment_count > 1
+            ? `Normalized (${result.fragment_count} fragments): ${result.normalized}`
+            : `Already clean: ${result.normalized}`,
+        }],
+      };
+    },
+  );
+
+  // ── Tool: rewrite ──────────────────────────────────────────────
+
+  server.registerTool(
+    'rewrite',
+    {
+      title: 'Rewrite text for a target audience',
+      description:
+        'Get rewrite instructions for adapting text to a specific audience style: technical, plain, ' +
+        'socially_gentle, concise, detailed, or direct. Pass the result to an LLM with the ' +
+        'rewrite_instructions as the system prompt. Use when communication needs tone adjustment.',
+      inputSchema: {
+        text: z.string().min(1).max(5000).describe('Text to rewrite.'),
+        style: z.enum(['technical', 'plain', 'socially_gentle', 'concise', 'detailed', 'direct'])
+          .default('plain').describe('Target audience style.'),
+      },
+      annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false, idempotentHint: true },
+    },
+    async (input) => {
+      const result = callTranslator('rewrite', [input.text, '--style', input.style]);
+      return {
+        structuredContent: result,
+        content: [{
+          type: 'text',
+          text: result.rewrite_instructions
+            ? `Style: ${result.style_label} (${result.style_description})\n\nInstructions:\n${result.rewrite_instructions}`
+            : `Rewrite unavailable for style "${input.style}"`,
+        }],
       };
     },
   );
 
   return server;
 }
+
+// ── Run ──────────────────────────────────────────────────────────
 
 const server = createServer();
 const transport = new StdioServerTransport();

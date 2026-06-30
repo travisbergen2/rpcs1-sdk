@@ -1,18 +1,18 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.travisbergen2/rpcs1-agent-tuner",
-  "title": "RPCS1",
-  "description": "Measure TI, SG, FT, UE, and AR in a configured agent, then get the runtime settings to fix it.",
+  "title": "RPCS-1 Agent Tuner & Translator",
+  "description": "Diagnose why your AI agent will fail before rollout AND translate ambiguous human input into clear intent. Two tools in one: recommend_agent_configuration tunes runtime settings (temperature, top_p, strategy) to match your environment, while interpret, normalize, and rewrite help LLMs understand what users actually mean.",
   "repository": {
     "url": "https://github.com/travisbergen2/rpcs1-sdk",
     "source": "github"
   },
-  "version": "0.2.1",
+  "version": "0.2.2",
   "packages": [
     {
       "registry_type": "npm",
       "identifier": "@rpcs1/mcp-server",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "transport": {
         "type": "stdio"
       }

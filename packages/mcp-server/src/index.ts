@@ -2,23 +2,11 @@
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { recommend } from '@rpcs1/core';
-import { execSync } from 'child_process';
+import { recommend, interpret, normalize, rewrite } from '@rpcs1/core';
 import { z } from 'zod';
 
 // ── Helpers ──────────────────────────────────────────────────────
 
-const PYTHON = process.env.RPCS1_PYTHON ?? 'python3';
-
-function callTranslator(tool: string, args: string[]): any {
-  try {
-    const cmd = [PYTHON, '-m', 'rpcs1.translator.server', tool, ...args].join(' ');
-    const output = execSync(cmd, { encoding: 'utf-8', timeout: 10000, maxBuffer: 1024 * 1024 });
-    return JSON.parse(output.trim());
-  } catch {
-    return { error: `Translator call failed for ${tool}` };
-  }
-}
 
 // ── Schemas ──────────────────────────────────────────────────────
 
@@ -162,7 +150,7 @@ function createServer() {
       annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false, idempotentHint: true },
     },
     async (input) => {
-      const result = callTranslator('interpret', [input.text, '--risk', input.risk]);
+      const result = interpret(input.text, input.risk);
       const summary = result.literal_summary || input.text;
       const arLevel = result.ar_level || 'AR0';
       const candidates = result.candidates || [];
@@ -178,7 +166,7 @@ function createServer() {
         }
       }
       return {
-        structuredContent: result,
+        structuredContent: { ...result } as Record<string, unknown>,
         content: [{ type: 'text', text }],
       };
     },
@@ -200,9 +188,9 @@ function createServer() {
       annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false, idempotentHint: true },
     },
     async (input) => {
-      const result = callTranslator('normalize', [input.text]);
+      const result = normalize(input.text);
       return {
-        structuredContent: result,
+        structuredContent: { ...result } as Record<string, unknown>,
         content: [{
           type: 'text',
           text: result.fragment_count > 1
@@ -231,9 +219,9 @@ function createServer() {
       annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false, idempotentHint: true },
     },
     async (input) => {
-      const result = callTranslator('rewrite', [input.text, '--style', input.style]);
+      const result = rewrite(input.text, input.style);
       return {
-        structuredContent: result,
+        structuredContent: { ...result } as Record<string, unknown>,
         content: [{
           type: 'text',
           text: result.rewrite_instructions

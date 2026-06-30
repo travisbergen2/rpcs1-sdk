@@ -24,3 +24,6 @@ export type {
   Confidence,
   Recommendation,
 } from './types.js';
+
+// ── Translator ──────────────────────────────────────────────
+export { interpret, normalize, rewrite } from './translator.js';

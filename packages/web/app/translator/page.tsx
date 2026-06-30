@@ -4,9 +4,9 @@ import { useState, useCallback } from 'react';
 
 export default function TranslatorPage() {
   const [activeTab, setActiveTab] = useState('interpret');
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Form states
   const [interpretText, setInterpretText] = useState("I'm fine");
@@ -23,7 +23,7 @@ export default function TranslatorPage() {
   ], null, 2));
   const [scoreRisk, setScoreRisk] = useState('casual');
 
-  const callApi = useCallback(async (tool, body) => {
+  const callApi = useCallback(async (tool: string, body: Record<string, any>) => {
     setLoading(true);
     setError(null);
     setResult(null);
@@ -36,7 +36,7 @@ export default function TranslatorPage() {
       const data = await res.json();
       if (data.error) setError(data.error);
       else setResult(data);
-    } catch (e) {
+    } catch (e: any) {
       setError(e.message);
     } finally {
       setLoading(false);

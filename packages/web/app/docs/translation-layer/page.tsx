@@ -149,6 +149,7 @@ export default function TranslationLayerPage() {
             Buy the diagnostic
           </Link>
         </div>
+      </section>
       {/* Live tool CTA */}
       <section className="rounded-2xl border border-sky-500/20 bg-sky-500/10 p-6 mt-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

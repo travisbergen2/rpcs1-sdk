@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateDiagnosticReport } from '@/lib/translator';
+import type { DiagnosticBrief, DiagnosticReport } from '@/lib/translator';
 import { Resend } from 'resend';
 import { z } from 'zod';
 import { env } from '@/lib/env';
@@ -20,17 +21,16 @@ const DiagnosticIntakeSchema = z.object({
 });
 
 const DIAGNOSTIC_RECIPIENT = 'travisbergen2@gmail.com';
-const PYTHON = process.env.RPCS1_PYTHON ?? 'python3';
-function generateReport(brief: Record<string, any>): any {
+function generateReport(brief: DiagnosticBrief): DiagnosticReport | null {
   try {
     return generateDiagnosticReport(brief);
-  } catch (err: any) {
-    console.error('[diagnostic] Report generation failed:', err.message);
+  } catch (err: unknown) {
+    console.error('[diagnostic] Report generation failed:', err instanceof Error ? err.message : err);
     return null;
   }
 }
 
-function buildReportEmailHtml(report: any, brief: any): string {
+function buildReportEmailHtml(report: DiagnosticReport, brief: DiagnosticBrief): string {
   const s = report.summary;
   const p = report.primitives;
   const r = report.recommendations;
@@ -105,7 +105,17 @@ export async function POST(req: NextRequest) {
   const isPostPurchase = data.stage === 'post-purchase';
 
   // Generate the diagnostic report
-  const report = generateReport(data);
+  const brief: DiagnosticBrief = {
+    name: data.name,
+    email: data.email,
+    company: data.company,
+    agent_type: data.agent_type,
+    biggest_risk: data.biggest_risk,
+    desired_outcome: data.desired_outcome,
+    notes: data.notes || undefined,
+    stage: data.stage,
+  };
+  const report = generateReport(brief);
 
   // Send email with report summary
   const subject = isPostPurchase
@@ -167,7 +177,7 @@ export async function POST(req: NextRequest) {
           from: env.EMAIL_FROM,
           to: data.email,
           subject: `Your RPCS-1 Diagnostic Report — ${data.company}`,
-          html: buildReportEmailHtml(report, data),
+          html: buildReportEmailHtml(report, brief),
           text: textParts.join('\n'),
         });
       }

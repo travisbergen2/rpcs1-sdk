@@ -48,7 +48,7 @@ export function createRpcs1McpServer() {
     async (input) => {
       const result = recommend(input);
       const profile = result.receiver_profile;
-      const nextTest = suggestNextTest(result.predicted_regime, result.warnings, (result.platform_parameters as Record<string, string>).translation_posture);
+      const nextTest = suggestNextTest(result.predicted_regime, result.warnings, result.platform_parameters.translation_posture);
       return {
         structuredContent: { ...result } as Record<string, unknown>,
         content: [{

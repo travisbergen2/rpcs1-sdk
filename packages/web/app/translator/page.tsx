@@ -52,7 +52,7 @@ export default function TranslatorPage() {
     { id: 'score', label: 'Score' },
   ];
 
-  const TabContent = () => {
+  function renderTabContent() {
     switch (activeTab) {
       case 'interpret':
         return (
@@ -188,7 +188,7 @@ export default function TranslatorPage() {
 
       {/* Input */}
       <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-5 mb-5">
-        <TabContent />
+        {renderTabContent()}
       </div>
 
       {/* Error */}

@@ -60,7 +60,8 @@ export async function POST(request: Request) {
       default:
         return NextResponse.json({ error: `Unknown tool: ${tool}` }, { status: 400 });
     }
-  } catch (err: any) {
-    return NextResponse.json({ error: `Request error: ${err.message}` }, { status: 500 });
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: `Request error: ${msg}` }, { status: 500 });
   }
 }

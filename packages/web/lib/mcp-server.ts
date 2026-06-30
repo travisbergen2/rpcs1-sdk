@@ -48,7 +48,7 @@ export function createRpcs1McpServer() {
     async (input) => {
       const result = recommend(input);
       const profile = result.receiver_profile;
-      const nextTest = suggestNextTest(result.predicted_regime, result.warnings, result.platform_parameters.translation_posture);
+      const nextTest = suggestNextTest(result.predicted_regime, result.warnings);
       return {
         structuredContent: { ...result } as Record<string, unknown>,
         content: [{
@@ -148,7 +148,7 @@ export function createRpcs1McpServer() {
   return server;
 }
 
-function suggestNextTest(regime: string, warnings: string[], _translationPosture?: string): string {
+function suggestNextTest(regime: string, warnings: string[]): string {
   const w = warnings[0] ?? '';
   if (w.includes('Oscillation')) return 'rerun with one shorter-history case and one ambiguous case';
   if (w.includes('Overload')) return 'rerun with a high-pressure case and lower signal gain';

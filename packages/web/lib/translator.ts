@@ -656,7 +656,7 @@ function generateDiagnosticReport(brief: DiagnosticBrief): DiagnosticReport {
   const resolution = resolveAmbiguity(candidates, riskCat);
 
   const regime = classifyRegime(resolution.margin, stakes, ic);
-  const recommendedPosture = recommendPosture(resolution.ar_level, riskCat);
+  const recommendedPosture = recommendPosture(resolution.ar_level);
   const nextTests = suggestNextTests(resolution, riskCat, agentType);
 
   return {
@@ -696,7 +696,7 @@ function classifyRegime(margin: number, stakes: string, confidence: number): str
   return 'cautious';
 }
 
-function recommendPosture(arLevel: ARLevel, _riskCat: string): { label: string; description: string; settings: { temperature: number; top_p: number } } {
+function recommendPosture(arLevel: ARLevel): { label: string; description: string; settings: { temperature: number; top_p: number } } {
   const postures: Record<string, { label: string; description: string; settings: { temperature: number; top_p: number } }> = {
     AR0: { label: 'Direct', description: 'Execute immediately. Intent is clear and stakes are appropriate.', settings: { temperature: 0.3, top_p: 0.9 } },
     AR1: { label: 'Mirror', description: 'Execute with assumptions noted in playback.', settings: { temperature: 0.4, top_p: 0.85 } },

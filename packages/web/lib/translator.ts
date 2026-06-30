@@ -316,7 +316,7 @@ function buildCanonicalTranslation(text: string, entities: RecoveredEntity[]): s
 
 // ── Stage 4-6: combined interpret pipeline ────────────────────
 
-function interpret(text: string, risk: RiskCategory = 'advice', contextHint?: string): TranslationOutput {
+function interpret(text: string, risk: RiskCategory = 'advice', _contextHint?: string): TranslationOutput {
   // Stage 1: Entity Recovery
   const { entities, hasAmbiguity } = recoverEntities(text, contextHint);
 

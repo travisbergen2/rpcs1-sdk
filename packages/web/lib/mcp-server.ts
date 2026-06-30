@@ -83,7 +83,7 @@ export function createRpcs1McpServer() {
     },
     async (input) => {
             const result = interpret(input.text, input.risk);
-      let lines: string[] = [];
+      const lines: string[] = [];
       lines.push(`INPUT: "${result.original}"`);
       lines.push('');
       if (result.recovered_entities.length > 0) {

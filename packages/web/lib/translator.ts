@@ -64,7 +64,6 @@ interface TranslationOutput {
 }
 
 interface NormalizeResult {
-interface NormalizeResult {
   original: string;
   fragments: string[];
   normalized: string;

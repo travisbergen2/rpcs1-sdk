@@ -18,7 +18,6 @@ import {
   rewriteForProfile,
   scoreIntake,
   buildProfileCard,
-  deriveRenderingDirectives,
   profileDivergence,
   INTAKE_ITEMS,
 } from '@rpcs1/core';
@@ -86,11 +85,8 @@ export async function POST(request: Request) {
         }
         // 3) answers → profile + directives + editable card.
         const profile = scoreIntake(params.answers as IntakeAnswers);
-        return NextResponse.json({
-          profile,
-          directives: deriveRenderingDirectives(profile),
-          ...buildProfileCard(profile),
-        });
+        // buildProfileCard already returns { profile, directives, summary } — return it directly.
+        return NextResponse.json(buildProfileCard(profile));
       }
       case 'manifest': {
         return NextResponse.json({

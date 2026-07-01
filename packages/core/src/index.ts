@@ -25,5 +25,48 @@ export type {
   Recommendation,
 } from './types.js';
 
-// ── Translator ──────────────────────────────────────────────
-export { interpret, normalize, rewrite } from './translator.js';
+// ── Translator (canonical engine — web re-exports this) ─────
+export {
+  interpret,
+  normalize,
+  split,
+  rewrite,
+  route,
+  score,
+  resolveAmbiguity,
+  rewriteForProfile,
+  directivesToInstructions,
+} from './translator.js';
+export type {
+  TranslationOutput,
+  NormalizeResult,
+  SplitResult,
+  RewriteResult,
+  RouteResult,
+  ScoreResult,
+  HatpFactors,
+  RiskCategory,
+  ARLevel,
+  RecoveredEntity,
+  EntityCandidate,
+  RecoveredIntent,
+} from './translator.js';
+
+// ── Intake (user-side receiver profiling + self-vs-observed mirror) ──
+export {
+  INTAKE_ITEMS,
+  scoreIntake,
+  deriveRenderingDirectives,
+  buildProfileCard,
+  updateProfile,
+  profileDivergence,
+} from './intake.js';
+export type {
+  PrimitiveKey,
+  IntakeOption,
+  IntakeItem,
+  IntakeAnswers,
+  RenderingDirectives,
+  ProfileCard,
+  ProfileDivergence,
+} from './intake.js';

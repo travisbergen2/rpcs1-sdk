@@ -1,6 +1,15 @@
-// ── RPCS-1 Translator — native TypeScript implementation ───────────
-// Ported from sdk/python/src/rpcs1/translator/
-// No Python dependency. Runs in any Node.js environment.
+// ── RPCS-1 Translator — canonical implementation (single source of truth) ──────
+// The web package re-exports this engine; do not fork it.
+//
+// NAMING NOTE (collision fix): this module's ambiguity scoring uses the HF-HATP
+// factor set, whose protocol abbreviations (IC, UE, EC, NM, SG, TI) collide
+// letter-for-letter with the RPCS-1 *receiver* primitives (TI, SG, FT, UE, AR).
+// To remove that ambiguity in code, the HF-HATP factors are spelled out here
+// (interpConf, userEvid, epistemic, narrative, semGap, transInteg). They are a
+// DIFFERENT construct from ReceiverProfile and must not be conflated.
+
+import { deriveRenderingDirectives, type RenderingDirectives } from './intake.js';
+import type { ReceiverProfile } from './types.js';
 
 type RiskCategory = 'casual' | 'advice' | 'high-stakes' | 'safety-critical';
 type ARLevel = 'AR0' | 'AR1' | 'AR2' | 'AR3' | 'AR4' | 'AR5';
@@ -12,33 +21,40 @@ const RISK_THRESHOLDS: Record<RiskCategory, number> = {
   'safety-critical': 0.85,
 };
 
-const REFERENCE_WEIGHTS = { IC: 0.30, UE: 0.25, EC: 0.15, NM: 0.10, SG: 0.10, TI: 0.10 };
+// HF-HATP v1.9 factor weights (protocol abbrevs in comments — NOT receiver primitives)
+const HATP_WEIGHTS = {
+  interpConf: 0.30, // IC — interpretation confidence
+  userEvid: 0.25,   // UE — user evidence
+  epistemic: 0.15,  // EC — epistemic commitment
+  narrative: 0.10,  // NM — narrative momentum
+  semGap: 0.10,     // SG — semantic gap (penalty)
+  transInteg: 0.10, // TI — translation integrity (penalty)
+};
 
 // ── Types ───────────────────────────────────────────────────────────
 
-interface CandidateInput {
+/** HF-HATP candidate factor vector (distinct from ReceiverProfile). */
+interface HatpFactors {
   label: string;
-  IC: number;
-  UE: number;
-  EC: number;
-  NM: number;
-  SG: number;
-  TI: number;
+  interpConf: number;
+  userEvid: number;
+  epistemic: number;
+  narrative: number;
+  semGap: number;
+  transInteg: number;
   ti_penalty_multiplier?: number;
 }
 
-interface Candidate extends CandidateInput {
+interface Candidate extends HatpFactors {
   ti_penalty_multiplier: number;
   score: number;
 }
 
-/** A single candidate resolution for an ambiguous reference */
 interface EntityCandidate {
   text: string;
   confidence: number;
 }
 
-/** A recovered ambiguous entity with its top candidate and alternatives */
 interface RecoveredEntity {
   original: string;
   category: 'pronoun' | 'location' | 'time' | 'action' | 'unspecified';
@@ -46,13 +62,11 @@ interface RecoveredEntity {
   alternatives: EntityCandidate[];
 }
 
-/** Recovered intent classification */
 interface RecoveredIntent {
   type: 'question' | 'correction' | 'explanation' | 'planning' | 'opinion' | 'instruction' | 'emotional_support' | 'research' | 'general';
   confidence: number;
 }
 
-/** Full pipeline output */
 interface TranslationOutput {
   original: string;
   recovered_entities: RecoveredEntity[];
@@ -112,16 +126,22 @@ interface ScoreResult {
   winner: string | null;
 }
 
-function computeScore(c: CandidateInput): number {
-  const w = REFERENCE_WEIGHTS;
-  const penaltyTI = (1 - c.TI) * (c.ti_penalty_multiplier ?? 1.0);
-  return w.IC * c.IC + w.UE * c.UE + w.EC * c.EC + w.NM * c.NM - w.SG * c.SG - w.TI * penaltyTI;
+// ── Scoring engine ──────────────────────────────────────────────────
+
+function computeScore(c: HatpFactors): number {
+  const w = HATP_WEIGHTS;
+  const penalty = (1 - c.transInteg) * (c.ti_penalty_multiplier ?? 1.0);
+  return (
+    w.interpConf * c.interpConf +
+    w.userEvid * c.userEvid +
+    w.epistemic * c.epistemic +
+    w.narrative * c.narrative -
+    w.semGap * c.semGap -
+    w.transInteg * penalty
+  );
 }
 
-function resolveAmbiguity(
-  candidatesInput: CandidateInput[],
-  risk: RiskCategory = 'advice',
-): ScoreResult {
+function resolveAmbiguity(candidatesInput: HatpFactors[], risk: RiskCategory = 'advice'): ScoreResult {
   const candidates = candidatesInput.map((c) => ({
     ...c,
     ti_penalty_multiplier: c.ti_penalty_multiplier ?? 1.0,
@@ -159,23 +179,10 @@ function resolveAmbiguity(
     winner = null;
   }
 
-  return {
-    candidates,
-    scores,
-    margin,
-    risk_category: risk,
-    threshold,
-    should_collapse: shouldCollapse,
-    ar_level: arLevel,
-    winner,
-  };
+  return { candidates, scores, margin, risk_category: risk, threshold, should_collapse: shouldCollapse, ar_level: arLevel, winner };
 }
 
-// ── Ambiguity patterns ─────────────────────────────────────────────
-
-
-
-// ── Translation Pipeline ───────────────────────────────────────
+// ── Stage 1: Entity Recovery ───────────────────────────────────
 
 const AMBIGUOUS_REFERENCES = [
   { word: 'they', category: 'pronoun' as const },
@@ -217,12 +224,8 @@ function recoverEntities(text: string): { entities: RecoveredEntity[]; hasAmbigu
       seen.add(ref.word);
       hasAmbiguity = true;
       const defaultCandidates: EntityCandidate[] = [];
-
       if (['they', 'them', 'their'].includes(ref.word)) {
-        defaultCandidates.push(
-          { text: '[unknown group]', confidence: 0.50 },
-          { text: '[the people being discussed]', confidence: 0.35 },
-        );
+        defaultCandidates.push({ text: '[unknown group]', confidence: 0.50 }, { text: '[the people being discussed]', confidence: 0.35 });
       } else if (['he', 'him'].includes(ref.word)) {
         defaultCandidates.push({ text: '[unknown male]', confidence: 0.50 });
       } else if (['she', 'her'].includes(ref.word)) {
@@ -238,7 +241,6 @@ function recoverEntities(text: string): { entities: RecoveredEntity[]; hasAmbigu
       } else if (ref.word === 'something') {
         defaultCandidates.push({ text: '[unspecified thing]', confidence: 0.50 });
       }
-
       entities.push({
         original: ref.word,
         category: ref.category,
@@ -251,7 +253,7 @@ function recoverEntities(text: string): { entities: RecoveredEntity[]; hasAmbigu
 }
 
 const INTENT_PATTERNS: Array<{ type: RecoveredIntent['type']; patterns: RegExp[] }> = [
-  { type: 'question', patterns: [/^what\\b/i, /^where\\b/i, /^when\\b/i, /^why\\b/i, /^how\\b/i, /^who\\b/i, /^which\\b/i, /\\?$/] },
+  { type: 'question', patterns: [/^what\b/i, /^where\b/i, /^when\b/i, /^why\b/i, /^how\b/i, /^who\b/i, /^which\b/i, /\?$/] },
   { type: 'instruction', patterns: [/^(please |could you |can you |would you |i need you to |make |create |write |find |show )/i] },
   { type: 'correction', patterns: [/(actually|that's not|you're wrong|incorrect|mistake|error)/i] },
   { type: 'explanation', patterns: [/(explain|what is |how does |tell me about|describe|define)/i] },
@@ -263,11 +265,9 @@ const INTENT_PATTERNS: Array<{ type: RecoveredIntent['type']; patterns: RegExp[]
 
 function recoverIntent(text: string): RecoveredIntent {
   for (const { type, patterns } of INTENT_PATTERNS) {
-    for (const p of patterns) {
-      if (p.test(text)) return { type, confidence: 0.85 };
-    }
+    for (const p of patterns) if (p.test(text)) return { type, confidence: 0.85 };
   }
-  if (/\\?$/.test(text.trim())) return { type: 'question', confidence: 0.70 };
+  if (/\?$/.test(text.trim())) return { type: 'question', confidence: 0.70 };
   return { type: 'general', confidence: 0.60 };
 }
 
@@ -281,50 +281,54 @@ function buildCanonicalTranslation(text: string, entities: RecoveredEntity[]): s
   return translated;
 }
 
-function interpret(text: string, risk: RiskCategory = 'advice'): TranslationOutput {
-  // Stage 1: Entity Recovery
+function interpret(text: string, risk: RiskCategory = 'advice', profile?: ReceiverProfile): TranslationOutput {
   const { entities, hasAmbiguity } = recoverEntities(text);
-  // Stage 2: Intent Recovery
   const intent = recoverIntent(text);
-  // Stage 3: Canonical Translation
   const canonical = buildCanonicalTranslation(text, entities);
 
-  // Stage 4: Risk Evaluation
   const lower = text.toLowerCase().trim();
   const vagueCount = VAGUE_SIGNALS.filter((s) => lower.includes(s)).length;
   const totalSignals = (hasAmbiguity ? 1 : 0) + vagueCount;
   const ambiguitySeverity = Math.min(1.0, totalSignals / 4);
 
-  const dynamicCandidates: CandidateInput[] = [];
+  const dynamicCandidates: HatpFactors[] = [];
   if (!hasAmbiguity && vagueCount === 0) {
-    dynamicCandidates.push({ label: 'literal', IC: 0.85, UE: 0.80, EC: 0.80, NM: 0.70, SG: 0.10, TI: 1.00 });
+    dynamicCandidates.push({ label: 'literal', interpConf: 0.85, userEvid: 0.80, epistemic: 0.80, narrative: 0.70, semGap: 0.10, transInteg: 1.00 });
   } else {
     const literalIC = Math.max(0.3, 0.8 - ambiguitySeverity * 0.5);
-    dynamicCandidates.push({ label: 'literal', IC: literalIC, UE: 0.70, EC: 0.60, NM: 0.60, SG: 0.20, TI: 0.95 });
+    dynamicCandidates.push({ label: 'literal', interpConf: literalIC, userEvid: 0.70, epistemic: 0.60, narrative: 0.60, semGap: 0.20, transInteg: 0.95 });
     if (hasAmbiguity) {
-      dynamicCandidates.push({ label: 'ambiguous_reference', IC: 0.30, UE: 0.40, EC: 0.50, NM: 0.60, SG: 0.75, TI: 0.55, ti_penalty_multiplier: 1.5 });
+      dynamicCandidates.push({ label: 'ambiguous_reference', interpConf: 0.30, userEvid: 0.40, epistemic: 0.50, narrative: 0.60, semGap: 0.75, transInteg: 0.55, ti_penalty_multiplier: 1.5 });
     }
     if (vagueCount > 0) {
-      dynamicCandidates.push({ label: 'underspecified', IC: 0.35, UE: 0.40, EC: 0.50, NM: 0.60, SG: 0.70, TI: 0.60, ti_penalty_multiplier: 1.5 });
+      dynamicCandidates.push({ label: 'underspecified', interpConf: 0.35, userEvid: 0.40, epistemic: 0.50, narrative: 0.60, semGap: 0.70, transInteg: 0.60, ti_penalty_multiplier: 1.5 });
     }
   }
   if (dynamicCandidates.length === 1) {
-    dynamicCandidates.push({ label: 'alt', IC: dynamicCandidates[0].IC - 0.2, UE: dynamicCandidates[0].UE - 0.1, EC: dynamicCandidates[0].EC - 0.1, NM: dynamicCandidates[0].NM, SG: dynamicCandidates[0].SG + 0.1, TI: dynamicCandidates[0].TI - 0.1 });
+    const c0 = dynamicCandidates[0];
+    dynamicCandidates.push({ label: 'alt', interpConf: c0.interpConf - 0.2, userEvid: c0.userEvid - 0.1, epistemic: c0.epistemic - 0.1, narrative: c0.narrative, semGap: c0.semGap + 0.1, transInteg: c0.transInteg - 0.1 });
   }
 
   const effectiveRisk = ambiguitySeverity > 0.3 && risk === 'casual' ? 'advice' : risk;
   const resolution = resolveAmbiguity(dynamicCandidates, effectiveRisk);
-  const ti = resolution.candidates[0]?.TI ?? 0.5;
+  const ti = resolution.candidates[0]?.transInteg ?? 0.5;
 
-  const playbackRequired = ti < 0.95 || (risk === 'safety-critical' && hasAmbiguity);
+  let playbackRequired = ti < 0.95 || (risk === 'safety-critical' && hasAmbiguity);
   const questions: string[] = [];
   if (hasAmbiguity) {
-    for (const entity of entities) {
-      questions.push('What does "' + entity.original + '" refer to?');
-    }
+    for (const entity of entities) questions.push('What does "' + entity.original + '" refer to?');
   }
   if (risk === 'safety-critical' || risk === 'high-stakes') {
     if (questions.length === 0) questions.push('I want to verify — is this exactly what you mean?');
+  }
+
+  // Receiver-profile modulation: the user's R̂ bends clarify-vs-commit.
+  if (profile) {
+    if (profile.AR > 60 && risk !== 'safety-critical' && !hasAmbiguity) playbackRequired = false;
+    if (profile.AR < 40 && resolution.margin < resolution.threshold * 1.5) playbackRequired = true;
+    if (profile.FT > 60 && questions.length === 0 && (intent.confidence < 0.85 || vagueCount > 0)) {
+      questions.push('To be explicit: did you mean this literally as written?');
+    }
   }
 
   const displayCandidates = entities.map((e) => e.candidate);
@@ -348,83 +352,111 @@ function interpret(text: string, risk: RiskCategory = 'advice'): TranslationOutp
 }
 
 function normalizeText(text: string): NormalizeResult {
-  const fragments = text
-    .replace(/\.\.\./g, '\x00')
-    .replace(/\.\./g, '\x00')
-    .split('\x00')
-    .map((f) => f.trim())
-    .filter(Boolean);
-  return {
-    original: text,
-    fragments,
-    normalized: fragments.length ? fragments.join(' ') : text,
-    fragment_count: fragments.length || 1,
-  };
+  const fragments = text.replace(/\.\.\./g, '\x00').replace(/\.\./g, '\x00').split('\x00').map((f) => f.trim()).filter(Boolean);
+  return { original: text, fragments, normalized: fragments.length ? fragments.join(' ') : text, fragment_count: fragments.length || 1 };
 }
 
-// ── split ──────────────────────────────────────────────────────────
+function splitText(text: string): SplitResult {
+  const parts = text.split(/(?:and\s+also|but\s+also|and|but|\.\s*|;\s*)/).map((p) => p.trim()).filter(Boolean);
+  return { original: text, intents: parts, count: parts.length };
+}
 
 const REWRITE_STYLES: Record<string, { label: string; description: string; instructions: string }> = {
-  technical: {
-    label: 'Technical',
-    description: 'Preserve exact language and precision',
-    instructions:
-      'Use precise terminology. Maintain all technical details. Prefer passive voice where appropriate.',
-  },
-  plain: {
-    label: 'Plain',
-    description: 'Clear but not condescending',
-    instructions: 'Use simple, clear language. Avoid jargon. Be direct but friendly.',
-  },
-  socially_gentle: {
-    label: 'Socially Gentle',
-    description: 'Soften tone to reduce confrontation',
-    instructions:
-      "Use softer framing. Replace accusations with observations. Add buffers like 'I think' and 'maybe'.",
-  },
-  concise: {
-    label: 'Concise',
-    description: 'Shortest useful form',
-    instructions: 'Cut all unnecessary words. Use bullet points. Remove pleasantries.',
-  },
-  detailed: {
-    label: 'Detailed',
-    description: 'Expanded with context and assumptions',
-    instructions:
-      'Add context, explain reasoning, state assumptions. Include caveats and edge cases.',
-  },
-  direct: {
-    label: 'Direct',
-    description: 'Remove hedging, keep truth',
-    instructions: 'Remove qualifying language. Be straightforward. State the truth without softening.',
-  },
+  technical: { label: 'Technical', description: 'Preserve exact language and precision', instructions: 'Use precise terminology. Maintain all technical details. Prefer passive voice where appropriate.' },
+  plain: { label: 'Plain', description: 'Clear but not condescending', instructions: 'Use simple, clear language. Avoid jargon. Be direct but friendly.' },
+  socially_gentle: { label: 'Socially Gentle', description: 'Soften tone to reduce confrontation', instructions: "Use softer framing. Replace accusations with observations. Add buffers like 'I think' and 'maybe'." },
+  concise: { label: 'Concise', description: 'Shortest useful form', instructions: 'Cut all unnecessary words. Use bullet points. Remove pleasantries.' },
+  detailed: { label: 'Detailed', description: 'Expanded with context and assumptions', instructions: 'Add context, explain reasoning, state assumptions. Include caveats and edge cases.' },
+  direct: { label: 'Direct', description: 'Remove hedging, keep truth', instructions: 'Remove qualifying language. Be straightforward. State the truth without softening.' },
 };
 
 function rewriteText(text: string, style: string = 'plain'): RewriteResult {
   const info = REWRITE_STYLES[style];
   if (!info) {
-    return {
-      original: text,
-      style,
-      style_label: 'Unknown',
-      style_description: '',
-      rewrite_instructions: `Unknown style "${style}". Available: ${Object.keys(REWRITE_STYLES).join(', ')}`,
-      rewritten: null,
-      note: 'Invalid style requested.',
-    };
+    return { original: text, style, style_label: 'Unknown', style_description: '', rewrite_instructions: `Unknown style "${style}". Available: ${Object.keys(REWRITE_STYLES).join(', ')}`, rewritten: null, note: 'Invalid style requested.' };
+  }
+  return { original: text, style, style_label: info.label, style_description: info.description, rewrite_instructions: info.instructions, rewritten: null, note: 'Pass this payload to an LLM with the rewrite_instructions as the system prompt.' };
+}
+
+const TASK_ROUTES: Record<string, { description: string; recommended: string; fallback: string; risk: string }> = {
+  code: { description: 'Code generation, debugging, refactoring', recommended: 'reasoning', fallback: 'fast', risk: 'high-stakes' },
+  creative_writing: { description: 'Creative prose, storytelling, marketing copy', recommended: 'creative', fallback: 'balanced', risk: 'casual' },
+  analysis: { description: 'Data analysis, research, summarization', recommended: 'reasoning', fallback: 'balanced', risk: 'advice' },
+  chat: { description: 'General conversation, Q&A, assistance', recommended: 'balanced', fallback: 'fast', risk: 'casual' },
+  translation: { description: 'Language translation, localization', recommended: 'balanced', fallback: 'fast', risk: 'advice' },
+  reasoning: { description: 'Complex reasoning, math, logic puzzles', recommended: 'reasoning', fallback: 'balanced', risk: 'advice' },
+  planning: { description: 'Project planning, task decomposition, scheduling', recommended: 'reasoning', fallback: 'balanced', risk: 'advice' },
+  emotional: { description: 'Emotional support, empathy, venting', recommended: 'creative', fallback: 'balanced', risk: 'casual' },
+};
+
+function routeTask(taskType: string, objective?: string, allowMultiModel = false): RouteResult {
+  const info = TASK_ROUTES[taskType];
+  if (!info) {
+    return { task_type: taskType, description: '', primary_route: '', fallback_route: '', risk_category: '', target_audience: 'plain', strategy: '', objective };
   }
   return {
-    original: text,
-    style,
-    style_label: info.label,
-    style_description: info.description,
-    rewrite_instructions: info.instructions,
-    rewritten: null,
-    note: 'Pass this payload to an LLM with the rewrite_instructions as the system prompt.',
+    task_type: taskType,
+    description: info.description,
+    primary_route: info.recommended,
+    fallback_route: info.fallback,
+    risk_category: info.risk,
+    target_audience: 'plain',
+    strategy: allowMultiModel ? 'parallel' : 'primary_with_fallback',
+    ...(objective ? { objective } : {}),
   };
 }
 
+function scoreCandidates(candidatesInput: HatpFactors[], risk: RiskCategory = 'casual'): ScoreResult {
+  return resolveAmbiguity(candidatesInput, risk);
+}
 
+// ── Receiver-profile-driven rewrite (the vector replaces the fixed style) ─────
 
-export { interpret, normalizeText as normalize, rewriteText as rewrite };
-export type { TranslationOutput, RecoveredEntity, EntityCandidate, RecoveredIntent };
+function directivesToInstructions(d: RenderingDirectives): string {
+  const parts: string[] = [];
+  parts.push(d.structure === 'bluf' ? 'Lead with the conclusion or answer first; put supporting detail afterward.' : d.structure === 'context_first' ? 'Build the context and reasoning first, then state the conclusion.' : 'Give a brief setup, then the main point.');
+  parts.push(d.warmth === 'warm' ? 'Use a warm, expressive tone; acknowledge feeling where relevant.' : d.warmth === 'minimal' ? 'Keep the tone flat and factual; minimal pleasantries.' : 'Keep a lightly warm, neutral tone.');
+  parts.push(d.explicitness === 'explicit_literal' ? 'State intent and meaning explicitly and literally. Do not rely on hints, idiom, or implication — spell out what is meant.' : d.explicitness === 'implication_ok' ? 'Implication, idiom, and subtext are fine; no need to over-explain.' : 'Be mostly explicit; avoid heavy reliance on subtext.');
+  parts.push(d.revision === 'open_challenge' ? 'Challenge and reframe freely where warranted; the reader welcomes pushback.' : d.revision === 'consistent' ? 'Stay consistent; avoid abrupt reversals, and if you must change course, flag the change gently and explicitly.' : 'Revise where warranted, with balanced framing.');
+  parts.push(d.ambiguity === 'commit' ? 'If the request is ambiguous, choose the most likely reading and answer it directly.' : d.ambiguity === 'clarify' ? 'If the request is ambiguous, surface the possible readings and ask which is meant before answering.' : 'If ambiguous, answer the most likely reading but note key alternatives.');
+  return parts.join(' ');
+}
+
+function rewriteForProfile(text: string, profile: ReceiverProfile): RewriteResult {
+  const d = deriveRenderingDirectives(profile);
+  return {
+    original: text,
+    style: 'profile',
+    style_label: 'Receiver-matched',
+    style_description: `Tuned to R̂ = TI${profile.TI} SG${profile.SG} FT${profile.FT} UE${profile.UE} AR${profile.AR}`,
+    rewrite_instructions: directivesToInstructions(d),
+    rewritten: null,
+    note: "Pass this payload to an LLM with rewrite_instructions as the system prompt. Instructions are derived from the user's receiver profile, not a fixed style.",
+  };
+}
+
+export {
+  interpret,
+  normalizeText as normalize,
+  splitText as split,
+  rewriteText as rewrite,
+  routeTask as route,
+  scoreCandidates as score,
+  resolveAmbiguity,
+  rewriteForProfile,
+  directivesToInstructions,
+};
+export type {
+  TranslationOutput,
+  NormalizeResult,
+  SplitResult,
+  RewriteResult,
+  RouteResult,
+  ScoreResult,
+  HatpFactors,
+  RiskCategory,
+  ARLevel,
+  RecoveredEntity,
+  EntityCandidate,
+  RecoveredIntent,
+};

@@ -182,9 +182,6 @@ function createServer() {
     },
   );
 
-  // ── Tool: normalize    },
-  );
-
   // ── Tool: normalize ────────────────────────────────────────────
 
   server.registerTool(

@@ -158,11 +158,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
-        <div className="rounded-[2rem] border border-sky-500/15 bg-[linear-gradient(180deg,rgba(18,102,255,0.12),rgba(255,176,0,0.08))] p-6 shadow-[0_32px_120px_rgba(0,0,0,0.4)] sm:p-8">
-          <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-            <div>
-
       {/* Translator Hub section */}
       <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
         <div className="rounded-[2rem] border border-sky-500/15 bg-[linear-gradient(180deg,rgba(18,102,255,0.08),rgba(99,102,241,0.04))] p-6 sm:p-8 shadow-[0_24px_100px_rgba(0,0,0,0.35)]">
@@ -172,7 +167,7 @@ export default function HomePage() {
               <h2 className="text-3xl font-bold text-white mb-3">RPCS-1 Translator Hub</h2>
               <p className="text-base leading-relaxed text-white/75 max-w-2xl mb-4">
                 Interpret ambiguous messages, normalize fragmented text, split mixed intents, rewrite
-                for any audience, and score candidate interpretations — all powered by the HF-HATP v1.9
+                for any audience, and score candidate interpretations — all powered by the HF-HATP v2.0
                 protocol.
               </p>
               <div className="grid sm:grid-cols-3 gap-3 mb-6">
@@ -215,6 +210,12 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Buy path section */}
+      <section className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+        <div className="rounded-[2rem] border border-sky-500/15 bg-[linear-gradient(180deg,rgba(18,102,255,0.12),rgba(255,176,0,0.08))] p-6 shadow-[0_32px_120px_rgba(0,0,0,0.4)] sm:p-8">
+          <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+            <div>
               <p className="text-xs font-mono uppercase tracking-[0.24em] text-sky-300">Buy path</p>
               <h2 className="mt-3 text-3xl font-bold text-white">Start free. Upgrade when one workflow needs a clear answer.</h2>
               <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/75">

@@ -18,8 +18,8 @@ export default function TranslatorPage() {
   const [routeType, setRouteType] = useState('code');
   const [routeObjective, setRouteObjective] = useState('');
   const [scoreCandidates, setScoreCandidates] = useState(JSON.stringify([
-    { label: 'Okay', IC: 0.80, UE: 0.20, EC: 0.50, NM: 0.50, SG: 0.10, TI: 1.00 },
-    { label: 'Frustrated', IC: 0.40, UE: 0.90, EC: 0.50, NM: 0.50, SG: 0.70, TI: 0.90 },
+    { label: 'Okay', interpConf: 0.80, userEvid: 0.20, epistemic: 0.50, narrative: 0.50, semGap: 0.10, transInteg: 1.00 },
+    { label: 'Frustrated', interpConf: 0.40, userEvid: 0.90, epistemic: 0.50, narrative: 0.50, semGap: 0.70, transInteg: 0.90 },
   ], null, 2));
   const [scoreRisk, setScoreRisk] = useState('casual');
 

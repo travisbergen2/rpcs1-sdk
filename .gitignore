@@ -8,6 +8,8 @@ dist/
 .env.local
 .vercel/
 dev-server*.log
+*.log
+*.exe
 __pycache__/
 *.py[cod]
 *.egg-info/

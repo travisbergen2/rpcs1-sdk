@@ -35,7 +35,7 @@ const QUESTIONS: Record<
   price: {
     label: 'Free or paid?',
     answer:
-      'The web sample assessment is free and does not require an account. The paid diagnostic memo is $750 one-time, and recurring SDK and team plans are for repeatable reviews and workflows.',
+      'The web sample assessment is free and does not require an account. The written diagnostic memo is a $99 one-time founding pilot (first five, includes an anonymized case study), and the Founding supporter plan ($9/mo or $79/yr) covers the SDK for repeatable reviews and workflows.',
     cta: { href: '/pricing', label: 'View pricing' },
   },
 };

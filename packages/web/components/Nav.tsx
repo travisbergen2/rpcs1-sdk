@@ -40,7 +40,7 @@ export function Nav() {
             href="/api/checkout?tier=diagnostic"
             className="ml-2 px-3 py-1.5 text-sm font-medium bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg transition-colors shadow-lg shadow-amber-500/20"
           >
-            Buy memo →
+            Founding pilot →
           </Link>
         </nav>
       </div>

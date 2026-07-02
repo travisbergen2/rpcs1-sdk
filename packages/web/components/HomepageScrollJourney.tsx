@@ -231,7 +231,7 @@ function RoomScene() {
               <div className="absolute right-[14%] top-[26%] h-[6rem] w-[9rem] rounded-[1.25rem] border border-white/10 bg-white/5 shadow-[0_18px_60px_rgba(0,0,0,0.38)] [transform:translateZ(45px)_rotateY(-18deg)]">
                 <div className="absolute inset-0 rounded-[1.25rem] bg-gradient-to-br from-amber-400/20 to-transparent" />
                 <div className="absolute inset-3 rounded-[1rem] border border-white/10 bg-[#0f1726]" />
-                <div className="absolute left-3 top-3 rounded-full bg-amber-400/15 px-2 py-1 text-[10px] font-mono text-amber-300">$750 memo</div>
+                <div className="absolute left-3 top-3 rounded-full bg-amber-400/15 px-2 py-1 text-[10px] font-mono text-amber-300">$99 pilot</div>
                 <p className="absolute bottom-3 left-3 text-xs text-white/80">Written diagnostic</p>
               </div>
 

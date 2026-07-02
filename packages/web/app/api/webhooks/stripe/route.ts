@@ -125,9 +125,11 @@ function buildEmailHtml({
   customerEmail: string;
   isRenewal?: boolean;
 }): string {
+  // Display names for the founding-era pricing. Internal tier keys are stable
+  // plumbing: 'founding' = yearly supporter, 'indie' = monthly supporter.
   const tierLabel = tier === 'founding'
-    ? 'Founding Access ($200/year)'
-    : tier === 'indie' ? 'Indie ($40/month)' : 'Team ($400/month)';
+    ? 'Founding supporter ($79/year)'
+    : tier === 'indie' ? 'Founding supporter ($9/month)' : 'Team';
   const intro = isRenewal
     ? 'Your RPCS-1 Agent Tuner subscription renewed — here is your license key for the new billing period. It replaces the previous one.'
     : 'Your RPCS-1 Agent Tuner license key is ready. Keep this email — the key is your entitlement record and is not stored on our servers.';

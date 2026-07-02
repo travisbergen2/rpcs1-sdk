@@ -81,7 +81,7 @@ print(message.content[0].text)`}</code></pre>
       <h3>SDK license key (paid tier)</h3>
       <p>
         The SDK is open to install. Free tier allows 5 calls per day.
-        Paid tiers (Indie $40/month, Team $400/month) unlock unlimited calls.
+        The Founding supporter plan ($9/month or $79/year — $40/month at v1) unlocks unlimited calls.
         After payment you receive a license key by email. Pass it in your environment:
       </p>
       <pre><code>{`export RPCS1_LICENSE_KEY="your-license-key"

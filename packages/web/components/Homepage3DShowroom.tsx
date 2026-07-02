@@ -26,7 +26,7 @@ const ARTIFACTS: Array<{
   {
     key: 'memo',
     label: 'Memo',
-    subtitle: '$750 diagnostic',
+    subtitle: '$99 founding pilot',
     color: '#fbbf24',
     accent: '#d97706',
     position: [4.7, 0.65, -1.4],
@@ -69,7 +69,7 @@ function createTextPlane(text: string, color: string, bg: string) {
   ctx.fillText(text, 34, 96);
   ctx.font = '24px Arial';
   ctx.fillStyle = 'rgba(255,255,255,0.9)';
-  ctx.fillText(text === 'Memo' ? '$750 written diagnostic' : text === 'Scanner' ? 'Live tuner' : text === 'Portal' ? 'Public MCP access' : 'Face-preserving translation', 34, 154);
+  ctx.fillText(text === 'Memo' ? '$99 written diagnostic' : text === 'Scanner' ? 'Live tuner' : text === 'Portal' ? 'Public MCP access' : 'Face-preserving translation', 34, 154);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.needsUpdate = true;

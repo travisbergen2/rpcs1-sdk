@@ -90,8 +90,8 @@ export async function POST(request: Request) {
       }
       case 'manifest': {
         return NextResponse.json({
-          protocol: 'RPCS-1 / HF-HATP v1.9',
-          version: '1.9.0',
+          protocol: 'RPCS-1 / HF-HATP v2.0',
+          version: '2.0.0',
           tools: {
             interpret: { description: 'Interpret a message using RPCS-1', parameters: { text: 'string (required)', risk: 'casual|advice|high-stakes|safety-critical', profile: 'optional ReceiverProfile', answers: 'optional intake answers' } },
             normalize: { description: 'Normalize fragmented human input' },

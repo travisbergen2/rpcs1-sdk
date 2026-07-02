@@ -111,11 +111,13 @@ export function HomepageLiveDemo() {
   const [result, setResult] = useState<Recommendation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastRunAt, setLastRunAt] = useState<string | null>(null);
 
   async function runDemo(key: DemoKey) {
     setSelected(key);
     setLoading(true);
     setError(null);
+    const started = Date.now();
 
     try {
       const res = await fetch('/api/recommend', {
@@ -129,7 +131,11 @@ export function HomepageLiveDemo() {
       }
 
       const json = (await res.json()) as Recommendation;
+      // The engine is deterministic and fast; without a floor the "running" state
+      // is imperceptible and a re-run looks like a dead button. Hold ≥450ms.
+      await new Promise((r) => setTimeout(r, Math.max(0, 450 - (Date.now() - started))));
       setResult(json);
+      setLastRunAt(new Date().toLocaleTimeString());
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not run the live demo.');
     } finally {
@@ -178,8 +184,8 @@ export function HomepageLiveDemo() {
               Pick a preset, run RPCS-1, and see the status, configuration, language mode, and next check.
             </p>
           </div>
-          <span className={cn('rounded-full border px-3 py-1 text-xs font-mono', loading ? 'text-gray-300 border-gray-700 bg-gray-900' : 'text-emerald-300 border-emerald-500/20 bg-emerald-500/10')}>
-            {loading ? 'running' : 'ready'}
+          <span className={cn('rounded-full border px-3 py-1 text-xs font-mono', loading ? 'text-amber-300 border-amber-500/30 bg-amber-500/10' : 'text-emerald-300 border-emerald-500/20 bg-emerald-500/10')}>
+            {loading ? 'running…' : lastRunAt ? `ran ${lastRunAt}` : 'ready'}
           </span>
         </div>
 

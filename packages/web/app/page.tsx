@@ -88,7 +88,7 @@ export default function HomePage() {
                   href="/api/checkout?tier=diagnostic"
                   className="inline-flex items-center justify-center gap-2 rounded bg-[#ffb000] px-6 py-3 text-base font-semibold text-black shadow-[0_8px_20px_rgba(255,176,0,0.24)] transition-colors hover:bg-[#ff9d00]"
                 >
-                  Buy $750 diagnostic
+                  Get the $99 founding pilot
                 </Link>
               </div>
 
@@ -233,7 +233,7 @@ export default function HomePage() {
                 href="/api/checkout?tier=diagnostic"
                 className="inline-flex items-center justify-center rounded-2xl bg-amber-400 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-amber-300"
               >
-                Buy the $750 diagnostic
+                Get the $99 founding pilot
               </Link>
               <Link
                 href="/pricing"

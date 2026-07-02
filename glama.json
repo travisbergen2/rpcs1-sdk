@@ -5,7 +5,7 @@
   ],
   "name": "io.github.travisbergen2/rpcs1-agent-tuner",
   "title": "RPCS-1 Agent Tuner & Translator",
-  "description": "Diagnose why your AI agent will fail before rollout AND translate ambiguous human input. Two capabilities in one MCP server: (1) recommend_agent_configuration tunes temperature, top_p, and strategy for your agent's environment. (2) interpret, normalize, and rewrite help LLMs understand what users actually mean using the HF-HATP v1.9 protocol.",
+  "description": "Diagnose why your AI agent will fail before rollout AND translate ambiguous human input. Two capabilities in one MCP server: (1) recommend_agent_configuration tunes temperature, top_p, and strategy for your agent's environment. (2) interpret, normalize, and rewrite help LLMs understand what users actually mean using the HF-HATP v2.0 protocol.",
   "categories": [
     "agent-configuration",
     "agent-diagnostics",

@@ -10,8 +10,12 @@ RPCS-1 is a five-primitive assay battery for deployed AI agents. It turns task t
 
 ```
 rpcs1-sdk/
-├── packages/core/          # TypeScript recommendation engine (@rpcs1/core)
+├── packages/core/          # TypeScript engine (@rpcs1/core): tuner + translation layer + receiver-profile intake
+├── packages/web/           # Next.js app serving rpcs1.dev (tuner, translator, docs, Stripe, /mcp endpoint)
+├── packages/mcp-server/    # Standalone STDIO MCP server (what Glama and MCP clients build)
 ├── sdk/python/             # Python SDK (pip install rpcs1)
+├── skills/                 # Canonical agent skill package (HF-HATP v2.0 SKILL.md)
+├── docs/                   # Architecture, deployment, launch playbook
 └── .github/workflows/      # CI/CD
 ```
 
@@ -74,6 +78,10 @@ pip install -e ".[dev]"
 pytest -v
 ```
 
+Web environment variables are documented in [`packages/web/.env.example`](./packages/web/.env.example)
+(Stripe, Resend, license signing, rate limits). MCP production controls are listed under
+[Production controls](#mcp-server) below.
+
 ## The Matching Principle
 
 The SDK implements Pred-09-5 from IMM Paper 9:
@@ -97,11 +105,28 @@ RPCS-1 is also available as a public, anonymous, read-only MCP server:
 https://rpcs1.dev/mcp
 ```
 
-It exposes one focused tool:
+It exposes four tools — one for tuning agents, three for translating humans:
 
-- `recommend_agent_configuration` — use when designing, tuning, or diagnosing an AI agent
-  against environmental entropy, predictability, stakes, context horizon, and commitment style.
-  The first useful call is a support copilot under live pressure:
+- `recommend_agent_configuration` — diagnose an AI agent against environmental entropy,
+  predictability, stakes, context horizon, and commitment style.
+- `interpret` — detect ambiguity in a human message (Signature Ambiguity Framework: AR level,
+  candidate readings with scores, clarifying questions).
+- `normalize` — join fragmented, ellipsis-heavy input into coherent prose without changing meaning.
+- `rewrite` — get rewrite instructions for a target style; the SDK's `rewriteForProfile` goes
+  further and renders for a specific person's receiver profile.
+
+### Translation Layer
+
+> "Say what you mean. Hear what they meant."
+
+The translation tools implement HF-HATP v2.0 — the canonical agent-facing spec lives at
+[`skills/rpcs1-translation-layer/SKILL.md`](./skills/rpcs1-translation-layer/SKILL.md). In the SDK,
+`scoreIntake` calibrates a five-primitive receiver profile (R̂) from a 5-item intake, and
+`interpret` / `rewriteForProfile` consume it so output is tuned to the person, not a lumped style.
+
+### Tuner examples
+
+The first useful call is a support copilot under live pressure:
 
 ```text
 Use recommend_agent_configuration to diagnose my support copilot.

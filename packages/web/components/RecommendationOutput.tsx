@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import type { Recommendation } from '@rpcs1/core';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -245,6 +246,27 @@ export function RecommendationOutput({ recommendation: rec }: Props) {
           <p className="text-sm text-gray-400 leading-relaxed">{rec.reasoning}</p>
         </CardContent>
       </Card>
+
+      {/* Diagnostic offer */}
+      <div className="rounded-lg border border-amber-500/25 bg-amber-500/5 p-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h3 className="text-sm font-semibold text-amber-300">
+              Want this as a written diagnostic for your real workload?
+            </h3>
+            <p className="mt-1 text-sm leading-relaxed text-gray-400">
+              The founding diagnostic ($99) adds a written memo: full profile, the settings to
+              change in priority order, and the one test that confirms the fix.
+            </p>
+          </div>
+          <Link
+            href="/diagnostic"
+            className="inline-flex shrink-0 items-center justify-center rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-amber-300"
+          >
+            Get the diagnostic
+          </Link>
+        </div>
+      </div>
 
       {/* IMM Principles — collapsible */}
       <div>

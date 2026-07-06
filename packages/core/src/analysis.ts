@@ -82,20 +82,20 @@ export function generateWarnings(
   // Chaotic environment + long context relevance → integration mismatch
   if (input.environment.entropy === 'chaotic' && input.environment.context_relevance === 'long') {
     warnings.push(
-      `Environment-context mismatch: chaotic entropy calls for short TI (Matching Principle), ` +
+      `Environment-context mismatch: chaotic entropy calls for short TI (R-1 matching law), ` +
       `but long context_relevance requests long integration. ` +
       `This configuration is structurally near the oscillation boundary.`,
     );
   }
 
   // TI floor binding: at dynamic/chaotic entropy (H >= 0.27), TI clips to TI_MIN.
-  // Above this threshold, the Matching Principle loses runtime resolution. This is
-  // a floor-binding artifact to validate against production traces, not a completed
-  // validation claim for the AI-agent extension.
+  // Above this threshold, the matching-law operationalization loses runtime resolution.
+  // This is a floor-binding artifact to validate against production traces, not a
+  // completed validation claim for the AI-agent extension.
   if (input.environment.entropy === 'dynamic' || input.environment.entropy === 'chaotic') {
     warnings.push(
       `TI floor binding: at ${input.environment.entropy} entropy (H ≥ 0.27), ` +
-      `TI clips to its minimum value and the Matching Principle (Pred-09-5) operates ` +
+      `TI clips to its minimum value and the R-1 matching law (IMM Paper 18) operates ` +
       `near its resolution limit. Treat this recommendation as a deterministic tuning ` +
       `hypothesis and validate truncation, quality, and failure rates against traces.`,
     );
@@ -119,10 +119,11 @@ export function generateReasoning(
     : '';
 
   return (
-    `Environment analysis: ${entropy} entropy → Matching Principle (Pred-09-5: TI ~ 1/H) ` +
-    `yields TI = ${TI} (${describeLevel(TI)} temporal integration window). ` +
+    `Environment analysis: ${entropy} entropy → R-1 Matching Law (IMM Paper 18: integrate ` +
+    `less when the world changes faster) yields TI = ${TI} (${describeLevel(TI)} temporal ` +
+    `integration window). ` +
     `${stakes} stakes drive SG = ${SG} (${describeLevel(SG)} signal gain) and ` +
-    `FT = ${FT} (${describeLevel(FT)} filtering threshold) for basin stability. ` +
+    `FT = ${FT} (${describeLevel(FT)} filtering threshold) on the detection channel (R-4). ` +
     `${commitment_style} commitment style sets AR = ${AR}; ` +
     `${context_relevance} context relevance + entropy set UE = ${UE}. ` +
     `Platform mapping hypothesis: temperature = ${temperature} (from SG via inverse gain), ` +
@@ -144,17 +145,17 @@ export function listPrinciplesApplied(
   profile: ReceiverProfile,
 ): string[] {
   const principles = [
-    'Matching Principle (Pred-09-5): TI ~ 1/H',
-    'Basin Stability: minimize V(R,E) subject to task constraints',
+    'R-1 Matching Law (IMM Paper 18): integrate less when the world changes faster — TI falls with the change rate',
+    'Three-Block Architecture (T-OR-1): estimate (TI, UE) → detect (SG, FT) → commit (AR)',
     'Boundary Avoidance: stay away from oscillation/overload/freeze regimes',
   ];
 
   if (profile.SG * profile.TI > OSCILLATION_THRESHOLD * 0.8) {
-    principles.push('Oscillation Threshold (Paper 9 §oscillatory threshold): SG × TI < Δ_R');
+    principles.push('Oscillation Threshold: SG × TI < Δ_R (over-integration under high gain revisits decisions)');
   }
 
   if (input.environment.stakes === 'high' || input.environment.stakes === 'catastrophic') {
-    principles.push('Conservative Gating (high-stakes): raise FT, lower SG to prevent overload');
+    principles.push('Conservative Gating (engineering rule, high stakes): raise FT, lower SG to prevent overload');
   }
 
   return principles;

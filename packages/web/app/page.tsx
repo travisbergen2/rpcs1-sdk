@@ -165,68 +165,182 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── What the diagnostic gives you ─────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-        <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-          <div>
-            <p className="text-xs font-mono uppercase tracking-[0.24em] text-sky-400">
-              What the memo gives you
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight">
-              A clear answer, the right settings, one next test
-            </h2>
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              {memoBullets.map((item) => (
-                <div
-                  key={item.title}
-                  className="rounded-2xl border border-white/8 bg-white/[0.03] p-4"
-                >
-                  <p className="text-sm font-semibold text-white">{item.title}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-white/60">{item.body}</p>
-                </div>
-              ))}
+      {/* ── Evidence ──────────────────────────────────────────── */}
+      <section id="evidence" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-20 sm:px-6">
+        <div className="max-w-3xl">
+          <p className="text-xs font-mono uppercase tracking-[0.24em] text-sky-400">
+            Tested before it was shipped
+          </p>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+            Pre-registered checks, pass and fail alike
+          </h2>
+          <p className="mt-4 text-base leading-relaxed text-white/65">
+            Every law behind the recommendations was checked numerically against criteria fixed{' '}
+            <em>before</em> the data was generated. Here&apos;s the scorecard — including what
+            failed:
+          </p>
+        </div>
+
+        <div className="mt-8 overflow-x-auto rounded-2xl border border-white/8">
+          <table className="w-full min-w-[560px] text-left text-sm">
+            <thead>
+              <tr className="border-b border-white/8 bg-white/[0.03] font-mono text-xs uppercase tracking-wider text-white/40">
+                <th className="px-4 py-3">Check</th>
+                <th className="px-4 py-3">Predicted</th>
+                <th className="px-4 py-3">Measured</th>
+                <th className="px-4 py-3">Verdict</th>
+              </tr>
+            </thead>
+            <tbody className="text-white/70">
+              <tr className="border-b border-white/5">
+                <td className="px-4 py-3">Update-elasticity exponents (R-2)</td>
+                <td className="px-4 py-3 font-mono text-xs">+0.667 / +0.5 / +0.5</td>
+                <td className="px-4 py-3 font-mono text-xs">+0.651 / +0.496 / +0.454</td>
+                <td className="px-4 py-3 font-mono text-xs text-emerald-300">PASS</td>
+              </tr>
+              <tr className="border-b border-white/5">
+                <td className="px-4 py-3">Sampling-rate exponents (R-3)</td>
+                <td className="px-4 py-3 font-mono text-xs">+0.667 / +0.5 / +0.5</td>
+                <td className="px-4 py-3 font-mono text-xs">+0.620 / +0.493 / +0.488</td>
+                <td className="px-4 py-3 font-mono text-xs text-emerald-300">PASS</td>
+              </tr>
+              <tr className="border-b border-white/5">
+                <td className="px-4 py-3">Detection value (R-4): deaf receiver</td>
+                <td className="px-4 py-3 font-mono text-xs">interior optimum</td>
+                <td className="px-4 py-3 font-mono text-xs">deaf loses 3.2×</td>
+                <td className="px-4 py-3 font-mono text-xs text-emerald-300">PASS</td>
+              </tr>
+              <tr className="border-b border-white/5">
+                <td className="px-4 py-3">Commitment stakes law (R-5)</td>
+                <td className="px-4 py-3 font-mono text-xs">slope ≈ 1</td>
+                <td className="px-4 py-3 font-mono text-xs">0.977</td>
+                <td className="px-4 py-3 font-mono text-xs text-emerald-300">PASS</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-3">Criterion log-law slope (R-4)</td>
+                <td className="px-4 py-3 font-mono text-xs">−0.51</td>
+                <td className="px-4 py-3 font-mono text-xs">−0.33</td>
+                <td className="px-4 py-3 font-mono text-xs text-red-300">FAIL — cut from claims</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p className="mt-5 max-w-3xl text-sm leading-relaxed text-white/50">
+          Three registered checks failed during development; one was corrected and re-run, one is
+          cut from the claims entirely, one was traced to a discretization artifact. All three are
+          reported in the paper — because a scorecard you can trust has to include the misses.{' '}
+          <Link href="/imm" className="text-sky-400 underline-offset-4 hover:underline">
+            Full claim ledger →
+          </Link>
+        </p>
+      </section>
+
+      {/* ── Exactly what you get ──────────────────────────────── */}
+      <section id="what-you-get" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-20 sm:px-6">
+        <div className="max-w-3xl">
+          <p className="text-xs font-mono uppercase tracking-[0.24em] text-sky-400">
+            Exactly what you get
+          </p>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+            Know what you&apos;re buying — and what it changes in your workflow
+          </h2>
+        </div>
+
+        <div className="mt-10 grid gap-4 lg:grid-cols-2">
+          {/* Free tier */}
+          <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-6">
+            <div className="flex items-baseline justify-between">
+              <h3 className="text-xl font-semibold">Free tuner</h3>
+              <span className="font-mono text-sm text-white/40">$0 · no account</span>
             </div>
+            <ul className="mt-5 space-y-3 text-sm leading-relaxed text-white/65">
+              <li className="flex gap-3">
+                <span className="mt-0.5 text-sky-400">→</span>
+                Receiver profile (TI, SG, FT, UE, AR) for one described workload
+              </li>
+              <li className="flex gap-3">
+                <span className="mt-0.5 text-sky-400">→</span>
+                Regime read: stable, near-oscillation, near-overload, or near-freeze
+              </li>
+              <li className="flex gap-3">
+                <span className="mt-0.5 text-sky-400">→</span>
+                Runtime settings to paste: temperature, max_tokens, context and tool-use strategy
+              </li>
+              <li className="flex gap-3">
+                <span className="mt-0.5 text-sky-400">→</span>
+                A reasoning trace citing the exact law behind every number
+              </li>
+            </ul>
+            <p className="mt-5 border-t border-white/8 pt-4 text-sm leading-relaxed text-white/45">
+              <span className="font-semibold text-white/70">In your workflow:</span> a 60-second
+              check before you ship a config change. Directional, deterministic, free to rerun.
+            </p>
           </div>
 
-          <div className="rounded-2xl border border-white/8 bg-[#0a101d] p-6">
-            <p className="text-xs font-mono uppercase tracking-[0.24em] text-amber-300">
-              Sample output
-            </p>
-            <div className="mt-4 rounded-xl border border-white/8 bg-black/40 p-5 font-mono text-sm leading-7 text-white/80">
-              <p>
-                <span className="text-sky-300">status:</span> stable
-              </p>
-              <p>
-                <span className="text-sky-300">receiver profile:</span> TI 78 · SG 61 · FT 43 · UE 66 · AR 22
-              </p>
-              <p>
-                <span className="text-sky-300">configuration:</span> explicit_confirmation · frequent_grounding
-              </p>
-              <p>
-                <span className="text-sky-300">language mode:</span> face-preserving
-              </p>
-              <p>
-                <span className="text-sky-300">best next check:</span> rerun 3 ambiguous cases
-              </p>
+          {/* Diagnostic tier */}
+          <div className="rounded-2xl border border-amber-400/25 bg-[linear-gradient(180deg,rgba(251,191,36,0.06),transparent)] p-6">
+            <div className="flex items-baseline justify-between">
+              <h3 className="text-xl font-semibold">Founding diagnostic</h3>
+              <span className="font-mono text-sm text-amber-300">$99 · one workflow</span>
             </div>
-            <p className="mt-4 text-sm leading-relaxed text-white/55">
-              You don&apos;t need the theory lecture to use it. You need to know whether the agent
-              is stable enough to ship, what to change, and which test confirms the fix.
+            <ul className="mt-5 space-y-3 text-sm leading-relaxed text-white/65">
+              {memoBullets.map((item) => (
+                <li key={item.title} className="flex gap-3">
+                  <span className="mt-0.5 text-amber-300">→</span>
+                  <span>
+                    <span className="font-semibold text-white/85">{item.title}.</span> {item.body}
+                  </span>
+                </li>
+              ))}
+              <li className="flex gap-3">
+                <span className="mt-0.5 text-amber-300">→</span>
+                <span>
+                  <span className="font-semibold text-white/85">Written memo.</span> Implementation
+                  priorities in order, so the fix is a checklist, not a research project.
+                </span>
+              </li>
+            </ul>
+            <p className="mt-5 border-t border-amber-400/15 pt-4 text-sm leading-relaxed text-white/45">
+              <span className="font-semibold text-white/70">In your workflow:</span> apply the
+              settings, run the named next test, and you know within one session whether the
+              configuration improved — instead of guessing across a week of prompt edits.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Link
-                href="/pricing"
-                className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold transition-colors hover:bg-white/10"
+                href="/api/checkout?tier=diagnostic"
+                className="rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-amber-300"
               >
-                See pricing
+                Get the diagnostic
               </Link>
               <Link
                 href="/diagnostic"
-                className="rounded-lg border border-amber-400/25 bg-amber-400/10 px-4 py-2 text-sm font-semibold text-amber-300 transition-colors hover:bg-amber-400/20"
+                className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold transition-colors hover:bg-white/10"
               >
-                Submit a brief
+                Submit a brief first
               </Link>
             </div>
+          </div>
+        </div>
+
+        {/* Sample output strip */}
+        <div className="mt-6 rounded-2xl border border-white/8 bg-[#0a101d] p-6">
+          <p className="text-xs font-mono uppercase tracking-[0.24em] text-white/40">
+            Sample memo header
+          </p>
+          <div className="mt-3 grid gap-x-8 gap-y-1 font-mono text-sm leading-7 text-white/75 sm:grid-cols-2">
+            <p>
+              <span className="text-sky-300">status:</span> stable
+            </p>
+            <p>
+              <span className="text-sky-300">profile:</span> TI 78 · SG 61 · FT 43 · UE 66 · AR 22
+            </p>
+            <p>
+              <span className="text-sky-300">configuration:</span> explicit_confirmation · frequent_grounding
+            </p>
+            <p>
+              <span className="text-sky-300">next check:</span> rerun 3 ambiguous cases
+            </p>
           </div>
         </div>
       </section>

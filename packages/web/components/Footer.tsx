@@ -7,7 +7,7 @@ export function Footer() {
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-sm font-semibold text-white">
-              RPCS<span className="text-sky-400">-1</span> five-primitive battery
+              RPCS<span className="text-sky-400">-1</span> — agent settings, derived not guessed
             </p>
             <p className="text-xs text-gray-600 mt-1">
               Free sample, written memo, and MCP access for deployed AI agents.

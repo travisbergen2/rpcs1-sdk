@@ -8,7 +8,7 @@ export function Nav() {
           <span className="text-lg font-bold text-white tracking-tight">
             RPCS<span className="text-sky-400">-1</span>
           </span>
-          <span className="text-xs text-gray-500 font-mono hidden sm:block">five-primitive battery</span>
+          <span className="text-xs text-gray-500 font-mono hidden sm:block">derived receiver laws</span>
         </Link>
 
         <nav className="flex items-center gap-1">

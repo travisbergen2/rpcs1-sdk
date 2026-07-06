@@ -1,28 +1,42 @@
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'The Matching Principle' };
+export const metadata: Metadata = { title: 'The Matching Laws' };
 
 export default function MatchingPage() {
   return (
     <div>
-      <h1>The Matching Principle (Pred-09-5)</h1>
+      <h1>The Matching Laws (R-1 family)</h1>
 
       <blockquote>
-        Stable receivers in an environment with entropy H satisfy TI ≈ 1 / H.
+        Integrate less when the world changes faster — with the exact scaling depending on
+        whether the receiver detects regime changes.
       </blockquote>
 
       <p>
-        This is the core structural insight behind every TI recommendation. It comes from
-        IMM Paper 9 and the RPCS-1 receiver dynamics framework. In the current product it is
-        operationalized as an engineering rule, not presented as a completed validation of
-        the AI-agent extension.
+        This is the structural insight behind every TI recommendation. Its current foundation is
+        IMM Paper 18 (<em>Observer Requirements</em>), which derives it from the bias–variance
+        trade-off faced by any bounded observer: the qualitative law — shorter integration in
+        faster-changing environments — is forced under any convex loss. The exact TI ∝ 1/H
+        scaling is conditional: it holds for receivers that detect regime changes and reset
+        their window; fixed-window receivers obey a square-root law instead.
+      </p>
+
+      <p>
+        <strong>History note.</strong> Earlier versions of this page presented the Matching
+        Principle as Pred-09-5 (&quot;TI ≈ 1/H&quot;) from IMM Paper 9. Paper 18 supersedes that
+        claim: it is vindicated qualitatively and sharpened quantitatively, and its published
+        derivation claim is retired in favor of the derived R-1 law family. The product&apos;s
+        recommendations are unchanged in direction; what improved is the honesty and precision
+        of the foundation. In the current product the law is operationalized as an engineering
+        rule, not presented as a completed validation of the AI-agent extension.
       </p>
 
       <h2>What it means in practice</h2>
       <p>
         Environmental entropy H measures how frequently and unpredictably an environment changes.
-        The Matching Principle says the Temporal Integration window (TI) of a stable receiver must
-        scale inversely with H:
+        (In Paper 18&apos;s terms this is an <em>identification</em> with the operational change
+        rate — labeled honestly as a modeling bridge, not a derivation.) The matching law says
+        the Temporal Integration window (TI) of a well-tuned receiver shrinks as H rises:
       </p>
       <ul>
         <li>
@@ -60,7 +74,7 @@ chaotic  → H = 0.95`}</code></pre>
 
       <h2>The oscillation threshold</h2>
       <p>
-        The Matching Principle also implies a stability boundary: when SG × TI exceeds
+        The matching laws also imply a stability boundary: when SG × TI exceeds
         the oscillation threshold, the receiver is structurally near the oscillation regime —
         it integrates too long while amplifying too strongly, causing it to revisit decisions.
       </p>
@@ -86,6 +100,16 @@ chaotic  → H = 0.95`}</code></pre>
         framework applies across biological, artificial, and hybrid cognitive systems.
         Every production deployment of this SDK is a test of that conjecture, so RPCS1 reports
         deterministic tuning hypotheses that should be measured against production traces.
+      </p>
+
+      <h2>The full law family</h2>
+      <p>
+        R-1 (integration) is one of five derived law families in Paper 18 — the others govern
+        update elasticity (R-2), sampling rate (R-3), the detection channel&apos;s gain and
+        criterion (R-4), and commitment thresholds (R-5). All five move the same direction as the
+        change rate rises. See <a href="/imm">the framework page</a> for the three-block picture
+        (estimate, detect, commit) and the honest claim ledger, including the pre-registered
+        checks that failed and were reported.
       </p>
     </div>
   );

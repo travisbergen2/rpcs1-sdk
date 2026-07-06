@@ -8,12 +8,25 @@ import { cn } from '@/lib/cn';
 
 type DemoKey = 'support' | 'coding' | 'research';
 
-const PRIMITIVES = [
-  { key: 'TI', label: 'Temporal Integration' },
-  { key: 'SG', label: 'Signal Gain' },
-  { key: 'FT', label: 'Filtering Threshold' },
-  { key: 'UE', label: 'Update Elasticity' },
-  { key: 'AR', label: 'Ambiguity Resolution' },
+const BLOCKS = [
+  {
+    name: 'Estimate',
+    primitives: [
+      { key: 'TI', label: 'Temporal Integration' },
+      { key: 'UE', label: 'Update Elasticity' },
+    ],
+  },
+  {
+    name: 'Detect',
+    primitives: [
+      { key: 'SG', label: 'Signal Gain' },
+      { key: 'FT', label: 'Filtering Threshold' },
+    ],
+  },
+  {
+    name: 'Commit',
+    primitives: [{ key: 'AR', label: 'Ambiguity Resolution' }],
+  },
 ] as const;
 
 const DEMOS: Record<
@@ -163,7 +176,7 @@ export function HomepageLiveDemo() {
     : 'Running...';
 
   function scrollToProof() {
-    document.getElementById('proof-signal')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('what-you-get')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   return (
@@ -237,18 +250,40 @@ export function HomepageLiveDemo() {
           </div>
 
           <div className="rounded-2xl border border-gray-800 bg-gray-900/60 p-4">
-            <p className="text-xs font-mono text-sky-400 mb-3">Five-primitive profile</p>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
-              {PRIMITIVES.map((primitive) => {
-                const value = result ? result.receiver_profile[primitive.key] : undefined;
-                return (
-                  <div key={primitive.key} className="rounded-xl border border-gray-800 bg-black/25 px-3 py-2">
-                    <p className="text-[11px] font-mono text-gray-500">{primitive.key}</p>
-                    <p className="mt-1 text-base font-semibold text-white">{value ?? '...'}</p>
-                    <p className="mt-1 text-[11px] leading-snug text-gray-600">{primitive.label}</p>
+            <p className="text-xs font-mono text-sky-400 mb-3">
+              Receiver profile <span className="text-gray-600">— estimate → detect → commit</span>
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              {BLOCKS.map((block) => (
+                <div key={block.name} className="rounded-xl border border-gray-800 bg-black/25 p-2.5">
+                  <p className="mb-2 text-[10px] font-mono uppercase tracking-wider text-gray-500">
+                    {block.name}
+                  </p>
+                  <div className="space-y-2">
+                    {block.primitives.map((primitive) => {
+                      const value = result ? result.receiver_profile[primitive.key] : undefined;
+                      return (
+                        <div key={primitive.key} className="flex items-baseline justify-between gap-1">
+                          <span className="text-[11px] font-mono text-sky-300/80">{primitive.key}</span>
+                          <span className="text-base font-semibold text-white">{value ?? '…'}</span>
+                        </div>
+                      );
+                    })}
                   </div>
-                );
-              })}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-gray-800 bg-gray-900/60 p-4">
+            <p className="text-xs font-mono text-sky-400 mb-2">Recommended settings — paste these</p>
+            <div className="grid grid-cols-2 gap-2 font-mono text-xs">
+              <div className="rounded-lg border border-gray-800 bg-black/25 px-3 py-2 text-gray-400">
+                temperature <span className="ml-1 text-emerald-300">{result?.platform_parameters.temperature ?? '…'}</span>
+              </div>
+              <div className="rounded-lg border border-gray-800 bg-black/25 px-3 py-2 text-gray-400">
+                max_tokens <span className="ml-1 text-emerald-300">{result?.platform_parameters.max_tokens ?? '…'}</span>
+              </div>
             </div>
           </div>
 
@@ -277,7 +312,7 @@ export function HomepageLiveDemo() {
           onClick={scrollToProof}
           className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-sky-500/20 bg-sky-500/10 px-4 py-2 text-xs font-semibold text-sky-200 transition-colors hover:bg-sky-500/15"
         >
-          See proof ↓
+          See exactly what you get ↓
         </button>
       </div>
     </div>

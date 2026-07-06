@@ -1,8 +1,12 @@
 /**
- * Matching Principle implementation (Pred-09-5 from RPCS-1).
+ * Matching-law implementation (R-1 family, IMM Paper 18 — supersedes Pred-09-5).
  *
- * Stable receivers in an environment with entropy H satisfy TI ~ 1/H.
- * This file provides lookup-table interpolation from the matching config.
+ * Derived direction: well-tuned receivers integrate less as the environment's
+ * change rate rises (forced by bias–variance under any convex loss). The exact
+ * TI ∝ 1/H scaling is conditional on change detection; H → change rate is an
+ * identification (A-OR-5), stated honestly.
+ * This file provides the product's operationalization: lookup-table
+ * interpolation from the matching config.
  */
 
 interface TiEntry {

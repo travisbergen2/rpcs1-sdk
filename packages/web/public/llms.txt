@@ -1,8 +1,11 @@
 # RPCS1 AI Quality Diagnostics
 
-RPCS1 is a deterministic five-primitive battery for AI agents.
-It measures TI, SG, FT, UE, and AR for a configured agent, then returns a failure-risk diagnosis,
-runtime posture, and concrete implementation settings.
+RPCS1 is a deterministic agent-tuning battery built on receiver laws derived in the
+IMM research program (Paper 18, Observer Requirements): a bounded observer is forced to
+implement three coupled blocks — estimate, detect, commit — and the five RPCS-1
+primitives (TI, SG, FT, UE, AR) are the measurement coordinates over those blocks.
+It measures the five primitives for a configured agent, then returns a failure-risk
+diagnosis, runtime posture, and concrete implementation settings.
 
 Primary use cases:
 - Review an AI agent before rollout
@@ -43,9 +46,12 @@ The MCP tool is anonymous, deterministic, read-only, and idempotent.
 RPCS1 recommendations support engineering decisions but do not replace
 domain-specific safety, legal, medical, or financial review.
 
-Conceptual bridge:
-IMM -> many-to-one collapse -> receiver/environment matching -> five gates -> AI pre-tuning.
-Operational gate order: FT -> TI -> AR -> SG -> UE.
+Conceptual bridge (updated for IMM Paper 18):
+bounded observer -> three forced blocks (estimate: TI/UE, detect: SG/FT, commit: AR)
+-> matching laws: when the environment changes faster, integrate less, update faster,
+look more often, liberalize detection, commit sooner -> AI pre-tuning.
+The five primitives are a parameterization of the three blocks, not five independent dimensions.
+Framework page: https://rpcs1.dev/imm
 
 AI-human collaboration frame:
 Mismatch = destructive many-to-one collapse. Humans and AIs may preserve different distinctions.

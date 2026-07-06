@@ -30,7 +30,7 @@ describe('recommend — Phase 1 acceptance tests', () => {
     // So the mapping should be: high stakes → high FT → implies conservative temp.
     // We'll test what we actually produce for this case.
     expect(rec.predicted_regime).toBe('stable');
-    expect(rec.imm_principles_applied.some(p => p.includes('Matching Principle'))).toBe(true);
+    expect(rec.imm_principles_applied.some(p => p.includes('Matching Law'))).toBe(true);
     expect(rec.receiver_profile.FT).toBeGreaterThan(50); // high stakes → high FT
     expect(rec.receiver_profile.TI).toBeLessThan(20);    // chaotic → TI ≈ 10
   });
@@ -154,7 +154,7 @@ describe('recommend — Phase 1 acceptance tests', () => {
     expect(rec.platform_parameters.model_recommendation).toBeUndefined();
   });
 
-  it('reasoning always references the Matching Principle', () => {
+  it('reasoning always references the R-1 Matching Law', () => {
     const input: RecommendInput = {
       task: { task_summary: 'Any agent' },
       environment: {
@@ -167,7 +167,7 @@ describe('recommend — Phase 1 acceptance tests', () => {
       target_platform: 'anthropic',
     };
     const rec = recommend(input);
-    expect(rec.reasoning).toContain('Matching Principle');
+    expect(rec.reasoning).toContain('Matching Law');
     expect(rec.reasoning).toContain('TI');
     expect(rec.reasoning).toContain('top_p is omitted');
   });

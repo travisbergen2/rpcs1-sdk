@@ -50,7 +50,7 @@ print(config.receiver_profile.FT)  # 75 — high filter (cautious + high stakes)
 # Interpretation
 print(config.predicted_regime)     # stable
 print(config.confidence)           # high
-print(config.reasoning)            # cites Matching Principle (Pred-09-5)
+print(config.reasoning)            # cites the matching laws (R-1 family, IMM Paper 18)
 for w in config.warnings:
     print(f"⚠ {w}")               # any regime-boundary warnings`}</code></pre>
 

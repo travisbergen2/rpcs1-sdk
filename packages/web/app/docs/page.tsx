@@ -4,7 +4,7 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'Documentation',
   description:
-    'RPCS-1 docs — five-primitive battery, validity gates, tuner, and MCP integration.',
+    'RPCS-1 docs — derived receiver laws, five-primitive measurement, tuner, and MCP integration.',
 };
 
 export default function DocsPage() {
@@ -13,8 +13,10 @@ export default function DocsPage() {
       <h1>RPCS-1 Documentation</h1>
       <p>
         RPCS-1 measures a configured agent with five primitives — TI, SG, FT, UE, and AR — then tells you
-        what runtime settings to change. If you want a fast start, use the{' '}
-        <Link href="/tuner">interactive tuner</Link> or connect the public MCP server.
+        what runtime settings to change. The recommendations follow receiver laws derived in the IMM
+        research program (see <Link href="/imm">the framework</Link>: three blocks — estimate, detect,
+        commit — of which the five primitives are the measurement coordinates). If you want a fast start,
+        use the <Link href="/tuner">interactive tuner</Link> or connect the public MCP server.
       </p>
 
       <h2>Start here</h2>
@@ -45,7 +47,9 @@ export default function DocsPage() {
         <li><Link href="/docs/mcp">MCP integration</Link> - connect the public read-only server</li>
         <li><Link href="/docs/examples">Examples</Link> - support, coding, and research calls</li>
         <li><Link href="/docs/translation-layer">Translation layer</Link> - face-preserving posture</li>
-        <li><Link href="/docs/primitives">Five primitives</Link> - TI, SG, FT, UE, AR</li>
+        <li><Link href="/imm">The framework</Link> - derived receiver laws and the three blocks (IMM Paper 18)</li>
+        <li><Link href="/docs/matching">Matching laws</Link> - how the R-1 family becomes TI recommendations</li>
+        <li><Link href="/docs/primitives">Five primitives</Link> - TI, SG, FT, UE, AR as measurement coordinates</li>
         <li><Link href="/docs/regimes">Four regimes</Link> - stable, near oscillation, near overload, near freeze</li>
       </ul>
 

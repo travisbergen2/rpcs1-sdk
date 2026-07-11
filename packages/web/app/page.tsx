@@ -385,6 +385,12 @@ export default function HomePage() {
                 >
                   Protocol docs
                 </Link>
+                <Link
+                  href="/bridge"
+                  className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold transition-colors hover:bg-white/10"
+                >
+                  For humans: the Translation Bridge →
+                </Link>
               </div>
             </div>
             <div className="rounded-2xl border border-white/8 bg-black/40 p-5 font-mono text-sm leading-7">

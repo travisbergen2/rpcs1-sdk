@@ -220,7 +220,7 @@ export function GET(request: Request) {
         '',
         'MCP endpoint: https://rpcs1.dev/mcp',
         'Transport: Streamable HTTP',
-        'Tools: recommend_agent_configuration, interpret, normalize, rewrite',
+        'Tools: recommend_agent_configuration, interpret, normalize, rewrite, calibrate_profile, prepare_prompt, render_reply',
         '',
         'Connect this URL from an MCP-compatible client.',
         'Health: https://rpcs1.dev/api/health',

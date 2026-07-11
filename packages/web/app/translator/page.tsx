@@ -225,8 +225,12 @@ export default function TranslatorPage() {
             <p>Casual (0.15) → Safety-Critical (0.85). Higher risk = stricter collapse threshold.</p>
           </div>
           <div>
-            <p className="text-sky-300 font-mono text-xs mb-1">Reference Weights</p>
-            <p>IC=0.30, UE=0.25, EC=0.15, NM=0.10, SG=0.10, TI=0.10</p>
+            <p className="text-sky-300 font-mono text-xs mb-1">Scoring Factors (HF-HATP v1.9)</p>
+            <p>
+              interpConf 0.30 · userEvid 0.25 · epistemic 0.15 · narrative 0.10 · semGap 0.10 ·
+              transInteg 0.10 — translation-scoring factors, distinct from the five receiver
+              primitives (TI, SG, FT, UE, AR).
+            </p>
           </div>
         </div>
       </div>

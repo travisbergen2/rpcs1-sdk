@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Translation Bridge — the receiver laws, pointed at you | RPCS-1',
+  title: 'Translation Bridge — the receiver laws, pointed at you',
   description:
     'The RPCS-1 Translation Bridge applies the derived receiver model (IMM Paper 18) to human communication: a five-primitive profile over the three observer blocks, compiled into deterministic rendering directives for any AI agent. Unrelated to RPCS3, the PlayStation 3 emulator.',
   alternates: { canonical: 'https://rpcs1.dev/bridge' },

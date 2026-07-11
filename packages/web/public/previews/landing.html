@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RPCS-1 · rpcs1.dev — Receiver profiles for AI communication (not the RPCS3 emulator)</title>
+<meta name="description" content="RPCS-1 (rpcs1.dev) is an open protocol and SDK that compiles your communication style into machine-usable receiver profiles for AI agents. AI that adapts to your cognitive style. Unrelated to RPCS3, the PlayStation 3 emulator.">
+<meta property="og:title" content="RPCS-1 — AI that adapts to your cognitive style">
+<meta property="og:description" content="An open protocol and SDK for compiling human communication profiles into deterministic rendering directives for any AI agent.">
+<meta property="og:url" content="https://rpcs1.dev/">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://rpcs1.dev/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "RPCS-1",
+  "alternateName": "RPCS-1 Receiver Protocol",
+  "url": "https://rpcs1.dev/",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "description": "Open protocol and SDK for compiling human communication profiles into machine-usable rendering directives for AI agents. Not affiliated with RPCS3, the PlayStation 3 emulator.",
+  "author": { "@type": "Person", "name": "Travis Bergen" },
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0e14; --bg2:#10141d; --panel:#131826; --line:#232a3a;
+    --text:#e8ecf4; --muted:#9aa4b8; --dim:#6b7489;
+    --accent:#4f8cff; --accent2:#7dd3a8; --warn:#e8b45a;
+    --mono:'JetBrains Mono',monospace; --sans:'Inter',system-ui,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 6%}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* NAV */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:22px 0;border-bottom:1px solid var(--line)}
+  .logo{font-family:var(--mono);font-weight:600;font-size:1.05rem;letter-spacing:.02em;color:var(--text)}
+  .logo span{color:var(--accent)}
+  .navlinks{display:flex;gap:28px;font-size:.9rem;color:var(--muted)}
+  .navlinks a{color:var(--muted)}
+  .navlinks a:hover{color:var(--text);text-decoration:none}
+
+  /* HERO */
+  header{padding:96px 0 72px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:20px}
+  h1{font-size:clamp(2.2rem,5vw,3.4rem);font-weight:800;line-height:1.12;letter-spacing:-.02em;max-width:820px}
+  .sub{font-size:1.15rem;color:var(--muted);max-width:680px;margin:24px 0 36px}
+  .ctas{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .cta-install{font-family:var(--mono);font-size:.92rem;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:13px 20px;color:var(--accent2);display:inline-flex;gap:10px;align-items:center}
+  .cta-install::before{content:"$";color:var(--dim)}
+  .cta-ghost{font-size:.92rem;font-weight:600;padding:13px 20px;border:1px solid var(--line);border-radius:8px;color:var(--text)}
+  .cta-ghost:hover{border-color:var(--accent);text-decoration:none}
+
+  /* STATUS STRIP */
+  .strip{display:flex;gap:0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .strip>div{flex:1 1 250px;padding:26px 24px;border-right:1px solid var(--line)}
+  .strip>div:last-child{border-right:none}
+  .strip .k{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+  .strip .k.derived{color:var(--accent2)} .strip .k.registered{color:var(--warn)} .strip .k.open{color:var(--muted)}
+  .strip p{font-size:.88rem;color:var(--muted)}
+
+  /* SECTIONS */
+  section{padding:80px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:1.7rem;font-weight:700;letter-spacing:-.01em;margin-bottom:12px}
+  .lede{color:var(--muted);max-width:640px;margin-bottom:44px}
+
+  /* COMPARISON TABLE */
+  table{width:100%;border-collapse:collapse;font-size:.93rem}
+  th{font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;text-align:left;padding:14px 18px;border-bottom:1px solid var(--line)}
+  th:first-child{color:var(--muted)} th:last-child{color:var(--accent)}
+  td{padding:18px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--muted);width:50%}
+  td strong{color:var(--text);display:block;margin-bottom:4px;font-weight:600}
+  tr td:last-child{background:var(--bg2)}
+
+  /* FEATURES */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:26px}
+  .card h3{font-size:1.02rem;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .card p{font-size:.9rem;color:var(--muted)}
+  .badge{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:99px;border:1px solid var(--line)}
+  .badge.sdk{color:var(--accent2);border-color:rgba(125,211,168,.4)}
+  .badge.road{color:var(--warn);border-color:rgba(232,180,90,.4)}
+
+  /* SCHEMA */
+  .code{background:#0d1117;border:1px solid var(--line);border-radius:10px;padding:28px;overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.7}
+  .code .c{color:#8b949e}.code .k{color:#79c0ff}.code .s{color:#a5d6ff}.code .b{color:#ffa657}
+  .caption{font-size:.8rem;color:var(--dim);margin-top:12px;font-family:var(--mono)}
+
+  /* GROUNDING */
+  .ledger{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:28px 30px;margin-top:8px}
+  .ledger ul{list-style:none;margin-top:16px}
+  .ledger li{padding:10px 0;border-top:1px solid var(--line);font-size:.92rem;color:var(--muted);display:flex;gap:14px}
+  .ledger li:first-child{border-top:none}
+  .tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 9px;border-radius:4px;white-space:nowrap;height:fit-content;margin-top:3px}
+  .tag.d{background:rgba(125,211,168,.12);color:var(--accent2)}
+  .tag.r{background:rgba(232,180,90,.12);color:var(--warn)}
+  .tag.o{background:rgba(154,164,184,.12);color:var(--muted)}
+  .motto{font-family:var(--mono);font-size:.85rem;color:var(--accent);margin-top:22px}
+
+  footer{padding:48px 0;color:var(--dim);font-size:.82rem;display:flex;justify-content:space-between;flex-wrap:gap;gap:16px;flex-wrap:wrap}
+  @media(max-width:720px){ td{display:block;width:100%} tr td:first-child{border-bottom:none;padding-bottom:6px} }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<nav>
+  <div class="logo">rpcs1<span>.dev</span></div>
+  <div class="navlinks"><a href="#problem">Why</a><a href="#features">Platform</a><a href="#schema">Schema</a><a href="#grounding">Grounding</a><a href="https://github.com/travisbergen2/rpcs1-sdk" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+</nav>
+
+<header>
+  <div class="eyebrow">Open protocol · Receiver-side communication</div>
+  <h1>AI that adapts to your cognitive style — not the other way around.</h1>
+  <p class="sub">RPCS-1 is an open protocol and SDK for compiling a human communication profile into machine-usable rendering directives. It removes prompt friction and executive-function bottlenecks from AI collaboration — deterministically, not by hoping the model infers you.</p>
+  <div class="ctas">
+    <span class="cta-install">npm install @rpcs1/core</span>
+    <a class="cta-ghost" href="#schema">View the spec</a>
+    <a class="cta-ghost" href="#grounding">Read the research</a>
+  </div>
+</header>
+
+<div class="strip">
+  <div><div class="k derived">Derived</div><p>Receiver control laws (R-1…R-5) from standard estimator-actor optimality theory.</p></div>
+  <div><div class="k registered">Registered</div><p>Validation battery pre-registered with fixed pass/fail criteria. Data not yet generated.</p></div>
+  <div><div class="k open">Open</div><p>Cross-substrate generalization of the receiver chart. We say so on the label.</p></div>
+</div>
+
+<section id="problem">
+  <h2>The problem with prompting a mind-reader</h2>
+  <p class="lede">System prompts describe you in prose and hope. RPCS-1 replaces the hope with parameters.</p>
+  <table>
+    <tr><th>Standard prompting</th><th>The RPCS-1 protocol</th></tr>
+    <tr>
+      <td><strong>Static instructions</strong>Long system prompts get skimmed, diluted, or overridden as context grows.</td>
+      <td><strong>Structured receiver profiles</strong>Preferences compile into explicit, versioned rendering directives that survive context growth.</td>
+    </tr>
+    <tr>
+      <td><strong>Implicit adaptation</strong>You rely on the model to infer your communication parameters from conversation statistics. RPCS-1's design premise — stated as a testable prediction, not a finding — is that this inference is unreliable and should be externalized.</td>
+      <td><strong>External parameter-setting</strong>Abstraction level, response pacing, and activation energy are set as explicit knobs, outside the model's discretion.</td>
+    </tr>
+    <tr>
+      <td><strong>Cognitive friction</strong>Exploratory probes get read as factual claims; executive-function load gets read as disinterest.</td>
+      <td><strong>Precision translation</strong>Claims are tagged separately from probes; evidence is separated from speculation; intent survives the channel.</td>
+    </tr>
+  </table>
+</section>
+
+<section id="features">
+  <h2>Platform</h2>
+  <p class="lede">Each feature is labeled with its actual status. That's the house style.</p>
+  <div class="grid">
+    <div class="card"><h3>Masking-mirror intake <span class="badge sdk">In SDK</span></h3><p>A short structured calibration captures self-reported communication preferences, then reconciles them against observed divergence over time — surfacing where your stated style and your worked style differ.</p></div>
+    <div class="card"><h3>ReceiverProfile JSON <span class="badge sdk">In SDK</span></h3><p>Clean, versioned JSON schemas containing explicit rendering directives, portable to any AI agent or LLM workflow. No prose. No vibes.</p></div>
+    <div class="card"><h3>Governed profile updates <span class="badge sdk">In SDK</span></h3><p>An externalized update rule adjusts detail density, first-step concreteness, and structure from ongoing interaction — with the learning rate itself a controlled parameter, not model whim.</p></div>
+    <div class="card"><h3>Privacy-tiered data control <span class="badge road">Roadmap</span></h3><p>Tiered partitioning — Core Card, Working Profile, Private Archive — so profiles stay safe across public and enterprise endpoints. Designed; not yet shipped.</p></div>
+  </div>
+</section>
+
+<section id="schema">
+  <h2>The schema, not the sales pitch</h2>
+  <p class="lede">An illustrative ReceiverProfile. Directives are deterministic inputs to the translation layer.</p>
+  <div class="code"><pre>{
+  <span class="k">"$schema"</span>: <span class="s">"https://rpcs1.dev/v1/receiver-profile.json"</span>,
+  <span class="k">"version"</span>: <span class="s">"1.0"</span>,
+  <span class="k">"profile"</span>: {
+    <span class="c">// five primitives, continuous [0,100] — never category labels</span>
+    <span class="k">"TI"</span>: <span class="b">20</span>,  <span class="c">// Temporal Integration: bottom line first</span>
+    <span class="k">"SG"</span>: <span class="b">25</span>,  <span class="c">// Signal Gain: flat and factual</span>
+    <span class="k">"FT"</span>: <span class="b">80</span>,  <span class="c">// Filtering Threshold: explicit &amp; literal, no hints</span>
+    <span class="k">"UE"</span>: <span class="b">75</span>,  <span class="c">// Update Elasticity: pushback welcome</span>
+    <span class="k">"AR"</span>: <span class="b">75</span>   <span class="c">// Ambiguity Resolution: commit, don't interrogate</span>
+  },
+  <span class="k">"directives"</span>: {
+    <span class="c">// derived deterministically by @rpcs1/core — profile is source of truth</span>
+    <span class="k">"structure"</span>: <span class="s">"bluf"</span>,
+    <span class="k">"warmth"</span>: <span class="s">"minimal"</span>,
+    <span class="k">"explicitness"</span>: <span class="s">"explicit_literal"</span>,
+    <span class="k">"revision"</span>: <span class="s">"open_challenge"</span>,
+    <span class="k">"ambiguity"</span>: <span class="s">"commit"</span>
+  },
+  <span class="k">"meta"</span>: { <span class="k">"source"</span>: <span class="s">"intake"</span>, <span class="k">"generator"</span>: <span class="s">"@rpcs1/core"</span> }
+}</pre></div>
+  <p class="caption">// matches the ReceiverProfile + deriveRenderingDirectives output shipped in @rpcs1/core · full JSON Schema at /v1/receiver-profile.json</p>
+</section>
+
+<section id="grounding">
+  <h2>Grounding — at exactly its earned grade</h2>
+  <p class="lede">Most AI products claim more evidence than they have. This one is built by someone who keeps a public claim ledger, and the landing page obeys it.</p>
+  <div class="ledger">
+    <ul>
+      <li><span class="tag d">Derived</span><span>The receiver model is built on formal observer requirements: control knobs any bounded estimator-actor must set, with optimal-setting laws from standard optimality theory.</span></li>
+      <li><span class="tag r">Registered</span><span>A validation battery (temporal-integration matching, claim/probe dissociation, urgency laws) is pre-registered with pass/fail criteria fixed before data generation. Results — pass or fail — will be published here.</span></li>
+      <li><span class="tag o">Open</span><span>Whether in-context AI receivers can self-tune these parameters from conversation statistics alone is an open, testable question. RPCS-1 externalizes the parameters so you don't have to bet on the answer.</span></li>
+    </ul>
+    <div class="motto">// no claim exceeds its derivation</div>
+  </div>
+</section>
+
+<footer>
+  <div>RPCS-1 · an open receiver-side communication protocol · MIT licensed · not affiliated with RPCS3 (the PlayStation 3 emulator)</div>
+  <div>Built by Travis Bergen · <a href="https://github.com/travisbergen2/rpcs1-sdk" target="_blank" rel="noopener noreferrer">travisbergen2/rpcs1-sdk</a></div>
+</footer>
+</div>
+
+</body>
+</html>

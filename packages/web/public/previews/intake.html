@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RPCS-1 Intake — calibrate your receiver profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0e14; --bg2:#10141d; --panel:#131826; --line:#232a3a;
+    --text:#e8ecf4; --muted:#9aa4b8; --dim:#6b7489;
+    --accent:#4f8cff; --accent2:#7dd3a8; --warn:#e8b45a;
+    --mono:'JetBrains Mono',monospace; --sans:'Inter',system-ui,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:0 6% 80px}
+  a{color:var(--accent);text-decoration:none}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:22px 0;border-bottom:1px solid var(--line);margin-bottom:56px}
+  .logo{font-family:var(--mono);font-weight:600;font-size:1.05rem;color:var(--text)}
+  .logo span{color:var(--accent)}
+  .navnote{font-family:var(--mono);font-size:.72rem;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+
+  h1{font-size:clamp(1.7rem,4vw,2.4rem);font-weight:800;letter-spacing:-.02em;line-height:1.15}
+  .sub{color:var(--muted);margin:16px 0 8px;max-width:640px}
+  .fine{font-size:.82rem;color:var(--dim);margin-bottom:44px;max-width:640px}
+
+  .item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:26px 28px;margin-bottom:18px}
+  .item .tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+  .item h3{font-size:1.05rem;font-weight:600;margin-bottom:16px}
+  .opt{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:8px;margin-bottom:10px;cursor:pointer;transition:border-color .15s,background .15s;font-size:.93rem;color:var(--muted)}
+  .opt:hover{border-color:var(--accent)}
+  .opt.sel{border-color:var(--accent);background:rgba(79,140,255,.08);color:var(--text)}
+  .opt input{margin-top:5px;accent-color:var(--accent)}
+
+  .results{display:none;margin-top:48px}
+  .results.show{display:block}
+  h2{font-size:1.4rem;font-weight:700;margin-bottom:6px}
+  .lede{color:var(--muted);font-size:.92rem;margin-bottom:28px}
+
+  .axes{display:grid;gap:18px;margin-bottom:36px}
+  .axis{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 22px}
+  .axis .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;gap:12px;flex-wrap:wrap}
+  .axis .name{font-weight:600;font-size:.95rem}
+  .axis .name small{font-family:var(--mono);color:var(--dim);font-weight:400;margin-left:8px;font-size:.72rem}
+  .axis .val{font-family:var(--mono);color:var(--accent2);font-size:.9rem}
+  .axis input[type=range]{width:100%;accent-color:var(--accent)}
+  .axis .why{font-size:.82rem;color:var(--muted);margin-top:8px}
+  .poles{display:flex;justify-content:space-between;font-size:.7rem;color:var(--dim);font-family:var(--mono);margin-top:2px}
+
+  .jsonbox{background:#0d1117;border:1px solid var(--line);border-radius:10px;padding:24px;font-family:var(--mono);font-size:.8rem;line-height:1.65;overflow-x:auto;white-space:pre;color:#a5d6ff}
+  .btnrow{display:flex;gap:12px;margin:22px 0 8px;flex-wrap:wrap}
+  button{font-family:var(--sans);font-weight:600;font-size:.9rem;padding:12px 22px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  button:hover{border-color:var(--accent)}
+  .note{font-size:.78rem;color:var(--dim);font-family:var(--mono)}
+  .divnote{background:rgba(232,180,90,.07);border:1px solid rgba(232,180,90,.3);border-radius:8px;padding:14px 18px;font-size:.85rem;color:var(--muted);margin-bottom:28px}
+  .divnote b{color:var(--warn)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav>
+  <div class="logo">rpcs1<span>.dev</span> / intake</div>
+  <div class="navnote">prototype · logic ported from @rpcs1/core intake.ts</div>
+</nav>
+
+<h1>Calibrate your receiver profile</h1>
+<p class="sub">Five behavioral questions — one per primitive. No self-diagnosis, no category labels: you land as a continuous point on five axes, and every derived directive shows its trace.</p>
+<p class="fine">A quick intake is a <b>noisy prior</b>, not a verdict. In the SDK it refines online from real interaction, at a rate governed by your own UE. Deterministic scoring — every number below traces to an anchor in the source.</p>
+
+<div id="items"></div>
+
+<div class="btnrow">
+  <button class="primary" onclick="score()">Build my profile</button>
+  <span class="note" id="hint">unanswered items fall to a neutral 50</span>
+</div>
+
+<div class="results" id="results">
+  <h2>Your profile — editable</h2>
+  <p class="lede">The intake placed you here; you own the card. Drag any slider — directives re-derive live, exactly as <span style="font-family:var(--mono)">deriveRenderingDirectives</span> does it.</p>
+  <div class="divnote"><b>Self-vs-observed mirror (SDK feature):</b> what you set here is your <i>self-perception</i>. In the full system, observed behavior is tracked separately, and the gap between the two — your masking shape — is surfaced back to you, never silently acted on.</div>
+  <div class="axes" id="axes"></div>
+  <h2>ReceiverProfile JSON</h2>
+  <p class="lede">Valid against <span style="font-family:var(--mono)">https://rpcs1.dev/v1/receiver-profile.json</span>. Paste into any agent config that speaks RPCS-1.</p>
+  <div class="jsonbox" id="json"></div>
+  <div class="btnrow">
+    <button class="primary" onclick="copyJson()">Copy JSON</button>
+    <button onclick="downloadJson()">Download .json</button>
+    <span class="note" id="copied"></span>
+  </div>
+</div>
+</div>
+
+<script>
+// ── Ported verbatim from @rpcs1/core packages/core/src/intake.ts ──
+const INTAKE_ITEMS = [
+  { primitive:'TI', prompt:'When someone explains something to you, you’d rather they:', options:[
+    {id:'a',label:'Give the bottom line first, details only if I ask',anchor:20},
+    {id:'b',label:'A little setup, then the point',anchor:50},
+    {id:'c',label:'Walk me through the full context so the conclusion lands',anchor:80}]},
+  { primitive:'SG', prompt:'A reply that lands well for you is:', options:[
+    {id:'a',label:'Flat and factual — just the information',anchor:25},
+    {id:'b',label:'Mostly factual, a little warmth',anchor:50},
+    {id:'c',label:'Warm and expressive — I read a lot into tone',anchor:80}]},
+  { primitive:'FT', prompt:'Someone says “It’s cold in here.” You most naturally read that as:', options:[
+    {id:'a',label:'A literal statement about the temperature',anchor:80},
+    {id:'b',label:'Could be either — I’d check',anchor:50},
+    {id:'c',label:'A hint to close the window / turn up the heat',anchor:25}]},
+  { primitive:'UE', prompt:'When someone pushes back on what you said, you usually:', options:[
+    {id:'a',label:'Want to hear it out and may change my mind',anchor:75},
+    {id:'b',label:'Want my point acknowledged first, then I’ll weigh it',anchor:50},
+    {id:'c',label:'Find sudden changes jarring — I prefer consistency',anchor:25}]},
+  { primitive:'AR', prompt:'When your question has several possible answers, you’d rather the AI:', options:[
+    {id:'a',label:'Pick the most likely one and just answer',anchor:75},
+    {id:'b',label:'Give the top answer but note the alternatives',anchor:50},
+    {id:'c',label:'Lay out the options and ask which I meant',anchor:25}]},
+];
+const NEUTRAL = 50;
+const AXIS_META = {
+  TI:{name:'Temporal Integration',lo:'bottom line first',hi:'full context first'},
+  SG:{name:'Signal Gain',lo:'flat & factual',hi:'warm & expressive'},
+  FT:{name:'Filtering Threshold',lo:'subtext lands',hi:'explicit & literal'},
+  UE:{name:'Update Elasticity',lo:'prefers consistency',hi:'pushback welcome'},
+  AR:{name:'Ambiguity Resolution',lo:'clarify first',hi:'commit & answer'},
+};
+const band = (v,lo,mid,hi)=> v<40?lo : v>60?hi : mid;
+function deriveRenderingDirectives(p){
+  const structure = band(p.TI,'bluf','balanced','context_first');
+  const warmth = band(p.SG,'minimal','moderate','warm');
+  const explicitness = p.FT>60?'explicit_literal':p.FT<40?'implication_ok':'moderate';
+  const revision = band(p.UE,'consistent','balanced','open_challenge');
+  const ambiguity = p.AR>60?'commit':p.AR<40?'clarify':'commit_with_note';
+  return { structure,warmth,explicitness,revision,ambiguity, why:{
+    structure:`TI=${p.TI}: ${structure==='bluf'?'lead with the conclusion':structure==='context_first'?'build context before the point':'brief setup then the point'}`,
+    warmth:`SG=${p.SG}: ${warmth==='warm'?'expressive, tone-rich':warmth==='minimal'?'flat and factual':'lightly warm'}`,
+    explicitness:`FT=${p.FT}: ${explicitness==='explicit_literal'?'state intent outright; avoid idiom/hints':explicitness==='implication_ok'?'implication and subtext are fine':'mostly explicit'}`,
+    revision:`UE=${p.UE}: ${revision==='open_challenge'?'pushback welcome; may reframe':revision==='consistent'?'stay consistent; flag any change gently':'balanced revision'}`,
+    ambiguity:`AR=${p.AR}: ${ambiguity==='commit'?'pick the best reading and answer':ambiguity==='clarify'?'surface options and ask':'answer but note alternatives'}`,
+  }};
+}
+// ──────────────────────────────────────────────────────────────────
+
+let profile = null;
+const answers = {};
+
+const itemsEl = document.getElementById('items');
+INTAKE_ITEMS.forEach((item,idx)=>{
+  const div = document.createElement('div'); div.className='item';
+  div.innerHTML = `<div class="tag">${idx+1} / 5 · ${item.primitive} — ${AXIS_META[item.primitive].name}</div><h3>${item.prompt}</h3>` +
+    item.options.map(o=>`<label class="opt" data-p="${item.primitive}" data-id="${o.id}"><input type="radio" name="${item.primitive}" value="${o.id}"><span>${o.label}</span></label>`).join('');
+  itemsEl.appendChild(div);
+});
+itemsEl.addEventListener('change',e=>{
+  const lab = e.target.closest('.opt'); if(!lab) return;
+  answers[lab.dataset.p] = lab.dataset.id;
+  document.querySelectorAll(`.opt[data-p="${lab.dataset.p}"]`).forEach(x=>x.classList.toggle('sel', x===lab));
+});
+
+function scoreIntake(ans){
+  const pick = k => {
+    const item = INTAKE_ITEMS.find(i=>i.primitive===k);
+    const chosen = item.options.find(o=>o.id===ans[k]);
+    return chosen ? chosen.anchor : NEUTRAL;
+  };
+  return {TI:pick('TI'),SG:pick('SG'),FT:pick('FT'),UE:pick('UE'),AR:pick('AR')};
+}
+
+function score(){
+  profile = scoreIntake(answers);
+  renderAxes(); renderJson();
+  document.getElementById('results').classList.add('show');
+  document.getElementById('results').scrollIntoView({behavior:'smooth'});
+}
+
+function renderAxes(){
+  const d = deriveRenderingDirectives(profile);
+  const whyKey = {TI:'structure',SG:'warmth',FT:'explicitness',UE:'revision',AR:'ambiguity'};
+  document.getElementById('axes').innerHTML = ['TI','SG','FT','UE','AR'].map(k=>`
+    <div class="axis">
+      <div class="row"><span class="name">${AXIS_META[k].name}<small>${k}</small></span><span class="val">${profile[k]} → ${d[whyKey[k]]}</span></div>
+      <input type="range" min="0" max="100" value="${profile[k]}" oninput="editAxis('${k}',this.value)">
+      <div class="poles"><span>0 · ${AXIS_META[k].lo}</span><span>100 · ${AXIS_META[k].hi}</span></div>
+      <div class="why">${d.why[whyKey[k]]}</div>
+    </div>`).join('');
+}
+function editAxis(k,v){ profile[k]=Number(v); renderAxes(); renderJson(); }
+
+function buildDoc(){
+  const d = deriveRenderingDirectives(profile);
+  return {
+    "$schema":"https://rpcs1.dev/v1/receiver-profile.json",
+    "version":"1.0",
+    "profile":{...profile},
+    "directives":{structure:d.structure,warmth:d.warmth,explicitness:d.explicitness,revision:d.revision,ambiguity:d.ambiguity},
+    "meta":{source:"intake",generator:"rpcs1.dev intake prototype"}
+  };
+}
+function renderJson(){ document.getElementById('json').textContent = JSON.stringify(buildDoc(),null,2); }
+function copyJson(){ navigator.clipboard.writeText(JSON.stringify(buildDoc(),null,2)).then(()=>{ document.getElementById('copied').textContent='copied ✓'; setTimeout(()=>document.getElementById('copied').textContent='',2000); }); }
+function downloadJson(){
+  const blob = new Blob([JSON.stringify(buildDoc(),null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'receiver-profile.json'; a.click();
+}
+</script>
+</body>
+</html>

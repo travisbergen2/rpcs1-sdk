@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rpcs1.dev/v1/receiver-profile.json",
+  "title": "RPCS-1 ReceiverProfile",
+  "description": "A machine-usable communication profile for a human receiver, per the RPCS-1 protocol (rpcs1.dev). The five primitives place the receiver continuously on each axis; no categorical labels are ever assigned. Directives are deterministically derived from the profile by @rpcs1/core's deriveRenderingDirectives and may be included for transport, but the profile vector is the source of truth.",
+  "type": "object",
+  "required": ["version", "profile"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional reference to this schema."
+    },
+    "version": {
+      "type": "string",
+      "description": "Schema version of this document.",
+      "pattern": "^1\\.[0-9]+$",
+      "examples": ["1.0"]
+    },
+    "profile": {
+      "$ref": "#/$defs/receiverProfile"
+    },
+    "directives": {
+      "$ref": "#/$defs/renderingDirectives",
+      "description": "Optional derived rendering directives. If present, they MUST be re-derivable from `profile`; consumers should treat `profile` as canonical and re-derive on conflict."
+    },
+    "meta": {
+      "type": "object",
+      "description": "Optional provenance metadata.",
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "type": "string",
+          "enum": ["intake", "observed", "manual", "blended"],
+          "description": "How this profile was produced: quick intake prior, observed-behavior estimate, manual user edit, or an updateProfile blend."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "generator": {
+          "type": "string",
+          "description": "Producing software, e.g. \"@rpcs1/core@x.y.z\"."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "primitiveValue": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Continuous position on a primitive axis, [0,100]."
+    },
+    "receiverProfile": {
+      "type": "object",
+      "description": "The five RPCS-1 receiver primitives. TI: Temporal Integration — how much context before the point (low = bottom line first, high = context first). SG: Signal Gain — tone sensitivity / warmth (low = flat and factual, high = expressive). FT: Filtering Threshold — explicitness needed (high = literal/explicit, low = subtext lands). UE: Update Elasticity — willingness to revise (low = consistency-preferring, high = pushback welcome). AR: Ambiguity Resolution — commit vs. surface options (high = commit to best reading, low = clarify first).",
+      "required": ["TI", "SG", "FT", "UE", "AR"],
+      "additionalProperties": false,
+      "properties": {
+        "TI": { "$ref": "#/$defs/primitiveValue" },
+        "SG": { "$ref": "#/$defs/primitiveValue" },
+        "FT": { "$ref": "#/$defs/primitiveValue" },
+        "UE": { "$ref": "#/$defs/primitiveValue" },
+        "AR": { "$ref": "#/$defs/primitiveValue" }
+      }
+    },
+    "renderingDirectives": {
+      "type": "object",
+      "description": "Deterministic rendering directives derived from the profile (band thresholds: <40 low, 40–60 mid, >60 high; FT and AR use their documented inversions).",
+      "required": ["structure", "warmth", "explicitness", "revision", "ambiguity"],
+      "additionalProperties": false,
+      "properties": {
+        "structure": {
+          "type": "string",
+          "enum": ["bluf", "balanced", "context_first"],
+          "description": "From TI. bluf = bottom line up front."
+        },
+        "warmth": {
+          "type": "string",
+          "enum": ["minimal", "moderate", "warm"],
+          "description": "From SG."
+        },
+        "explicitness": {
+          "type": "string",
+          "enum": ["explicit_literal", "moderate", "implication_ok"],
+          "description": "From FT. High FT requires explicit-literal rendering; low FT permits implication."
+        },
+        "revision": {
+          "type": "string",
+          "enum": ["consistent", "balanced", "open_challenge"],
+          "description": "From UE."
+        },
+        "ambiguity": {
+          "type": "string",
+          "enum": ["clarify", "commit_with_note", "commit"],
+          "description": "From AR. High AR commits to the best reading; low AR surfaces options and asks."
+        },
+        "why": {
+          "type": "object",
+          "description": "Optional one-line trace per directive, for the transparency card.",
+          "additionalProperties": false,
+          "properties": {
+            "structure": { "type": "string" },
+            "warmth": { "type": "string" },
+            "explicitness": { "type": "string" },
+            "revision": { "type": "string" },
+            "ambiguity": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "$schema": "https://rpcs1.dev/v1/receiver-profile.json",
+      "version": "1.0",
+      "profile": { "TI": 20, "SG": 25, "FT": 80, "UE": 75, "AR": 75 },
+      "directives": {
+        "structure": "bluf",
+        "warmth": "minimal",
+        "explicitness": "explicit_literal",
+        "revision": "open_challenge",
+        "ambiguity": "commit"
+      },
+      "meta": { "source": "intake", "generator": "@rpcs1/core" }
+    }
+  ]
+}

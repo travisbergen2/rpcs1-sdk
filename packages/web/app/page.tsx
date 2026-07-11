@@ -83,10 +83,10 @@ export default function HomePage() {
                 Run the free tuner
               </Link>
               <Link
-                href="/api/checkout?tier=diagnostic"
+                href="/pricing#diagnostic"
                 className="inline-flex items-center justify-center rounded-xl border border-amber-400/30 bg-amber-400/10 px-6 py-3.5 text-base font-semibold text-amber-300 transition-colors hover:bg-amber-400/20"
               >
-                Get the $99 founding diagnostic
+                Get the founding diagnostic — first 3 free
               </Link>
             </div>
             <p className="mt-5 max-w-xl text-sm leading-relaxed text-white/45">
@@ -282,7 +282,7 @@ export default function HomePage() {
           <div className="rounded-2xl border border-amber-400/25 bg-[linear-gradient(180deg,rgba(251,191,36,0.06),transparent)] p-6">
             <div className="flex items-baseline justify-between">
               <h3 className="text-xl font-semibold">Founding diagnostic</h3>
-              <span className="font-mono text-sm text-amber-300">$99 · one workflow</span>
+              <span className="font-mono text-sm text-amber-300">first 3 free · then $99</span>
             </div>
             <ul className="mt-5 space-y-3 text-sm leading-relaxed text-white/65">
               {memoBullets.map((item) => (
@@ -308,10 +308,10 @@ export default function HomePage() {
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Link
-                href="/api/checkout?tier=diagnostic"
+                href="/pricing#diagnostic"
                 className="rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-amber-300"
               >
-                Get the diagnostic
+                See founding terms
               </Link>
               <Link
                 href="/diagnostic"
@@ -441,10 +441,10 @@ export default function HomePage() {
                 Run the free tuner
               </Link>
               <Link
-                href="/api/checkout?tier=diagnostic"
+                href="/pricing#diagnostic"
                 className="inline-flex items-center justify-center rounded-xl bg-amber-400 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-amber-300"
               >
-                Get the $99 founding diagnostic
+                Get the founding diagnostic — first 3 free
               </Link>
               <Link
                 href="/pricing"

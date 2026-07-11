@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/Badge';
 export const metadata: Metadata = {
   title: 'Pricing',
   description:
-    'RPCS-1 pricing — everything self-serve is free. Founding supporter $9/mo or $79/yr (will be $40/mo at v1). $99 founding pilot diagnostic for the first five.',
+    'RPCS-1 pricing — everything self-serve is free. Written Agent Diagnostic: first three case-study seats free, then $99 founding rate. Founding supporter $9/mo or $79/yr (will be $40/mo at v1).',
 };
 
 export default function PricingPage() {
@@ -26,17 +26,20 @@ export default function PricingPage() {
           <div className="max-w-xl">
             <div className="flex items-center gap-3 mb-3">
               <Badge variant="paid">Founding pilot</Badge>
-              <span className="text-sm text-gray-500">One-time · first five only</span>
+              <span className="text-sm text-gray-500">One-time · staged honestly</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-              Written Agent Diagnostic — $99 founding pilot
+              Written Agent Diagnostic — first 3 free, then $99
             </h2>
             <p className="text-gray-400 leading-relaxed">
               One written decision memo for one deployed agent: the five-primitive profile,
               failure-risk score, recommended runtime posture, and the next test to run —
-              delivered to your inbox. Founding-pilot terms: the first five pilots pay $99
-              instead of the eventual full price, and in exchange agree to an anonymized
-              public case study of the engagement.
+              delivered to your inbox. Staged the same way we publish claims: the first{' '}
+              <strong className="text-white">three case-study seats are free</strong> in exchange
+              for an anonymized public case study — you get the memo, we earn the receipts.
+              Once those case studies are published, the next seats pay the{' '}
+              <strong className="text-white">$99 founding rate</strong> with the evidence in
+              front of them. No one is asked to pay for an unproven service.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               {['Five-primitive profile', 'Failure-risk score', 'Recommended posture', 'Next test', 'Anonymized case study'].map((item) => (
@@ -48,16 +51,16 @@ export default function PricingPage() {
           </div>
           <div className="flex flex-col gap-3 shrink-0">
             <Link
-              href="/api/checkout?tier=diagnostic"
+              href="/diagnostic"
               className="inline-flex items-center justify-center rounded-lg bg-amber-500 px-6 py-3 text-sm font-semibold text-slate-950 hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/20"
             >
-              Get the $99 founding pilot →
+              Claim a free case-study seat →
             </Link>
             <Link
-              href="/diagnostic"
-              className="inline-flex items-center justify-center rounded-lg border border-gray-700 px-6 py-3 text-sm font-semibold text-gray-200 hover:bg-gray-800 transition-colors"
+              href="/api/checkout?tier=diagnostic"
+              className="inline-flex items-center justify-center rounded-lg border border-amber-500/40 px-6 py-3 text-sm font-semibold text-amber-300 hover:bg-amber-500/10 transition-colors"
             >
-              Submit a brief
+              Skip the queue — $99, no case study
             </Link>
           </div>
         </div>
@@ -167,7 +170,7 @@ export default function PricingPage() {
         <div className="grid sm:grid-cols-2 gap-6">
           {[
             { q: 'What do I get with the free tier?', a: 'The whole self-serve product: the tuner at /tuner, the Translator Hub at /translator, and the public MCP server. No API key, no account.' },
-            { q: 'How does the $99 founding pilot work?', a: 'First five only: buy the pilot, submit a brief about one agent or workflow, and get the full written memo — primitives, risk score, posture, next tests. In exchange you agree to an anonymized public case study. Price rises when the five seats are gone.' },
+            { q: 'How does the founding diagnostic work?', a: 'Two stages. Stage 1: the first three seats are free — submit a brief about one agent or workflow, get the full written memo (primitives, risk score, posture, next tests), and agree to an anonymized public case study. Stage 2: once those case studies are published, the next seats pay the $99 founding rate, with the receipts visible before you buy. You can also skip the free queue at any time by paying $99 with no case-study obligation.' },
             { q: 'What is the Founding supporter tier?', a: 'Early-supporter pricing: $9/month or $79/year, versus $40/month at v1. The rate locks for as long as your subscription stays active. Includes the SDK license key.' },
             { q: 'Does the SDK send data to your servers?', a: 'No. The recommend() and translator functions are pure local computation. License key validation is a local JWT check. Nothing is sent to rpcs1.dev at call time.' },
             { q: 'Can I upgrade or downgrade?', a: 'Yes. Upgrade anytime. Downgrades take effect at the end of the current billing period.' },

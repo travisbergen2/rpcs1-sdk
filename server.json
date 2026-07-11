@@ -1,17 +1,33 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.travisbergen2/rpcs1-agent-tuner",
-  "title": "RPCS-1 Agent Tuner & Translator",
-  "description": "Diagnose AI agent failures & translate ambiguous human input into clear intent using RPCS-1.",
+  "name": "dev.rpcs1/agent-tuner",
+  "title": "RPCS-1 Agent Tuner & Translation Bridge",
+  "description": "Derive agent runtime settings from receiver laws (not vibes), and adapt every reply to a calibrated per-user communication profile. 7 deterministic, stateless tools.",
+  "websiteUrl": "https://rpcs1.dev",
   "repository": {
     "url": "https://github.com/travisbergen2/rpcs1-sdk",
     "source": "github"
   },
-  "version": "0.2.2",
+  "version": "0.3.0",
   "remotes": [
     {
       "type": "streamable-http",
       "url": "https://rpcs1.dev/mcp"
     }
-  ]
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "tools": [
+        "recommend_agent_configuration",
+        "interpret",
+        "normalize",
+        "rewrite",
+        "calibrate_profile",
+        "prepare_prompt",
+        "render_reply"
+      ],
+      "auth": "none (anonymous, read-only, rate-limited)",
+      "docs": "https://rpcs1.dev/docs/mcp"
+    }
+  }
 }

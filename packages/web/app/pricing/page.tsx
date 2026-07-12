@@ -156,11 +156,15 @@ export default function PricingPage() {
             ))}
           </ul>
           <a
-            href="mailto:travisbergen2@gmail.com?subject=RPCS-1%20for%20our%20team"
+            href="mailto:travisbergen2@gmail.com?subject=RPCS-1%20for%20our%20team&body=What%20we%27re%20running%3A%20%0AHow%20many%20agents%3A%20%0AWhat%27s%20failing%20(oscillation%20%2F%20overload%20%2F%20freeze%20%2F%20not%20sure)%3A%20%0AStakes%20and%20volume%3A%20%0A"
             className="inline-flex items-center justify-center rounded-lg w-full px-4 py-2.5 text-sm font-semibold transition-colors text-center border border-gray-700 text-gray-200 hover:bg-gray-800"
           >
             Talk to me
           </a>
+          <p className="mt-2 text-center text-xs text-gray-500">
+            or email directly:{' '}
+            <span className="select-all font-mono text-gray-400">travisbergen2@gmail.com</span>
+          </p>
         </div>
       </div>
 

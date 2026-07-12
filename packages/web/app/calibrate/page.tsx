@@ -87,6 +87,14 @@ export default function CalibratePage() {
           never a category label. Output is then rendered for <em>your</em> profile instead of a
           one-size style. Answers stay in this tab; nothing is stored.
         </p>
+        <p className="mt-3 rounded-lg border border-gray-800 bg-gray-950/60 px-4 py-3 text-xs text-gray-500 leading-relaxed">
+          <strong className="text-gray-300">What this is — and isn&apos;t:</strong> these questions
+          measure communication preferences — how you like information delivered. They are not a
+          psychological assessment, produce no diagnosis or category, and haven&apos;t been
+          validated as measuring anything beyond rendering preferences (that validation study is
+          pre-registered and not yet run — we label our claims). Deterministic scoring, continuous
+          coordinates, your tab only.
+        </p>
       </div>
 
       {error && (

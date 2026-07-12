@@ -15,7 +15,7 @@ afterEach(async () => {
 });
 
 describe('RPCS1 MCP server', () => {
-  it('advertises four safe, read-only tools', async () => {
+  it('advertises seven safe, read-only tools', async () => {
     const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
     server = createRpcs1McpServer();
     client = new Client({ name: 'rpcs1-test-client', version: '1.0.0' });
@@ -25,7 +25,19 @@ describe('RPCS1 MCP server', () => {
 
     const { tools } = await client.listTools();
 
-    expect(tools).toHaveLength(4);
+    expect(tools).toHaveLength(7);
+    expect(tools.map((t) => t.name)).toEqual([
+      'recommend_agent_configuration',
+      'interpret',
+      'normalize',
+      'rewrite',
+      'calibrate_profile',
+      'prepare_prompt',
+      'render_reply',
+    ]);
+    for (const tool of tools) {
+      expect(tool.annotations).toMatchObject({ readOnlyHint: true, destructiveHint: false });
+    }
     expect(tools[0].name).toBe('recommend_agent_configuration');
     expect(tools[0].annotations).toMatchObject({
       readOnlyHint: true,
@@ -159,5 +171,86 @@ describe('RPCS1 MCP server', () => {
     expect(structured.platform_parameters.temperature).toBeDefined();
     expect(structured.platform_parameters.top_p).toBeUndefined();
     expect(structured.reasoning).toContain('top_p is omitted');
+  });
+
+  it('calibrate_profile returns the questions when called without answers', async () => {
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    server = createRpcs1McpServer();
+    client = new Client({ name: 'rpcs1-test-client', version: '1.0.0' });
+
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+
+    const result = await client.callTool({ name: 'calibrate_profile', arguments: {} });
+    expect(result.isError).not.toBe(true);
+    const text = (result.content as Array<{ type: string; text: string }>)[0].text;
+    expect(text).toContain('five questions');
+    expect(text).toContain('calibrate_profile');
+  });
+
+  it('calibrate_profile scores answers into a schema-shaped profile document', async () => {
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    server = createRpcs1McpServer();
+    client = new Client({ name: 'rpcs1-test-client', version: '1.0.0' });
+
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+
+    const result = await client.callTool({
+      name: 'calibrate_profile',
+      arguments: { answers: { TI: 'a', SG: 'a', FT: 'a', UE: 'a', AR: 'a' } },
+    });
+    expect(result.isError).not.toBe(true);
+    expect(result.structuredContent).toMatchObject({
+      version: '1.0',
+      profile: { TI: 20, SG: 25, FT: 80, UE: 75, AR: 75 },
+      directives: {
+        structure: 'bluf',
+        warmth: 'minimal',
+        explicitness: 'explicit_literal',
+        revision: 'open_challenge',
+        ambiguity: 'commit',
+      },
+    });
+  });
+
+  it('render_reply returns deterministic profile-matched rewrite instructions', async () => {
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    server = createRpcs1McpServer();
+    client = new Client({ name: 'rpcs1-test-client', version: '1.0.0' });
+
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+
+    const result = await client.callTool({
+      name: 'render_reply',
+      arguments: {
+        text: 'Well, there are several ways to think about this...',
+        profile: { TI: 20, SG: 25, FT: 80, UE: 75, AR: 75 },
+      },
+    });
+    expect(result.isError).not.toBe(true);
+    expect(result.structuredContent).toMatchObject({ style: 'profile' });
+    const text = (result.content as Array<{ type: string; text: string }>)[0].text;
+    expect(text).toContain('Rewrite your draft');
+    expect(text).toContain('Lead with the conclusion');
+  });
+
+  it('prepare_prompt recovers a canonical translation from ambiguous input', async () => {
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    server = createRpcs1McpServer();
+    client = new Client({ name: 'rpcs1-test-client', version: '1.0.0' });
+
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+
+    const result = await client.callTool({
+      name: 'prepare_prompt',
+      arguments: { text: 'can you fix the thing from yesterday', risk: 'advice' },
+    });
+    expect(result.isError).not.toBe(true);
+    const structured = result.structuredContent as { canonical_translation: string; ar_level: string };
+    expect(typeof structured.canonical_translation).toBe('string');
+    expect(structured.ar_level).toMatch(/^AR[0-5]$/);
   });
 });

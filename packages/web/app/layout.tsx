@@ -4,6 +4,7 @@ import './globals.css';
 import { Nav } from '@/components/Nav';
 import { Footer } from '@/components/Footer';
 import { Analytics } from '@vercel/analytics/next';
+import { ProfileProvider } from '@/components/ProfileProvider';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
@@ -29,9 +30,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`dark ${inter.className}`}>
       <body className="min-h-screen flex flex-col">
-        <Nav />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <ProfileProvider>
+          <Nav />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </ProfileProvider>
         <Analytics />
         <SpeedInsights />
       </body>

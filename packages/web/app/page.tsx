@@ -3,28 +3,28 @@
 import Link from 'next/link';
 import { HomepageLiveDemo } from '@/components/HomepageLiveDemo';
 import { PRIMITIVES } from '@/lib/primitives';
+import { PROFILES } from '@/lib/profiles';
+import { useProfile } from '@/components/ProfileProvider';
+import { ProfileChooser } from '@/components/ProfileChooser';
+import { ProfileCompare } from '@/components/ProfileCompare';
 
-const failureModes = [
-  {
-    name: 'Oscillation',
-    tell: 'It flip-flops — rewrites its own work, reverses decisions, chases every new signal.',
-    knob: 'Agility and Gain set too high for how noisy the task actually is.',
-  },
-  {
-    name: 'Overload',
-    tell: 'It drowns — context stuffed full, every alert firing, quality collapsing as the session grows.',
-    knob: 'Memory holding too much, Trigger set too loose.',
-  },
-  {
-    name: 'Freeze',
-    tell: 'It stalls — hedges forever, asks for confirmation it doesn’t need, never commits.',
-    knob: 'Commit bar set too high for the actual stakes.',
-  },
-];
+const failureKnobs = {
+  Oscillation: 'Agility and Gain set too high for how noisy the task actually is.',
+  Overload: 'Memory holding too much, Trigger set too loose.',
+  Freeze: 'Commit bar set too high for the actual stakes.',
+} as const;
 
 export default function HomePage() {
+  const { profile } = useProfile();
+  const c = PROFILES[profile];
+  const failureModes = [
+    { name: 'Oscillation' as const, tell: c.tells.oscillation },
+    { name: 'Overload' as const, tell: c.tells.overload },
+    { name: 'Freeze' as const, tell: c.tells.freeze },
+  ];
   return (
     <div className="bg-[#070b14] text-white">
+      <ProfileChooser />
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
         <div
@@ -35,18 +35,16 @@ export default function HomePage() {
           <div>
             <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-sky-500/25 bg-sky-500/10 px-3 py-1 text-xs font-medium text-sky-300">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-sky-400" />
-              Stop guessing temperature
+              {c.hero.kicker}
             </p>
             <h1 className="max-w-2xl text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
-              Your agent loops, drowns, or stalls.{' '}
+              {c.hero.h1}{' '}
               <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
-                The fix is computable.
+                {c.hero.accent}
               </span>
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/70">
-              Describe your workload. RPCS-1 tells you which failure mode your agent is closest
-              to and the exact settings to change — temperature, memory, alert sensitivity,
-              commit threshold — with the reasoning behind every number.
+              {c.hero.sub}
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
@@ -83,7 +81,7 @@ export default function HomePage() {
               The problem
             </p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-              Three ways agents fail. You’ve seen at least one this week.
+              {c.failHeading}
             </h2>
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-3">
@@ -95,14 +93,14 @@ export default function HomePage() {
                 <h3 className="text-xl font-semibold text-sky-300">{m.name}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/65">{m.tell}</p>
                 <p className="mt-3 text-sm leading-relaxed text-white/45">
-                  <span className="font-semibold text-white/60">Usually:</span> {m.knob}
+                  <span className="font-semibold text-white/60">Usually:</span>{' '}
+                  {failureKnobs[m.name]}
                 </p>
               </div>
             ))}
           </div>
           <p className="mt-6 max-w-3xl text-sm leading-relaxed text-white/50">
-            These aren’t metaphors. They’re the three failure modes any bounded decision system
-            can exhibit — and which one you’re near is computable from your workload.{' '}
+            {c.failIntro}{' '}
             <Link href="/rd" className="text-sky-400 underline-offset-4 hover:underline">
               See the derivation →
             </Link>
@@ -243,6 +241,8 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+
+      <ProfileCompare />
 
       {/* ── Trust strip ──────────────────────────────────────── */}
       <section className="border-t border-white/5 bg-[#090e1a]">

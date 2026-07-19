@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ProfilePill } from '@/components/ProfilePill';
 
 export function Nav() {
   return (
@@ -12,6 +13,7 @@ export function Nav() {
         </Link>
 
         <nav className="flex items-center gap-1">
+          <ProfilePill />
           <Link
             href="/tuner"
             className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"

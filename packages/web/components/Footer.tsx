@@ -30,6 +30,7 @@ export function Footer() {
           <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-500">
             <Link href="/pricing" className="hover:text-gray-300 transition-colors">Pricing</Link>
             <Link href="/docs" className="hover:text-gray-300 transition-colors">Docs</Link>
+            <Link href="/rd" className="hover:text-gray-300 transition-colors">R&amp;D</Link>
             <Link href="/docs/examples" className="hover:text-gray-300 transition-colors">Examples</Link>
             <Link href="/docs/mcp" className="hover:text-gray-300 transition-colors">MCP</Link>
             <Link href="/diagnostic" className="hover:text-gray-300 transition-colors">Brief</Link>

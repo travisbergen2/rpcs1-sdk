@@ -9,12 +9,13 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://rpcs1.dev'),
   title: {
-    default: 'RPCS-1 — agent settings, derived not guessed',
+    default: 'RPCS-1 — find your AI agent\u2019s failure mode and fix it',
     template: '%s | RPCS-1',
   },
   description:
-    'Turn your agent’s operating conditions into the runtime settings it needs — using receiver laws derived in the IMM research program. Five-primitive profile, failure-risk read, next test.',
+    'Your agent loops, drowns, or stalls. RPCS-1 reads your workload and gives you the settings to change and the test that proves the fix \u2014 every number derived, not guessed.',
   keywords: ['AI evaluation', 'agent observability', 'agent tuning', 'receiver primitives', 'IMM', 'MCP', 'rpcs1', 'agent configuration'],
   openGraph: {
     type: 'website',

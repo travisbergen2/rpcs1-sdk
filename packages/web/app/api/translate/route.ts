@@ -15,12 +15,14 @@ import { interpret, normalize, split, rewrite, route, score } from '@/lib/transl
 // Shared core — profile-aware translation + intake/mirror:
 import {
   interpret as interpretProfiled,
+  interpretWithModel,
   rewriteForProfile,
   scoreIntake,
   buildProfileCard,
   profileDivergence,
   INTAKE_ITEMS,
 } from '@rpcs1/core';
+import { getGatewayBackend, consumeModelBudget, clientIp, REWRITE_GUARD } from '@/lib/gateway';
 import type { ReceiverProfile, IntakeAnswers } from '@rpcs1/core';
 
 export const dynamic = 'force-dynamic';
@@ -40,12 +42,29 @@ export async function POST(request: Request) {
 
     switch (tool) {
       case 'interpret': {
-        // Profile-aware when a user vector/answers are supplied; otherwise legacy behavior.
         const profile = resolveProfile(params);
+        const text = params.text || '';
+        const risk = params.risk || 'advice';
+        const context = Array.isArray(params.context)
+          ? (params.context as unknown[]).filter((t): t is string => typeof t === 'string').slice(-12)
+          : undefined;
+        // Model-backed perception when the gateway is configured and budget
+        // allows; deterministic RPCS-1 decision layer either way. Falls back
+        // to the rules engine on any backend failure (engine field says which).
+        const backend = getGatewayBackend();
+        if (backend && consumeModelBudget(clientIp(request))) {
+          const result = await interpretWithModel(text, backend, {
+            risk,
+            profile,
+            context,
+            fallbackToRules: true,
+          });
+          return NextResponse.json(result);
+        }
         const result = profile
-          ? interpretProfiled(params.text || '', params.risk || 'advice', profile)
-          : interpret(params.text || '', params.risk || 'advice');
-        return NextResponse.json(result);
+          ? interpretProfiled(text, risk, profile)
+          : interpret(text, risk);
+        return NextResponse.json({ ...result, engine: 'rules' });
       }
       case 'normalize': {
         const result = normalize(params.text || '');
@@ -58,10 +77,32 @@ export async function POST(request: Request) {
       case 'rewrite': {
         // The user's receiver vector becomes the style. Falls back to a fixed style name.
         const profile = resolveProfile(params);
-        const result = profile
+        const payload = profile
           ? rewriteForProfile(params.text || '', profile)
           : rewrite(params.text || '', params.style || 'plain');
-        return NextResponse.json(result);
+        // Execute the rewrite when the gateway is configured — this is the
+        // step that used to be left to "pass this payload to an LLM".
+        const backend = getGatewayBackend();
+        if (backend && payload.rewrite_instructions && !payload.note?.startsWith('Invalid')) {
+          if (consumeModelBudget(clientIp(request))) {
+            try {
+              const rewritten = await backend.complete(
+                REWRITE_GUARD + payload.rewrite_instructions,
+                params.text || '',
+              );
+              return NextResponse.json({
+                ...payload,
+                rewritten,
+                note: 'Rewritten by the configured model using the instructions above.',
+                engine: backend.name,
+              });
+            } catch {
+              return NextResponse.json({ ...payload, engine: 'rules', note: payload.note + ' (Model temporarily unavailable — instructions returned unexecuted.)' });
+            }
+          }
+          return NextResponse.json({ ...payload, engine: 'rules', note: payload.note + ' (Daily free budget reached — instructions returned unexecuted.)' });
+        }
+        return NextResponse.json({ ...payload, engine: 'rules' });
       }
       case 'route': {
         const result = route(params.task_type || 'chat', params.objective, params.allow_multi_model);

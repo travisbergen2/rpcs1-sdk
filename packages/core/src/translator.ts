@@ -10,6 +10,12 @@
 
 import { deriveRenderingDirectives, type RenderingDirectives } from './intake.js';
 import type { ReceiverProfile } from './types.js';
+import {
+  readingsToFactors,
+  entitiesToRecovered,
+  type ModelBackend,
+  type PerceptionResult,
+} from './perception.js';
 
 type RiskCategory = 'casual' | 'advice' | 'high-stakes' | 'safety-critical';
 type ARLevel = 'AR0' | 'AR1' | 'AR2' | 'AR3' | 'AR4' | 'AR5';
@@ -79,6 +85,14 @@ interface TranslationOutput {
   clarifying_questions: string[];
   candidates: EntityCandidate[];
   margin: number;
+  /**
+   * Which perception engine produced the candidates the resolver decided on:
+   * 'rules' (legacy keyword/regex heuristics) or a backend name such as
+   * 'anthropic:claude-haiku-4-5'. The decision layer is deterministic either way.
+   */
+  engine?: string;
+  /** Model path only: paraphrases of the top competing readings (best first). */
+  reading_paraphrases?: string[];
 }
 
 interface NormalizeResult {
@@ -351,6 +365,107 @@ function interpret(text: string, risk: RiskCategory = 'advice', profile?: Receiv
   };
 }
 
+// ── Model-backed interpret (perception: model; decision: deterministic RPCS-1) ─
+
+interface InterpretModelOptions {
+  risk?: RiskCategory;
+  profile?: ReceiverProfile;
+  /** Prior conversation turns (oldest first) for grounding referents. */
+  context?: string[];
+  /**
+   * When the backend fails (network, key, malformed output), fall back to the
+   * legacy rules engine instead of throwing. Default true. The output's
+   * `engine` field always tells you which path actually ran.
+   */
+  fallbackToRules?: boolean;
+}
+
+/**
+ * Interpret `text` using a model-backed perception layer.
+ *
+ * Division of labor: the backend PROPOSES candidate readings (entities, intent
+ * hypotheses, HF-HATP factor estimates); the deterministic RPCS-1 resolver
+ * DECIDES — collapse vs clarify, AR level, playback — via the same
+ * resolveAmbiguity / risk-threshold machinery as the rules path. Given
+ * identical perception output, the decision is identical, every time.
+ */
+async function interpretWithModel(
+  text: string,
+  backend: ModelBackend,
+  options: InterpretModelOptions = {},
+): Promise<TranslationOutput> {
+  const risk = options.risk ?? 'advice';
+  let perception: PerceptionResult;
+  try {
+    perception = await backend.perceive(text, options.context);
+  } catch (err) {
+    if (options.fallbackToRules === false) throw err;
+    const fallback = interpret(text, risk, options.profile);
+    fallback.engine = 'rules';
+    return fallback;
+  }
+
+  const entities = entitiesToRecovered(perception.entities);
+  const hasAmbiguity = entities.length > 0;
+  const intent = perception.intents[0];
+
+  // Deterministic decision on model-proposed candidates (unchanged machinery).
+  const factors = readingsToFactors(perception.readings);
+  const resolution = resolveAmbiguity(factors, risk);
+  const top = resolution.candidates[0];
+  const ti = top?.transInteg ?? 0.5;
+
+  let playbackRequired = ti < 0.95 || (risk === 'safety-critical' && hasAmbiguity);
+  const questions: string[] = [];
+  for (const entity of entities) {
+    if (entity.candidate.confidence < 0.75) {
+      questions.push('What does "' + entity.original + '" refer to?');
+    }
+  }
+  if (!resolution.should_collapse && resolution.candidates.length > 1) {
+    const alts = resolution.candidates.slice(0, 2).map((c) => c.label).join('" or "');
+    questions.push('Did you mean "' + alts + '"?');
+  }
+  if ((risk === 'safety-critical' || risk === 'high-stakes') && questions.length === 0) {
+    questions.push('I want to verify — is this exactly what you mean?');
+  }
+
+  // Receiver-profile modulation: identical policy to the rules path.
+  if (options.profile) {
+    const profile = options.profile;
+    if (profile.AR > 60 && risk !== 'safety-critical' && !hasAmbiguity) playbackRequired = false;
+    if (profile.AR < 40 && resolution.margin < resolution.threshold * 1.5) playbackRequired = true;
+    if (profile.FT > 60 && questions.length === 0 && intent.confidence < 0.85) {
+      questions.push('To be explicit: did you mean this literally as written?');
+    }
+  }
+
+  const displayCandidates = entities.map((e) => e.candidate);
+  if (displayCandidates.length === 0 && resolution.candidates.length > 0) {
+    displayCandidates.push({ text: resolution.candidates[0].label, confidence: resolution.candidates[0].score });
+  }
+
+  const paraphraseByLabel = new Map(perception.readings.map((r) => [r.label, r.paraphrase]));
+
+  return {
+    original: text,
+    recovered_entities: entities,
+    recovered_intent: intent,
+    canonical_translation: perception.canonicalTranslation,
+    translation_integrity: Math.round(ti * 100),
+    confidence: Math.round((top?.score ?? 0.5) * 100) / 100,
+    ar_level: resolution.ar_level,
+    playback_required: playbackRequired,
+    clarifying_questions: questions,
+    candidates: displayCandidates,
+    margin: resolution.margin,
+    engine: backend.name,
+    reading_paraphrases: resolution.candidates
+      .map((c) => paraphraseByLabel.get(c.label))
+      .filter((p): p is string => !!p),
+  };
+}
+
 function normalizeText(text: string): NormalizeResult {
   const fragments = text.replace(/\.\.\./g, '\x00').replace(/\.\./g, '\x00').split('\x00').map((f) => f.trim()).filter(Boolean);
   return { original: text, fragments, normalized: fragments.length ? fragments.join(' ') : text, fragment_count: fragments.length || 1 };
@@ -437,6 +552,7 @@ function rewriteForProfile(text: string, profile: ReceiverProfile): RewriteResul
 
 export {
   interpret,
+  interpretWithModel,
   normalizeText as normalize,
   splitText as split,
   rewriteText as rewrite,
@@ -448,6 +564,7 @@ export {
 };
 export type {
   TranslationOutput,
+  InterpretModelOptions,
   NormalizeResult,
   SplitResult,
   RewriteResult,

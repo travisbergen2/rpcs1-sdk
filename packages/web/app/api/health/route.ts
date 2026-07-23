@@ -10,7 +10,15 @@ export function GET() {
       mcp: {
         endpoint: '/mcp',
         transport: 'streamable-http',
-        version: '0.2.1',
+        version: '0.3.0',
+      },
+      translator: {
+        // Presence flag only — never the key. Distinguishes "no key in this
+        // deployment" from "gateway failing" when engine reports 'rules'.
+        model_backed: Boolean(process.env.AI_GATEWAY_API_KEY),
+        model: process.env.AI_GATEWAY_API_KEY
+          ? (process.env.RPCS1_GATEWAY_MODEL ?? 'openai/gpt-4o-mini')
+          : null,
       },
       deployment: {
         id: process.env.VERCEL_DEPLOYMENT_ID ?? null,

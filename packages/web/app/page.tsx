@@ -1,12 +1,23 @@
 'use client';
 
 import Link from 'next/link';
-import { HomepageLiveDemo } from '@/components/HomepageLiveDemo';
+import dynamic from 'next/dynamic';
 import { PRIMITIVES } from '@/lib/primitives';
 import { PROFILES } from '@/lib/profiles';
 import { useProfile } from '@/components/ProfileProvider';
 import { ProfileChooser } from '@/components/ProfileChooser';
-import { ProfileCompare } from '@/components/ProfileCompare';
+
+// Code-split the two interactive widgets out of the initial hydration bundle.
+// SSR stays on (default), so the server-rendered HTML is identical and there is
+// no layout shift — only their JS arrives as separate async chunks, which cuts
+// main-thread work before first paint on slow devices (the sessions that
+// dominate field FCP/LCP percentiles).
+const HomepageLiveDemo = dynamic(() =>
+  import('@/components/HomepageLiveDemo').then((m) => m.HomepageLiveDemo),
+);
+const ProfileCompare = dynamic(() =>
+  import('@/components/ProfileCompare').then((m) => m.ProfileCompare),
+);
 
 const failureKnobs = {
   Oscillation: 'Agility and Gain set too high for how noisy the task actually is.',

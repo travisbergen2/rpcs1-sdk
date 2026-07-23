@@ -6,6 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
   const routes: Array<[path: string, priority: number]> = [
     ['/', 1.0],
+    ['/repaste', 0.9],
     ['/tuner', 0.9],
     ['/bridge', 0.9],
     ['/translator', 0.8],

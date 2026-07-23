@@ -40,6 +40,8 @@ export type {
   PerceivedEntity,
   AnthropicBackendOptions,
 } from './perception.js';
+export { GatewayBackend } from './perception-gateway.js';
+export type { GatewayBackendOptions } from './perception-gateway.js';
 
 // ── Translator (canonical engine — web re-exports this) ─────
 export {

@@ -35,6 +35,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { interpret, interpretWithModel, type TranslationOutput, type RiskCategory } from '../src/translator';
 import { AnthropicBackend } from '../src/perception';
+import { GatewayBackend } from '../src/perception-gateway';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -150,14 +151,17 @@ describe(`translator eval battery v${battery.version} (frozen ${battery.frozen})
     expect(s.n).toBe(50);
   });
 
-  it('model engine (runs only with RPCS1_EVAL_ANTHROPIC_API_KEY; BYO-key)', async () => {
-    const apiKey = process.env.RPCS1_EVAL_ANTHROPIC_API_KEY;
-    if (!apiKey) {
+  it('model engine (runs with RPCS1_EVAL_ANTHROPIC_API_KEY or RPCS1_EVAL_GATEWAY_API_KEY; BYO-key)', async () => {
+    const anthropicKey = process.env.RPCS1_EVAL_ANTHROPIC_API_KEY;
+    const gatewayKey = process.env.RPCS1_EVAL_GATEWAY_API_KEY;
+    if (!anthropicKey && !gatewayKey) {
       // eslint-disable-next-line no-console
-      console.log('[eval] RPCS1_EVAL_ANTHROPIC_API_KEY not set — model eval skipped (no fabricated numbers).');
+      console.log('[eval] no eval API key set — model eval skipped (no fabricated numbers).');
       return;
     }
-    const backend = new AnthropicBackend({ apiKey, model: process.env.RPCS1_EVAL_MODEL });
+    const backend = anthropicKey
+      ? new AnthropicBackend({ apiKey: anthropicKey, model: process.env.RPCS1_EVAL_MODEL })
+      : new GatewayBackend({ apiKey: gatewayKey!, model: process.env.RPCS1_EVAL_MODEL });
     const results: CaseResult[] = [];
     for (const c of battery.cases) {
       const out = await interpretWithModel(c.text, backend, { risk: c.risk, context: c.context, fallbackToRules: false });

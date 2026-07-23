@@ -19,13 +19,40 @@ const GLOBAL_DAILY_LIMIT = 500;
 
 let backend: GatewayBackend | null | undefined;
 
-/** Returns the shared GatewayBackend, or null when no key is configured. */
+const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/openai';
+
+/**
+ * Returns the shared model backend, or null when no key is configured.
+ *
+ * Provider priority (all OpenAI-compatible via GatewayBackend):
+ *   1. Explicit override: RPCS1_GATEWAY_BASE_URL + RPCS1_GATEWAY_API_KEY
+ *   2. GEMINI_API_KEY → Google AI Studio (free tier with a workable request
+ *      quota; default model gemini-2.5-flash-lite)
+ *   3. AI_GATEWAY_API_KEY → Vercel AI Gateway (free tier allows only a few
+ *      requests per window — verified 2026-07-23; fine with paid credits)
+ * Gemini outranks the Vercel gateway deliberately: a provider that mostly
+ * 429s would push every request into the rules fallback.
+ */
 export function getGatewayBackend(): GatewayBackend | null {
   if (backend !== undefined) return backend;
-  const apiKey = process.env.AI_GATEWAY_API_KEY;
-  backend = apiKey
-    ? new GatewayBackend({ apiKey, model: process.env.RPCS1_GATEWAY_MODEL })
-    : null;
+  const overrideUrl = process.env.RPCS1_GATEWAY_BASE_URL;
+  const overrideKey = process.env.RPCS1_GATEWAY_API_KEY;
+  const geminiKey = process.env.GEMINI_API_KEY;
+  const vercelKey = process.env.AI_GATEWAY_API_KEY;
+
+  if (overrideUrl && overrideKey) {
+    backend = new GatewayBackend({ apiKey: overrideKey, baseUrl: overrideUrl, model: process.env.RPCS1_GATEWAY_MODEL });
+  } else if (geminiKey) {
+    backend = new GatewayBackend({
+      apiKey: geminiKey,
+      baseUrl: GEMINI_BASE_URL,
+      model: process.env.RPCS1_GATEWAY_MODEL ?? 'gemini-2.5-flash-lite',
+    });
+  } else if (vercelKey) {
+    backend = new GatewayBackend({ apiKey: vercelKey, model: process.env.RPCS1_GATEWAY_MODEL });
+  } else {
+    backend = null;
+  }
   return backend;
 }
 

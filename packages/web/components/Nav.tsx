@@ -9,7 +9,7 @@ export function Nav() {
           <span className="text-lg font-bold text-white tracking-tight">
             RPCS<span className="text-sky-400">-1</span>
           </span>
-          <span className="text-xs text-gray-500 font-mono hidden sm:block">derived receiver laws</span>
+          <span className="text-xs text-gray-500 hidden sm:block">find your agent&apos;s failure mode</span>
         </Link>
 
         <nav className="flex items-center gap-1">
@@ -18,7 +18,7 @@ export function Nav() {
             href="/tuner"
             className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
           >
-            Free sample
+            Free check
           </Link>
           <Link
             href="/pricing"
@@ -42,7 +42,7 @@ export function Nav() {
             href="/api/checkout?tier=diagnostic"
             className="ml-2 px-3 py-1.5 text-sm font-medium bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg transition-colors shadow-lg shadow-amber-500/20"
           >
-            Founding pilot →
+            Get the diagnostic →
           </Link>
         </nav>
       </div>

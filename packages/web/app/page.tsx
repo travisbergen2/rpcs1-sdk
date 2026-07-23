@@ -35,14 +35,13 @@ export default function HomePage() {
   ];
   return (
     <div className="bg-[#070b14] text-white">
-      <ProfileChooser />
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_-10%,rgba(14,165,233,0.13),transparent)]"
         />
-        <div className="relative mx-auto grid max-w-6xl gap-12 px-4 pb-20 pt-24 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <div className="relative mx-auto grid max-w-6xl gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
           <div>
             <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-sky-500/25 bg-sky-500/10 px-3 py-1 text-xs font-medium text-sky-300">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-sky-400" />
@@ -66,11 +65,12 @@ export default function HomePage() {
               </Link>
               <Link
                 href="/pricing#diagnostic"
-                className="inline-flex items-center justify-center rounded-xl border border-amber-400/30 bg-amber-400/10 px-6 py-3.5 text-base font-semibold text-amber-300 transition-colors hover:bg-amber-400/20"
+                className="inline-flex items-center justify-center rounded-xl px-2 py-3.5 text-base font-semibold text-amber-300/90 underline-offset-4 transition-colors hover:text-amber-200 hover:underline"
               >
-                Founding diagnostic — first 3 free
+                Founding diagnostic — first 3 free →
               </Link>
             </div>
+            <p className="mt-3 text-xs text-white/40">No account. About a minute. Free to rerun.</p>
             <p className="mt-5 max-w-xl text-sm leading-relaxed text-white/45">
               The free check takes about a minute and is directional. The diagnostic adds a
               written memo: what to change, in what order, and the test that proves it worked.{' '}
@@ -116,37 +116,6 @@ export default function HomePage() {
               See the derivation →
             </Link>
           </p>
-        </div>
-      </section>
-
-      {/* ── Five dials ───────────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-        <div className="max-w-3xl">
-          <p className="text-xs font-mono uppercase tracking-[0.24em] text-sky-400">
-            The model
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-            Five dials, not fifty flags.
-          </h2>
-          <p className="mt-4 text-base leading-relaxed text-white/65">
-            Every agent runtime — any model, any framework — reduces to five settings. RPCS-1
-            reads your workload and sets each one.
-          </p>
-        </div>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          {PRIMITIVES.map((p) => (
-            <div
-              key={p.key}
-              className="rounded-2xl border border-white/8 bg-white/[0.03] p-5 transition-colors hover:border-sky-500/30 hover:bg-white/[0.05]"
-            >
-              <h3 className="text-lg font-semibold">{p.name}</h3>
-              <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-white/30">
-                {p.abbr} · {p.scientific}
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-white/65">{p.gloss}</p>
-              <p className="mt-2 text-xs leading-relaxed text-white/40">{p.plain}</p>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -226,6 +195,37 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── Five dials ───────────────────────────────────────── */}
+      <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+        <div className="max-w-3xl">
+          <p className="text-xs font-mono uppercase tracking-[0.24em] text-sky-400">
+            The model
+          </p>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+            Five dials, not fifty flags.
+          </h2>
+          <p className="mt-4 text-base leading-relaxed text-white/65">
+            Every agent runtime — any model, any framework — reduces to five settings. RPCS-1
+            reads your workload and sets each one.
+          </p>
+        </div>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {PRIMITIVES.map((p) => (
+            <div
+              key={p.key}
+              className="rounded-2xl border border-white/8 bg-white/[0.03] p-5 transition-colors hover:border-sky-500/30 hover:bg-white/[0.05]"
+            >
+              <h3 className="text-lg font-semibold">{p.name}</h3>
+              <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-white/30">
+                {p.abbr} · {p.scientific}
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-white/65">{p.gloss}</p>
+              <p className="mt-2 text-xs leading-relaxed text-white/40">{p.plain}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── Translator ───────────────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
         <div className="max-w-3xl">
@@ -253,6 +253,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      <ProfileChooser />
       <ProfileCompare />
 
       {/* ── Trust strip ──────────────────────────────────────── */}

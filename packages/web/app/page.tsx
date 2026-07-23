@@ -71,6 +71,13 @@ export default function HomePage() {
               </Link>
             </div>
             <p className="mt-3 text-xs text-white/40">No account. About a minute. Free to rerun.</p>
+            <p className="mt-2 text-xs text-white/40">
+              New:{' '}
+              <Link href="/repaste" className="text-sky-300/90 underline underline-offset-4 hover:text-sky-200">
+                Repaste
+              </Link>{' '}
+              — paste it rough, copy it right. Pick who&apos;s reading; your prompt arrives the way you meant it.
+            </p>
             <p className="mt-5 max-w-xl text-sm leading-relaxed text-white/45">
               The free check takes about a minute and is directional. The diagnostic adds a
               written memo: what to change, in what order, and the test that proves it worked.{' '}

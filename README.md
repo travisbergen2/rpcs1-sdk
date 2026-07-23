@@ -97,6 +97,36 @@ Every parameter recommendation traces back to this principle or the basin stabil
 
 Interactive tuner: [https://rpcs1.dev](https://rpcs1.dev)
 
+### Repaste (`/repaste`) — paste it rough, copy it right
+
+The one-box front door. The user picks a **receiver persona** (an avatar-and-title
+card for a style of reader), pastes a rough prompt, and copies back a version
+aligned to that receiver. No signup, no user profiling — nothing about the user
+is collected or needed.
+
+**How it works.** Each persona in `packages/web/lib/personas.ts` is a
+`ReceiverProfile` preset (the five RPCS-1 primitives on [0,100]). Picking a card
+sends the vector to `POST /api/translate {tool:'rewrite', profile}`, which derives
+rendering directives deterministically (`deriveRenderingDirectives` →
+`rewriteForProfile` in `@rpcs1/core`). When the Vercel AI Gateway is configured
+the rewrite is executed and the aligned prompt comes back; otherwise the
+receiver-derived instructions are returned and shown with an honest note. The
+"why?" reveal displays the mechanism one click deep. Runtime parameters remain
+the Tuner's job — Repaste links to it rather than inventing numbers.
+
+**Card claim discipline.** A persona card is a claim about how a class of
+receivers reads. Cards carry exactly one of two grades, enforced by tests
+(`packages/web/tests/personas.test.ts`):
+
+- `provisional` — sketched from documented default behavior; badge shown on the
+  card; `testedVersion`/`measuredDate` must be `null`. "Works well with" lines are
+  pointers, not measurements.
+- `measured` — backed by a frozen, versioned battery run; card must carry the
+  exact model+version string and run date, and must be re-graded when the model
+  updates.
+
+There is no third state. All launch cards are `provisional`.
+
 ## MCP Server
 
 RPCS-1 is also available as a public, anonymous, read-only MCP server:

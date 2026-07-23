@@ -25,9 +25,26 @@ export type {
   Recommendation,
 } from './types.js';
 
+// ── Perception layer (model proposes, deterministic RPCS-1 disposes) ──
+export {
+  AnthropicBackend,
+  MockBackend,
+  sanitizePerception,
+  readingsToFactors,
+  entitiesToRecovered,
+} from './perception.js';
+export type {
+  ModelBackend,
+  PerceptionResult,
+  PerceivedReading,
+  PerceivedEntity,
+  AnthropicBackendOptions,
+} from './perception.js';
+
 // ── Translator (canonical engine — web re-exports this) ─────
 export {
   interpret,
+  interpretWithModel,
   normalize,
   split,
   rewrite,
@@ -39,6 +56,7 @@ export {
 } from './translator.js';
 export type {
   TranslationOutput,
+  InterpretModelOptions,
   NormalizeResult,
   SplitResult,
   RewriteResult,

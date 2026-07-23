@@ -25,7 +25,8 @@
   "scripts": {
     "build": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.json",
     "test": "vitest run --config ./vitest.config.ts",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "eval": "vitest run --config ./vitest.eval.config.ts"
   },
   "devDependencies": {
     "tsup": "^8.0.0",

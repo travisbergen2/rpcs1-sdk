@@ -1,0 +1,28 @@
+{
+  "frozen": "2026-07-24",
+  "spec": "AUTHORING-V3.md as amended (T1-prime)",
+  "baseline_commit_pinned": "2f19427",
+  "rules_baseline_v4": {
+    "clarify": 66,
+    "intent": 33,
+    "falseClarify": 10,
+    "grounding": 0,
+    "recall": 100
+  },
+  "swap_gates": {
+    "S1_clarify_min": 76,
+    "S2_intent_min": 53,
+    "S3_falseClarify_max": 10,
+    "S4_grounding_min": 50
+  },
+  "claim_gates": {
+    "C1_clarify_min": 85,
+    "C2_recall_min": 90,
+    "C3_falseClarify_max": 15,
+    "C4_grounding_min": 90
+  },
+  "pass_rule": "point estimate must clear each bar by more than 1 case-equivalent (1pt at n=100); S3 requires strictly fewer pestered controls than rules; single confirmatory shot; >10% hard-failures = infrastructure-invalid",
+  "stability": {
+    "status": "PASS"
+  }
+}

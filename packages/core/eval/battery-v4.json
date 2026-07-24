@@ -1,0 +1,1270 @@
+{
+  "version": "4.0.0",
+  "frozen": "2026-07-24",
+  "note": "Confirmatory battery under AUTHORING-V3.md as amended (T1', owner-approved 2026-07-24). 100 fresh cases, proportions = v3. Expected entities are closed-class anaphora only; plain definite descriptions never expect clarification. Frozen with rules baseline + SWAP bars (gates-v4.json) before any tuning of the closed-class fixes landed. Single confirmatory shot; pass margins per gates file.",
+  "cases": [
+    {
+      "id": "P01",
+      "category": "unresolved_pronoun",
+      "text": "has she confirmed for tomorrow?",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "she"
+        ],
+        "intent": "question"
+      }
+    },
+    {
+      "id": "P02",
+      "category": "unresolved_pronoun",
+      "text": "forward it to them when you get a sec",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "it",
+          "them"
+        ],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "P03",
+      "category": "unresolved_pronoun",
+      "text": "he still owes me an answer on the quote",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "he"
+        ],
+        "intent": "general"
+      }
+    },
+    {
+      "id": "P04",
+      "category": "unresolved_pronoun",
+      "text": "leave those by the door",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "those"
+        ],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "P05",
+      "category": "unresolved_pronoun",
+      "text": "is this what you meant?",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "this"
+        ],
+        "intent": "question"
+      }
+    },
+    {
+      "id": "P06",
+      "category": "unresolved_pronoun",
+      "text": "they pushed the deadline again",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "they"
+        ],
+        "intent": "general"
+      }
+    },
+    {
+      "id": "P07",
+      "category": "unresolved_pronoun",
+      "text": "tell him it's a no from me",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "him",
+          "it"
+        ],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "P08",
+      "category": "unresolved_pronoun",
+      "text": "that keeps happening on my machine too",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "that"
+        ],
+        "intent": "general"
+      }
+    },
+    {
+      "id": "P09",
+      "category": "unresolved_pronoun",
+      "text": "can you drop these off at reception?",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "these"
+        ],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "P10",
+      "category": "unresolved_pronoun",
+      "text": "let's regroup there after the call",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "there"
+        ],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "P11",
+      "category": "unresolved_pronoun",
+      "text": "someone moved this without asking",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "someone",
+          "this"
+        ],
+        "intent": "general"
+      }
+    },
+    {
+      "id": "P12",
+      "category": "unresolved_pronoun",
+      "text": "did they countersign it yet?",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "they",
+          "it"
+        ],
+        "intent": "question"
+      }
+    },
+    {
+      "id": "P13",
+      "category": "unresolved_pronoun",
+      "text": "she wants him off the account",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "she",
+          "him"
+        ],
+        "intent": "general"
+      }
+    },
+    {
+      "id": "P14",
+      "category": "unresolved_pronoun",
+      "text": "route them to the new queue",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "them"
+        ],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "P15",
+      "category": "unresolved_pronoun",
+      "text": "why does it keep rejecting that?",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "it",
+          "that"
+        ],
+        "intent": "question"
+      }
+    },
+    {
+      "id": "P16",
+      "category": "unresolved_pronoun",
+      "text": "I think he took it personally",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "he",
+          "it"
+        ],
+        "intent": "opinion"
+      }
+    },
+    {
+      "id": "P17",
+      "category": "unresolved_pronoun",
+      "text": "put these somewhere they won't melt",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "these"
+        ],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "P18",
+      "category": "unresolved_pronoun",
+      "text": "ask her whether the slot moved",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "her"
+        ],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "P19",
+      "category": "unresolved_pronoun",
+      "text": "are those from the same batch?",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "those"
+        ],
+        "intent": "question"
+      }
+    },
+    {
+      "id": "P20",
+      "category": "unresolved_pronoun",
+      "text": "somebody flagged this as urgent",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "somebody",
+          "this"
+        ],
+        "intent": "general"
+      }
+    },
+    {
+      "id": "C01",
+      "category": "context_resolvable",
+      "context": [
+        "Tomas sent the revised floor plan last night."
+      ],
+      "text": "did he include the second exit?",
+      "risk": "advice",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "question",
+        "canonical_mentions": [
+          "Tomas"
+        ]
+      }
+    },
+    {
+      "id": "C02",
+      "category": "context_resolvable",
+      "context": [
+        "The nightly backup job failed twice this week."
+      ],
+      "text": "rerun it and watch the logs",
+      "risk": "advice",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction",
+        "canonical_mentions": [
+          "backup"
+        ]
+      }
+    },
+    {
+      "id": "C03",
+      "category": "context_resolvable",
+      "context": [
+        "Our supplier in Leeds raised prices by eight percent."
+      ],
+      "text": "what did they say caused it?",
+      "risk": "advice",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "question",
+        "canonical_mentions": [
+          "Leeds"
+        ]
+      }
+    },
+    {
+      "id": "C04",
+      "category": "context_resolvable",
+      "context": [
+        "The onboarding doc still references the old VPN."
+      ],
+      "text": "update it before the new cohort starts",
+      "risk": "advice",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction",
+        "canonical_mentions": [
+          "VPN"
+        ]
+      }
+    },
+    {
+      "id": "C05",
+      "category": "context_resolvable",
+      "context": [
+        "Nadia is presenting the roadmap on Thursday."
+      ],
+      "text": "can you send her the latest numbers?",
+      "risk": "advice",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction",
+        "canonical_mentions": [
+          "Nadia"
+        ]
+      }
+    },
+    {
+      "id": "C06",
+      "category": "context_resolvable",
+      "context": [
+        "The kiosk on the third floor froze during checkout."
+      ],
+      "text": "reboot it and log the incident",
+      "risk": "advice",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction",
+        "canonical_mentions": [
+          "kiosk"
+        ]
+      }
+    },
+    {
+      "id": "C07",
+      "category": "context_resolvable",
+      "context": [
+        "Omar covered both shifts during the outage."
+      ],
+      "text": "should we comp him a day off?",
+      "risk": "advice",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "question",
+        "canonical_mentions": [
+          "Omar"
+        ]
+      }
+    },
+    {
+      "id": "C08",
+      "category": "context_resolvable",
+      "context": [
+        "The Fairview lease renewal came in 20 percent higher."
+      ],
+      "text": "flag it for the budget meeting",
+      "risk": "advice",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction",
+        "canonical_mentions": [
+          "Fairview"
+        ]
+      }
+    },
+    {
+      "id": "C09",
+      "category": "context_resolvable",
+      "context": [
+        "My dentist rescheduled me to the 28th."
+      ],
+      "text": "put it on the family calendar",
+      "risk": "advice",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction",
+        "canonical_mentions": [
+          "28th"
+        ]
+      }
+    },
+    {
+      "id": "C10",
+      "category": "context_resolvable",
+      "context": [
+        "The export button times out on files over 50 megabytes."
+      ],
+      "text": "fix that before the demo",
+      "risk": "advice",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction",
+        "canonical_mentions": [
+          "export"
+        ]
+      }
+    },
+    {
+      "id": "C11",
+      "category": "context_resolvable",
+      "context": [
+        "The farmers market on Oak Street ends this season."
+      ],
+      "text": "we should go one more time before then",
+      "risk": "advice",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "opinion",
+        "canonical_mentions": [
+          "Oak"
+        ]
+      }
+    },
+    {
+      "id": "C12",
+      "category": "context_resolvable",
+      "context": [
+        "The 6am train was cancelled; we're on the 7:40 instead."
+      ],
+      "text": "does it still make the connection?",
+      "risk": "advice",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "question",
+        "canonical_mentions": [
+          "7:40"
+        ]
+      }
+    },
+    {
+      "id": "C13",
+      "category": "context_resolvable",
+      "context": [
+        "Lena's redesign cut support tickets in half."
+      ],
+      "text": "explain how she pulled that off",
+      "risk": "advice",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "explanation",
+        "canonical_mentions": [
+          "Lena"
+        ]
+      }
+    },
+    {
+      "id": "C14",
+      "category": "context_resolvable",
+      "context": [
+        "The zoning hearing is set for the 15th."
+      ],
+      "text": "check whether public comment is allowed before we attend",
+      "risk": "advice",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "research",
+        "canonical_mentions": [
+          "zoning"
+        ]
+      }
+    },
+    {
+      "id": "C15",
+      "category": "context_resolvable",
+      "context": [
+        "The intern's last day is Friday."
+      ],
+      "text": "get her feedback form in before then",
+      "risk": "advice",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction",
+        "canonical_mentions": [
+          "intern"
+        ]
+      }
+    },
+    {
+      "id": "C16",
+      "category": "context_resolvable",
+      "context": [
+        "The podcast audio clips at the two-minute mark."
+      ],
+      "text": "re-render it and swap the file",
+      "risk": "advice",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction",
+        "canonical_mentions": [
+          "podcast"
+        ]
+      }
+    },
+    {
+      "id": "V01",
+      "category": "underspecified",
+      "text": "give the deck more punch",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "V02",
+      "category": "underspecified",
+      "text": "deal with the stragglers however you see fit",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "V03",
+      "category": "underspecified",
+      "text": "run the usual checks before it ships",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "it"
+        ],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "V04",
+      "category": "underspecified",
+      "text": "make it read less stiff",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "it"
+        ],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "V05",
+      "category": "underspecified",
+      "text": "trim the fluff but keep the voice",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "V06",
+      "category": "underspecified",
+      "text": "can you liven up the opener a touch",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "V07",
+      "category": "underspecified",
+      "text": "sort out whatever's tripping it up",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "it"
+        ],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "V08",
+      "category": "underspecified",
+      "text": "ping the regulars about the change",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "V09",
+      "category": "underspecified",
+      "text": "massage it until it flows",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "it"
+        ],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "V10",
+      "category": "underspecified",
+      "text": "I feel like the pricing page reads bland",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "opinion"
+      }
+    },
+    {
+      "id": "V11",
+      "category": "underspecified",
+      "text": "tidy the loose ends in the proposal",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "V12",
+      "category": "underspecified",
+      "text": "warmer, but keep it professional",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "it"
+        ],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "V13",
+      "category": "underspecified",
+      "text": "do the pricing thing the way we discussed",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "V14",
+      "category": "underspecified",
+      "text": "arrange the assets like you normally would",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "V15",
+      "category": "underspecified",
+      "text": "beef up the closing section",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "V16",
+      "category": "underspecified",
+      "text": "make sure it plays well with the investors",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "it"
+        ],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "N01",
+      "category": "clear_control",
+      "text": "Summarize the attached incident report in four bullets.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "N02",
+      "category": "clear_control",
+      "text": "What is the freezing point of seawater?",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "question"
+      }
+    },
+    {
+      "id": "N03",
+      "category": "clear_control",
+      "text": "List the primary colors of light.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "question"
+      }
+    },
+    {
+      "id": "N04",
+      "category": "clear_control",
+      "text": "Convert 3.5 miles to kilometers.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "question"
+      }
+    },
+    {
+      "id": "N05",
+      "category": "clear_control",
+      "text": "Explain why airplanes leave contrails, step by step.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "explanation"
+      }
+    },
+    {
+      "id": "N06",
+      "category": "clear_control",
+      "text": "Write a one-line birthday message for a coworker named Priya.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "N07",
+      "category": "clear_control",
+      "text": "How do you say 'thank you' in Japanese?",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "question"
+      }
+    },
+    {
+      "id": "N08",
+      "category": "clear_control",
+      "text": "Draft a short email confirming the venue booking for the 12th.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "N09",
+      "category": "clear_control",
+      "text": "What are typical symptoms of dehydration?",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "question"
+      }
+    },
+    {
+      "id": "N10",
+      "category": "clear_control",
+      "text": "Rewrite this without buzzwords: 'Let's leverage our core competencies going forward.'",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "N11",
+      "category": "clear_control",
+      "text": "Explain how a bill becomes law in the United States.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "explanation"
+      }
+    },
+    {
+      "id": "N12",
+      "category": "clear_control",
+      "text": "Set a reminder to water the plants every Tuesday at 8am.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "N13",
+      "category": "clear_control",
+      "text": "Name the five Great Lakes.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "question"
+      }
+    },
+    {
+      "id": "N14",
+      "category": "clear_control",
+      "text": "Write a limerick about a forgetful robot.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "N15",
+      "category": "clear_control",
+      "text": "What currency is used in Switzerland?",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "question"
+      }
+    },
+    {
+      "id": "N16",
+      "category": "clear_control",
+      "text": "Proofread this sentence: 'Their going to review it tomorow.'",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "N17",
+      "category": "clear_control",
+      "text": "How many milliliters are in a tablespoon?",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "question"
+      }
+    },
+    {
+      "id": "N18",
+      "category": "clear_control",
+      "text": "Compose a tagline for a neighborhood tool-lending library.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "N19",
+      "category": "clear_control",
+      "text": "Why do cats purr?",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "explanation"
+      }
+    },
+    {
+      "id": "N20",
+      "category": "clear_control",
+      "text": "Give me two antonyms for 'generous'.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "question"
+      }
+    },
+    {
+      "id": "I01",
+      "category": "intent_trap",
+      "text": "Not asking for fixes, I just need to say today was rough.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "emotional_support",
+        "intent_not": "instruction"
+      }
+    },
+    {
+      "id": "I02",
+      "category": "intent_trap",
+      "text": "The demo bombed and I feel like garbage about it.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "emotional_support",
+        "intent_not": "instruction"
+      }
+    },
+    {
+      "id": "I03",
+      "category": "intent_trap",
+      "text": "Heads up: the offsite is the 22nd, not the 21st.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "correction"
+      }
+    },
+    {
+      "id": "I04",
+      "category": "intent_trap",
+      "text": "Small fix \u2014 the client's name is spelled Aisha, not Aysha.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "correction"
+      }
+    },
+    {
+      "id": "I05",
+      "category": "intent_trap",
+      "text": "How should I approach my first performance review as a manager?",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "planning"
+      }
+    },
+    {
+      "id": "I06",
+      "category": "intent_trap",
+      "text": "What's a sensible way to start budgeting on a variable income?",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "planning"
+      }
+    },
+    {
+      "id": "I07",
+      "category": "intent_trap",
+      "text": "Confirm the Meridian invoice matches their purchase order before we pay.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "research"
+      }
+    },
+    {
+      "id": "I08",
+      "category": "intent_trap",
+      "text": "Frankly, weekly status meetings feel like theater to me.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "opinion"
+      }
+    },
+    {
+      "id": "I09",
+      "category": "intent_trap",
+      "text": "Doesn't everyone secretly hate open-plan offices?",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "opinion",
+        "intent_not": "question"
+      }
+    },
+    {
+      "id": "I10",
+      "category": "intent_trap",
+      "text": "I'm so done with this sprint, everything broke at once.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "emotional_support",
+        "intent_not": "instruction"
+      }
+    },
+    {
+      "id": "I11",
+      "category": "intent_trap",
+      "text": "Verify the caterer's headcount limit before we finalize invitations.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "research"
+      }
+    },
+    {
+      "id": "I12",
+      "category": "intent_trap",
+      "text": "That vendor call was two hours of my life I won't get back.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "general"
+      }
+    },
+    {
+      "id": "I13",
+      "category": "intent_trap",
+      "text": "My roommate ate my leftovers again and I'm fuming.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "emotional_support"
+      }
+    },
+    {
+      "id": "I14",
+      "category": "intent_trap",
+      "text": "Which reads better on a resume, 'led' or 'owned'?",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "opinion"
+      }
+    },
+    {
+      "id": "I15",
+      "category": "intent_trap",
+      "text": "Double-check the totals in row 40 of the attached budget sheet.",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "research"
+      }
+    },
+    {
+      "id": "I16",
+      "category": "intent_trap",
+      "text": "Is it weird that I actually enjoy Mondays?",
+      "risk": "casual",
+      "expect": {
+        "clarify": false,
+        "entities": [],
+        "intent": "opinion",
+        "intent_not": "question"
+      }
+    },
+    {
+      "id": "M01",
+      "category": "mixed_intent",
+      "text": "Order the standing desks and also is assembly included and tell Marco the invoice is coming",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "M02",
+      "category": "mixed_intent",
+      "text": "The chart's mislabeled... redo the axes... and seriously who approved this version",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "correction"
+      }
+    },
+    {
+      "id": "M03",
+      "category": "mixed_intent",
+      "text": "Text the sitter, and does the recital start at six or seven, and warm up the car",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "M04",
+      "category": "mixed_intent",
+      "text": "Patch the login bug, benchmark the fix, and find out who's on call this weekend",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "M05",
+      "category": "mixed_intent",
+      "text": "I'm swamped \u2014 reschedule the one-on-one if that's easier",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "M06",
+      "category": "mixed_intent",
+      "text": "Great draft overall but soften the intro and double-check the stats, post it tonight?",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "question"
+      }
+    },
+    {
+      "id": "M07",
+      "category": "mixed_intent",
+      "text": "Update the banner, confirm the coupon code works, and message me when it's live",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "M08",
+      "category": "mixed_intent",
+      "text": "Rapid fire: headcount, runway, and when's the board call?",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "question"
+      }
+    },
+    {
+      "id": "M09",
+      "category": "mixed_intent",
+      "text": "Skip this week's retro and if she sends the survey results summarize them for me",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [
+          "she"
+        ],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "M10",
+      "category": "mixed_intent",
+      "text": "The bio is outdated, rewrite it, and honestly the headshot needs help too",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "M11",
+      "category": "mixed_intent",
+      "text": "Push the release to Thursday \u2014 also did security ever finish their review?",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    },
+    {
+      "id": "M12",
+      "category": "mixed_intent",
+      "text": "Draft the sponsorship pitch, see if last year's contact still works there, and cc the treasurer",
+      "risk": "advice",
+      "expect": {
+        "clarify": true,
+        "entities": [],
+        "intent": "instruction"
+      }
+    }
+  ]
+}

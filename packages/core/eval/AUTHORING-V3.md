@@ -52,8 +52,18 @@ Every v2 clarify/recall disagreement was adjudicated by the owner. The rulings
 below are the authoring law for v3 expectations.
 
 ### Expect `clarify: true` when
-- **T1. Unresolved referent**: a pronoun, deictic (this/that/there), or definite
-  description has no antecedent in the message or provided context.
+- **T1′. Unresolved closed-class referent** *(amended 2026-07-24, owner-approved,
+  supersedes T1)*: a third-person pronoun (he/she/they/it/them…), demonstrative
+  deictic (this/that/these/those/there), indefinite unknown (somebody/something/
+  sometime/somewhere), deictic-determiner phrase ("that vendor"), or explicit
+  shared-knowledge marker ("the thing we discussed", "the usual crowd") has no
+  antecedent in the message or provided context. **Plain definite descriptions
+  in operational context ("the venue", "the brief", "the flyers") are assumed
+  common ground: they are carried as assumptions in the canonical translation,
+  never asked about.** Units, quantities, and non-referential words are never
+  entities. (Original T1 said "definite description" without the closed-class
+  restriction; the v3 probes showed that line contradicts the owner-calibrated
+  expectations and manufactures pseudo-referents.)
 - **T2. Lexical/numeric ambiguity that changes the action** — even when all
   referents resolve. *(Ruling 2A: "should I book it for seven?" — seven o'clock
   vs a party of seven. The referents resolved; the booking still can't be made.)*

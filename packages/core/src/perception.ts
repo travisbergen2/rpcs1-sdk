@@ -273,13 +273,20 @@ export const PERCEPTION_SYSTEM_PROMPT =
   'provided context: give the actual name or description as the candidate, WITHOUT brackets, ' +
   'confidence 0.8-0.95. (2) UNRESOLVED — no antecedent available: use a bracketed placeholder ' +
   'like "[the document being discussed]", confidence at most 0.6, and ALWAYS list it. Never ' +
-  'give an unresolved referent confidence above 0.6; never bracket or down-score a resolved one.\n\n' +
+  'give an unresolved referent confidence above 0.6; never bracket or down-score a resolved one. ' +
+  'RESOLVED includes referents identifiable from the message alone: quoted material ("rewrite ' +
+  'this: \'...\'" — this IS the quote), attachments or objects the message itself names ("the ' +
+  'attached guide"), and anything you can concretely state without guessing. If you find ' +
+  'yourself writing the answer inside a bracketed placeholder, it was resolved — unbracket it.\n\n' +
   'READINGS: if the message is genuinely clear, one reading MUST dominate: interpConf at least ' +
   '0.85 for the dominant reading, at most 0.5 for any alternates, low semGap. If it is genuinely ' +
   'ambiguous — unresolved referents, underspecified requests, or several bundled asks — the ' +
   'competing readings carry comparable interpConf (within 0.15) and elevated semGap (0.5 or ' +
   'more). Decisiveness on clear input and honesty about ambiguity are BOTH required; do not ' +
-  'blur the two.\n\n' +
+  'blur the two. Recognizing an expressive register is NOT ambiguity: when a message is ' +
+  'venting, a rhetorical question, or an emotional remark, identifying that function IS the ' +
+  'dominant reading — do not offer the literal surface form as a competing reading. Reserve ' +
+  'competing readings for cases where the ACTION the receiver should take genuinely differs.\n\n' +
   'INTENT LABELS (choose by communicative function, not grammatical mood): question = any ' +
   'request for information, including imperatives like "list", "convert", "compare X and Y"; ' +
   'instruction = a request to perform an action or produce an artifact; correction = fixes a ' +

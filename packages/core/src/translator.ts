@@ -418,7 +418,10 @@ async function interpretWithModel(
   let playbackRequired = ti < 0.95 || (risk === 'safety-critical' && hasAmbiguity);
   const questions: string[] = [];
   for (const entity of entities) {
-    if (entity.candidate.confidence < 0.75) {
+    // Ask when perception is unsure OR when the best candidate is an
+    // unresolved placeholder ("[the document being discussed]") — a confident
+    // description of an unknown is still an unknown.
+    if (entity.candidate.confidence < 0.75 || entity.candidate.text.startsWith('[')) {
       questions.push('What does "' + entity.original + '" refer to?');
     }
   }
@@ -426,7 +429,14 @@ async function interpretWithModel(
     const alts = resolution.candidates.slice(0, 2).map((c) => c.label).join('" or "');
     questions.push('Did you mean "' + alts + '"?');
   }
-  if ((risk === 'safety-critical' || risk === 'high-stakes') && questions.length === 0) {
+  // Risk raises the bar for committing (via RISK_THRESHOLDS); it does not
+  // interrogate crystal-clear input. Only auto-verify under elevated risk when
+  // something is actually unresolved.
+  if (
+    (risk === 'safety-critical' || risk === 'high-stakes') &&
+    questions.length === 0 &&
+    (hasAmbiguity || !resolution.should_collapse)
+  ) {
     questions.push('I want to verify — is this exactly what you mean?');
   }
 

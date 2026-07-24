@@ -433,6 +433,10 @@ async function interpretWithModel(
 
   let playbackRequired = ti < 0.95 || (risk === 'safety-critical' && hasAmbiguity);
   const questions: string[] = [];
+  // Referent identity matters when the receiver must ACT on the referent;
+  // in expressive registers (venting, judgment) the remark is the message
+  // and interrogating its referents is pestering (owner rulings, 2026-07-24).
+  const actionBearing = !['emotional_support', 'opinion'].includes(intent.type);
   for (const entity of entities) {
     // Ask only about genuinely anaphoric forms (T1': closed-class anaphora,
     // deictic-determiner phrases, shared-knowledge markers). Even if the
@@ -440,6 +444,7 @@ async function interpretWithModel(
     // are carried as assumptions, never interrogated. Within that set, ask
     // when perception is unsure OR the best candidate is an unresolved
     // placeholder — a confident description of an unknown is still unknown.
+    if (!actionBearing) continue;
     if (!isAnaphoricForm(entity.original)) continue;
     if (entity.candidate.confidence < 0.75 || entity.candidate.text.startsWith('[')) {
       questions.push('What does "' + entity.original + '" refer to?');

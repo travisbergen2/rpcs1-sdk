@@ -203,6 +203,13 @@ describe("T1' decision filter: content nouns are never interrogated", () => {
     },
   );
 
+  it('expressive register suppresses entity questions (opinion/emotional_support)', async () => {
+    const r = mk('this');
+    r.intents = [{ type: 'opinion', confidence: 0.9 }];
+    const out = await interpretWithModel('x', new MockBackend(r));
+    expect(out.clarifying_questions).toEqual([]);
+  });
+
   it('anaphoric form resolved with high confidence is not interrogated', async () => {
     const r = mk('she', false);
     r.entities[0].candidates[0].confidence = 0.93;

@@ -287,7 +287,12 @@ export const PERCEPTION_SYSTEM_PROMPT =
   'ambiguous — unresolved referents, underspecified requests, or several bundled asks — the ' +
   'competing readings carry comparable interpConf (within 0.15) and elevated semGap (0.5 or ' +
   'more). Decisiveness on clear input and honesty about ambiguity are BOTH required; do not ' +
-  'blur the two. Recognizing an expressive register is NOT ambiguity: when a message is ' +
+  'blur the two. UNDERSPECIFIED requests — the ask names no concrete success criterion ' +
+  '("make it pop", "change things up", "the usual checks", "handle it however makes sense") — ' +
+  'and BUNDLED messages containing several distinct asks ("book X and also is Y covered and ' +
+  'tell Z") are genuinely ambiguous: emit competing readings with comparable interpConf and ' +
+  'semGap of 0.5 or more. Shared-knowledge markers ("the thing we discussed", "the usual ' +
+  'crowd", "the stuff from last time") must ALWAYS be listed as unresolved entities. Recognizing an expressive register is NOT ambiguity: when a message is ' +
   'venting, a rhetorical question, or an emotional remark, identifying that function IS the ' +
   'dominant reading — do not offer the literal surface form as a competing reading. Reserve ' +
   'competing readings for cases where the ACTION the receiver should take genuinely differs.\n\n' +

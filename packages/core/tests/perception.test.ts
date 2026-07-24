@@ -173,3 +173,40 @@ describe('AnthropicBackend (BYO key, structured output)', () => {
     await expect(backend.perceive('x')).rejects.toThrow(/tool_use/);
   });
 });
+
+// ── T1' structural filter (closed-class anaphora only get interrogated) ──
+
+describe("T1' decision filter: content nouns are never interrogated", () => {
+  const mk = (original: string, bracketed = true): PerceptionResult => ({
+    entities: [{ original, category: 'unspecified', candidates: [{ text: bracketed ? '[unknown]' : 'resolved', confidence: 0.5 }] }],
+    intents: [{ type: 'question', confidence: 0.9 }],
+    readings: [
+      { label: 'main', paraphrase: 'p', interpConf: 0.9, userEvid: 0.85, epistemic: 0.8, narrative: 0.7, semGap: 0.1, transInteg: 0.98 },
+      { label: 'alt', paraphrase: 'q', interpConf: 0.2, userEvid: 0.2, epistemic: 0.4, narrative: 0.4, semGap: 0.6, transInteg: 0.6 },
+    ],
+    canonicalTranslation: 'x',
+  });
+
+  it.each(['the venue', 'gallon', '300', 'flyers', 'the attached sheet', 'done'])(
+    'plain content form "%s" produces no question even when bracketed and low-confidence',
+    async (form) => {
+      const out = await interpretWithModel('x', new MockBackend(mk(form)));
+      expect(out.clarifying_questions).toEqual([]);
+    },
+  );
+
+  it.each(['she', 'it', 'them', 'this', 'those', 'there', 'somebody', 'sometime', 'that vendor', 'the thing we discussed', 'the usual crowd'])(
+    'anaphoric form "%s" still produces the referent question',
+    async (form) => {
+      const out = await interpretWithModel('x', new MockBackend(mk(form)));
+      expect(out.clarifying_questions.join(' ')).toContain(form);
+    },
+  );
+
+  it('anaphoric form resolved with high confidence is not interrogated', async () => {
+    const r = mk('she', false);
+    r.entities[0].candidates[0].confidence = 0.93;
+    const out = await interpretWithModel('x', new MockBackend(r));
+    expect(out.clarifying_questions).toEqual([]);
+  });
+});

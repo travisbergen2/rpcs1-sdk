@@ -367,6 +367,22 @@ function interpret(text: string, risk: RiskCategory = 'advice', profile?: Receiv
 
 // ── Model-backed interpret (perception: model; decision: deterministic RPCS-1) ─
 
+/**
+ * T1' structural filter: surface forms the decision layer may interrogate.
+ * Closed-class anaphora, deictic-determiner phrases ("that vendor"), and
+ * shared-knowledge markers ("the thing we discussed", "the usual crowd").
+ * Deterministic and unit-tested — the belt to the perception prompt's braces.
+ */
+const CLOSED_CLASS_ANAPHOR =
+  /^(he|him|his|she|her|hers|they|them|their|theirs|it|its|this|that|these|those|there|somebody|someone|something|somewhere|sometime|anyone|anybody|anything)$/i;
+const DEICTIC_DETERMINER = /^(this|that|these|those)\s+\S/i;
+const SHARED_KNOWLEDGE = /^the\s+(thing|stuff|usual|one|ones)/i;
+
+function isAnaphoricForm(surface: string): boolean {
+  const s = surface.trim();
+  return CLOSED_CLASS_ANAPHOR.test(s) || DEICTIC_DETERMINER.test(s) || SHARED_KNOWLEDGE.test(s);
+}
+
 interface InterpretModelOptions {
   risk?: RiskCategory;
   profile?: ReceiverProfile;
@@ -418,9 +434,13 @@ async function interpretWithModel(
   let playbackRequired = ti < 0.95 || (risk === 'safety-critical' && hasAmbiguity);
   const questions: string[] = [];
   for (const entity of entities) {
-    // Ask when perception is unsure OR when the best candidate is an
-    // unresolved placeholder ("[the document being discussed]") — a confident
-    // description of an unknown is still an unknown.
+    // Ask only about genuinely anaphoric forms (T1': closed-class anaphora,
+    // deictic-determiner phrases, shared-knowledge markers). Even if the
+    // perception stage over-lists content nouns, plain definite descriptions
+    // are carried as assumptions, never interrogated. Within that set, ask
+    // when perception is unsure OR the best candidate is an unresolved
+    // placeholder — a confident description of an unknown is still unknown.
+    if (!isAnaphoricForm(entity.original)) continue;
     if (entity.candidate.confidence < 0.75 || entity.candidate.text.startsWith('[')) {
       questions.push('What does "' + entity.original + '" refer to?');
     }

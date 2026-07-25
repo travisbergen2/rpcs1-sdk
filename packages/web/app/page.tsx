@@ -84,6 +84,27 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── SendRight banner ── */}
+      <section className="border-t border-white/5 bg-emerald-950/20">
+        <div className="mx-auto flex max-w-6xl flex-col items-start gap-4 px-4 py-10 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wide text-emerald-400">New — SendRight</p>
+            <h2 className="mt-1 text-xl font-semibold text-white">Say it your way. Send it right.</h2>
+            <p className="mt-1 max-w-xl text-sm text-gray-400">
+              Type a prompt like you&apos;d say it out loud. SendRight shows you what your words
+              actually say — forks, contradictions, tangled asks — then opens your own AI app
+              with the clear version filled in. No signup, no keys, free.
+            </p>
+          </div>
+          <Link
+            href="/send"
+            className="shrink-0 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-slate-950 shadow-lg shadow-emerald-500/20 transition-colors hover:bg-emerald-400"
+          >
+            Try SendRight →
+          </Link>
+        </div>
+      </section>
+
       {/* ── Failure modes ────────────────────────────────────── */}
       <section className="border-t border-white/5 bg-[#090e1a]">
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">

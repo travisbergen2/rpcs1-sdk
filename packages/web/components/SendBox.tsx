@@ -32,6 +32,26 @@ import SprawlStrip from '@/components/SprawlStrip';
 
 const DEBOUNCE_MS = 250;
 
+/**
+ * One-click demo prompts for the empty state — each triggers a different
+ * detector so a first-time visitor sees the product work within 250ms
+ * instead of staring at a silent box.
+ */
+const EXAMPLES: Array<{ label: string; prompt: string }> = [
+  {
+    label: 'Could be read two ways',
+    prompt: 'What do you think about React or Vue for my project?',
+  },
+  {
+    label: 'Contradicts itself',
+    prompt: 'Keep it brief. I want a comprehensive breakdown of every step in the process.',
+  },
+  {
+    label: 'Too many asks at once',
+    prompt: 'Write a summary of my sales data from last quarter. Include the top five customers and their revenue totals. Also can you plan a birthday party for my daughter? She likes horses and the party is next month. What venues would work?',
+  },
+];
+
 export default function SendBox() {
   const [text, setText] = useState('');
   const [result, setResult] = useState<MirrorResult | null>(null);
@@ -104,6 +124,32 @@ export default function SendBox() {
         className="w-full rounded-2xl border border-white/10 bg-[#0a0f1a] p-5 text-base text-gray-100 placeholder-gray-500 shadow-[0_0_40px_-12px_rgba(16,185,129,0.25)] transition-shadow focus:border-emerald-400/50 focus:shadow-[0_0_50px_-8px_rgba(16,185,129,0.4)] focus:outline-none resize-y"
         aria-label="Your prompt"
       />
+
+      {/* Empty state — show what this is and let visitors trigger it in one click */}
+      {text.trim().length === 0 && (
+        <div className="mt-3" data-testid="empty-state">
+          <p className="text-sm text-neutral-400">
+            Type a prompt like you&apos;d say it out loud. If it can be misread, the readings
+            appear here <span className="text-neutral-300">before</span> you send it — then one
+            tap opens your own AI app with the clear version filled in.
+          </p>
+          <p className="mt-3 text-xs text-neutral-500">Or watch it catch something — try one:</p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {EXAMPLES.map((ex) => (
+              <button
+                key={ex.label}
+                onClick={() => setText(ex.prompt)}
+                className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-1.5 text-sm text-gray-300 transition-colors hover:border-emerald-400/40 hover:text-emerald-200"
+              >
+                {ex.label}
+              </button>
+            ))}
+          </div>
+          <p className="mt-3 text-[11px] text-neutral-600">
+            Nothing is sent anywhere until you pick an app and hit send there yourself.
+          </p>
+        </div>
+      )}
 
       {/* Reading chips — render ONLY when a fork is detected (silent-strip contract) */}
       {forked && (

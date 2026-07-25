@@ -101,7 +101,7 @@ export default function SendBox() {
         onChange={(e) => { setText(e.target.value); setLockedNote(null); setLockedKind(null); }}
         placeholder="Say it your way…"
         rows={5}
-        className="w-full rounded-xl border border-neutral-700 bg-neutral-900 p-4 text-base text-neutral-100 placeholder-neutral-500 focus:border-neutral-400 focus:outline-none resize-y"
+        className="w-full rounded-2xl border border-white/10 bg-[#0a0f1a] p-5 text-base text-gray-100 placeholder-gray-500 shadow-[0_0_40px_-12px_rgba(16,185,129,0.25)] transition-shadow focus:border-emerald-400/50 focus:shadow-[0_0_50px_-8px_rgba(16,185,129,0.4)] focus:outline-none resize-y"
         aria-label="Your prompt"
       />
 
@@ -116,7 +116,7 @@ export default function SendBox() {
               <button
                 key={r.id}
                 onClick={() => lockReading(r.id, r.summary, r.clarifier)}
-                className="rounded-full border border-amber-500/50 bg-amber-500/10 px-4 py-1.5 text-sm text-amber-200 hover:bg-amber-500/20 transition-colors"
+                className="rounded-full border border-amber-400/40 bg-amber-500/10 px-4 py-1.5 text-sm text-amber-200 shadow-sm hover:bg-amber-500/20 hover:border-amber-300/60 transition-colors"
               >
                 {r.summary}
               </button>

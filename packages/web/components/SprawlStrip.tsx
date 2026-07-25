@@ -24,7 +24,7 @@ export default function SprawlStrip({ result, onSendSegment }: SprawlStripProps)
   const topicCount = Math.max(result.segments.length, 1);
 
   return (
-    <div className="mt-3 rounded-xl border border-neutral-800 bg-neutral-900/60 p-3" data-testid="sprawl-strip">
+    <div className="mt-3 rounded-2xl border border-white/10 bg-white/[0.02] p-4" data-testid="sprawl-strip">
       <p className="text-sm text-neutral-300">
         This prompt carries{' '}
         <span className="text-neutral-100 font-medium">

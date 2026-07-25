@@ -90,3 +90,11 @@ export type {
   ProfileCard,
   ProfileDivergence,
 } from './intake.js';
+
+// ── Interpretation Mirror (deterministic fork detectors, SendRight) ──
+export { mirror, applyReading } from './mirror.js';
+export type { MirrorResult, AmbiguousSpan, ForkReading, ForkKind } from './mirror.js';
+
+// ── Hand-off (deep-link prefill into the user's own model app) ──
+export { buildHandoff, listVendors, VENDOR_CAPABILITIES } from './handoff.js';
+export type { VendorId, VendorCapability, HandoffPlan, HandoffMethod } from './handoff.js';

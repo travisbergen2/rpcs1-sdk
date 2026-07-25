@@ -1,0 +1,140 @@
+'use client';
+
+/**
+ * SendBox — the SendRight box.
+ *
+ * Type like you talk → deterministic fork detection runs client-side on every
+ * keystroke (debounced; mirror() is a pure function from @rpcs1/core, zero API
+ * calls) → when the prompt forks, reading chips appear; tapping one appends its
+ * clarifier → pick a model app → hand-off opens the user's own app with the
+ * prompt pre-filled (or clipboard fallback). rpcs1 never makes the model call
+ * and never sees the answer.
+ *
+ * UI contract (registered decision #2): the strip renders NOTHING on clean
+ * prompts — silent until a fork is actually detected.
+ */
+
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  mirror,
+  applyReading,
+  buildHandoff,
+  listVendors,
+  type MirrorResult,
+  type VendorId,
+} from '@rpcs1/core';
+
+const DEBOUNCE_MS = 250;
+
+export default function SendBox() {
+  const [text, setText] = useState('');
+  const [result, setResult] = useState<MirrorResult | null>(null);
+  const [lockedNote, setLockedNote] = useState<string | null>(null);
+  const [handoffNote, setHandoffNote] = useState<string | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Debounced deterministic mirror — pure client-side, no network.
+  useEffect(() => {
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => setResult(mirror(text)), DEBOUNCE_MS);
+    return () => { if (timer.current) clearTimeout(timer.current); };
+  }, [text]);
+
+  const forked = result !== null && !result.clean && text.trim().length > 0;
+  const vendors = useMemo(() => listVendors(), []);
+
+  const lockReading = (summary: string, clarifier: string | null) => {
+    if (!clarifier) return;
+    setText((t) => applyReading(t, clarifier));
+    setLockedNote(`Locked in: ${summary}`);
+    setHandoffNote(null);
+  };
+
+  const sendTo = async (vendor: VendorId) => {
+    const plan = buildHandoff(vendor, text);
+    if (plan.method === 'clipboard' && plan.clipboardText !== null) {
+      try {
+        await navigator.clipboard.writeText(plan.clipboardText);
+      } catch {
+        /* clipboard can be denied — instructions still tell the user what to do */
+      }
+    }
+    setHandoffNote(plan.instructions);
+    window.open(plan.url, '_blank', 'noopener,noreferrer');
+  };
+
+  return (
+    <div className="w-full max-w-2xl mx-auto">
+      <textarea
+        value={text}
+        onChange={(e) => { setText(e.target.value); setLockedNote(null); }}
+        placeholder="Say it your way…"
+        rows={5}
+        className="w-full rounded-xl border border-neutral-700 bg-neutral-900 p-4 text-base text-neutral-100 placeholder-neutral-500 focus:border-neutral-400 focus:outline-none resize-y"
+        aria-label="Your prompt"
+      />
+
+      {/* Reading chips — render ONLY when a fork is detected (silent-strip contract) */}
+      {forked && (
+        <div className="mt-3" data-testid="chip-strip">
+          <p className="mb-2 text-sm text-neutral-400">
+            This could be read more than one way — tap what you meant:
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {result!.readings.map((r) => (
+              <button
+                key={r.id}
+                onClick={() => lockReading(r.summary, r.clarifier)}
+                className="rounded-full border border-amber-500/50 bg-amber-500/10 px-4 py-1.5 text-sm text-amber-200 hover:bg-amber-500/20 transition-colors"
+              >
+                {r.summary}
+              </button>
+            ))}
+          </div>
+          <details className="mt-2">
+            <summary className="cursor-pointer text-xs text-neutral-500 hover:text-neutral-400">
+              why?
+            </summary>
+            <ul className="mt-1 space-y-1 text-xs text-neutral-500">
+              {result!.ambiguousSpans.map((s, i) => (
+                <li key={i}>
+                  <span className="text-neutral-300">&ldquo;{s.text}&rdquo;</span> — {s.why}
+                </li>
+              ))}
+            </ul>
+          </details>
+        </div>
+      )}
+
+      {lockedNote && (
+        <p className="mt-2 text-sm text-emerald-400" role="status">{lockedNote}</p>
+      )}
+
+      {/* Hand-off row */}
+      {text.trim().length > 0 && (
+        <div className="mt-4">
+          <p className="mb-2 text-sm text-neutral-400">Send it right — opens your own app, you hit send:</p>
+          <div className="flex flex-wrap gap-2">
+            {vendors.map((v) => (
+              <button
+                key={v.id}
+                onClick={() => sendTo(v.id)}
+                className="rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-2 text-sm text-neutral-100 hover:border-neutral-500 transition-colors"
+                title={v.notes}
+              >
+                {v.label}
+                {v.method === 'clipboard' && (
+                  <span className="ml-1.5 text-xs text-neutral-500">(copy &amp; paste)</span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {handoffNote && (
+        <p className="mt-3 text-sm text-neutral-400" role="status">{handoffNote}</p>
+      )}
+    </div>
+  );
+}

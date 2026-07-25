@@ -97,6 +97,43 @@ Every parameter recommendation traces back to this principle or the basin stabil
 
 Interactive tuner: [https://rpcs1.dev](https://rpcs1.dev)
 
+## SendRight (Interpretation Mirror + Hand-off)
+
+SendRight is the type-and-send front door: type a prompt the way you'd say it
+out loud, see the readings it actually supports, lock in the one you meant, and
+hand it to your own model app with one click.
+
+**Modules (packages/core):**
+
+- `mirror(text)` — deterministic fork detectors (no ML, no API calls). Returns
+  `{ clean, readings[], ambiguousSpans[] }`. Detectors: compare-or-choose
+  ("X or Y?" questions without an explicit verb), grouping forks ("A and B or C"),
+  scope forks ("only ... and ..."), dangling pronouns, bare objects ("fix it"),
+  external references ("the above"). **Contract: silent on clean prompts** —
+  zero-fork controls in `tests/mirror.test.ts` enforce it. Pure function,
+  callable from any front end (web box, NL2Build, CLI).
+- `applyReading(text, clarifier)` — appends the chosen reading's clarifier so
+  the locked interpretation travels with the prompt.
+- `buildHandoff(vendor, prompt)` / `listVendors()` — per-vendor capability
+  table for opening the user's own model app with the prompt pre-filled.
+  Prefill URL parameters are **undocumented vendor behavior and churn without
+  notice**; each entry carries a `verified` date and must be re-checked at
+  release. Verified 2026-07-25: ChatGPT, Claude, Perplexity, Grok support URL
+  prefill; Gemini and Copilot are clipboard-fallback only. Logged-out users may
+  lose the prefill at login. All vendors degrade gracefully to clipboard.
+
+**Web:** `/send` (packages/web/app/send) renders the box via
+`components/SendBox.tsx` — mirror runs client-side (debounced, zero network);
+the hand-off happens in the user's own app. SendRight never makes the model
+call and never sees the answer.
+
+**Feasibility boundary (honest scope):** reasoning-stream digests and
+mid-generation stop/realign are only possible where rpcs1 itself owns the API
+call (the fan-out / power-user mode, not yet shipped). They are structurally
+impossible in vendor chat UIs and via the MCP surface — SendRight's hand-off
+path intentionally trades those away for zero keys, zero cost, and zero data
+custody.
+
 ## MCP Server
 
 RPCS-1 is also available as a public, anonymous, read-only MCP server:

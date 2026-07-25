@@ -98,3 +98,7 @@ export type { MirrorResult, AmbiguousSpan, ForkReading, ForkKind } from './mirro
 // ── Hand-off (deep-link prefill into the user's own model app) ──
 export { buildHandoff, listVendors, VENDOR_CAPABILITIES } from './handoff.js';
 export type { VendorId, VendorCapability, HandoffPlan, HandoffMethod } from './handoff.js';
+
+// ── Receiver personas + panel ranking (SendRight model panel) ──
+export { PERSONAS, rankPersonas } from './personas.js';
+export type { PersonaCard, PersonaGrade, PersonaStat, TraitVector, RankedPersona, PanelResult } from './personas.js';

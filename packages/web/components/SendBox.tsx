@@ -22,7 +22,9 @@ import {
   listVendors,
   type MirrorResult,
   type VendorId,
+  type ForkKind,
 } from '@rpcs1/core';
+import ModelPanel from '@/components/ModelPanel';
 
 const DEBOUNCE_MS = 250;
 
@@ -30,6 +32,7 @@ export default function SendBox() {
   const [text, setText] = useState('');
   const [result, setResult] = useState<MirrorResult | null>(null);
   const [lockedNote, setLockedNote] = useState<string | null>(null);
+  const [lockedKind, setLockedKind] = useState<ForkKind | null>(null);
   const [handoffNote, setHandoffNote] = useState<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -43,12 +46,22 @@ export default function SendBox() {
   const forked = result !== null && !result.clean && text.trim().length > 0;
   const vendors = useMemo(() => listVendors(), []);
 
-  const lockReading = (summary: string, clarifier: string | null) => {
+  const lockReading = (id: string, summary: string, clarifier: string | null) => {
     if (!clarifier) return;
     setText((t) => applyReading(t, clarifier));
     setLockedNote(`Locked in: ${summary}`);
+    setLockedKind((id.split(':')[0] as ForkKind) ?? null);
     setHandoffNote(null);
   };
+
+  // Panel reading context: the locked fork kind wins; otherwise the primary
+  // detected fork (panel stays non-blocking); otherwise the clean default.
+  const panelKind: ForkKind | 'as_written' =
+    lockedKind ?? (forked ? (result!.readings[0].id.split(':')[0] as ForkKind) : 'as_written');
+  const clipboardVendors = useMemo(
+    () => new Set(vendors.filter((v) => v.method === 'clipboard').map((v) => v.id as string)),
+    [vendors],
+  );
 
   const sendTo = async (vendor: VendorId) => {
     const plan = buildHandoff(vendor, text);
@@ -67,7 +80,7 @@ export default function SendBox() {
     <div className="w-full max-w-2xl mx-auto">
       <textarea
         value={text}
-        onChange={(e) => { setText(e.target.value); setLockedNote(null); }}
+        onChange={(e) => { setText(e.target.value); setLockedNote(null); setLockedKind(null); }}
         placeholder="Say it your way…"
         rows={5}
         className="w-full rounded-xl border border-neutral-700 bg-neutral-900 p-4 text-base text-neutral-100 placeholder-neutral-500 focus:border-neutral-400 focus:outline-none resize-y"
@@ -84,7 +97,7 @@ export default function SendBox() {
             {result!.readings.map((r) => (
               <button
                 key={r.id}
-                onClick={() => lockReading(r.summary, r.clarifier)}
+                onClick={() => lockReading(r.id, r.summary, r.clarifier)}
                 className="rounded-full border border-amber-500/50 bg-amber-500/10 px-4 py-1.5 text-sm text-amber-200 hover:bg-amber-500/20 transition-colors"
               >
                 {r.summary}
@@ -110,25 +123,14 @@ export default function SendBox() {
         <p className="mt-2 text-sm text-emerald-400" role="status">{lockedNote}</p>
       )}
 
-      {/* Hand-off row */}
+      {/* Model panel — top-3 receiver personas for the current reading */}
       {text.trim().length > 0 && (
         <div className="mt-4">
-          <p className="mb-2 text-sm text-neutral-400">Send it right — opens your own app, you hit send:</p>
-          <div className="flex flex-wrap gap-2">
-            {vendors.map((v) => (
-              <button
-                key={v.id}
-                onClick={() => sendTo(v.id)}
-                className="rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-2 text-sm text-neutral-100 hover:border-neutral-500 transition-colors"
-                title={v.notes}
-              >
-                {v.label}
-                {v.method === 'clipboard' && (
-                  <span className="ml-1.5 text-xs text-neutral-500">(copy &amp; paste)</span>
-                )}
-              </button>
-            ))}
-          </div>
+          <ModelPanel
+            kind={panelKind}
+            clipboardVendors={clipboardVendors}
+            onPick={(v) => sendTo(v as VendorId)}
+          />
         </div>
       )}
 

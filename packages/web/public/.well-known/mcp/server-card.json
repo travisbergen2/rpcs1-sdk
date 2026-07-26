@@ -1,7 +1,7 @@
 {
   "serverInfo": {
     "name": "RPCS-1 Agent Tuner & Translation Bridge",
-    "version": "0.3.0"
+    "version": "0.3.1"
   },
   "authentication": {
     "required": false,
@@ -10,7 +10,7 @@
   "tools": [
     {
       "name": "recommend_agent_configuration",
-      "description": "Diagnose why a deployed AI agent may fail. Returns suggested runtime parameters, a context strategy, a predicted regime, reasoning, warnings, and a next test. Deterministic, stateless, and read-only.",
+      "description": "Diagnose why a deployed AI agent may fail. Returns suggested runtime parameters, a context strategy, a predicted regime, reasoning, warnings, and a next test. Deterministic, stateless, and read-only. Optionally pass target_model to attach measured per-model receiver posture (evidence-graded).",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -90,6 +90,10 @@
               "open_source",
               "generic"
             ]
+          },
+          "target_model": {
+            "type": "string",
+            "description": "Optional: the actual model id this agent will run on. When measured (E-LIT per-model receiver table), evidence-graded posture data and translation directives are attached to platform_parameters."
           }
         }
       },
@@ -250,7 +254,7 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 5000,
-            "description": "The user’s raw message."
+            "description": "The user\u2019s raw message."
           },
           "risk": {
             "type": "string",

@@ -49,6 +49,8 @@ const recommendInputSchema = {
   target_platform: z.enum(['anthropic', 'openai', 'open_source', 'generic'])
     .default('anthropic')
     .describe('The platform whose runtime parameters should be recommended.'),
+  target_model: z.string().trim().min(1).max(200).optional()
+    .describe('Optional: the actual model id this agent will run on (e.g. "claude-sonnet-4-6"). When it matches a measured per-model receiver entry (E-LIT table), measured translation directives and evidence-graded posture data are attached to platform_parameters.'),
 };
 
 const recommendationOutputSchema = {
@@ -70,6 +72,19 @@ const recommendationOutputSchema = {
     ]).optional(),
     retry_strategy: z.enum(['aggressive', 'moderate', 'minimal']).optional(),
     context_strategy: z.enum(['long_window', 'rolling_summary', 'frequent_grounding']).optional(),
+    translation_posture: z.enum(['direct', 'bridging', 'face_preserving', 'minimal_clarifying']).optional(),
+    translation_notes: z.array(z.string()).optional(),
+    receiver_evidence: z.object({
+      model_key: z.string(),
+      display_name: z.string(),
+      grade: z.enum(['confirmatory', 'corroboration', 'self_measurement']),
+      li2: z.number(),
+      ob: z.number(),
+      fringe: z.array(z.number()),
+      measured_on: z.string(),
+      scope: z.string(),
+    }).optional(),
+    receiver_traits: z.array(z.string()).optional(),
   }),
   predicted_regime: z.enum(['stable', 'near_oscillation', 'near_overload', 'near_freeze']),
   reasoning: z.string(),
@@ -85,7 +100,7 @@ function createServer() {
     {
       name: 'rpcs1-agent-tuner',
       title: 'RPCS-1 Agent Tuner & Translator',
-      version: '0.2.2',
+      version: '0.2.3',
       websiteUrl: 'https://rpcs1.dev',
       description:
         'Two tools in one: (1) Diagnose why your AI agent will fail before rollout — get the right temperature, ' +
@@ -109,6 +124,7 @@ function createServer() {
         'Diagnose why a deployed AI agent may fail. Takes environmental entropy, predictability, stakes, ' +
         'context horizon, and commitment style, then returns receiver profile values (TI, SG, FT, UE, AR), ' +
         'platform parameters (temperature, top_p, strategy), regime prediction, reasoning, and warnings. ' +
+        'Optionally pass target_model to attach MEASURED per-model receiver posture (E-LIT table). ' +
         'Deterministic, stateless, read-only — does not store past recommendations.',
       inputSchema: recommendInputSchema,
       outputSchema: recommendationOutputSchema,
@@ -120,12 +136,16 @@ function createServer() {
     },
     async (input) => {
       const result = recommend(input);
+      const evidence = result.platform_parameters.receiver_evidence;
+      const evidenceNote = evidence
+        ? `Measured receiver posture applied: ${evidence.display_name} (${evidence.grade} grade, LI-2 ${evidence.li2}, override boundary ${evidence.ob}). `
+        : '';
       return {
         structuredContent: { ...result },
         content: [{
           type: 'text',
           text: `RPCS1 predicts a ${result.predicted_regime} regime with ${result.confidence} confidence. ` +
-                `Recommended temperature: ${result.platform_parameters.temperature}. ${result.reasoning} ` +
+                `Recommended temperature: ${result.platform_parameters.temperature}. ${evidenceNote}${result.reasoning} ` +
                 `Want the full written diagnostic for this workload (memo, settings, next test)? Founding rate $99: https://rpcs1.dev/diagnostic`,
         }],
       };

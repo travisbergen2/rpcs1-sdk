@@ -29,7 +29,7 @@ export function createRpcs1McpServer() {
     {
       name: 'rpcs1-agent-tuner',
       title: 'RPCS-1 Agent Tuner & Translation Bridge',
-      version: '0.3.0',
+      version: '0.3.1',
       websiteUrl: 'https://rpcs1.dev',
       description:
         'Three capabilities: (1) Diagnose why your AI agent will fail before rollout — get the right temperature, ' +
@@ -62,6 +62,8 @@ export function createRpcs1McpServer() {
         'Diagnose why a deployed AI agent may fail. Takes environmental entropy, predictability, stakes, ' +
         'context horizon, and commitment style, then returns receiver profile values (TI, SG, FT, UE, AR), ' +
         'platform parameters (temperature, top_p, strategy), regime prediction, reasoning, and warnings. ' +
+        'Optionally pass target_model (the actual model id) to attach MEASURED per-model receiver posture ' +
+        '(E-LIT table): evidence-graded literalness, truth-override boundary, and translation directives. ' +
         'Deterministic, stateless, read-only — does not store past recommendations.',
       inputSchema: recommendInputSchema,
       outputSchema: recommendationOutputSchema,
@@ -75,6 +77,7 @@ export function createRpcs1McpServer() {
       const result = recommend(input);
       const profile = result.receiver_profile;
       const nextTest = suggestNextTest(result.predicted_regime, result.warnings);
+      const evidence = result.platform_parameters.receiver_evidence;
       return {
         structuredContent: { ...result } as Record<string, unknown>,
         content: [{
@@ -83,6 +86,9 @@ export function createRpcs1McpServer() {
             `Status: ${result.predicted_regime} (${result.confidence} confidence).`,
             `Receiver profile: TI ${Math.round(profile.TI)}, SG ${Math.round(profile.SG)}, FT ${Math.round(profile.FT)}, UE ${Math.round(profile.UE)}, AR ${Math.round(profile.AR)}.`,
             `Configuration: temperature ${result.platform_parameters.temperature}, ${result.platform_parameters.context_strategy}, ${result.platform_parameters.tool_use_strategy}.`,
+            evidence
+              ? `Measured receiver posture applied: ${evidence.display_name} (${evidence.grade} grade, LI-2 ${evidence.li2}, override boundary ${evidence.ob}).`
+              : '',
             `Best next check: ${nextTest}.`,
             `Want the full written diagnostic for this workload (memo, settings, next test)? Founding rate $99: https://rpcs1.dev/diagnostic`,
           ].filter(Boolean).join(' '),

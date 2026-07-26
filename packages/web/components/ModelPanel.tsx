@@ -67,7 +67,7 @@ export default function ModelPanel({ kind, onPick, clipboardVendors }: ModelPane
           <button
             key={card.vendor}
             onClick={() => onPick(card.vendor)}
-            className="flex flex-col rounded-xl border border-neutral-700 bg-neutral-900 p-3 text-left hover:border-neutral-500 transition-colors"
+            className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-left transition-all hover:border-emerald-400/40 hover:bg-white/[0.05] hover:shadow-[0_0_30px_-12px_rgba(16,185,129,0.3)]"
           >
             <div className="flex items-center justify-between gap-2">
               <span className="text-lg" aria-hidden>{AVATAR[card.vendor] ?? '🤖'}</span>

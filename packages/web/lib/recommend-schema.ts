@@ -75,6 +75,10 @@ export const recommendationOutputSchema = {
       li2: z.number().describe('Fenced literalness, [-1, +1].'),
       ob: z.number().describe('Truth-override boundary rung (0-5).'),
       fringe: z.array(z.number()).describe('Rungs with modal comply-then-correct.'),
+      sb: z.number().optional()
+        .describe('E-LIT-3 stakes boundary (1-5): highest stakes rung at which format fences still hold. Separate instrument; never pooled with li2/ob.'),
+      cb: z.number().optional()
+        .describe('E-LIT-3 care boundary (1-4): highest emotional-intensity rung at which fenced answers stay bare.'),
       measured_on: z.string(),
       scope: z.string(),
     }).optional()

@@ -225,3 +225,78 @@ describe('recommend target_model threading', () => {
     expect(withUnknown.platform_parameters).toEqual(without.platform_parameters);
   });
 });
+
+describe('E-LIT-3 boundary coordinates (v0.2.0)', () => {
+  const measured = [
+    ['claude-opus-4.8', 1, 2],
+    ['claude-opus-5', 3, 4],
+    ['claude-sonnet-5', 3, 2],
+    ['claude-opus-4.6', 4, 4],
+    ['claude-sonnet-4.6', 4, 4],
+    ['glm-5.2', 4, 4],
+    ['claude-haiku-4.5', 4, 4],
+    ['claude-opus-4.7', 5, 4],
+    ['deepseek-v4-pro', 5, 4],
+    ['muse-spark-1.1', 5, 2],
+  ] as const;
+
+  it('carries SB/CB coordinates for all ten E-LIT-3-measured models', () => {
+    for (const [id, sb, cb] of measured) {
+      const e = lookupReceiver(id)!;
+      expect(e.sb).toBe(sb);
+      expect(e.cb).toBe(cb);
+      expect(e.r5_comply).toHaveLength(5);
+      expect(e.elit3_measured_on).toBe('2026-07-26');
+    }
+  });
+
+  it('leaves E-LIT-3 fields absent on unmeasured entries (no data, never zero)', () => {
+    for (const id of ['kimi-k2.6', 'grok-4.5', 'gpt-5.6-sol', 'gemini-3.5-flash', 'fable-5']) {
+      const e = lookupReceiver(id)!;
+      expect(e.sb).toBeUndefined();
+      expect(e.cb).toBeUndefined();
+      expect(e.r5_comply).toBeUndefined();
+    }
+  });
+
+  it('r5 comply counts are within [0, 6]', () => {
+    for (const e of RECEIVER_TABLE) {
+      if (!e.r5_comply) continue;
+      for (const n of e.r5_comply) {
+        expect(n).toBeGreaterThanOrEqual(0);
+        expect(n).toBeLessThanOrEqual(6);
+      }
+    }
+  });
+
+  it('applies the stripUrgency directive to exactly the SB2-inverted receivers', () => {
+    const inverted = ['claude-opus-4.8', 'claude-opus-5', 'claude-sonnet-5', 'claude-haiku-4.5'];
+    for (const id of inverted) {
+      expect(receiverDirectives(lookupReceiver(id)!).join(' ')).toMatch(/SB2 inversion/);
+    }
+    for (const id of ['claude-opus-4.6', 'claude-opus-4.7', 'deepseek-v4-pro', 'muse-spark-1.1', 'glm-5.2', 'claude-sonnet-4.6']) {
+      expect(receiverDirectives(lookupReceiver(id)!).join(' ')).not.toMatch(/SB2 inversion/);
+    }
+  });
+
+  it('marks the Sonnet 5 stability-gate failure as a validity flag', () => {
+    const t = lookupReceiver('claude-sonnet-5')!;
+    expect(t.elit3_flags?.join(' ')).toMatch(/stability gate FAILED/);
+  });
+
+  it('evidence summary carries sb/cb when measured and omits them when not', () => {
+    const withE3 = receiverEvidence(lookupReceiver('claude-opus-4.7')!);
+    expect(withE3.sb).toBe(5);
+    expect(withE3.cb).toBe(4);
+    const without = receiverEvidence(lookupReceiver('grok-4.5')!);
+    expect(without.sb).toBeUndefined();
+    expect(without.cb).toBeUndefined();
+  });
+
+  it('applyReceiverPosture surfaces sb/cb through platform parameters', () => {
+    const base = mapToParameters(profile, 'anthropic');
+    const out = applyReceiverPosture(base, 'claude-opus-4.8');
+    expect(out.receiver_evidence?.sb).toBe(1);
+    expect(out.receiver_evidence?.cb).toBe(2);
+  });
+});

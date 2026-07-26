@@ -81,6 +81,8 @@ const recommendationOutputSchema = {
       li2: z.number(),
       ob: z.number(),
       fringe: z.array(z.number()),
+      sb: z.number().optional(),
+      cb: z.number().optional(),
       measured_on: z.string(),
       scope: z.string(),
     }).optional(),

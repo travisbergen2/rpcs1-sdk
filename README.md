@@ -2,9 +2,9 @@
 
 <!-- mcp-name: io.github.travisbergen2/rpcs1-agent-tuner -->
 
-**Measure TI, SG, FT, UE, and AR in a configured agent, then get the runtime settings to fix it.**
+**Start with the free tuner: find your AI agent’s likely failure mode, get runtime settings to try, and validate them with a harder case.**
 
-RPCS-1 is a five-primitive assay battery for deployed AI agents. It turns task type, entropy, stakes, predictability, context horizon, and commitment style into a five-primitive profile, a failure-risk score, a runtime recommendation, and the next test to run.
+RPCS-1 helps teams make agent settings deliberate rather than guessed. Describe the task, change rate, predictability, stakes, relevant context horizon, and commitment style; it returns a five-primitive profile, a runtime recommendation, and a next test. The suite also includes SendRight for catching ambiguous prompts before handoff and the Translation Bridge for profile-aware communication rendering.
 
 ## Repository Structure
 
@@ -95,7 +95,12 @@ Every parameter recommendation traces back to this principle or the basin stabil
 
 ## Web App
 
-Interactive tuner: [https://rpcs1.dev](https://rpcs1.dev)
+- Free Tuner: [https://rpcs1.dev/tuner](https://rpcs1.dev/tuner)
+- SendRight: [https://rpcs1.dev/send](https://rpcs1.dev/send)
+- Translation Bridge: [https://rpcs1.dev/translator](https://rpcs1.dev/translator)
+- Calibrate a communication-preference profile: [https://rpcs1.dev/calibrate](https://rpcs1.dev/calibrate)
+
+The site can also explain the same product facts in technical, executive, plain-language, or literal-and-precise registers. The explanation changes; pricing, deliverables, and limitations do not.
 
 ## SendRight (Interpretation Mirror + Hand-off)
 
@@ -142,24 +147,23 @@ RPCS-1 is also available as a public, anonymous, read-only MCP server:
 https://rpcs1.dev/mcp
 ```
 
-It exposes four tools — one for tuning agents, three for translating humans:
+It exposes seven read-only tools across three families:
 
 - `recommend_agent_configuration` — diagnose an AI agent against environmental entropy,
-  predictability, stakes, context horizon, and commitment style.
-- `interpret` — detect ambiguity in a human message (Signature Ambiguity Framework: AR level,
-  candidate readings with scores, clarifying questions).
-- `normalize` — join fragmented, ellipsis-heavy input into coherent prose without changing meaning.
-- `rewrite` — get rewrite instructions for a target style; the SDK's `rewriteForProfile` goes
-  further and renders for a specific person's receiver profile.
+  predictability, stakes, context horizon, and commitment style; receive runtime settings to try and a next test.
+- `interpret`, `normalize`, and `rewrite` — detect ambiguity, turn fragmented text into coherent prose,
+  and return style-specific rewrite instructions.
+- `calibrate_profile`, `prepare_prompt`, and `render_reply` — create a continuous communication-preference
+  profile, recover intended meaning before an action, and render a reply for that profile.
 
 ### Translation Layer
 
 > "Say what you mean. Hear what they meant."
 
-The translation tools implement HF-HATP v2.0 — the canonical agent-facing spec lives at
-[`skills/rpcs1-translation-layer/SKILL.md`](./skills/rpcs1-translation-layer/SKILL.md). In the SDK,
-`scoreIntake` calibrates a five-primitive receiver profile (R̂) from a 5-item intake, and
-`interpret` / `rewriteForProfile` consume it so output is tuned to the person, not a lumped style.
+The Translation Bridge treats the profile as a transportable parameter, not a category label. The five-question
+Calibrate flow measures communication preferences for rendering only; it is not a psychological assessment or diagnosis.
+`prepare_prompt` / `render_reply` use that profile on the inbound and outbound sides of an interaction. The canonical
+agent-facing specification lives at [`skills/rpcs1-translation-layer/SKILL.md`](./skills/rpcs1-translation-layer/SKILL.md).
 
 ### Tuner examples
 
@@ -201,9 +205,9 @@ Practical coding, support, and research examples are available at
 Hyperagent uses the fixed public OAuth client `hyperagent-rpcs1` with PKCE and the registered
 callback `https://hyperagent.com/api/mcp-servers/callback`. No client secret is required.
 
-The MCP surface intentionally wraps the existing deterministic recommendation engine. Broader
-communication, market, and decision-analysis tools should be added only after their scoring
-contracts are implemented and tested in the core package.
+The MCP surface exposes the deterministic agent-tuning workflow alongside read-only translation and
+per-user rendering tools. New tools should be added only after their scoring or behavior contracts are
+implemented and tested in the core package.
 
 Discovery metadata:
 
@@ -216,6 +220,7 @@ Production controls:
 - `MCP_HOURLY_LIMIT` controls per-instance MCP throttling (default: `120` requests per IP/hour).
 - `MCP_MAX_BODY_BYTES` limits request bodies (default: `65536` bytes).
 - `MCP_ALLOWED_HOSTS` is a comma-separated production host allowlist.
+- `MCP_ALLOWED_ORIGINS` is an optional comma-separated browser-origin allowlist. Leave it blank to reject cross-origin browser requests.
 - `MCP_OAUTH_JWT_SECRET` signs short-lived OAuth authorization codes and access tokens.
 - `/api/health` reports deployment and MCP readiness metadata.
 

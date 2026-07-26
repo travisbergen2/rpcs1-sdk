@@ -1,7 +1,7 @@
 {
   "serverInfo": {
-    "name": "RPCS1 Agent Tuner",
-    "version": "0.2.2"
+    "name": "RPCS-1 Agent Tuner & Translation Bridge",
+    "version": "0.3.0"
   },
   "authentication": {
     "required": false,
@@ -10,7 +10,7 @@
   "tools": [
     {
       "name": "recommend_agent_configuration",
-      "description": "Diagnose whether a deployed AI agent is matched to its operating environment. Returns receiver profile values, platform parameters, confidence, reasoning, and warnings.",
+      "description": "Diagnose why a deployed AI agent may fail. Returns suggested runtime parameters, a context strategy, a predicted regime, reasoning, warnings, and a next test. Deterministic, stateless, and read-only.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -102,7 +102,7 @@
     },
     {
       "name": "interpret",
-      "description": "Detect ambiguity in user messages. Returns AR level (AR0-AR5), confidence, candidate interpretations, clarifying questions.",
+      "description": "Detect ambiguity in user messages. Returns AR level, confidence, candidate interpretations, clarifying questions, and a suggested next step.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -149,7 +149,7 @@
     },
     {
       "name": "rewrite",
-      "description": "Get rewrite instructions for adapting text to a target audience style: technical, plain, gentle, concise, detailed, or direct.",
+      "description": "Return style-specific rewrite instructions for technical, plain, socially gentle, concise, detailed, or direct communication.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -169,6 +169,219 @@
             ]
           }
         }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": true
+      }
+    },
+    {
+      "name": "calibrate_profile",
+      "description": "Build a continuous communication-preference profile from five behavioral forced-choice answers. Omit answers to receive the questions. The profile is not a diagnosis or category label, and nothing is stored server-side.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "answers": {
+            "type": "object",
+            "properties": {
+              "TI": {
+                "type": "string",
+                "enum": [
+                  "a",
+                  "b",
+                  "c"
+                ]
+              },
+              "SG": {
+                "type": "string",
+                "enum": [
+                  "a",
+                  "b",
+                  "c"
+                ]
+              },
+              "FT": {
+                "type": "string",
+                "enum": [
+                  "a",
+                  "b",
+                  "c"
+                ]
+              },
+              "UE": {
+                "type": "string",
+                "enum": [
+                  "a",
+                  "b",
+                  "c"
+                ]
+              },
+              "AR": {
+                "type": "string",
+                "enum": [
+                  "a",
+                  "b",
+                  "c"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "description": "Chosen option per primitive. Omit entirely to receive the five questions."
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": true
+      }
+    },
+    {
+      "name": "prepare_prompt",
+      "description": "Recover likely intent from a raw message before acting. Returns a canonical translation, ambiguity level, and whether to clarify or commit; an optional receiver profile shapes that choice.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5000,
+            "description": "The user’s raw message."
+          },
+          "risk": {
+            "type": "string",
+            "enum": [
+              "casual",
+              "advice",
+              "high-stakes",
+              "safety-critical"
+            ],
+            "default": "advice",
+            "description": "Risk category for the ambiguity threshold."
+          },
+          "profile": {
+            "type": "object",
+            "properties": {
+              "TI": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Temporal Integration: 0 = bottom line first, 100 = full context first"
+              },
+              "SG": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Signal Gain: 0 = flat and factual, 100 = warm and expressive"
+              },
+              "FT": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Filtering Threshold: 100 = explicit and literal, 0 = subtext lands"
+              },
+              "UE": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Update Elasticity: 100 = pushback welcome, 0 = prefers consistency"
+              },
+              "AR": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Ambiguity Resolution: 100 = commit to best reading, 0 = clarify first"
+              }
+            },
+            "required": [
+              "TI",
+              "SG",
+              "FT",
+              "UE",
+              "AR"
+            ],
+            "additionalProperties": false,
+            "description": "ReceiverProfile from calibrate_profile."
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": true
+      }
+    },
+    {
+      "name": "render_reply",
+      "description": "Return deterministic rendering instructions for a draft reply and a receiver profile. Apply the returned structure, warmth, explicitness, revision, and ambiguity guidance before answering.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000,
+            "description": "Your draft reply."
+          },
+          "profile": {
+            "type": "object",
+            "properties": {
+              "TI": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Temporal Integration: 0 = bottom line first, 100 = full context first"
+              },
+              "SG": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Signal Gain: 0 = flat and factual, 100 = warm and expressive"
+              },
+              "FT": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Filtering Threshold: 100 = explicit and literal, 0 = subtext lands"
+              },
+              "UE": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Update Elasticity: 100 = pushback welcome, 0 = prefers consistency"
+              },
+              "AR": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Ambiguity Resolution: 100 = commit to best reading, 0 = clarify first"
+              }
+            },
+            "required": [
+              "TI",
+              "SG",
+              "FT",
+              "UE",
+              "AR"
+            ],
+            "additionalProperties": false,
+            "description": "ReceiverProfile from calibrate_profile."
+          }
+        },
+        "required": [
+          "text",
+          "profile"
+        ],
+        "additionalProperties": false
       },
       "annotations": {
         "readOnlyHint": true,

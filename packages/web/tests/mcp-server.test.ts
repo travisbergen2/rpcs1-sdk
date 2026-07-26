@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
@@ -6,6 +7,16 @@ import { createRpcs1McpServer } from '../lib/mcp-server';
 
 let server: McpServer | undefined;
 let client: Client | undefined;
+
+const publicToolNames = [
+  'recommend_agent_configuration',
+  'interpret',
+  'normalize',
+  'rewrite',
+  'calibrate_profile',
+  'prepare_prompt',
+  'render_reply',
+];
 
 afterEach(async () => {
   await client?.close();
@@ -26,15 +37,7 @@ describe('RPCS1 MCP server', () => {
     const { tools } = await client.listTools();
 
     expect(tools).toHaveLength(7);
-    expect(tools.map((t) => t.name)).toEqual([
-      'recommend_agent_configuration',
-      'interpret',
-      'normalize',
-      'rewrite',
-      'calibrate_profile',
-      'prepare_prompt',
-      'render_reply',
-    ]);
+    expect(tools.map((t) => t.name)).toEqual(publicToolNames);
     for (const tool of tools) {
       expect(tool.annotations).toMatchObject({ readOnlyHint: true, destructiveHint: false });
     }
@@ -77,6 +80,39 @@ describe('RPCS1 MCP server', () => {
         },
       },
       target_platform: { default: 'anthropic' },
+    });
+  });
+
+  it('keeps the public server card aligned with the live tool surface', () => {
+    const card = JSON.parse(
+      readFileSync(
+        new URL('../public/.well-known/mcp/server-card.json', import.meta.url),
+        'utf8',
+      ),
+    );
+
+    expect(card.serverInfo).toMatchObject({
+      name: 'RPCS-1 Agent Tuner & Translation Bridge',
+      version: '0.3.0',
+    });
+    expect(card.tools.map((tool: { name: string }) => tool.name)).toEqual(publicToolNames);
+    for (const tool of card.tools) {
+      expect(tool.annotations).toMatchObject({
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+      });
+    }
+  });
+
+  it('ships Glama ownership metadata for the maintainer account', () => {
+    const claim = JSON.parse(
+      readFileSync(new URL('../public/.well-known/glama.json', import.meta.url), 'utf8'),
+    );
+
+    expect(claim).toMatchObject({
+      $schema: 'https://glama.ai/mcp/schemas/connector.json',
+      maintainers: [{ email: 'travisbergen2@gmail.com' }],
     });
   });
 

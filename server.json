@@ -1,9 +1,9 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "dev.rpcs1/agent-tuner",
+  "name": "io.github.travisbergen2/rpcs1-agent-tuner",
   "title": "RPCS-1 Agent Tuner & Translation Bridge",
-  "description": "Derive agent runtime settings from receiver laws (not vibes), and adapt every reply to a calibrated per-user communication profile. 7 deterministic, stateless tools.",
-  "websiteUrl": "https://rpcs1.dev",
+  "description": "Find your AI agent’s likely failure mode, get runtime settings plus a next test, and clarify ambiguous prompts before they steer an action. Seven read-only tools.",
+  "websiteUrl": "https://rpcs1.dev/tuner?utm_source=official-mcp-registry&utm_medium=mcp-directory&utm_campaign=listing",
   "repository": {
     "url": "https://github.com/travisbergen2/rpcs1-sdk",
     "source": "github"

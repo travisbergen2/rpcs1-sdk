@@ -9,8 +9,7 @@ export const dynamic = 'force-dynamic';
 export const maxDuration = 10;
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+  'Access-Control-Allow-Methods': 'POST, DELETE, OPTIONS',
   'Access-Control-Allow-Headers':
     'Content-Type, Accept, Authorization, MCP-Protocol-Version, MCP-Session-Id, Last-Event-ID',
   'Access-Control-Expose-Headers': 'MCP-Protocol-Version, MCP-Session-Id',
@@ -63,6 +62,21 @@ function isAllowedHost(request: Request): boolean {
   return allowedHosts.has(requestHost);
 }
 
+function isAllowedOrigin(request: Request): boolean {
+  const origin = request.headers.get('origin');
+  if (!origin) return true;
+
+  const requestOrigin = new URL(request.url).origin;
+  if (origin === requestOrigin) return true;
+
+  const configuredOrigins = env.MCP_ALLOWED_ORIGINS
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+
+  return configuredOrigins.includes(origin);
+}
+
 function summarizeMcpPayload(payload: unknown): { rpcMethods: string[]; toolNames: string[] } {
   const messages = Array.isArray(payload) ? payload : [payload];
   const rpcMethods = new Set<string>();
@@ -94,6 +108,10 @@ async function handleMcpRequest(request: Request): Promise<Response> {
 
   if (!isAllowedHost(request)) {
     return jsonRpcError(403, -32001, 'Host is not allowed');
+  }
+
+  if (!isAllowedOrigin(request)) {
+    return jsonRpcError(403, -32005, 'Origin is not allowed');
   }
 
   const authorization = request.headers.get('authorization');
@@ -157,6 +175,8 @@ async function handleMcpRequest(request: Request): Promise<Response> {
   await server.connect(transport);
   const response = await transport.handleRequest(transportRequest, { parsedBody });
   const headers = new Headers(response.headers);
+  const origin = request.headers.get('origin');
+  if (origin) headers.set('Access-Control-Allow-Origin', origin);
 
   for (const [key, value] of Object.entries(corsHeaders)) {
     headers.set(key, value);
@@ -206,48 +226,32 @@ export const POST = handleMcpRequest;
 export const DELETE = handleMcpRequest;
 
 export function GET(request: Request) {
-  const accept = request.headers.get('accept') ?? '';
-
-  // For MCP Streamable HTTP session initialization, require MCP headers
-  if (accept.includes('application/json')) {
-    return handleMcpRequest(request);
+  if (!isAllowedOrigin(request)) {
+    return jsonRpcError(403, -32005, 'Origin is not allowed');
   }
 
-  if (accept.includes('text/html')) {
-    return new Response(
-      [
-        'RPCS1 MCP server is online.',
-        '',
-        'MCP endpoint: https://rpcs1.dev/mcp',
-        'Transport: Streamable HTTP',
-        'Tools: recommend_agent_configuration, interpret, normalize, rewrite, calibrate_profile, prepare_prompt, render_reply',
-        '',
-        'Connect this URL from an MCP-compatible client.',
-        'Health: https://rpcs1.dev/api/health',
-        'Docs: https://rpcs1.dev/docs',
-      ].join('\n'),
-      {
-        status: 200,
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'text/plain; charset=utf-8',
-        },
-      },
-    );
-  }
-
-  return new Response('MCP endpoint is at https://rpcs1.dev/mcp. Use POST with MCP protocol headers.', {
-    status: 200,
+  // This server does not offer a standalone SSE stream. Streamable HTTP clients
+  // send JSON-RPC requests over POST; a GET must therefore fail fast with 405.
+  return new Response('Method Not Allowed', {
+    status: 405,
     headers: {
       ...corsHeaders,
-      'Content-Type': 'text/plain; charset=utf-8',
+      Allow: 'POST, DELETE, OPTIONS',
     },
   });
 }
 
-export function OPTIONS() {
+export function OPTIONS(request: Request) {
+  if (!isAllowedOrigin(request)) {
+    return new Response('Origin is not allowed', { status: 403, headers: corsHeaders });
+  }
+
+  const headers = new Headers(corsHeaders);
+  const origin = request.headers.get('origin');
+  if (origin) headers.set('Access-Control-Allow-Origin', origin);
+
   return new Response(null, {
     status: 204,
-    headers: corsHeaders,
+    headers,
   });
 }

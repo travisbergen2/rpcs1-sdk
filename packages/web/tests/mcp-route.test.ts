@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { GET, POST } from '../app/mcp/route';
+import { GET, OPTIONS, POST } from '../app/mcp/route';
 import { createHash } from 'node:crypto';
 import {
   exchangeAuthorizationCode,
@@ -17,14 +17,46 @@ const headers = {
 };
 
 describe('RPCS1 MCP HTTP route', () => {
-  it('shows a useful status message when opened in a browser', async () => {
+  it('returns 405 for GET because this server does not offer a standalone SSE stream', async () => {
     const response = await GET(new Request('http://localhost/mcp', {
-      headers: { Accept: 'text/html' },
+      headers: { Accept: 'text/event-stream' },
     }));
 
-    expect(response.status).toBe(200);
-    expect(response.headers.get('content-type')).toContain('text/plain');
-    expect(await response.text()).toContain('RPCS1 MCP server is online');
+    expect(response.status).toBe(405);
+    expect(response.headers.get('allow')).toBe('POST, DELETE, OPTIONS');
+  });
+
+  it('accepts a same-origin CORS preflight without opening the endpoint to other origins', async () => {
+    const response = await OPTIONS(new Request('http://localhost/mcp', {
+      method: 'OPTIONS',
+      headers: {
+        Origin: 'http://localhost',
+        'Access-Control-Request-Method': 'POST',
+      },
+    }));
+
+    expect(response.status).toBe(204);
+    expect(response.headers.get('access-control-allow-origin')).toBe('http://localhost');
+  });
+
+  it('rejects a cross-origin MCP request that is not explicitly allowed', async () => {
+    const response = await POST(new Request('http://localhost/mcp', {
+      method: 'POST',
+      headers: {
+        ...headers,
+        Origin: 'https://untrusted.example',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 0,
+        method: 'tools/list',
+        params: {},
+      }),
+    }));
+    const body = await response.json();
+
+    expect(response.status).toBe(403);
+    expect(body.error).toMatchObject({ code: -32005, message: 'Origin is not allowed' });
   });
 
   it('handles MCP initialization over Streamable HTTP', async () => {

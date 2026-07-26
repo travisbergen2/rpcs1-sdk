@@ -45,6 +45,13 @@ export interface RecommendInput {
   task: TaskDescriptor;
   environment: AgentEnvironment;
   target_platform: Platform;
+  /**
+   * Optional: the actual model id this configuration targets. When it matches
+   * a measured per-model receiver entry (E-LIT table), measured directives and
+   * evidence metadata are attached to platform_parameters. Unknown models fall
+   * back to platform-level behavior unchanged.
+   */
+  target_model?: string;
 }
 
 // ─── Output Types ─────────────────────────────────────────────────────────────

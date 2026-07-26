@@ -9,6 +9,7 @@ import {
   applyReceiverPosture,
 } from '../src/receivers.js';
 import { mapToParameters } from '../src/platforms.js';
+import { recommend } from '../src/recommend.js';
 import type { ReceiverProfile } from '../src/types.js';
 
 const profile: ReceiverProfile = { TI: 50, SG: 50, FT: 50, UE: 50, AR: 50 };
@@ -191,5 +192,36 @@ describe('mapToParameters targetModel integration', () => {
     const legacy = mapToParameters(profile, 'openai', { task_summary: 'summarize a report' });
     const out = mapToParameters(profile, 'openai', { task_summary: 'summarize a report' }, 'gpt-99-nonexistent');
     expect(out).toEqual(legacy);
+  });
+});
+
+describe('recommend target_model threading', () => {
+  const input = {
+    task: { task_summary: 'summarize a report' },
+    environment: {
+      entropy: 'moderate',
+      predictability: 'somewhat_predictable',
+      stakes: 'medium',
+      context_relevance: 'medium',
+      commitment_style: 'balanced',
+    },
+    target_platform: 'anthropic',
+  } as const;
+
+  it('attaches measured evidence when target_model is measured', () => {
+    const rec = recommend({ ...input, target_model: 'claude-sonnet-4-6' });
+    expect(rec.platform_parameters.receiver_evidence?.grade).toBe('confirmatory');
+    expect(rec.platform_parameters.receiver_evidence?.display_name).toBe('Claude Sonnet 4.6');
+  });
+
+  it('omitting target_model leaves the recommendation untouched', () => {
+    const rec = recommend(input);
+    expect(rec.platform_parameters.receiver_evidence).toBeUndefined();
+  });
+
+  it('unmeasured target_model matches the no-target output', () => {
+    const withUnknown = recommend({ ...input, target_model: 'not-a-real-model' });
+    const without = recommend(input);
+    expect(withUnknown.platform_parameters).toEqual(without.platform_parameters);
   });
 });

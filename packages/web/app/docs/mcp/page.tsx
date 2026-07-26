@@ -37,7 +37,9 @@ export default function McpIntegrationPage() {
               <p className="text-xs font-mono text-sky-300 mb-1">Agent tuning</p>
               <p>
                 <code>recommend_agent_configuration</code> — a five-primitive profile, failure-risk
-                score, runtime posture, and next test for a described workload.
+                score, runtime posture, and next test for a described workload. Pass{' '}
+                <code>target_model</code> to attach measured per-model receiver posture
+                (evidence-graded literalness, override boundary, and translation directives).
               </p>
             </div>
             <div>

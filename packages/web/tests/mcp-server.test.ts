@@ -93,7 +93,7 @@ describe('RPCS1 MCP server', () => {
 
     expect(card.serverInfo).toMatchObject({
       name: 'RPCS-1 Agent Tuner & Translation Bridge',
-      version: '0.3.0',
+      version: '0.3.1',
     });
     expect(card.tools.map((tool: { name: string }) => tool.name)).toEqual(publicToolNames);
     for (const tool of card.tools) {
@@ -114,6 +114,69 @@ describe('RPCS1 MCP server', () => {
       $schema: 'https://glama.ai/mcp/schemas/connector.json',
       maintainers: [{ email: 'travisbergen2@gmail.com' }],
     });
+  });
+
+
+  it('attaches measured receiver posture when target_model is measured', async () => {
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    server = createRpcs1McpServer();
+    client = new Client({ name: 'rpcs1-test-client', version: '1.0.0' });
+
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+
+    const result = await client.callTool({
+      name: 'recommend_agent_configuration',
+      arguments: {
+        task: { task_summary: 'Summarize weekly reports' },
+        environment: {
+          entropy: 'moderate',
+          predictability: 'somewhat_predictable',
+          stakes: 'medium',
+          context_relevance: 'medium',
+          commitment_style: 'balanced',
+        },
+        target_platform: 'anthropic',
+        target_model: 'claude-sonnet-4-6',
+      },
+    });
+
+    expect(result.isError).not.toBe(true);
+    const structured = result.structuredContent as {
+      platform_parameters: {
+        receiver_evidence?: { grade: string; display_name: string; scope: string };
+        receiver_traits?: string[];
+        system_prompt_additions?: string[];
+      };
+    };
+    expect(structured.platform_parameters.receiver_evidence).toMatchObject({
+      grade: 'confirmatory',
+      display_name: 'Claude Sonnet 4.6',
+    });
+    expect(structured.platform_parameters.receiver_evidence?.scope).toContain('E-LIT');
+    expect(structured.platform_parameters.receiver_traits?.length).toBeGreaterThan(0);
+    const text = (result.content as Array<{ type: string; text: string }>)[0].text;
+    expect(text).toContain('Measured receiver posture applied');
+
+    // Unmeasured model: no evidence attached, no error
+    const fallback = await client.callTool({
+      name: 'recommend_agent_configuration',
+      arguments: {
+        task: { task_summary: 'Summarize weekly reports' },
+        environment: {
+          entropy: 'moderate',
+          predictability: 'somewhat_predictable',
+          stakes: 'medium',
+          context_relevance: 'medium',
+          commitment_style: 'balanced',
+        },
+        target_platform: 'anthropic',
+        target_model: 'not-a-real-model-id',
+      },
+    });
+    expect(fallback.isError).not.toBe(true);
+    const fb = fallback.structuredContent as { platform_parameters: { receiver_evidence?: unknown } };
+    expect(fb.platform_parameters.receiver_evidence).toBeUndefined();
   });
 
   it('returns structured recommendations through a real MCP call', async () => {

@@ -39,6 +39,8 @@ export const recommendInputSchema = z.object({
   target_platform: z.enum(['anthropic', 'openai', 'open_source', 'generic'])
     .default('anthropic')
     .describe('The platform whose runtime parameters should be recommended.'),
+  target_model: z.string().trim().min(1).max(200).optional()
+    .describe('Optional: the actual model id this agent will run on (e.g. "claude-sonnet-4-6", "deepseek-v4-pro"). When it matches a measured per-model receiver entry (E-LIT table), measured translation directives and evidence-graded posture data are attached to platform_parameters. Unknown models fall back to platform-level behavior unchanged.'),
 }).strict();
 
 export const recommendationOutputSchema = {
@@ -65,6 +67,20 @@ export const recommendationOutputSchema = {
     context_strategy: z.enum(['long_window', 'rolling_summary', 'frequent_grounding']).optional(),
     translation_posture: z.enum(['direct', 'bridging', 'face_preserving', 'minimal_clarifying']).optional(),
     translation_notes: z.array(z.string()).optional(),
+    receiver_evidence: z.object({
+      model_key: z.string(),
+      display_name: z.string(),
+      grade: z.enum(['confirmatory', 'corroboration', 'self_measurement'])
+        .describe('Evidence grade of the measurement — travels with the data.'),
+      li2: z.number().describe('Fenced literalness, [-1, +1].'),
+      ob: z.number().describe('Truth-override boundary rung (0-5).'),
+      fringe: z.array(z.number()).describe('Rungs with modal comply-then-correct.'),
+      measured_on: z.string(),
+      scope: z.string(),
+    }).optional()
+      .describe('Present only when target_model has a measured per-model receiver entry.'),
+    receiver_traits: z.array(z.string()).optional()
+      .describe('Reliability warnings and named traits for the measured receiver.'),
   }),
   predicted_regime: z.enum(['stable', 'near_oscillation', 'near_overload', 'near_freeze']),
   reasoning: z.string(),

@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { PRIMITIVES } from '@/lib/primitives';

@@ -10,11 +10,11 @@
  * Everything is served by the existing API; this page is wiring, not engine code.
  */
 
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
+import { INTAKE_ITEMS } from '@rpcs1/core';
+import type { IntakeItem } from '@rpcs1/core';
 
 // ── API shapes (mirror @rpcs1/core types; kept local so this stays a leaf page) ──
-interface IntakeOption { id: string; label: string; anchor: number }
-interface IntakeItem { primitive: 'TI' | 'SG' | 'FT' | 'UE' | 'AR'; prompt: string; options: IntakeOption[] }
 interface Profile { TI: number; SG: number; FT: number; UE: number; AR: number }
 interface Directives {
   structure: string; warmth: string; explicitness: string; revision: string; ambiguity: string;
@@ -42,7 +42,10 @@ async function api(tool: string, body: Record<string, unknown>) {
 }
 
 export default function CalibratePage() {
-  const [items, setItems] = useState<IntakeItem[]>([]);
+  // Intake items are static in @rpcs1/core — import them directly so the five
+  // questions are in the server-rendered HTML immediately (no API round trip,
+  // no hydration-gated content). Scoring still goes through /api/translate.
+  const items: IntakeItem[] = INTAKE_ITEMS;
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [card, setCard] = useState<ProfileCard | null>(null);
   const [text, setText] = useState("Honestly it's fine, don't worry about the deadline thing");
@@ -51,12 +54,6 @@ export default function CalibratePage() {
   const [outputKind, setOutputKind] = useState<'rewrite' | 'interpret' | null>(null);
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    api('intake', {})
-      .then((d) => setItems(d.items ?? []))
-      .catch((e) => setError(e.message));
-  }, []);
 
   const answered = items.length > 0 && items.every((i) => answers[i.primitive]);
 
@@ -104,7 +101,6 @@ export default function CalibratePage() {
       {/* ── Step 1: intake ── */}
       <section className="space-y-5">
         <h2 className="text-sm font-semibold text-sky-400 uppercase tracking-wide">1 · Calibration</h2>
-        {items.length === 0 && !error && <p className="text-sm text-gray-500">Loading questions…</p>}
         {items.map((item) => (
           <fieldset key={item.primitive} className="border border-gray-800 rounded-xl p-4 bg-gray-900/40">
             <legend className="px-1 text-xs font-mono text-gray-500">

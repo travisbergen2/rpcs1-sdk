@@ -17,6 +17,7 @@ export type {
   // Output types
   ReceiverProfile,
   PlatformParameters,
+  ReceiverEvidenceSummary,
   ToolUseStrategy,
   RetryStrategy,
   ContextStrategy,
@@ -24,6 +25,27 @@ export type {
   Confidence,
   Recommendation,
 } from './types.js';
+
+
+// ── Measured per-model receiver table (E-LIT program) ──
+export {
+  RECEIVER_TABLE,
+  RECEIVER_TABLE_VERSION,
+  RECEIVER_TABLE_MEASURED,
+  RECEIVER_TABLE_SCOPE,
+  normalizeModelId,
+  lookupReceiver,
+  receiverDirectives,
+  receiverEvidence,
+  applyReceiverPosture,
+} from './receivers.js';
+export type {
+  ReceiverEntry,
+  EvidenceGrade,
+  LadderClass,
+  ChannelGain,
+  ReceiverEvidence,
+} from './receivers.js';
 
 // ── Perception layer (model proposes, deterministic RPCS-1 disposes) ──
 export {

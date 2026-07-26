@@ -15,6 +15,7 @@ import {
   TranslationPosture,
   TaskDescriptor,
 } from './types.js';
+import { applyReceiverPosture } from './receivers.js';
 
 interface PlatformConfig {
   model_recommendations: Record<string, string> | null;
@@ -220,6 +221,14 @@ export function mapToParameters(
   profile: ReceiverProfile,
   platform: Platform,
   task: TaskDescriptor = { task_summary: 'Unspecified task' },
+  /**
+   * Optional: the actual model this prompt will be sent to. When provided
+   * and a measured per-model receiver entry exists (E-LIT table), measured
+   * directives supersede vendor-level posture assumptions and are appended
+   * to system_prompt_additions with evidence-grade metadata attached.
+   * Unknown models fall back to vendor-level behavior unchanged.
+   */
+  targetModel?: string,
 ): PlatformParameters {
   const config = (platformsConfig as Record<string, PlatformConfig>)[platform];
 
@@ -252,6 +261,12 @@ export function mapToParameters(
     // top_p mirrors temperature intent: high SG → low top_p (stays in [0.4, 1.0])
     const rawTopP = (1 - profile.SG / 100) * 0.6 + 0.4;
     params.top_p = Math.round(rawTopP * 100) / 100;
+  }
+
+  // Per-model measured posture takes precedence over per-vendor assumptions
+  // whenever the target model is known and measured.
+  if (targetModel) {
+    return applyReceiverPosture(params, targetModel);
   }
 
   return params;

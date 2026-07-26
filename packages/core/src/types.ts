@@ -101,6 +101,10 @@ export interface ReceiverEvidenceSummary {
   ob: number;
   /** Rungs with modal comply-then-correct (correction fringe). */
   fringe: number[];
+  /** E-LIT-3 stakes boundary (1–5), when measured. Separate instrument; never pooled with li2/ob. */
+  sb?: number;
+  /** E-LIT-3 care boundary (1–4), when measured. */
+  cb?: number;
   measured_on: string;
   scope: string;
 }

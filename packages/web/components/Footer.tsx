@@ -10,7 +10,7 @@ export function Footer() {
               RPCS<span className="text-sky-400">-1</span> — agent settings, derived not guessed
             </p>
             <p className="text-xs text-gray-600 mt-1">
-              Free sample, written memo, and MCP access for deployed AI agents.
+              Free tuner, translator, and MCP server. Founding agent diagnostic: first 3 seats free, then $99.
             </p>
             <div className="mt-4 flex flex-wrap gap-3">
               <Link
@@ -20,10 +20,10 @@ export function Footer() {
                 Run free sample
               </Link>
               <Link
-                href="/api/checkout?tier=diagnostic"
+                href="/diagnostic"
                 className="inline-flex items-center justify-center rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-amber-400 shadow-lg shadow-amber-500/20"
               >
-                $99 founding pilot
+                Founding pilot →
               </Link>
             </div>
           </div>

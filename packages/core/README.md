@@ -75,6 +75,51 @@ neither knows nor cares.
 - Keys are held in memory on your side only; HTTP error bodies are not echoed
   into thrown errors.
 
+## Per-model receiver table (measured posture)
+
+Vendor is the wrong key for receiver posture. The E-LIT measurement program
+(2026-07) showed models from the same vendor spanning most of the literalness
+scale (Claude Haiku 4.5 at +0.96 vs Opus 4.8 at +0.29), a Meta model running
+the exact ladder geometry formerly attributed to Opus, and a 0.58-point swing
+across four generations of one family. So the SDK now ships a **measured
+per-model receiver table** that supersedes per-vendor posture assumptions
+whenever the target model is known:
+
+```ts
+import { mapToParameters, lookupReceiver, applyReceiverPosture } from '@rpcs1/core';
+
+// Integrated: pass the target model to mapToParameters
+const params = mapToParameters(profile, 'anthropic', task, 'claude-sonnet-4-6');
+params.receiver_evidence   // { grade: 'confirmatory', li2: 0.467, ob: 3, ... }
+params.system_prompt_additions // now includes measured directives, e.g.
+                               // "Fence every constraint explicitly ..."
+
+// Or standalone:
+const entry = lookupReceiver('deepseek/deepseek-v4-pro');
+entry?.ladder              // ['C','C','C','C','R'] — truth-ladder modal vector
+const merged = applyReceiverPosture(params, 'gpt-5.6-terra');
+```
+
+Design rules, enforced by tests:
+
+- **Every entry carries an evidence grade** (`confirmatory` — measured on an
+  E-LIT-naive subject; `corroboration` — subject had prior instrument contact;
+  `self_measurement` — grade-capped). Grades travel with the data; don't strip
+  them.
+- **Unknown model = no data, never "no posture."** `lookupReceiver` returns
+  `undefined` and `mapToParameters` falls back to vendor-level behavior
+  unchanged. Nothing is silently guessed.
+- **Scope is declared**: entries are field measurements of deployed defaults
+  on an agent scaffold (k=3, single date), not model-internal constants. The
+  caveat string ships on every `receiver_evidence` payload.
+- Matching handles vendor prefixes (`deepseek/…`), date-pinned variants
+  (`claude-haiku-4-5-20251001`), and known aliases (`opus-latest` resolves to
+  the measured 4.8 entry — which is itself a documented hazard).
+
+Source data and methodology: the E-LIT program write-up (frozen item banks,
+pre-registered predictions, per-run ledgers). Update path: re-run the battery
+on a new model (~26 threads), add one entry with its grade.
+
 ## Eval battery (frozen)
 
 `eval/battery.json` is a 50-case frozen battery (unresolved pronouns,

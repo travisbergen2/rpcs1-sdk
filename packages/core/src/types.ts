@@ -82,6 +82,22 @@ export type TranslationPosture =
   | 'face_preserving'
   | 'minimal_clarifying';
 
+
+/** Evidence summary for a measured receiver entry (E-LIT program). */
+export interface ReceiverEvidenceSummary {
+  model_key: string;
+  display_name: string;
+  grade: 'confirmatory' | 'corroboration' | 'self_measurement';
+  /** Fenced literalness, [-1, +1]. */
+  li2: number;
+  /** Truth-override boundary rung (0–5). */
+  ob: number;
+  /** Rungs with modal comply-then-correct (correction fringe). */
+  fringe: number[];
+  measured_on: string;
+  scope: string;
+}
+
 export interface PlatformParameters {
   temperature: number;
   top_p?: number;
@@ -93,6 +109,13 @@ export interface PlatformParameters {
   context_strategy?: ContextStrategy;
   translation_posture?: TranslationPosture;
   translation_notes?: string[];
+  /**
+   * Present only when the target model has a MEASURED per-model receiver
+   * entry (E-LIT table). Absence means "no data", never "no posture".
+   */
+  receiver_evidence?: ReceiverEvidenceSummary;
+  /** Reliability warnings and named traits for the measured receiver. */
+  receiver_traits?: string[];
 }
 
 export type PredictedRegime =

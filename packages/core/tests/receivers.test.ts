@@ -300,3 +300,47 @@ describe('E-LIT-3 boundary coordinates (v0.2.0)', () => {
     expect(out.receiver_evidence?.cb).toBe(2);
   });
 });
+
+describe('E-GRD-1 retest fields and evidence constants (v2 season)', () => {
+  it('exports the scoring-validation and directives-evidence constants', async () => {
+    const mod = await import('../src/receivers.js');
+    expect(mod.RECEIVER_TABLE_SCORING_VALIDATION).toContain('99.4%');
+    expect(mod.RECEIVER_TABLE_SCORING_VALIDATION).toContain('+/-1 rung');
+    expect(mod.RECEIVER_TABLE_ELIT3_RETEST).toBe('2026-07-28');
+    expect(mod.RECEIVER_DIRECTIVES_EVIDENCE).toContain('GENERIC PROMPT HYGIENE');
+    expect(mod.RECEIVER_DIRECTIVES_EVIDENCE).toContain('withdrawn');
+  });
+
+  it('every entry with a retest coordinate carries a consistent band', () => {
+    for (const e of RECEIVER_TABLE) {
+      if (e.sb_retest !== undefined) {
+        expect(e.sb).toBeDefined();
+        expect(e.sb_band).toBeDefined();
+        const [lo, hi] = e.sb_band!;
+        expect(lo).toBeLessThanOrEqual(hi);
+        expect(lo).toBe(Math.min(e.sb!, e.sb_retest));
+        expect(hi).toBe(Math.max(e.sb!, e.sb_retest));
+      }
+      if (e.cb_retest !== undefined) {
+        expect(e.cb_band).toBeDefined();
+        const [lo, hi] = e.cb_band!;
+        expect(lo).toBe(Math.min(e.cb!, e.cb_retest));
+        expect(hi).toBe(Math.max(e.cb!, e.cb_retest));
+      }
+    }
+  });
+
+  it('all ten E-LIT-3 subjects carry retest data', () => {
+    const withRetest = RECEIVER_TABLE.filter((e) => e.sb_retest !== undefined);
+    expect(withRetest.length).toBe(10);
+  });
+
+  it('stripUrgency is ordered first wherever present (E-RX-1 highest-leverage transform)', () => {
+    for (const e of RECEIVER_TABLE) {
+      const idx = e.directives.findIndex((d) => d.includes('measured SB2 inversion'));
+      if (idx !== -1) {
+        expect(idx).toBe(0);
+      }
+    }
+  });
+});

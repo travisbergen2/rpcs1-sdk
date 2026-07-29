@@ -279,6 +279,46 @@ describe('E-LIT-3 boundary coordinates (v0.2.0)', () => {
     }
   });
 
+  it('carries E-GRD-1 retest bands for all ten E-LIT-3-measured models', () => {
+    const bands = [
+      ['deepseek-v4-pro', 5, [5, 5]],
+      ['claude-haiku-4.5', 5, [4, 5]],
+      ['claude-opus-4.6', 3, [3, 4]],
+      ['glm-5.2', 5, [4, 5]],
+      ['muse-spark-1.1', 5, [5, 5]],
+      ['claude-sonnet-4.6', 4, [4, 4]],
+      ['claude-sonnet-5', 3, [3, 3]],
+      ['claude-opus-5', 3, [3, 3]],
+      ['claude-opus-4.7', 5, [5, 5]],
+      ['claude-opus-4.8', 3, [1, 3]],
+    ] as const;
+    for (const [id, rt, band] of bands) {
+      const e = lookupReceiver(id)!;
+      expect(e.sb_retest).toBe(rt);
+      expect(e.sb_band).toEqual(band);
+    }
+  });
+
+  it('sb bands contain both measurements and are ordered', () => {
+    for (const e of RECEIVER_TABLE) {
+      if (!e.sb_band) continue;
+      const [lo, hi] = e.sb_band;
+      expect(lo).toBeLessThanOrEqual(hi);
+      expect(e.sb).toBeGreaterThanOrEqual(lo);
+      expect(e.sb).toBeLessThanOrEqual(hi);
+      expect(e.sb_retest).toBeGreaterThanOrEqual(lo);
+      expect(e.sb_retest).toBeLessThanOrEqual(hi);
+    }
+  });
+
+  it('retest fields absent on entries without an E-LIT-3 measurement', () => {
+    for (const id of ['kimi-k2.6', 'grok-4.5', 'gpt-5.6-sol', 'gemini-3.5-flash', 'fable-5']) {
+      const e = lookupReceiver(id)!;
+      expect(e.sb_retest).toBeUndefined();
+      expect(e.sb_band).toBeUndefined();
+    }
+  });
+
   it('marks the Sonnet 5 stability-gate failure as a validity flag', () => {
     const t = lookupReceiver('claude-sonnet-5')!;
     expect(t.elit3_flags?.join(' ')).toMatch(/stability gate FAILED/);

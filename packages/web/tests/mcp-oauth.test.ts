@@ -208,6 +208,22 @@ describe('Dynamic client registration (Claude.ai-style connectors)', () => {
     expect(typeof body.access_token).toBe('string');
   });
 
+  it("consent page CSP form-action includes the client's redirect origin (Chrome blocks the post-Allow redirect otherwise)", async () => {
+    const reg = await (await register([claudeRedirect])).json();
+    const params = new URLSearchParams({
+      response_type: 'code',
+      client_id: reg.client_id,
+      redirect_uri: claudeRedirect,
+      scope: MCP_OAUTH_SCOPE,
+      code_challenge: challenge,
+      code_challenge_method: 'S256',
+    });
+    const page = await authorizeGet(new Request(`http://localhost/oauth/authorize?${params}`));
+    expect(page.status).toBe(200);
+    const csp = page.headers.get('content-security-policy')!;
+    expect(csp).toContain("form-action 'self' https://claude.ai");
+  });
+
   it('rejects non-https redirect URIs (except localhost)', async () => {
     expect((await register(['http://evil.example.com/cb'])).status).toBe(400);
     expect((await register(['http://localhost:8123/cb'])).status).toBe(201);

@@ -152,10 +152,22 @@ describe('routeByEntropy', () => {
     expect(d.options).toBeNull();
   });
 
-  it('clarifies at maximal ambiguity, with a question separating the top two', () => {
+  it('clarifies at maximal ambiguity; ZERO evidence yields an open question, not a false binary', () => {
+    // Uniform posterior = nothing discriminates. A "closer to X or Y?" question
+    // would fabricate a choice between arbitrary tied readings (live-trace
+    // finding, 2026-07-29) — the router must ask open-endedly and rank nothing.
     const d = routeByEntropy(computePosterior(H, { a: 1, b: 1, c: 1 }));
     expect(d.mode).toBe('clarify');
-    expect(d.clarifyingQuestion).toContain('reading');
+    expect(d.clarifyingQuestion).toContain('tell me a bit more');
+    expect(d.clarifyingQuestion).not.toContain('closer to');
+    expect(d.options).toBeNull();
+  });
+
+  it('clarify WITH discriminating evidence still asks the targeted top-two question', () => {
+    // Weak but real evidence: high entropy, nonzero margin — the binary is honest here.
+    const d = routeByEntropy(computePosterior(H, { a: 1.4, b: 1, c: 1 }), { tClarify: 0.9 });
+    expect(d.mode).toBe('clarify');
+    expect(d.clarifyingQuestion).toContain('closer to');
     expect(d.options!.length).toBeGreaterThanOrEqual(2);
   });
 

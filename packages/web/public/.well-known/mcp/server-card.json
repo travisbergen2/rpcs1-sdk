@@ -1,7 +1,7 @@
 {
   "serverInfo": {
     "name": "RPCS-1 Agent Tuner & Translation Bridge",
-    "version": "0.4.0"
+    "version": "0.4.1"
   },
   "authentication": {
     "required": false,
@@ -397,7 +397,7 @@
     {
       "name": "route_intent",
       "title": "Route an ambiguous request: commit, present options, or clarify",
-      "description": "Entropy routing over competing interpretations: posterior over candidate readings, normalized entropy, and a decision — commit, commit_with_note, present_options, or clarify with one targeted question. Thresholds adapt to the user's ReceiverProfile. Deterministic, stateless, read-only.",
+      "description": "Entropy routing over competing interpretations — the model proposes the candidate readings (3–7 hypotheses incl. typo/idiom/domain-sense readings, with likelihoods), the deterministic router computes the posterior + normalized entropy and returns commit / commit_with_note / present_options / clarify (open-ended when nothing discriminates). Profile-aware thresholds. The commit-vs-clarify authority in the pipeline; the built-in default set is a product-routing starter only. Deterministic, stateless, read-only.",
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,

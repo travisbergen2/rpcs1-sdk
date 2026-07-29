@@ -28,6 +28,14 @@ describe('interpret with receiver profile (clarify vs commit bends per user)', (
     const loAR = interpret(msg, 'advice', scoreIntake({ AR: 'c', FT: 'a' }));
     expect(Number(loAR.playback_required)).toBeGreaterThanOrEqual(Number(hiAR.playback_required));
   });
+  it('high-FT profile does NOT fire the literalness question on clean literal text (static-question regression)', () => {
+    // Live-trace finding 2026-07-29: keyword-intent confidence is constantly
+    // low on out-of-vocabulary text, so gating on it made this question fire
+    // on EVERY message for high-FT receivers. Clean text must stay silent.
+    const out = interpret('I need to buy a reel to go fishing on the river bank', 'advice', scoreIntake({ FT: 'a', AR: 'b' }));
+    expect(out.clarifying_questions).toHaveLength(0);
+  });
+
   it('high-FT literal profile adds an explicit-check on lower-confidence input', () => {
     const out = interpret('do the thing', 'advice', scoreIntake({ FT: 'a', AR: 'b' }));
     expect(out.clarifying_questions.join(' ')).toMatch(/literal|explicit|refer to/i);

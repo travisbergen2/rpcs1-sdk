@@ -11,10 +11,26 @@ export const dynamic = 'force-dynamic';
 const securityHeaders = {
   'Cache-Control': 'no-store',
   'Content-Security-Policy':
-    "default-src 'none'; style-src 'unsafe-inline'; form-action 'self' https://hyperagent.com; base-uri 'none'; frame-ancestors 'none'",
+    "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
 };
+
+/**
+ * CSP for the consent page. `form-action` is enforced by Chrome on the
+ * REDIRECT that follows a form submission, so it must include the validated
+ * client's redirect origin or clicking "Allow" silently does nothing (the
+ * pre-DCR version pinned https://hyperagent.com here, which broke every other
+ * client's callback).
+ */
+function consentSecurityHeaders(redirectUri: string) {
+  const origin = new URL(redirectUri).origin;
+  return {
+    ...securityHeaders,
+    'Content-Security-Policy':
+      `default-src 'none'; style-src 'unsafe-inline'; form-action 'self' ${origin}; base-uri 'none'; frame-ancestors 'none'`,
+  };
+}
 
 function escapeHtml(value: string): string {
   return value
@@ -86,7 +102,7 @@ export async function GET(request: Request) {
 </body>
 </html>`, {
     headers: {
-      ...securityHeaders,
+      ...consentSecurityHeaders(redirectUri),
       'Content-Type': 'text/html; charset=utf-8',
     },
   });

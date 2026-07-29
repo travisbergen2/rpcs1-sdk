@@ -22,6 +22,12 @@ export function Nav() {
             <span className="ml-1.5 rounded bg-emerald-500/15 px-1 py-0.5 text-[10px] font-medium uppercase tracking-wide text-emerald-400">new</span>
           </Link>
           <Link
+            href="/guess"
+            className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
+          >
+            Guessing Test
+          </Link>
+          <Link
             href="/tuner"
             className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
           >

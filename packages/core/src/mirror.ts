@@ -20,6 +20,8 @@
  *     readings later, clearly labeled as such.
  */
 
+import { CONFUSABLES, POLYSEMOUS } from './mirror-lexicon.js';
+
 // ─── Result contract ──────────────────────────────────────────────────────────
 
 export type ForkKind =
@@ -28,7 +30,9 @@ export type ForkKind =
   | 'compare_or_choose'  // "X or Y" / "X vs Y" question without an explicit compare/choose verb
   | 'scope_fork'         // "only/just/all/also" whose scope forks across a coordination
   | 'grouping_fork'      // "A and B or C" — grouping is unparenthesized
-  | 'bare_object';       // imperative verb whose only object is a pronoun
+  | 'bare_object'        // imperative verb whose only object is a pronoun
+  | 'confusable_typo'    // word whose edit-distance/homophone neighbor fits the context better
+  | 'polysemy_fork';     // word with >= 2 senses BOTH supported by the surrounding context
 
 export interface ForkReading {
   /** Stable id within the span, e.g. 'a' | 'b' */
@@ -218,10 +222,85 @@ function detectBareObject(text: string): AmbiguousSpan[] {
   return out;
 }
 
+// ─── Lexical fork detectors (D7/D8 — the deterministic branch-growers) ───────
+//
+// These grow the bounded part of the branching tree: words with multiple
+// spellings (D7) or senses (D8). Deterministic and curated — the guaranteed
+// floor; the model-proposes path (route_intent) grows the rest.
+
+/** Cue matching: whole-word for single tokens, substring for phrases. */
+function cueHits(lower: string, cues: string[]): boolean {
+  for (const cue of cues) {
+    if (cue.includes(' ')) {
+      if (lower.includes(cue)) return true;
+    } else {
+      const re = new RegExp(`\\b${cue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+      if (re.test(lower)) return true;
+    }
+  }
+  return false;
+}
+
+function wordSpan(text: string, word: string): { start: number; end: number } | null {
+  const re = new RegExp(`\\b${word}\\b`, 'i');
+  const m = re.exec(text);
+  return m ? { start: m.index, end: m.index + m[0].length } : null;
+}
+
+/**
+ * D7 — confusable/typo fork: the word's edit-distance-1 or homophone neighbor
+ * fits the surrounding context better than the word itself. Fires only when
+ * the text supports the ALTERNATIVE (altCues) and not the word as written
+ * (ownCues) — one-sided support in the wrong direction is the typo signature.
+ */
+function detectConfusableTypo(text: string): AmbiguousSpan[] {
+  const lower = text.toLowerCase();
+  const out: AmbiguousSpan[] = [];
+  for (const entry of CONFUSABLES) {
+    const loc = wordSpan(text, entry.word);
+    if (!loc) continue;
+    if (!cueHits(lower, entry.altCues)) continue;   // nothing supports the alternative
+    if (cueHits(lower, entry.ownCues)) continue;    // the word as written is supported — no fork
+    out.push(span(loc.start, loc.end, text.slice(loc.start, loc.end), 'confusable_typo',
+      `"${entry.word}" reads oddly here, but its neighbor "${entry.alt}" fits the context — possible typo.`,
+      [
+        { id: 'a', summary: `"${entry.word}" is intended literally, as written`, clarifier: `To be clear: I mean "${entry.word}" literally, not "${entry.alt}".` },
+        { id: 'b', summary: `"${entry.word}" is a typo for "${entry.alt}"`, clarifier: `Correction: I meant "${entry.alt}", not "${entry.word}".` },
+      ]));
+  }
+  return out;
+}
+
+/**
+ * D8 — polysemy fork: a word with several senses where AT LEAST TWO senses
+ * have independent cue support in the same text. One-sided support is not a
+ * fork (that is just the word being used normally).
+ */
+function detectPolysemyFork(text: string): AmbiguousSpan[] {
+  const lower = text.toLowerCase();
+  const out: AmbiguousSpan[] = [];
+  for (const entry of POLYSEMOUS) {
+    const loc = wordSpan(text, entry.word);
+    if (!loc) continue;
+    const supported = entry.senses.filter((sense) => cueHits(lower, sense.cues));
+    if (supported.length < 2) continue;
+    out.push(span(loc.start, loc.end, text.slice(loc.start, loc.end), 'polysemy_fork',
+      `"${entry.word}" has ${supported.length} senses that BOTH fit this context — the model will pick one.`,
+      supported.slice(0, 3).map((sense, i) => ({
+        id: String.fromCharCode(97 + i),
+        summary: `"${entry.word}" = ${sense.gloss}`,
+        clarifier: `To be clear: by "${entry.word}" I mean ${sense.gloss}.`,
+      }))));
+  }
+  return out;
+}
+
 // ─── Public API ───────────────────────────────────────────────────────────────
 
 /** Detector priority for the prompt-level chip readings (highest first). */
 const DETECTOR_ORDER: ForkKind[] = [
+  'confusable_typo',
+  'polysemy_fork',
   'compare_or_choose',
   'grouping_fork',
   'scope_fork',
@@ -251,6 +330,8 @@ export function mirror(text: string): MirrorResult {
     ...detectScopeFork(trimmed, sentences),
     ...detectGroupingFork(trimmed, sentences),
     ...detectBareObject(trimmed),
+    ...detectConfusableTypo(trimmed),
+    ...detectPolysemyFork(trimmed),
   ].sort((a, b) => a.start - b.start);
 
   if (spans.length === 0) {

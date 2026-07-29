@@ -130,6 +130,11 @@ const READING_WEIGHTS: Record<ForkKind | 'as_written', Partial<Record<keyof Trai
   // Comparison-vs-choice got resolved by the clarifier; what matters now is
   // faithful execution of the locked reading.
   compare_or_choose: { literal: 2, sourced: 1 },
+  // A locked typo-or-literal reading must be executed exactly as clarified —
+  // no "helpful" re-correction of the word the user just confirmed.
+  confusable_typo: { literal: 3 },
+  // A locked word-sense must stay locked; literal execution, no sense drift.
+  polysemy_fork: { literal: 2, cautious: 1 },
   // Grouping / scope clarifiers demand tight instruction-following.
   grouping_fork: { literal: 3 },
   scope_fork: { literal: 3 },

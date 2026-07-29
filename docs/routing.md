@@ -113,3 +113,21 @@ way: identical posterior → identical decision.
   lineage: Armitage 1950; Baum–Veeravalli 1994); posterior-entropy stopping
   approximates its rule. The contribution here is architectural — wiring the
   commit-vs-clarify choice to the receiver's own AR/FT settings.
+
+## The branching tree: who grows it, who holds it
+
+The router HOLDS and COLLAPSES a tree of readings; it does not GROW one. The
+branches come from two generators:
+
+- **The calling model** (broad, judgment-based): propose 3–7 readings of the
+  message — including typo readings, idiom-vs-literal readings, and domain
+  senses — and pass them as `hypotheses` with your likelihoods. This is the
+  "model proposes, deterministic core disposes" contract.
+- **The Mirror's lexical fork detectors** (bounded, guaranteed): deterministic
+  branch-growers for confusable typos ("pay cast" → cash?) and two-sided
+  polysemy ("meet me at the bank with the rods and the deposit slip") from a
+  curated lexicon (`mirror-lexicon.ts`). Same input → same forks, no model in
+  the loop. Silent on clean prompts, like every Mirror detector.
+
+Neither generator replicates a full human lexicon; together they are the
+buildable approximation, and the router's math is generator-agnostic.

@@ -21,6 +21,8 @@ import {
   buildProfileCard,
   profileDivergence,
   INTAKE_ITEMS,
+  routeIntent,
+  DEFAULT_INTENT_HYPOTHESES,
 } from '@rpcs1/core';
 import { getGatewayBackend, consumeModelBudget, clientIp, REWRITE_GUARD } from '@/lib/gateway';
 import type { ReceiverProfile, IntakeAnswers } from '@rpcs1/core';
@@ -41,6 +43,19 @@ export async function POST(request: Request) {
     const { tool, ...params } = body;
 
     switch (tool) {
+      case 'route_intent': {
+        // Entropy routing: commit / present options / clarify over competing readings.
+        const profile = resolveProfile(params);
+        const text = typeof params.text === 'string' ? params.text : '';
+        if (!text) return NextResponse.json({ error: 'text is required' }, { status: 400 });
+        const hypotheses = Array.isArray(params.hypotheses) && params.hypotheses.length >= 2
+          ? params.hypotheses
+          : DEFAULT_INTENT_HYPOTHESES;
+        const likelihoods = params.likelihoods && typeof params.likelihoods === 'object'
+          ? (params.likelihoods as Record<string, number>)
+          : undefined;
+        return NextResponse.json(routeIntent(text, hypotheses, { profile, likelihoods }));
+      }
       case 'interpret': {
         const profile = resolveProfile(params);
         const text = params.text || '';

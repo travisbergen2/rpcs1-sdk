@@ -16,6 +16,7 @@ const publicToolNames = [
   'calibrate_profile',
   'prepare_prompt',
   'render_reply',
+  'route_intent',
 ];
 
 afterEach(async () => {
@@ -26,7 +27,7 @@ afterEach(async () => {
 });
 
 describe('RPCS1 MCP server', () => {
-  it('advertises seven safe, read-only tools', async () => {
+  it('advertises eight safe, read-only tools', async () => {
     const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
     server = createRpcs1McpServer();
     client = new Client({ name: 'rpcs1-test-client', version: '1.0.0' });
@@ -36,7 +37,7 @@ describe('RPCS1 MCP server', () => {
 
     const { tools } = await client.listTools();
 
-    expect(tools).toHaveLength(7);
+    expect(tools).toHaveLength(8);
     expect(tools.map((t) => t.name)).toEqual(publicToolNames);
     for (const tool of tools) {
       expect(tool.annotations).toMatchObject({ readOnlyHint: true, destructiveHint: false });
@@ -93,7 +94,7 @@ describe('RPCS1 MCP server', () => {
 
     expect(card.serverInfo).toMatchObject({
       name: 'RPCS-1 Agent Tuner & Translation Bridge',
-      version: '0.3.1',
+      version: '0.4.0',
     });
     expect(card.tools.map((tool: { name: string }) => tool.name)).toEqual(publicToolNames);
     for (const tool of card.tools) {

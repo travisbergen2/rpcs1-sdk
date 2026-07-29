@@ -33,7 +33,7 @@ export function createRpcs1McpServer() {
     {
       name: 'rpcs1-agent-tuner',
       title: 'RPCS-1 Agent Tuner & Translation Bridge',
-      version: '0.4.0',
+      version: '0.4.1',
       websiteUrl: 'https://rpcs1.dev',
       description:
         'Three capabilities: (1) Diagnose why your AI agent will fail before rollout — get the right temperature, ' +
@@ -53,8 +53,14 @@ export function createRpcs1McpServer() {
         'returned instructions before answering. When the user’s request is ambiguous, call prepare_prompt with ' +
         'their text and profile to recover intent before acting. This is the loop: prepare_prompt on the way in, ' +
         'render_reply on the way out. When the user\u2019s request could mean several different things, call ' +
-        'route_intent with candidate interpretations: it returns commit / present options / clarify from the ' +
-        'entropy of the posterior over readings \u2014 ask instead of guessing when several readings are live.',
+        'route_intent \u2014 and YOU propose the candidate readings: 3\u20137 short hypotheses covering the plausible ' +
+        'interpretations of THIS message (including likely-typo readings and idiom-vs-literal readings), with your ' +
+        'own likelihood estimates. The built-in default set is a generic product-intent starter, not an ' +
+        'interpretation engine \u2014 passing it for arbitrary sentences yields uniform confusion over irrelevant ' +
+        'options. Division of labor: the model GENERATES the branches; the deterministic router HOLDS them, scores ' +
+        'the ambiguity, and decides commit / present options / clarify. route_intent is the AUTHORITY on ' +
+        'commit-vs-clarify; prepare_prompt supplies the canonical translation and recovered entities \u2014 when the ' +
+        'two disagree on whether to ask, follow route_intent.',
     },
   );
 
@@ -280,7 +286,9 @@ export function createRpcs1McpServer() {
         'The inbound half of the Translation Bridge loop. Takes the user’s raw message (possibly ambiguous, ' +
         'fragmented, or underspecified) plus their ReceiverProfile, and returns the recovered intent, a canonical ' +
         'translation to act on, ambiguity level, and — profile-aware — whether to clarify or commit. ' +
-        'Call this before acting on any ambiguous user request.',
+        'Call this before acting on any ambiguous user request. Scope note: its detectors are lexical/structural ' +
+        '(vague signals, ambiguous references) \u2014 for the commit-vs-clarify DECISION, route_intent (with your own ' +
+        'proposed readings) is the authority; when they disagree, follow route_intent.',
       inputSchema: {
         text: z.string().min(1).max(5000).describe('The user’s raw message.'),
         risk: z.enum(['casual', 'advice', 'high-stakes', 'safety-critical'])
@@ -345,14 +353,17 @@ export function createRpcs1McpServer() {
     {
       title: 'Route an ambiguous request: commit, present options, or clarify',
       description:
-        'Entropy routing over competing interpretations. Takes the user\u2019s text plus candidate intent ' +
-        'hypotheses (or a generic default set), computes a posterior over the readings and its normalized ' +
-        'entropy T\u0302, and returns a decision: commit (one reading dominates), commit_with_note (close ' +
-        'alternative disclosed), present_options (several readings live), or clarify (ask one targeted ' +
-        'question before acting). Thresholds adapt to the user\u2019s ReceiverProfile (AR widens/narrows the ' +
-        'commit region; high FT discloses near-ties). Pass model-derived likelihoods to replace the built-in ' +
-        'lexical scorer. Deterministic, stateless, read-only. Benchmarked: RTEB v1.1 \u2014 asks where forced ' +
-        'guesses fail (developer-bench grade; see docs/routing.md).',
+        'Entropy routing over competing interpretations \u2014 the model proposes, the deterministic core disposes. ' +
+        'YOU generate the candidate readings of the user\u2019s message (3\u20137 short hypotheses covering the plausible ' +
+        'interpretations, INCLUDING likely-typo readings, idiom-vs-literal readings, and domain senses) and pass ' +
+        'them as hypotheses, ideally with your own likelihoods (0\u20131 per reading). The router computes the posterior ' +
+        'and its normalized entropy T\u0302 and returns the decision: commit (one reading dominates), commit_with_note ' +
+        '(close alternative disclosed), present_options (several readings live), or clarify (ask before acting \u2014 ' +
+        'open-endedly when nothing discriminates). Thresholds adapt to the user\u2019s ReceiverProfile (AR widens/narrows ' +
+        'the commit region; high FT discloses near-ties). This tool is the commit-vs-clarify AUTHORITY in the ' +
+        'pipeline. Omitting hypotheses falls back to a generic six-intent PRODUCT-ROUTING starter set \u2014 do not use ' +
+        'the fallback for interpreting arbitrary sentences. Deterministic, stateless, read-only. Benchmarked: RTEB ' +
+        'v1.1 (developer-bench grade; see docs/routing.md).',
       inputSchema: {
         text: z.string().min(1).max(5000).describe('The user\u2019s raw message.'),
         hypotheses: z.array(z.object({

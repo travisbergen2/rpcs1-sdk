@@ -340,7 +340,11 @@ function interpret(text: string, risk: RiskCategory = 'advice', profile?: Receiv
   if (profile) {
     if (profile.AR > 60 && risk !== 'safety-critical' && !hasAmbiguity) playbackRequired = false;
     if (profile.AR < 40 && resolution.margin < resolution.threshold * 1.5) playbackRequired = true;
-    if (profile.FT > 60 && questions.length === 0 && (intent.confidence < 0.85 || vagueCount > 0)) {
+    // Fire the explicit-check only on ACTUAL ambiguity evidence (vague signals
+    // or an ambiguous reference) — never on mere keyword-intent low confidence,
+    // which is constant on out-of-vocabulary text and made this question fire
+    // on every message for high-FT receivers (live-trace finding, 2026-07-29).
+    if (profile.FT > 60 && questions.length === 0 && (vagueCount > 0 || hasAmbiguity)) {
       questions.push('To be explicit: did you mean this literally as written?');
     }
   }
@@ -445,7 +449,9 @@ async function interpretWithModel(
     const profile = options.profile;
     if (profile.AR > 60 && risk !== 'safety-critical' && !hasAmbiguity) playbackRequired = false;
     if (profile.AR < 40 && resolution.margin < resolution.threshold * 1.5) playbackRequired = true;
-    if (profile.FT > 60 && questions.length === 0 && intent.confidence < 0.85) {
+    // Same policy as the rules path: require actual ambiguity evidence, not
+    // the keyword-intent confidence floor (live-trace finding, 2026-07-29).
+    if (profile.FT > 60 && questions.length === 0 && hasAmbiguity) {
       questions.push('To be explicit: did you mean this literally as written?');
     }
   }

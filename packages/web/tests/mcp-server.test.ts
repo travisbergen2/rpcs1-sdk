@@ -94,7 +94,7 @@ describe('RPCS1 MCP server', () => {
 
     expect(card.serverInfo).toMatchObject({
       name: 'RPCS-1 Agent Tuner & Translation Bridge',
-      version: '0.4.0',
+      version: '0.4.1',
     });
     expect(card.tools.map((tool: { name: string }) => tool.name)).toEqual(publicToolNames);
     for (const tool of card.tools) {

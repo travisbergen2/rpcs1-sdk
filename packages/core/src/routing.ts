@@ -267,12 +267,22 @@ export function routeByEntropy(
     why = `T̂=${T.toFixed(2)} ≥ ${t.tClarify.toFixed(2)}: too many readings are live — ask before acting.`;
   }
 
+  // Zero-evidence guard: when no reading is supported (posterior ≈ uniform,
+  // margin ≈ 0 at maximal entropy), a "closer to X or Y?" question would be a
+  // FALSE BINARY between arbitrary tied hypotheses (live-trace finding,
+  // 2026-07-29: "pay cast" produced a choice among unrelated product intents).
+  // Ask open-endedly instead, and return no options — there is nothing to rank.
+  const noEvidence = margin < 1e-9 && T > 0.99;
+  const openQuestion =
+    'I can read that several ways and nothing in the message settles it \u2014 can you tell me a bit more about what you\u2019re after?';
   const clarifyingQuestion =
-    mode === 'clarify' && second
-      ? `Just to make sure I read you right — is this closer to "${top.label}" or "${second.label}"?`
-      : null;
+    mode !== 'clarify'
+      ? null
+      : noEvidence || !second
+        ? openQuestion
+        : `Just to make sure I read you right — is this closer to "${top.label}" or "${second.label}"?`;
   const options =
-    mode === 'present_options' || mode === 'clarify'
+    (mode === 'present_options' || mode === 'clarify') && !noEvidence
       ? posterior.entries.filter((e) => e.p >= 0.5 / posterior.entries.length)
       : null;
 

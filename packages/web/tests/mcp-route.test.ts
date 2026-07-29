@@ -81,7 +81,7 @@ describe('RPCS1 MCP HTTP route', () => {
     expect(response.headers.get('x-request-id')).toBeTruthy();
     expect(body.result.serverInfo).toMatchObject({
       name: 'rpcs1-agent-tuner',
-      version: '0.4.0',
+      version: '0.4.1',
     });
   });
 

@@ -319,6 +319,14 @@ describe('E-LIT-3 boundary coordinates (v0.2.0)', () => {
     }
   });
 
+  it('lists stripUrgency FIRST for SB2-inverted receivers (E-RX-1 leverage ordering)', () => {
+    const inverted = ['claude-opus-4.8', 'claude-opus-5', 'claude-sonnet-5', 'claude-haiku-4.5'];
+    for (const id of inverted) {
+      const e = lookupReceiver(id)!;
+      expect(e.directives[0]).toMatch(/strip urgency register|Deadline\/social-pressure framing/);
+    }
+  });
+
   it('marks the Sonnet 5 stability-gate failure as a validity flag', () => {
     const t = lookupReceiver('claude-sonnet-5')!;
     expect(t.elit3_flags?.join(' ')).toMatch(/stability gate FAILED/);

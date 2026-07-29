@@ -44,6 +44,14 @@ export interface IntentHypothesis {
    * Optional when likelihoods are supplied externally.
    */
   cues?: string[];
+  /**
+   * The user's message REWRITTEN UNAMBIGUOUSLY under this reading — the
+   * verification artifact. Labels are still compressed; a paraphrase lets the
+   * user confirm intent by recognition instead of decoding. Surfaced whenever
+   * the router asks (present_options / clarify). Supplied by the hypothesis
+   * proposer (the core cannot write paraphrases deterministically).
+   */
+  paraphrase?: string;
   /** Prior weight (relative; normalized internally). Default 1. */
   prior?: number;
 }
@@ -55,6 +63,8 @@ export interface PosteriorEntry {
   id: string;
   label: string;
   p: number;
+  /** Unambiguous restatement of the message under this reading, if supplied. */
+  paraphrase?: string;
 }
 
 export interface Posterior {
@@ -173,7 +183,7 @@ export function updatePosterior(
 
 function toPosterior(hypotheses: IntentHypothesis[], p: Record<string, number>): Posterior {
   const entries = hypotheses
-    .map((h) => ({ id: h.id, label: h.label, p: p[h.id] }))
+    .map((h) => ({ id: h.id, label: h.label, p: p[h.id], ...(h.paraphrase ? { paraphrase: h.paraphrase } : {}) }))
     .sort((a, b) => b.p - a.p || a.id.localeCompare(b.id));
   const entropy = shannonEntropy(entries.map((e) => e.p));
   const k = entries.length;
@@ -280,7 +290,9 @@ export function routeByEntropy(
       ? null
       : noEvidence || !second
         ? openQuestion
-        : `Just to make sure I read you right — is this closer to "${top.label}" or "${second.label}"?`;
+        : top.paraphrase && second.paraphrase
+          ? `Just to make sure I read you right — did you mean: (a) "${top.paraphrase}" or (b) "${second.paraphrase}"?`
+          : `Just to make sure I read you right — is this closer to "${top.label}" or "${second.label}"?`;
   const options =
     (mode === 'present_options' || mode === 'clarify') && !noEvidence
       ? posterior.entries.filter((e) => e.p >= 0.5 / posterior.entries.length)

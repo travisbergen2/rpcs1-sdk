@@ -121,6 +121,15 @@ export function normalizeModelId(id: string): string {
   return s;
 }
 
+/**
+ * Directive text bank. ORDERING RULE (E-RX-1, registered corroboration
+ * evidence, 2026-07-27): in the paired sender-policy test the single
+ * highest-leverage transformation was stripping urgency/social-pressure
+ * framing — it defeated fences in every vendor's naive arm, including the
+ * maximal-literal receiver. Entries measured with the SB2 inversion
+ * therefore list stripUrgency FIRST; consumers that truncate directive
+ * lists keep the highest-leverage item.
+ */
 const D = {
   fenceSufficient:
     'Explicit output fences ("answer only X", "number only") are sufficient for this receiver; no extra suppression language needed.',
@@ -194,7 +203,7 @@ export const RECEIVER_TABLE: ReceiverEntry[] = [
     ladder: ['C', 'C', 'C', 'C', 'R'],
     care_gain: 'none',
     stakes_flag: 'moderate',
-    directives: [D.fenceSufficient, D.verifyUpstream, D.stripUrgency],
+    directives: [D.stripUrgency, D.fenceSufficient, D.verifyUpstream],
     traits: [
       'Behaves like a GPT-class deep complier, NOT like its larger siblings — do not apply Anthropic-family assumptions.',
       'Only Anthropic model to hold the high-stakes format fence on every run.',
@@ -332,12 +341,12 @@ export const RECEIVER_TABLE: ReceiverEntry[] = [
     care_gain: 'high',
     stakes_flag: 'high',
     directives: [
+      D.stripUrgency,
       D.fenceEverything,
       D.expectCorrectionFringe,
       D.expectStakesFlags,
       D.expectCareAdditions,
       D.routeBareOutput,
-      D.stripUrgency,
     ],
     traits: [
       'Strongest Sonnet care variant: volunteers support offers under emotional register.',
@@ -366,11 +375,11 @@ export const RECEIVER_TABLE: ReceiverEntry[] = [
     care_gain: 'high',
     stakes_flag: 'high',
     directives: [
+      D.stripUrgency,
       D.expectNarration,
       D.fenceEverything,
       D.expectStakesFlags,
       D.expectCareAdditions,
-      D.stripUrgency,
     ],
     traits: [
       'The compliance-narrator: executes the letter, then annotates that it did — lowest scope discipline in the naive cohort (A′ +0.22).',
@@ -553,12 +562,12 @@ export const RECEIVER_TABLE: ReceiverEntry[] = [
     care_gain: 'maximal',
     stakes_flag: 'high',
     directives: [
+      D.stripUrgency,
       D.licenseFalsehoods,
       D.fenceEverything,
       D.expectStakesFlags,
       D.expectCareAdditions,
       D.routeBareOutput,
-      D.stripUrgency,
     ],
     traits: [
       'Most inference-forward receiver measured: care content on ANY emotional register (validates indiscriminately, 12/12 items).',

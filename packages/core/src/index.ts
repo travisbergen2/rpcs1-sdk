@@ -113,6 +113,28 @@ export type {
   ProfileDivergence,
 } from './intake.js';
 
+// ── Entropy Routing (commit-vs-clarify over competing interpretations) ──
+export {
+  shannonEntropy,
+  computePosterior,
+  updatePosterior,
+  scoreLexicalLikelihoods,
+  thresholdsFromProfile,
+  routeByEntropy,
+  routeIntent,
+  DEFAULT_INTENT_HYPOTHESES,
+} from './routing.js';
+export type {
+  IntentHypothesis,
+  Likelihoods,
+  PosteriorEntry,
+  Posterior,
+  RoutingMode,
+  RoutingThresholds,
+  RoutingDecision,
+  RouteIntentOptions,
+} from './routing.js';
+
 // ── Interpretation Mirror (deterministic fork detectors, SendRight) ──
 export { mirror, applyReading } from './mirror.js';
 export type { MirrorResult, AmbiguousSpan, ForkReading, ForkKind } from './mirror.js';

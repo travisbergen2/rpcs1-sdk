@@ -4,8 +4,12 @@ import {
   INTAKE_ITEMS,
   scoreIntake,
   buildProfileCard,
+  routeIntent,
+  DEFAULT_INTENT_HYPOTHESES,
   type IntakeAnswers,
   type ReceiverProfile,
+  type IntentHypothesis,
+  type Likelihoods,
 } from '@rpcs1/core';
 import { interpret, normalize, rewrite, rewriteForProfile } from '@/lib/translator';
 import { z } from 'zod';
@@ -29,7 +33,7 @@ export function createRpcs1McpServer() {
     {
       name: 'rpcs1-agent-tuner',
       title: 'RPCS-1 Agent Tuner & Translation Bridge',
-      version: '0.3.1',
+      version: '0.4.0',
       websiteUrl: 'https://rpcs1.dev',
       description:
         'Three capabilities: (1) Diagnose why your AI agent will fail before rollout — get the right temperature, ' +
@@ -48,7 +52,9 @@ export function createRpcs1McpServer() {
         'Then, on EVERY reply to that user, call render_reply with your draft and their profile, and apply the ' +
         'returned instructions before answering. When the user’s request is ambiguous, call prepare_prompt with ' +
         'their text and profile to recover intent before acting. This is the loop: prepare_prompt on the way in, ' +
-        'render_reply on the way out.',
+        'render_reply on the way out. When the user\u2019s request could mean several different things, call ' +
+        'route_intent with candidate interpretations: it returns commit / present options / clarify from the ' +
+        'entropy of the posterior over readings \u2014 ask instead of guessing when several readings are live.',
     },
   );
 
@@ -327,6 +333,66 @@ export function createRpcs1McpServer() {
             `${result.style_description}\n\nRewrite your draft per these instructions, then send:\n` +
             `${result.rewrite_instructions}`,
         }],
+      };
+    },
+  );
+
+
+  // ── Tool: route_intent (entropy routing — commit vs clarify) ──
+
+  server.registerTool(
+    'route_intent',
+    {
+      title: 'Route an ambiguous request: commit, present options, or clarify',
+      description:
+        'Entropy routing over competing interpretations. Takes the user\u2019s text plus candidate intent ' +
+        'hypotheses (or a generic default set), computes a posterior over the readings and its normalized ' +
+        'entropy T\u0302, and returns a decision: commit (one reading dominates), commit_with_note (close ' +
+        'alternative disclosed), present_options (several readings live), or clarify (ask one targeted ' +
+        'question before acting). Thresholds adapt to the user\u2019s ReceiverProfile (AR widens/narrows the ' +
+        'commit region; high FT discloses near-ties). Pass model-derived likelihoods to replace the built-in ' +
+        'lexical scorer. Deterministic, stateless, read-only. Benchmarked: RTEB v1.1 \u2014 asks where forced ' +
+        'guesses fail (developer-bench grade; see docs/routing.md).',
+      inputSchema: {
+        text: z.string().min(1).max(5000).describe('The user\u2019s raw message.'),
+        hypotheses: z.array(z.object({
+          id: z.string().min(1).max(64),
+          label: z.string().min(1).max(200),
+          cues: z.array(z.string().min(1).max(64)).max(32).optional()
+            .describe('Lexical cues for the built-in scorer; omit when passing likelihoods.'),
+          prior: z.number().positive().optional(),
+        })).min(2).max(24).optional()
+          .describe('Candidate interpretations. Omit to use a generic six-intent starter set plus a catch-all.'),
+        likelihoods: z.record(z.string(), z.number().min(0)).optional()
+          .describe('Optional externally computed likelihood per hypothesis id (e.g. model-derived) — replaces the lexical scorer.'),
+        profile: receiverProfileSchema.optional()
+          .describe('The user\u2019s ReceiverProfile from calibrate_profile. Shapes commit-vs-clarify thresholds.'),
+      },
+      annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false, idempotentHint: true },
+    },
+    async (input) => {
+      const hypotheses = (input.hypotheses as IntentHypothesis[] | undefined) ?? DEFAULT_INTENT_HYPOTHESES;
+      const decision = routeIntent(input.text, hypotheses, {
+        profile: input.profile as ReceiverProfile | undefined,
+        likelihoods: input.likelihoods as Likelihoods | undefined,
+      });
+      const lines = [
+        `Decision: ${decision.mode} \u2014 top reading: "${decision.top.label}" (p=${decision.top.p.toFixed(2)}, T\u0302=${decision.posterior.normalizedEntropy.toFixed(2)})`,
+        decision.why,
+      ];
+      if (decision.clarifyingQuestion) lines.push(`Ask the user: ${decision.clarifyingQuestion}`);
+      if (decision.options) lines.push(`Live readings: ${decision.options.map((o) => `${o.label} (${(100 * o.p).toFixed(0)}%)`).join(' \u00b7 ')}`);
+      return {
+        structuredContent: {
+          mode: decision.mode,
+          top: decision.top,
+          posterior: decision.posterior,
+          thresholds: decision.thresholds,
+          why: decision.why,
+          clarifyingQuestion: decision.clarifyingQuestion,
+          options: decision.options,
+        } as Record<string, unknown>,
+        content: [{ type: 'text', text: lines.join('\n') }],
       };
     },
   );

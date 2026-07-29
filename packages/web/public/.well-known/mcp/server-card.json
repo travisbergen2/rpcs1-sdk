@@ -1,7 +1,7 @@
 {
   "serverInfo": {
     "name": "RPCS-1 Agent Tuner & Translation Bridge",
-    "version": "0.3.1"
+    "version": "0.4.0"
   },
   "authentication": {
     "required": false,
@@ -254,7 +254,7 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 5000,
-            "description": "The user\u2019s raw message."
+            "description": "The user’s raw message."
           },
           "risk": {
             "type": "string",
@@ -392,6 +392,112 @@
         "destructiveHint": false,
         "openWorldHint": false,
         "idempotentHint": true
+      }
+    },
+    {
+      "name": "route_intent",
+      "title": "Route an ambiguous request: commit, present options, or clarify",
+      "description": "Entropy routing over competing interpretations: posterior over candidate readings, normalized entropy, and a decision — commit, commit_with_note, present_options, or clarify with one targeted question. Thresholds adapt to the user's ReceiverProfile. Deterministic, stateless, read-only.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5000,
+            "description": "The user's raw message."
+          },
+          "hypotheses": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 24,
+            "description": "Candidate interpretations ({id,label,cues?,prior?}). Omit for the generic six-intent starter set plus a catch-all.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "cues": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "prior": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "label"
+              ]
+            }
+          },
+          "likelihoods": {
+            "type": "object",
+            "description": "Optional externally computed likelihood per hypothesis id — replaces the lexical scorer.",
+            "additionalProperties": {
+              "type": "number"
+            }
+          },
+          "profile": {
+            "type": "object",
+            "properties": {
+              "TI": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Temporal Integration: 0 = bottom line first, 100 = full context first"
+              },
+              "SG": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Signal Gain: 0 = flat and factual, 100 = warm and expressive"
+              },
+              "FT": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Filtering Threshold: 100 = explicit and literal, 0 = subtext lands"
+              },
+              "UE": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Update Elasticity: 100 = pushback welcome, 0 = prefers consistency"
+              },
+              "AR": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Ambiguity Resolution: 100 = commit to best reading, 0 = clarify first"
+              }
+            },
+            "required": [
+              "TI",
+              "SG",
+              "FT",
+              "UE",
+              "AR"
+            ],
+            "additionalProperties": false,
+            "description": "ReceiverProfile from calibrate_profile."
+          }
+        },
+        "required": [
+          "text"
+        ]
       }
     }
   ],

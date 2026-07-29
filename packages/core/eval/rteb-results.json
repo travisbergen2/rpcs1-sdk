@@ -1,0 +1,61 @@
+{
+  "run": "2026-07-29T11:19:38.926Z",
+  "runLabel": "v1.1 POST-REPAIR (smoothing 0.05->0.01, near-tie forks to present_options); v1 verdict NOT-EARNED stands; repair informed by v1 diagnostics on this same bank - overfit-to-bank risk declared",
+  "bankSha": "eval/rteb-battery.json (frozen 2026-07-29)",
+  "grade": "developer-benchmark / corroboration",
+  "askRates": {
+    "A": 0.041666666666666664,
+    "B": 1,
+    "C": 0.9444444444444444,
+    "overallCount": 43,
+    "overallRate": 0.4777777777777778
+  },
+  "modesE": {
+    "commit": 47,
+    "commit_with_note": 0,
+    "present_options": 2,
+    "clarify": 41
+  },
+  "gates": {
+    "M1": {
+      "value": 0.9027777777777778,
+      "threshold": 0.3,
+      "pass": true
+    },
+    "M2": {
+      "errAsked": 0.8076923076923077,
+      "errCommitted": 0,
+      "ratio": "inf (err(committed)=0)",
+      "threshold": 1.5,
+      "pass": true
+    },
+    "M3": {
+      "accE": 1,
+      "accTS": 1,
+      "accMG": 1,
+      "delta": 0,
+      "expectation": "PASS-TRIVIAL if |delta| <= 0.02",
+      "outcome": "PASS-TRIVIAL"
+    },
+    "M4": {
+      "accE_A": 1,
+      "accSCR_A": 0,
+      "drop": 1,
+      "threshold": 0.2,
+      "pass": true
+    },
+    "M5": {
+      "askRateB": 1,
+      "committedAccB": null,
+      "committedCountB": 0
+    },
+    "M6": {
+      "accE": 1,
+      "accRND": 0.714532810023952,
+      "delta": 0.28546718997604803,
+      "threshold": 0.05,
+      "pass": true
+    }
+  },
+  "verdict": "EARNS-MECHANICS"
+}

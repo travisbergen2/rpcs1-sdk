@@ -33,7 +33,7 @@ export function createRpcs1McpServer() {
     {
       name: 'rpcs1-agent-tuner',
       title: 'RPCS-1 Agent Tuner & Translation Bridge',
-      version: '0.4.1',
+      version: '0.4.2',
       websiteUrl: 'https://rpcs1.dev',
       description:
         'Three capabilities: (1) Diagnose why your AI agent will fail before rollout — get the right temperature, ' +
@@ -356,7 +356,9 @@ export function createRpcs1McpServer() {
         'Entropy routing over competing interpretations \u2014 the model proposes, the deterministic core disposes. ' +
         'YOU generate the candidate readings of the user\u2019s message (3\u20137 short hypotheses covering the plausible ' +
         'interpretations, INCLUDING likely-typo readings, idiom-vs-literal readings, and domain senses) and pass ' +
-        'them as hypotheses, ideally with your own likelihoods (0\u20131 per reading). The router computes the posterior ' +
+        'them as hypotheses, ideally with your own likelihoods (0\u20131 per reading) AND a paraphrase per reading \u2014 ' +
+        'the user\u2019s message rewritten unambiguously under that interpretation, so the user can VERIFY intent by ' +
+        'recognition before anything commits (one misread prompt skews a whole thread). The router computes the posterior ' +
         'and its normalized entropy T\u0302 and returns the decision: commit (one reading dominates), commit_with_note ' +
         '(close alternative disclosed), present_options (several readings live), or clarify (ask before acting \u2014 ' +
         'open-endedly when nothing discriminates). Thresholds adapt to the user\u2019s ReceiverProfile (AR widens/narrows ' +
@@ -371,6 +373,8 @@ export function createRpcs1McpServer() {
           label: z.string().min(1).max(200),
           cues: z.array(z.string().min(1).max(64)).max(32).optional()
             .describe('Lexical cues for the built-in scorer; omit when passing likelihoods.'),
+          paraphrase: z.string().min(1).max(500).optional()
+            .describe('The user\u2019s message REWRITTEN UNAMBIGUOUSLY under this reading. Strongly recommended: when the router asks, the user verifies intent by reading these restatements, not by decoding labels.'),
           prior: z.number().positive().optional(),
         })).min(2).max(24).optional()
           .describe('Candidate interpretations. Omit to use a generic six-intent starter set plus a catch-all.'),
@@ -392,7 +396,12 @@ export function createRpcs1McpServer() {
         decision.why,
       ];
       if (decision.clarifyingQuestion) lines.push(`Ask the user: ${decision.clarifyingQuestion}`);
-      if (decision.options) lines.push(`Live readings: ${decision.options.map((o) => `${o.label} (${(100 * o.p).toFixed(0)}%)`).join(' \u00b7 ')}`);
+      if (decision.options) {
+        lines.push('Live readings \u2014 relay these to the user for verification:');
+        for (const o of decision.options) {
+          lines.push(`  \u2022 ${o.label} (${(100 * o.p).toFixed(0)}%)${o.paraphrase ? ` \u2014 \u201c${o.paraphrase}\u201d` : ''}`);
+        }
+      }
       return {
         structuredContent: {
           mode: decision.mode,

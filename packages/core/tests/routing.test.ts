@@ -236,3 +236,27 @@ describe('routeIntent (end-to-end) & default hypothesis set', () => {
     expect(DEFAULT_INTENT_HYPOTHESES.some((h) => h.id === 'other')).toBe(true);
   });
 });
+
+describe('paraphrase verification (unambiguous restatement per reading)', () => {
+  const HP: IntentHypothesis[] = [
+    { id: 'cash', label: 'typo for cash', cues: ['pay'], paraphrase: 'I need to hurry to the bank so I can withdraw cash to pay someone.' },
+    { id: 'cast', label: 'literal film cast', cues: ['film'], paraphrase: 'I need to hurry to the bank so I can pay the members of a film cast.' },
+    { id: 'other', label: 'something else' },
+  ];
+  it('paraphrases ride through the posterior to the options', () => {
+    // T̂ ≈ 0.65 for this posterior; tClarify 0.6 puts it in the clarify band.
+    const d = routeByEntropy(computePosterior(HP, { cash: 1.2, cast: 1 }), { tClarify: 0.6 });
+    expect(d.mode).toBe('clarify');
+    expect(d.options!.find((o) => o.id === 'cash')!.paraphrase).toContain('withdraw cash');
+  });
+  it('the clarify question quotes full paraphrases when both top readings carry them', () => {
+    const d = routeByEntropy(computePosterior(HP, { cash: 1.2, cast: 1 }), { tClarify: 0.6 });
+    expect(d.clarifyingQuestion).toContain('did you mean');
+    expect(d.clarifyingQuestion).toContain('withdraw cash');
+    expect(d.clarifyingQuestion).toContain('film cast');
+  });
+  it('falls back to labels when paraphrases are absent', () => {
+    const d = routeByEntropy(computePosterior(H, { a: 1.4, b: 1, c: 1 }), { tClarify: 0.9 });
+    expect(d.clarifyingQuestion).toContain('closer to');
+  });
+});

@@ -165,12 +165,18 @@ describe('routeByEntropy', () => {
     expect(d.options).not.toBeNull();
   });
 
-  it('commit_with_note when entropy is low but the top two are close', () => {
-    // Two near-tied readings, third negligible: low normalized entropy over
-    // k=3 support is not reachable, so use k=5 with mass on two entries.
+  it('commit_with_note when entropy is low and the top two are close but not tied', () => {
+    // margin must land in [minCommitMargin/2, minCommitMargin) for the note band.
     const H5: IntentHypothesis[] = ['a', 'b', 'c', 'd', 'e'].map((id) => ({ id, label: id }));
-    const d = routeByEntropy(computePosterior(H5, { a: 10, b: 9, c: 0, d: 0, e: 0 }, ), { tCommit: 0.6, minCommitMargin: 0.2 });
+    const d = routeByEntropy(computePosterior(H5, { a: 10, b: 7.5, c: 0, d: 0, e: 0 }), { tCommit: 0.6, minCommitMargin: 0.2 });
     expect(d.mode).toBe('commit_with_note');
+  });
+
+  it('a NEAR-TIE at low entropy forks to present_options, not a silent-ish commit', () => {
+    // RTEB v1 repair: two live readings at ~50/50 are a real fork — show both.
+    const H5: IntentHypothesis[] = ['a', 'b', 'c', 'd', 'e'].map((id) => ({ id, label: id }));
+    const d = routeByEntropy(computePosterior(H5, { a: 10, b: 9.9, c: 0, d: 0, e: 0 }), { tCommit: 0.6, minCommitMargin: 0.2 });
+    expect(d.mode).toBe('present_options');
   });
 
   it('rejects inverted thresholds', () => {

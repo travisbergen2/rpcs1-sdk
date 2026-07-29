@@ -125,7 +125,11 @@ function normalizeWeights(ids: string[], w: Record<string, number>): Record<stri
  * Build a posterior from hypotheses + likelihoods (single-shot Bayes).
  * posterior ∝ prior × likelihood, with additive smoothing so that a zero
  * likelihood demotes rather than annihilates a hypothesis (evidence is
- * lexical and noisy; hard zeros overstate it).
+ * lexical and noisy; hard zeros overstate it). Default 0.01 — RTEB v1 showed
+ * that 0.05 inflates the entropy floor at k=7 enough to push clean single-cue
+ * posteriors past the commit boundary (71% ask rate on clear items: the
+ * over-asking defect). Sharper smoothing restores silent commits on clean
+ * input while zero-evidence inputs still land exactly uniform.
  */
 export function computePosterior(
   hypotheses: IntentHypothesis[],
@@ -133,7 +137,7 @@ export function computePosterior(
   opts: { smoothing?: number } = {},
 ): Posterior {
   if (hypotheses.length === 0) throw new Error('computePosterior: empty hypothesis set');
-  const smoothing = opts.smoothing ?? 0.05;
+  const smoothing = opts.smoothing ?? 0.01;
   const ids = hypotheses.map((h) => h.id);
   const prior = normalizeWeights(ids, Object.fromEntries(hypotheses.map((h) => [h.id, h.prior ?? 1])));
   const raw: Record<string, number> = {};
@@ -249,9 +253,12 @@ export function routeByEntropy(
   if (T <= t.tCommit && margin >= t.minCommitMargin) {
     mode = 'commit';
     why = `T̂=${T.toFixed(2)} ≤ ${t.tCommit.toFixed(2)} and margin ${margin.toFixed(2)} ≥ ${t.minCommitMargin}: one reading dominates — commit silently.`;
-  } else if (T <= t.tCommit) {
+  } else if (T <= t.tCommit && margin >= 0.5 * t.minCommitMargin) {
     mode = 'commit_with_note';
     why = `T̂=${T.toFixed(2)} is low but the top two readings are close (margin ${margin.toFixed(2)}): commit, disclosing the alternative.`;
+  } else if (T <= t.tCommit) {
+    mode = 'present_options';
+    why = `T̂=${T.toFixed(2)} is low but the top two readings are a near-tie (margin ${margin.toFixed(2)} < ${(0.5 * t.minCommitMargin).toFixed(2)}): a real fork — show both.`;
   } else if (T < t.tClarify) {
     mode = 'present_options';
     why = `T̂=${T.toFixed(2)} sits between commit (${t.tCommit.toFixed(2)}) and clarify (${t.tClarify.toFixed(2)}): show the live readings.`;

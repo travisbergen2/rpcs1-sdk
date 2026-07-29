@@ -1,0 +1,60 @@
+{
+  "run": "2026-07-29T11:17:29.442Z",
+  "bankSha": "eval/rteb-battery.json (frozen 2026-07-29)",
+  "grade": "developer-benchmark / corroboration",
+  "askRates": {
+    "A": 0.7083333333333334,
+    "B": 1,
+    "C": 1,
+    "overallCount": 76,
+    "overallRate": 0.8444444444444444
+  },
+  "modesE": {
+    "commit": 14,
+    "commit_with_note": 0,
+    "present_options": 35,
+    "clarify": 41
+  },
+  "gates": {
+    "M1": {
+      "value": 0.29166666666666663,
+      "threshold": 0.3,
+      "pass": false
+    },
+    "M2": {
+      "errAsked": 0.3620689655172414,
+      "errCommitted": 0,
+      "ratio": null,
+      "threshold": 1.5,
+      "pass": true
+    },
+    "M3": {
+      "accE": 1,
+      "accTS": 1,
+      "accMG": 1,
+      "delta": 0,
+      "expectation": "PASS-TRIVIAL if |delta| <= 0.02",
+      "outcome": "PASS-TRIVIAL"
+    },
+    "M4": {
+      "accE_A": 1,
+      "accSCR_A": 0,
+      "drop": 1,
+      "threshold": 0.2,
+      "pass": true
+    },
+    "M5": {
+      "askRateB": 1,
+      "committedAccB": null,
+      "committedCountB": 0
+    },
+    "M6": {
+      "accE": 1,
+      "accRND": 0.705484751359751,
+      "delta": 0.294515248640249,
+      "threshold": 0.05,
+      "pass": true
+    }
+  },
+  "verdict": "NOT-EARNED"
+}

@@ -1,8 +1,4 @@
-import {
-  exchangeAuthorizationCode,
-  MCP_OAUTH_CLIENT_ID,
-  MCP_OAUTH_REDIRECT_URI,
-} from '@/lib/mcp-oauth';
+import { exchangeAuthorizationCode } from '@/lib/mcp-oauth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -45,10 +41,6 @@ export async function POST(request: Request) {
     typeof codeVerifier !== 'string'
   ) {
     return oauthError('invalid_request', 'code, client_id, redirect_uri, and code_verifier are required');
-  }
-
-  if (clientId !== MCP_OAUTH_CLIENT_ID || redirectUri !== MCP_OAUTH_REDIRECT_URI) {
-    return oauthError('invalid_grant', 'Client or redirect URI does not match');
   }
 
   try {

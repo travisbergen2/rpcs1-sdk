@@ -1,7 +1,6 @@
 import {
   issueAuthorizationCode,
   MCP_OAUTH_CLIENT_ID,
-  MCP_OAUTH_REDIRECT_URI,
   MCP_OAUTH_SCOPE,
   validateAuthorizationRequest,
 } from '@/lib/mcp-oauth';
@@ -35,10 +34,16 @@ function errorResponse(message: string, status = 400) {
   });
 }
 
-export function GET(request: Request) {
+export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
-  const error = validateAuthorizationRequest(params);
+  const error = await validateAuthorizationRequest(params);
   if (error) return errorResponse(error);
+
+  const clientId = params.get('client_id')!;
+  const redirectUri = params.get('redirect_uri')!;
+  const clientLabel = clientId === MCP_OAUTH_CLIENT_ID
+    ? 'Hyperagent'
+    : `an MCP client (redirects to ${new URL(redirectUri).host})`;
 
   const hiddenFields = [...params.entries()]
     .map(([name, value]) => (
@@ -65,18 +70,18 @@ export function GET(request: Request) {
 </head>
 <body>
   <main>
-    <h1>Authorize Hyperagent</h1>
-    <p>Hyperagent is requesting access to the public RPCS1 Agent Tuner MCP server.</p>
+    <h1>Authorize access</h1>
+    <p>${escapeHtml(clientLabel)} is requesting access to the public RPCS1 Agent Tuner MCP server.</p>
     <ul>
-      <li>Client: <code>${MCP_OAUTH_CLIENT_ID}</code></li>
+      <li>Client: <code>${escapeHtml(clientId.length > 48 ? clientId.slice(0, 45) + '…' : clientId)}</code></li>
       <li>Scope: <code>${MCP_OAUTH_SCOPE}</code></li>
-      <li>Permission: call the read-only <code>recommend_agent_configuration</code> tool</li>
+      <li>Permission: call the server's read-only tools</li>
     </ul>
     <form method="post" action="/oauth/authorize">
       ${hiddenFields}
       <button type="submit">Allow access</button>
     </form>
-    <small>The authorization result returns only to ${MCP_OAUTH_REDIRECT_URI}.</small>
+    <small>The authorization result returns only to ${escapeHtml(redirectUri)}.</small>
   </main>
 </body>
 </html>`, {
@@ -94,11 +99,14 @@ export async function POST(request: Request) {
     if (typeof value === 'string') params.append(key, value);
   }
 
-  const error = validateAuthorizationRequest(params);
+  const error = await validateAuthorizationRequest(params);
   if (error) return errorResponse(error);
 
   const code = await issueAuthorizationCode(params);
-  const callback = new URL(MCP_OAUTH_REDIRECT_URI);
+  // Redirect to the VALIDATED redirect_uri of the requesting client (the
+  // pre-DCR implementation pinned this to Hyperagent's callback, which broke
+  // every other spec-following client).
+  const callback = new URL(params.get('redirect_uri')!);
   callback.searchParams.set('code', code);
 
   const state = params.get('state');

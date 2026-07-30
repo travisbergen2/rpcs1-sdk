@@ -60,6 +60,11 @@ export default function McpIntegrationPage() {
                 score, runtime posture, and next test for a described workload. Pass{' '}
                 <code>target_model</code> to attach measured per-model receiver posture
                 (evidence-graded literalness, override boundary, and translation directives).
+                In a registered paired test (E-RX-1, 192 cells, corroboration grade), prompts
+                recomposed by the directive bundle raised exact-format compliance from 69% to
+                96% across six frontier models — as general prompt hygiene: the per-model
+                targeting claim is still under test, and stakes coordinates carry a measured
+                ±1-rung day-to-day band.
               </p>
             </div>
             <div>

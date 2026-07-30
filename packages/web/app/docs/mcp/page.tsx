@@ -31,6 +31,26 @@ export default function McpIntegrationPage() {
             <p><strong className="text-white">Authentication:</strong> None</p>
           </div>
 
+          <div className="mt-5 flex flex-wrap items-center gap-2">
+            <span className="text-xs font-mono text-gray-500">listed in</span>
+            <a
+              href="https://registry.modelcontextprotocol.io/v0/servers?search=rpcs1-agent-tuner"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-xs font-medium text-sky-300 hover:bg-sky-500/20 transition-colors"
+            >
+              <span aria-hidden="true">&#10003;</span> Official MCP Registry
+            </a>
+            <a
+              href="https://smithery.ai/servers/@travisbergen2/rpcs1-agent-tuner"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-xs font-medium text-sky-300 hover:bg-sky-500/20 transition-colors"
+            >
+              <span aria-hidden="true">&#10003;</span> Smithery
+            </a>
+          </div>
+
           <h2 className="mt-8 text-xl font-semibold text-white mb-4">Seven tools, three families</h2>
           <div className="space-y-4 text-sm text-gray-400 leading-relaxed">
             <div>

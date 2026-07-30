@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'MCP Integration',
   description:
-    'Connect MCP-compatible clients to the public RPCS-1 server: agent tuning, translation, and the per-user Translation Bridge loop. Seven tools, no API key.',
+    'Connect MCP-compatible clients to the public RPCS-1 server: agent tuning, translation, and the per-user Translation Bridge loop. Eight tools, no API key.',
 };
 
 export default function McpIntegrationPage() {
@@ -15,7 +15,7 @@ export default function McpIntegrationPage() {
           Connect the public RPCS-1 battery.
         </h1>
         <p className="text-gray-400 text-lg leading-relaxed">
-          RPCS-1 provides a public Streamable HTTP MCP server with seven tools across three families:
+          RPCS-1 provides a public Streamable HTTP MCP server with eight tools across three families:
           agent tuning, translation, and the per-user Translation Bridge loop. It is anonymous,
           deterministic, read-only, and does not require an API key.
         </p>
@@ -51,7 +51,7 @@ export default function McpIntegrationPage() {
             </a>
           </div>
 
-          <h2 className="mt-8 text-xl font-semibold text-white mb-4">Seven tools, three families</h2>
+          <h2 className="mt-8 text-xl font-semibold text-white mb-4">Eight tools, three families</h2>
           <div className="space-y-4 text-sm text-gray-400 leading-relaxed">
             <div>
               <p className="text-xs font-mono text-sky-300 mb-1">Agent tuning</p>
@@ -75,7 +75,11 @@ export default function McpIntegrationPage() {
                 <code>calibrate_profile</code> builds a user&apos;s ReceiverProfile from five in-chat
                 questions (continuous coordinates, never a category label).{' '}
                 <code>prepare_prompt</code> recovers intent from the user&apos;s raw message on the way
-                in. <code>render_reply</code> returns deterministic rendering instructions for the
+                in. <code>route_intent</code> is the commit-or-clarify authority: pass the plausible
+                readings of an ambiguous message and it returns a deterministic decision — commit,
+                commit with a disclosed alternative, present options, or ask first — with
+                paraphrases the user verifies by recognition, thresholds shaped by the profile.{' '}
+                <code>render_reply</code> returns deterministic rendering instructions for the
                 user&apos;s profile on the way out. The profile travels as a parameter — nothing is
                 stored server-side. Schema:{' '}
                 <a href="/v1/receiver-profile.json" className="text-sky-400 hover:underline">

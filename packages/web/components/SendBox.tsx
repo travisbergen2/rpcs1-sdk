@@ -28,6 +28,7 @@ import {
   type VendorId,
   type ForkKind,
 } from '@rpcs1/core';
+import BridgePanel from '@/components/BridgePanel';
 import ModelPanel from '@/components/ModelPanel';
 import SprawlStrip from '@/components/SprawlStrip';
 
@@ -314,6 +315,12 @@ export default function SendBox() {
           />
         </div>
       )}
+
+      {/* Bridge dials — Stage A: deterministic axis transforms with live preview */}
+      <BridgePanel
+        text={text}
+        onApply={(next) => { setText(next); setLockedNote(null); setLockedKind(null); setActiveSpan(null); }}
+      />
 
       {handoffNote && (
         <p className="mt-3 text-sm text-neutral-400" role="status">{handoffNote}</p>

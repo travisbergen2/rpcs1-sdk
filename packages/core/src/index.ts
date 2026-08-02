@@ -150,3 +150,7 @@ export type { PersonaCard, PersonaGrade, PersonaStat, TraitVector, RankedPersona
 // ── Sprawl analysis (discourse-level: asks, topics, flips, contradictions) ──
 export { analyzeSprawl } from './sprawl.js';
 export type { SprawlResult, SprawlSegment, PerspectiveFlip, Conflict, Frame } from './sprawl.js';
+
+// ── Bridge axes (Full-Duplex Bridge spec v0.2 — coordinate transforms) ──
+export { AXES, IDENTITY_COORDS, applyAxes } from './axes.js';
+export type { AxisId, AxisDef, AxisCoords, AxisMove, ApplyResult } from './axes.js';

@@ -22,6 +22,7 @@ import {
   listVendors,
   analyzeSprawl,
   rankPersonas,
+  type AmbiguousSpan,
   type MirrorResult,
   type SprawlResult,
   type VendorId,
@@ -59,6 +60,8 @@ export default function SendBox() {
   const [lockedNote, setLockedNote] = useState<string | null>(null);
   const [lockedKind, setLockedKind] = useState<ForkKind | null>(null);
   const [shareNote, setShareNote] = useState<string | null>(null);
+  const [activeSpan, setActiveSpan] = useState<number | null>(null);
+  const backdropRef = useRef<HTMLDivElement | null>(null);
   const [handoffNote, setHandoffNote] = useState<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -115,16 +118,97 @@ export default function SendBox() {
     window.open(plan.url, '_blank', 'noopener,noreferrer');
   };
 
+  // Squiggle overlay segments — split text at ambiguous span boundaries.
+  // Spans carry [start, end) offsets from mirror(); render order is guaranteed.
+  const spans: AmbiguousSpan[] = forked ? result!.ambiguousSpans : [];
+  const segments = useMemo(() => {
+    if (spans.length === 0 || text.length === 0) return null;
+    const parts: Array<{ str: string; span: number | null }> = [];
+    let cursor = 0;
+    spans.forEach((sp, i) => {
+      if (sp.start < cursor || sp.end > text.length) return; // overlap/stale guard — skip rather than corrupt segments
+      if (sp.start > cursor) parts.push({ str: text.slice(cursor, sp.start), span: null });
+      parts.push({ str: text.slice(sp.start, sp.end), span: i });
+      cursor = sp.end;
+    });
+    if (cursor < text.length) parts.push({ str: text.slice(cursor), span: null });
+    return parts;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text, result]);
+
+  // Tap-to-expand: if the caret lands inside a squiggled span, open that span's readings.
+  const revealSpanAtCaret = (el: HTMLTextAreaElement) => {
+    const pos = el.selectionStart;
+    if (pos === null || spans.length === 0) { setActiveSpan(null); return; }
+    const hit = spans.findIndex((sp) => pos >= sp.start && pos <= sp.end);
+    setActiveSpan(hit === -1 ? null : hit);
+  };
+
   return (
     <div className="w-full max-w-2xl mx-auto">
+      <div className="relative rounded-2xl border border-white/10 bg-[#0a0f1a] shadow-[0_0_40px_-12px_rgba(16,185,129,0.25)] transition-shadow focus-within:border-emerald-400/50 focus-within:shadow-[0_0_50px_-8px_rgba(16,185,129,0.4)]">
+        {/* Backdrop clone — renders the amber squiggles under the (transparent-bg) textarea.
+            Same metrics as the textarea; text is transparent so only underlines show. */}
+        {segments !== null && (
+          <div
+            ref={backdropRef}
+            aria-hidden
+            data-testid="squiggle-backdrop"
+            className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words p-5 text-base text-transparent"
+          >
+            {segments.map((seg, i) =>
+              seg.span === null ? (
+                <span key={i}>{seg.str}</span>
+              ) : (
+                <span
+                  key={i}
+                  style={{
+                    textDecorationLine: 'underline',
+                    textDecorationStyle: 'wavy',
+                    textDecorationColor: seg.span === activeSpan ? '#fbbf24' : '#d97706',
+                    textDecorationThickness: '2px',
+                    textUnderlineOffset: '4px',
+                  }}
+                >
+                  {seg.str}
+                </span>
+              ),
+            )}
+          </div>
+        )}
       <textarea
         value={text}
-        onChange={(e) => { setText(e.target.value); setLockedNote(null); setLockedKind(null); }}
+        onChange={(e) => { setText(e.target.value); setLockedNote(null); setLockedKind(null); setActiveSpan(null); }}
+        onClick={(e) => revealSpanAtCaret(e.currentTarget)}
+        onKeyUp={(e) => revealSpanAtCaret(e.currentTarget)}
+        onScroll={(e) => { if (backdropRef.current) backdropRef.current.scrollTop = e.currentTarget.scrollTop; }}
         placeholder="Say it your way…"
         rows={5}
-        className="w-full rounded-2xl border border-white/10 bg-[#0a0f1a] p-5 text-base text-gray-100 placeholder-gray-500 shadow-[0_0_40px_-12px_rgba(16,185,129,0.25)] transition-shadow focus:border-emerald-400/50 focus:shadow-[0_0_50px_-8px_rgba(16,185,129,0.4)] focus:outline-none resize-y"
+        className="relative w-full rounded-2xl bg-transparent p-5 text-base text-gray-100 placeholder-gray-500 focus:outline-none resize-y"
         aria-label="Your prompt"
       />
+      </div>
+
+      {/* Span callout — opens when the caret lands on a squiggle (tap or arrow keys) */}
+      {activeSpan !== null && spans[activeSpan] && (
+        <div className="mt-2 rounded-xl border border-amber-400/30 bg-amber-500/[0.06] p-3" data-testid="span-callout" role="status">
+          <p className="text-xs text-amber-200/80">
+            <span className="font-medium text-amber-200">&ldquo;{spans[activeSpan].text}&rdquo;</span>
+            {' — '}{spans[activeSpan].why}
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {spans[activeSpan].readings.map((r) => (
+              <button
+                key={r.id}
+                onClick={() => { lockReading(`${spans[activeSpan].kind}:${r.id}`, r.summary, r.clarifier); setActiveSpan(null); }}
+                className="rounded-full border border-amber-400/40 bg-amber-500/10 px-3 py-1 text-xs text-amber-200 hover:bg-amber-500/20 hover:border-amber-300/60 transition-colors"
+              >
+                {r.summary}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Empty state — show what this is and let visitors trigger it in one click */}
       {text.trim().length === 0 && (

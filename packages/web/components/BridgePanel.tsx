@@ -17,6 +17,7 @@
 
 import { useMemo, useState } from 'react';
 import { AXES, IDENTITY_COORDS, applyAxes, type AxisCoords, type AxisId } from '@rpcs1/core';
+import { diffBase } from '@/lib/worddiff';
 
 const STORE_KEY = 'rpcs1.bridge.profile.v1';
 
@@ -74,6 +75,11 @@ export default function BridgePanel({
   const [touched, setTouched] = useState(false);
 
   const result = useMemo(() => applyAxes(text, coords), [text, coords]);
+  // E-INT-1 miss-anatomy fix: show WHICH words each dial removed/relocated.
+  const diff = useMemo(
+    () => (result.moves.length > 0 ? diffBase(text, result.text) : null),
+    [text, result],
+  );
   const changed = result.moves.length > 0;
   const isIdentity = AXES.every((a) => coords[a.id] === 0);
 
@@ -133,6 +139,11 @@ export default function BridgePanel({
           ))}
         </div>
 
+        <p className="mt-3 text-[11px] text-neutral-600">
+          Dial and reading labels verified faithful by a blinded multi-vendor panel
+          (registered test E-INT-1, 2026-08-02).
+        </p>
+
         {/* Live preview — deterministic, so it updates as the dial moves */}
         {!isIdentity && (
           <div className="mt-4" data-testid="bridge-preview">
@@ -141,6 +152,18 @@ export default function BridgePanel({
                 <p className="mb-1 text-xs text-neutral-500">
                   {result.moves.map((m) => m.note).join(' · ')}
                 </p>
+                {diff && (
+                  <p className="mb-2 whitespace-pre-wrap rounded-lg border border-white/8 bg-white/[0.02] p-3 text-sm leading-relaxed text-gray-400" data-testid="bridge-diff">
+                    {diff.map((t, i) => (
+                      <span
+                        key={i}
+                        className={t.removed ? 'rounded-sm bg-amber-500/15 text-amber-300/90 line-through decoration-amber-400/70' : undefined}
+                      >
+                        {t.text}{' '}
+                      </span>
+                    ))}
+                  </p>
+                )}
                 <pre className="whitespace-pre-wrap rounded-lg border border-emerald-500/20 bg-emerald-500/[0.04] p-3 text-sm text-gray-200">
                   {result.text}
                 </pre>

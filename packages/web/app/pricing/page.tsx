@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { EvidenceCard } from '@/components/EvidenceCard';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 
@@ -47,6 +48,9 @@ export default function PricingPage() {
                   {item}
                 </span>
               ))}
+            </div>
+            <div className="mt-4">
+              <EvidenceCard compact />
             </div>
           </div>
           <div className="flex flex-col gap-3 shrink-0">

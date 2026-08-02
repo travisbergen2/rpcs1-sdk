@@ -58,6 +58,7 @@ export default function SendBox() {
   const [sprawl, setSprawl] = useState<SprawlResult | null>(null);
   const [lockedNote, setLockedNote] = useState<string | null>(null);
   const [lockedKind, setLockedKind] = useState<ForkKind | null>(null);
+  const [shareNote, setShareNote] = useState<string | null>(null);
   const [handoffNote, setHandoffNote] = useState<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -180,6 +181,33 @@ export default function SendBox() {
               ))}
             </ul>
           </details>
+          {/* Share the mirror moment — the fork itself is the most convincing ad */}
+          <div className="mt-3 flex items-center gap-3">
+            <button
+              onClick={async () => {
+                const n = result!.readings.length;
+                const shareText = `I pasted my prompt into SendRight and it found ${n} different things my words could mean — before the AI picked the wrong one. Free, no signup: https://rpcs1.dev/send`;
+                try {
+                  if (navigator.share) {
+                    await navigator.share({ text: shareText });
+                    setShareNote('Shared.');
+                  } else {
+                    await navigator.clipboard.writeText(shareText);
+                    setShareNote('Copied — paste it anywhere.');
+                  }
+                } catch {
+                  /* user cancelled the share sheet — no note needed */
+                }
+              }}
+              className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-1.5 text-xs text-gray-400 transition-colors hover:border-emerald-400/40 hover:text-emerald-200"
+              data-testid="share-mirror"
+            >
+              Share what it caught
+            </button>
+            {shareNote && (
+              <span className="text-xs text-emerald-400" role="status">{shareNote}</span>
+            )}
+          </div>
         </div>
       )}
 

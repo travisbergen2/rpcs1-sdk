@@ -1,6 +1,7 @@
 'use client';
 
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { EvidenceCard } from '@/components/EvidenceCard';
 import { useSearchParams } from 'next/navigation';
 import { track } from '@vercel/analytics';
 import type { Recommendation, RecommendInput } from '@rpcs1/core';
@@ -153,7 +154,10 @@ function TunerPageContent() {
             Running the {preset} example automatically. You can adjust any field and run it again.
           </p>
         )}
-        <div className="mt-6 flex flex-col sm:flex-row gap-3">
+        <div className="mt-6">
+          <EvidenceCard compact />
+        </div>
+        <div className="mt-4 flex flex-col sm:flex-row gap-3">
           <a
             href="/api/checkout?tier=diagnostic"
             className="inline-flex items-center justify-center rounded-full bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-amber-400 shadow-lg shadow-amber-500/20"

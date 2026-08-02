@@ -207,6 +207,51 @@ export default function RdPage() {
             Full claim ledger →
           </Link>
         </p>
+
+        {/* E-RX-1 — the payoff test for the directive bundle */}
+        <div id="erx1" className="mt-12 scroll-mt-24 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] p-6 sm:p-8">
+          <p className="text-xs font-mono uppercase tracking-[0.24em] text-emerald-400">
+            E-RX-1 · registered 2026-07-26 · run 2026-07-27
+          </p>
+          <h3 className="mt-3 text-xl font-bold tracking-tight sm:text-2xl">
+            Does the directive bundle actually improve outcomes?
+          </h3>
+          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/65">
+            A paired A/B test: the same tasks sent to six frontier models twice — once written the
+            way people naturally write (deadlines, feelings, unfenced constraints), once
+            recomposed by the rpcs1 directive bundle (strip urgency, fence every constraint,
+            license instructed deviations, no-commentary fence). All items, scoring keys, and
+            pass thresholds were frozen before any model saw anything.
+          </p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+            <div className="rounded-xl border border-white/8 bg-white/[0.02] p-4">
+              <p className="font-mono text-2xl font-bold text-emerald-300">69% → 96%</p>
+              <p className="mt-1 text-xs text-white/50">
+                pooled bare-output compliance, naive vs. recomposed (n=192 paired cells,
+                exact McNemar p&lt;0.00001)
+              </p>
+            </div>
+            <div className="rounded-xl border border-white/8 bg-white/[0.02] p-4">
+              <p className="font-mono text-2xl font-bold text-emerald-300">0 harmed</p>
+              <p className="mt-1 text-xs text-white/50">
+                no model got worse under the bundle — worst per-model change was +12.5 points
+              </p>
+            </div>
+            <div className="rounded-xl border border-white/8 bg-white/[0.02] p-4">
+              <p className="font-mono text-2xl font-bold text-red-300">1 miss</p>
+              <p className="mt-1 text-xs text-white/50">
+                the per-model targeting prediction failed — controls gained as much as targeted
+                models — so that claim is withdrawn pending E-RX-2
+              </p>
+            </div>
+          </div>
+          <p className="mt-5 max-w-3xl text-sm leading-relaxed text-white/50">
+            Honest verdict: the bundle works as <em>general prompt hygiene</em> — a large, uniform,
+            highly significant gain — not (yet) as measured-receiver targeting. The product claims
+            on this site are scoped to exactly that. Grade: corroboration; subjects had prior
+            instrument contact and the scorer was blinded to arm but not to the study.
+          </p>
+        </div>
       </section>
 
       {/* Papers */}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { EvidenceCard } from '@/components/EvidenceCard';
 
 export default function TranslatorPage() {
   const [activeTab, setActiveTab] = useState('interpret');
@@ -209,6 +210,9 @@ export default function TranslatorPage() {
           <pre className="bg-gray-950 border border-gray-800 rounded-lg p-4 overflow-x-auto text-sm text-gray-300 font-mono whitespace-pre-wrap">
             {JSON.stringify(result, null, 2)}
           </pre>
+          <div className="mt-4">
+            <EvidenceCard />
+          </div>
         </div>
       )}
 

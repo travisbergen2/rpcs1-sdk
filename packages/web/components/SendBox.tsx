@@ -30,6 +30,7 @@ import {
 } from '@rpcs1/core';
 import BridgePanel from '@/components/BridgePanel';
 import ModelPanel from '@/components/ModelPanel';
+import ReturnPanel from '@/components/ReturnPanel';
 import SprawlStrip from '@/components/SprawlStrip';
 
 const DEBOUNCE_MS = 250;
@@ -325,6 +326,9 @@ export default function SendBox() {
       {handoffNote && (
         <p className="mt-3 text-sm text-neutral-400" role="status">{handoffNote}</p>
       )}
+
+      {/* Return leg — Stage B: read the AI's reply in your own register */}
+      <ReturnPanel ownText={text} />
     </div>
   );
 }

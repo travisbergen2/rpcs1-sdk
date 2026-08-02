@@ -15,7 +15,7 @@
  * person actually sends. Edits after Apply remain the escape hatch.
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { AXES, IDENTITY_COORDS, applyAxes, type AxisCoords, type AxisId } from '@rpcs1/core';
 
 const STORE_KEY = 'rpcs1.bridge.profile.v1';
@@ -71,11 +71,7 @@ export default function BridgePanel({
 }) {
   const [coords, setCoords] = useState<AxisCoords>({ ...IDENTITY_COORDS });
   const [applied, setApplied] = useState(false);
-
-  // Preset sliders from the stored profile once, on mount (A3 personalization v0).
-  useEffect(() => {
-    setCoords(presetFromProfile(loadProfile()));
-  }, []);
+  const [touched, setTouched] = useState(false);
 
   const result = useMemo(() => applyAxes(text, coords), [text, coords]);
   const changed = result.moves.length > 0;
@@ -84,7 +80,17 @@ export default function BridgePanel({
   if (text.trim().length === 0) return null;
 
   return (
-    <details className="mt-4 rounded-xl border border-white/10 bg-white/[0.02]" data-testid="bridge-panel">
+    <details
+      className="mt-4 rounded-xl border border-white/10 bg-white/[0.02]"
+      data-testid="bridge-panel"
+      onToggle={(e) => {
+        // Preset sliders from the stored profile when the drawer opens (A3
+        // personalization v0) — a user event, so no effect-driven setState.
+        if ((e.target as HTMLDetailsElement).open && !touched) {
+          setCoords(presetFromProfile(loadProfile()));
+        }
+      }}
+    >
       <summary className="cursor-pointer select-none px-4 py-3 text-sm text-neutral-300 hover:text-white">
         Tune for sending
         <span className="ml-2 text-xs text-neutral-500">
@@ -113,6 +119,7 @@ export default function BridgePanel({
                 value={coords[axis.id]}
                 onChange={(e) => {
                   setApplied(false);
+                  setTouched(true);
                   setCoords((c) => ({ ...c, [axis.id]: Number(e.target.value) }));
                 }}
                 className="mt-1 w-full accent-emerald-400"

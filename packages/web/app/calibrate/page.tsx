@@ -62,7 +62,13 @@ export default function CalibratePage() {
 
   const buildCard = useCallback(async () => {
     setLoading('card'); setError(null);
-    try { setCard(await api('intake', { answers })); }
+    try {
+      const c = await api('intake', { answers });
+      setCard(c);
+      // Persist the R-hat vector so the Bridge return leg can tune replies
+      // to this profile (Full-Duplex Bridge spec, Stage B).
+      try { localStorage.setItem('rpcs1.rhat.v1', JSON.stringify(c.profile)); } catch { /* storage denied — calibrate still works in-session */ }
+    }
     catch (e) { setError(e instanceof Error ? e.message : String(e)); }
     finally { setLoading(null); }
   }, [answers]);

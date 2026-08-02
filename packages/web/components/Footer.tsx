@@ -15,13 +15,13 @@ export function Footer() {
             <div className="mt-4 flex flex-wrap gap-3">
               <Link
                 href="/tuner"
-                className="inline-flex items-center justify-center rounded-lg border border-gray-700 bg-gray-900 px-4 py-2 text-sm font-semibold text-gray-200 transition-colors hover:bg-gray-800"
+                className="text-sm font-medium text-gray-300 underline-offset-4 hover:text-white hover:underline"
               >
-                Run free sample
+                Run free sample →
               </Link>
               <Link
                 href="/diagnostic"
-                className="inline-flex items-center justify-center rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-amber-400 shadow-lg shadow-amber-500/20"
+                className="text-sm font-medium text-amber-300/90 underline-offset-4 hover:text-amber-200 hover:underline"
               >
                 Founding pilot →
               </Link>

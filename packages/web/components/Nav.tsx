@@ -1,6 +1,13 @@
 import Link from 'next/link';
 import { ProfilePill } from '@/components/ProfilePill';
 
+/**
+ * One product for people (SendRight — the full Bridge lives at /send),
+ * one product for agents (the Tuner + written diagnostic), one price page.
+ * Calibrate, Translator, and the Guessing Test are now stations INSIDE the
+ * Bridge flow or demos linked from within — they no longer compete in the nav.
+ * Their routes stay live for links and search engines.
+ */
 export function Nav() {
   return (
     <header className="border-b border-gray-800 bg-[#0a0f1a]/80 backdrop-blur-md sticky top-0 z-50">
@@ -9,7 +16,7 @@ export function Nav() {
           <span className="text-lg font-bold text-white tracking-tight">
             RPCS<span className="text-sky-400">-1</span>
           </span>
-          <span className="text-xs text-gray-500 hidden sm:block">find your agent&apos;s failure mode</span>
+          <span className="text-xs text-gray-500 hidden sm:block">say it once, land it right</span>
         </Link>
 
         <nav className="flex items-center gap-1">
@@ -19,19 +26,12 @@ export function Nav() {
             className="px-3 py-1.5 text-sm text-emerald-300 hover:text-emerald-200 transition-colors rounded-lg hover:bg-gray-800"
           >
             SendRight
-            <span className="ml-1.5 rounded bg-emerald-500/15 px-1 py-0.5 text-[10px] font-medium uppercase tracking-wide text-emerald-400">new</span>
-          </Link>
-          <Link
-            href="/guess"
-            className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
-          >
-            Guessing Test
           </Link>
           <Link
             href="/tuner"
             className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
           >
-            Free check
+            Agent Tuner
           </Link>
           <Link
             href="/pricing"
@@ -40,16 +40,10 @@ export function Nav() {
             Pricing
           </Link>
           <Link
-            href="/translator"
-            className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
+            href="/rd"
+            className="hidden sm:block px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
           >
-            Translator
-          </Link>
-          <Link
-            href="/calibrate"
-            className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
-          >
-            Calibrate
+            R&amp;D
           </Link>
           <Link
             href="/diagnostic"

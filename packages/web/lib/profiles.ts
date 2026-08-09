@@ -33,9 +33,9 @@ export const PROFILES: Record<ProfileKey, ProfileCopy> = {
     tagline: 'Dense, numbers first, jargon fine',
     hero: {
       kicker: 'Stop guessing temperature',
-      h1: 'Your agent loops, drowns, or stalls.',
-      accent: 'The fix is computable.',
-      sub: 'Describe your workload. RPCS-1 tells you which failure mode your agent is closest to and the exact settings to change — temperature, memory, alert sensitivity, commit threshold — with the reasoning behind every number.',
+      h1: 'Know exactly what to change.',
+      accent: 'Prove it worked by tomorrow.',
+      sub: 'Describe your workload and get the settings to paste — temperature, memory, alert sensitivity, commit threshold — plus one named follow-up test that verifies the fix within a session. Every number traces to registered, published research. Monitoring tools show you the problem; this hands you the fix and the proof.',
     },
     failHeading: 'Three ways agents fail. You’ve seen at least one this week.',
     failIntro:
@@ -57,9 +57,9 @@ export const PROFILES: Record<ProfileKey, ProfileCopy> = {
     tagline: 'Outcomes, risk, and time — skip the mechanism',
     hero: {
       kicker: 'Ship with evidence, not vibes',
-      h1: 'Your agent’s failure risk is knowable',
-      accent: 'before it reaches customers.',
-      sub: 'Describe the workload and get a decision-ready read: how close the agent is to failing, what to change before rollout, and the one test that confirms the fix — in an hour, not a sprint.',
+      h1: 'Ship agents with proof,',
+      accent: 'not hope.',
+      sub: 'A decision-ready read in an hour: what to change before rollout and the one test that confirms it worked. Dashboards report problems after customers feel them; this prevents them — at a diagnostic price, not a consulting engagement, with every recommendation backed by published research.',
     },
     failHeading: 'The three failure modes that reach production.',
     failIntro:
@@ -81,9 +81,9 @@ export const PROFILES: Record<ProfileKey, ProfileCopy> = {
     tagline: 'Short sentences, no jargon',
     hero: {
       kicker: 'A check-up for your AI agent',
-      h1: 'AI agents fail in three ways.',
-      accent: 'We tell you which one yours is close to.',
-      sub: 'Describe what your agent does. You get its settings, the problem it’s closest to, and one test to run afterward. All of it in plain language.',
+      h1: 'Fix your AI agent —',
+      accent: 'and see proof that it’s fixed.',
+      sub: 'Tell us what your agent does. You get the settings to change and one test that shows the fix worked. Free to check, plain language. Other tools show you charts; this tells you what to do.',
     },
     failHeading: 'The three problems',
     failIntro: 'Every AI agent problem we see is one of these three.',
@@ -102,8 +102,8 @@ export const PROFILES: Record<ProfileKey, ProfileCopy> = {
     hero: {
       kicker: 'Deterministic settings calculator',
       h1: 'Input: a description of your workload.',
-      accent: 'Output: five settings, one risk, one test.',
-      sub: 'RPCS-1 computes agent runtime settings from workload properties. Each output value includes the rule that produced it. The same input always produces the same output. Free output is directional; the paid diagnostic adds a written memo.',
+      accent: 'Output: settings, plus the test that verifies them.',
+      sub: 'RPCS-1 computes agent runtime settings from workload properties and names one verification test to run after applying them. Each value includes the rule that produced it; the same input always produces the same output. Distinction from alternatives: monitoring tools report state; this returns a prescription with a verification procedure. Free output is directional; the paid diagnostic adds a written memo.',
     },
     failHeading: 'The three failure modes, defined',
     failIntro:

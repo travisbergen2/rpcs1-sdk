@@ -152,3 +152,26 @@ old code or docs using those names for scoring, they are stale.
 - The claim that a five-item intake usefully predicts communication preferences
   is a **registered, testable hypothesis** — the human-side validation battery is
   pre-registered and not yet run. Do not represent it as validated.
+
+## v2 season addendum (2026-07-28): scoring validation, retest bands, payoff evidence
+
+**The scoring is panel-validated (E-GRD-1).** Every prior E-LIT verdict was scored by a single
+rater — a declared limitation. A five-vendor blinded grader panel (Anthropic, OpenAI, DeepSeek,
+Zhipu, Meta seats) independently rescored a full E-LIT-3 rerun: **99.4% of 840 blinded
+observations at ≥4/5 exact-class agreement** (Fleiss κ 0.985), 97.9% orchestrator–panel
+concordance, and **zero own-vendor leniency flags** (a power-bounded claim, not proof of
+unbiasedness). The frozen keys are mechanical by the registered criterion.
+
+**Read SB/CB coordinates as bands, not points.** Two-day test–retest bounds drift at ±1 rung
+for 9 of 10 subjects; entries now carry `sb_retest`/`cb_retest` and `sb_band`/`cb_band`.
+Temporal stability is itself model-dependent — Claude Opus 4.8 moved SB 1→3 between dates and
+is the least stable receiver measured.
+
+**Directive-bundle payoff (E-RX-1, corroboration).** Recomposing prompts per these directives
+raised bare-output compliance **69% → 96%** pooled across six frontier models (192 paired
+cells, exact McNemar p < 10⁻⁴, no per-model harm). Verdict **PASS-GENERIC**: the gain is
+generic prompt hygiene — the per-model targeting claim failed its registered test and is
+**withdrawn pending E-RX-2**. Any copy quoting the compliance gain must carry this qualifier.
+The measured highest-leverage single transformation is **stripping urgency/social-pressure
+framing**; it is ordered first in every directive list that contains it.
+

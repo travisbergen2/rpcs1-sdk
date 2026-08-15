@@ -82,6 +82,8 @@ Web environment variables are documented in [`packages/web/.env.example`](./pack
 (Stripe, Resend, license signing, rate limits). MCP production controls are listed under
 [Production controls](#mcp-server) below.
 
+The web app deploys to Vercel on Node 24 (region `iad1`); pushes to `main` trigger the production deployment.
+
 ## The Matching Principle
 
 The SDK implements Pred-09-5 from IMM Paper 9:

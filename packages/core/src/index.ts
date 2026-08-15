@@ -139,6 +139,10 @@ export type {
 export { mirror, applyReading } from './mirror.js';
 export type { MirrorResult, AmbiguousSpan, ForkReading, ForkKind } from './mirror.js';
 
+// ── Fork View (receiver-side: mirror floor + model branch-grower) ──
+export { buildForkView } from './fork.js';
+export type { ForkBranch, ForkViewStatus, ForkViewResult, ForkViewOptions } from './fork.js';
+
 // ── Hand-off (deep-link prefill into the user's own model app) ──
 export { buildHandoff, listVendors, VENDOR_CAPABILITIES } from './handoff.js';
 export type { VendorId, VendorCapability, HandoffPlan, HandoffMethod } from './handoff.js';

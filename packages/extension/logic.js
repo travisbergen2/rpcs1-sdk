@@ -145,6 +145,99 @@ function shouldRender(result, opts = {}) {
   return shouldFlag(result);
 }
 
+// ── Receiver-side fork model ────────────────────────────────────────────────
+//
+// Client-side composition for the fallback path (tool:"interpret") that
+// mirrors the shape of core's buildForkView (tool:"fork"), so the fork card
+// renders identically whether or not the server fork endpoint has deployed.
+
+function truncateReading(s, max = 90) {
+  if (typeof s !== "string") return "";
+  const t = s.trim();
+  return t.length <= max ? t : t.slice(0, max - 1).trimEnd() + "…";
+}
+
+function composeBranchQuestion(branches) {
+  if (!Array.isArray(branches) || branches.length < 2) return null;
+  return `Quick check — do you mean "${truncateReading(branches[0].summary)}", or "${truncateReading(branches[1].summary)}"?`;
+}
+
+function composeForkedScaffold(branches) {
+  if (!Array.isArray(branches) || branches.length < 2) return null;
+  return `If you mean "${truncateReading(branches[0].summary)}":\n\nIf you mean "${truncateReading(branches[1].summary)}":\n`;
+}
+
+// Build a fork-view model from a raw interpret() result (fallback path).
+// Engine gate carried over from the 2026-08-15 calibration: on the rules
+// path we return status "budget" — the card says "out of deep checks",
+// never a pronoun-list fork (rules flagged 47/47 items incl. all controls).
+function buildForkModel(data) {
+  if (!data || typeof data !== "object") {
+    return { status: "error", branches: [], branch_question: null, forked_answer_scaffold: null, ask_backs: [], engine: "?", ar_level: "" };
+  }
+  const engine = data.engine || "rules";
+  if (engine === "rules") {
+    return { status: "budget", branches: [], branch_question: null, forked_answer_scaffold: null, ask_backs: [], canonical: null, unresolved: [], engine, ar_level: data.ar_level || "" };
+  }
+
+  const seen = new Set();
+  const branches = [];
+  const paraphrases = Array.isArray(data.reading_paraphrases) ? data.reading_paraphrases : [];
+  for (const p of paraphrases) {
+    const s = typeof p === "string" ? p.trim() : "";
+    const key = s.toLowerCase();
+    if (!s || seen.has(key)) continue;
+    seen.add(key);
+    branches.push({ id: `model:${branches.length + 1}`, source: "model", summary: s, canonical: s, consequence: null });
+    if (branches.length >= 4) break;
+  }
+
+  const askBacks = Array.isArray(data.clarifying_questions) ? data.clarifying_questions.slice(0, 2) : [];
+  const unresolved = unresolvedEntities(data).map((e) => e.original);
+
+  let status;
+  if (branches.length >= 2) status = "forks";
+  else if (unresolved.length > 0) status = "referent";
+  else status = "clean";
+
+  return {
+    status,
+    branches,
+    branch_question: composeBranchQuestion(branches) || askBacks[0] || null,
+    forked_answer_scaffold: composeForkedScaffold(branches),
+    ask_backs: askBacks,
+    canonical:
+      data.canonical_translation && data.canonical_translation !== data.original
+        ? data.canonical_translation
+        : null,
+    unresolved,
+    engine,
+    ar_level: data.ar_level || ""
+  };
+}
+
+// Normalize either background payload mode into the single card model.
+function normalizeForkPayload(payload) {
+  if (!payload || payload.mode === "error") {
+    return { status: "error", error: (payload && payload.error) || "no response", branches: [], branch_question: null, forked_answer_scaffold: null, ask_backs: [], engine: "?", ar_level: "" };
+  }
+  if (payload.mode === "fork") {
+    const d = payload.data || {};
+    return {
+      status: d.status || "clean",
+      branches: Array.isArray(d.branches) ? d.branches : [],
+      branch_question: d.branch_question || null,
+      forked_answer_scaffold: d.forked_answer_scaffold || null,
+      ask_backs: Array.isArray(d.ask_backs) ? d.ask_backs : [],
+      canonical: null,
+      unresolved: [],
+      engine: d.engine || "?",
+      ar_level: d.ar_level || ""
+    };
+  }
+  return buildForkModel(payload.data);
+}
+
 const RPCS1_LOGIC = {
   FLAG_LEVELS,
   isUnresolvedEntity,
@@ -152,6 +245,11 @@ const RPCS1_LOGIC = {
   unresolvedEntities,
   shouldFlag,
   shouldRender,
+  truncateReading,
+  composeBranchQuestion,
+  composeForkedScaffold,
+  buildForkModel,
+  normalizeForkPayload,
   escapeRegExp,
   surfaceRegex,
   locateEntitySpans,

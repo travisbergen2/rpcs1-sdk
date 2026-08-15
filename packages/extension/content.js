@@ -320,6 +320,157 @@ function scanForFields(root = document) {
     .forEach(handleField);
 }
 
+// ── Receiver-side fork card ("How could this read?" on a selection) ─────────
+
+let activeForkCard = null;
+let forkDismissBound = false;
+
+function removeForkCard() {
+  if (activeForkCard) {
+    activeForkCard.remove();
+    activeForkCard = null;
+  }
+}
+
+function selectionAnchorRect() {
+  const sel = window.getSelection();
+  if (sel && sel.rangeCount) {
+    const rect = sel.getRangeAt(0).getBoundingClientRect();
+    if (rect && (rect.width || rect.height)) return rect;
+  }
+  // Selection already gone (some pages clear it on menu open): fixed fallback.
+  return { left: Math.max(8, window.innerWidth / 2 - 190), bottom: 72, top: 72 };
+}
+
+const FORK_TITLES = {
+  forks: "This reads more than one way.",
+  referent: "One reading — but a pointer is unresolved.",
+  clean: "Parses one way.",
+  budget: "Out of deep checks today.",
+  error: "Couldn't check this."
+};
+
+function copyButton(label, text) {
+  const btn = document.createElement("button");
+  btn.className = "rpcs1-btn";
+  btn.type = "button";
+  btn.textContent = label;
+  btn.addEventListener("click", () => {
+    navigator.clipboard.writeText(text).then(
+      () => {
+        btn.textContent = "Copied ✓";
+        setTimeout(() => (btn.textContent = label), 1400);
+      },
+      () => {
+        btn.textContent = "Copy failed";
+      }
+    );
+  });
+  return btn;
+}
+
+function renderForkCard(model, selection) {
+  removeForkCard();
+  removeCard(); // never stack on a sender-side hover card
+  const rect = selectionAnchorRect();
+
+  const card = document.createElement("div");
+  card.className = "rpcs1-card rpcs1-fork-card";
+  card.style.pointerEvents = "auto";
+
+  const title = document.createElement("div");
+  title.className = "rpcs1-card-title";
+  title.textContent = FORK_TITLES[model.status] || FORK_TITLES.error;
+  card.appendChild(title);
+
+  const close = document.createElement("button");
+  close.className = "rpcs1-close";
+  close.type = "button";
+  close.textContent = "×";
+  close.addEventListener("click", removeForkCard);
+  card.appendChild(close);
+
+  if (model.status === "forks") {
+    const list = document.createElement("ol");
+    list.className = "rpcs1-branches";
+    for (const b of model.branches) {
+      const li = document.createElement("li");
+      li.className = "rpcs1-branch";
+      const sum = document.createElement("div");
+      sum.textContent = b.summary;
+      li.appendChild(sum);
+      if (b.consequence) {
+        const cons = document.createElement("div");
+        cons.className = "rpcs1-branch-consequence";
+        cons.textContent = b.consequence;
+        li.appendChild(cons);
+      }
+      list.appendChild(li);
+    }
+    card.appendChild(list);
+  } else if (model.status === "referent") {
+    const p = document.createElement("div");
+    p.className = "rpcs1-card-subline";
+    p.textContent = model.unresolved && model.unresolved.length
+      ? `"${model.unresolved.join('", "')}" — you can't recover what this points to from the words alone.`
+      : "A referent in this message isn't recoverable from the words alone.";
+    card.appendChild(p);
+  } else if (model.status === "clean") {
+    const p = document.createElement("div");
+    p.className = "rpcs1-card-subline";
+    p.textContent = model.canonical
+      ? `Best reading: ${model.canonical}`
+      : "No fork detected. Read it as written.";
+    card.appendChild(p);
+  } else if (model.status === "budget") {
+    const p = document.createElement("div");
+    p.className = "rpcs1-card-subline";
+    p.textContent =
+      "The deep check is rate-limited for today. The fallback engine can't produce a trustworthy fork, so nothing is shown rather than noise.";
+    card.appendChild(p);
+  } else {
+    const p = document.createElement("div");
+    p.className = "rpcs1-card-subline";
+    p.textContent = model.error || "No response from the checker.";
+    card.appendChild(p);
+  }
+
+  // Reply builders — the card's teeth.
+  const actions = document.createElement("div");
+  actions.className = "rpcs1-actions";
+  const ask = model.branch_question || (model.ask_backs && model.ask_backs[0]) || null;
+  if (ask) actions.appendChild(copyButton("Copy ask-back", ask));
+  if (model.forked_answer_scaffold) {
+    actions.appendChild(copyButton("Copy forked answer", model.forked_answer_scaffold));
+  }
+  if (actions.childNodes.length) card.appendChild(actions);
+
+  const tag = document.createElement("div");
+  tag.className = "rpcs1-card-engine";
+  tag.textContent = `${model.engine || "?"}${model.ar_level ? " · " + model.ar_level : ""}`;
+  card.appendChild(tag);
+
+  getOverlayRoot().appendChild(card);
+  card.style.top = `${window.scrollY + rect.bottom + 8}px`;
+  card.style.left = `${Math.max(4, window.scrollX + rect.left)}px`;
+  activeForkCard = card;
+
+  if (!forkDismissBound) {
+    forkDismissBound = true;
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") removeForkCard();
+    });
+    document.addEventListener("mousedown", (e) => {
+      if (activeForkCard && !activeForkCard.contains(e.target)) removeForkCard();
+    });
+  }
+}
+
+chrome.runtime.onMessage.addListener((msg) => {
+  if (!msg || msg.type !== "RPCS1_FORK_RESULT") return;
+  renderForkCard(L.normalizeForkPayload(msg.payload), msg.selection || "");
+});
+
 // Initial pass + dynamically added fields (SPAs swap DOM constantly).
 scanForFields();
 document.addEventListener("focusin", (e) => handleField(e.target), true);

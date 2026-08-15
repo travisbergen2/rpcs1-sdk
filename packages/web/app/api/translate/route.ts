@@ -25,7 +25,7 @@ import {
   DEFAULT_INTENT_HYPOTHESES,
   buildForkView,
 } from '@rpcs1/core';
-import { getGatewayBackend, consumeModelBudget, clientIp, REWRITE_GUARD } from '@/lib/gateway';
+import { getGatewayBackend, allowModelCall, REWRITE_GUARD } from '@/lib/gateway';
 import type { ReceiverProfile, IntakeAnswers } from '@rpcs1/core';
 
 export const dynamic = 'force-dynamic';
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
         // allows; deterministic RPCS-1 decision layer either way. Falls back
         // to the rules engine on any backend failure (engine field says which).
         const backend = getGatewayBackend();
-        if (backend && consumeModelBudget(clientIp(request))) {
+        if (backend && allowModelCall(request)) {
           const result = await interpretWithModel(text, backend, {
             risk,
             profile,
@@ -97,7 +97,7 @@ export async function POST(request: Request) {
           : undefined;
         const backend = getGatewayBackend();
         let interp = null;
-        if (backend && consumeModelBudget(clientIp(request))) {
+        if (backend && allowModelCall(request)) {
           interp = await interpretWithModel(text, backend, { risk, profile, context, fallbackToRules: true });
         } else {
           interp = profile ? interpretProfiled(text, risk, profile) : interpret(text, risk);
@@ -123,7 +123,7 @@ export async function POST(request: Request) {
         // step that used to be left to "pass this payload to an LLM".
         const backend = getGatewayBackend();
         if (backend && payload.rewrite_instructions && !payload.note?.startsWith('Invalid')) {
-          if (consumeModelBudget(clientIp(request))) {
+          if (allowModelCall(request)) {
             try {
               const rewritten = await backend.complete(
                 REWRITE_GUARD + payload.rewrite_instructions,

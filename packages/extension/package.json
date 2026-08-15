@@ -1,0 +1,9 @@
+{
+  "name": "@rpcs1/extension",
+  "version": "0.4.0",
+  "private": true,
+  "description": "Browser extension: amber-flags phrasing a reader could parse more than one way, before you send it — and shows how anything you select could read.",
+  "scripts": {
+    "test": "node --test test/"
+  }
+}

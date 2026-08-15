@@ -189,6 +189,109 @@ test("card model suppresses reads-as when canonical equals original", () => {
   assert.equal(m.engine, "rules");
 });
 
+// ── Receiver-side fork model ────────────────────────────────────────────────
+
+const mkInterpret = (over = {}) => ({
+  original: "should I take the deal or wait",
+  recovered_entities: [],
+  recovered_intent: { type: "question", confidence: 0.85 },
+  canonical_translation: "should I take the deal or wait",
+  translation_integrity: 90,
+  confidence: 0.7,
+  ar_level: "AR3",
+  playback_required: false,
+  clarifying_questions: [],
+  candidates: [],
+  margin: 0.2,
+  engine: "gateway:openai/gpt-4o-mini",
+  ...over
+});
+
+test("fork model: rules engine becomes status budget, renders nothing else", () => {
+  const m = L.buildForkModel(mkInterpret({ engine: "rules", reading_paraphrases: ["a", "b"] }));
+  assert.equal(m.status, "budget");
+  assert.equal(m.branches.length, 0);
+  assert.equal(m.branch_question, null);
+});
+
+test("fork model: two model paraphrases produce forks with question and scaffold", () => {
+  const m = L.buildForkModel(
+    mkInterpret({ reading_paraphrases: ["Take the deal now", "Wait for a better offer"] })
+  );
+  assert.equal(m.status, "forks");
+  assert.equal(m.branches.length, 2);
+  assert.match(m.branch_question, /^Quick check — do you mean "Take the deal now", or "Wait for a better offer"\?$/);
+  assert.match(m.forked_answer_scaffold, /^If you mean "Take the deal now":\n\nIf you mean "Wait for a better offer":\n$/);
+});
+
+test("fork model: paraphrases dedupe case-insensitively and cap at 4", () => {
+  const m = L.buildForkModel(
+    mkInterpret({ reading_paraphrases: ["Same reading", "same reading", "B", "C", "D", "E"] })
+  );
+  assert.equal(m.branches.length, 4);
+  assert.equal(m.branches[0].summary, "Same reading");
+});
+
+test("fork model: single paraphrase + unresolved entity is status referent with ask-back", () => {
+  const m = L.buildForkModel(
+    mkInterpret({
+      reading_paraphrases: ["Fix the item"],
+      recovered_entities: [
+        { original: "that thing", candidate: { text: "[the thing]", confidence: 0.6 }, alternatives: [] }
+      ],
+      clarifying_questions: ['What does "that thing" refer to?']
+    })
+  );
+  assert.equal(m.status, "referent");
+  assert.deepEqual(m.unresolved, ["that thing"]);
+  assert.equal(m.branch_question, 'What does "that thing" refer to?');
+});
+
+test("fork model: clean model result stays clean, canonical suppressed when identical", () => {
+  const m = L.buildForkModel(mkInterpret({ ar_level: "AR0" }));
+  assert.equal(m.status, "clean");
+  assert.equal(m.canonical, null);
+  assert.equal(m.forked_answer_scaffold, null);
+});
+
+test("fork model: long readings are truncated with ellipsis in the question", () => {
+  const long = "x".repeat(200);
+  const m = L.buildForkModel(mkInterpret({ reading_paraphrases: [long, "short"] }));
+  assert.ok(m.branch_question.includes("…"));
+  assert.ok(m.branch_question.length < 240);
+});
+
+test("normalizeForkPayload: fork mode passes the server view through", () => {
+  const m = L.normalizeForkPayload({
+    mode: "fork",
+    data: {
+      status: "forks",
+      branches: [{ id: "mirror:compare_or_choose:a", source: "mirror", summary: "Compare A and B" }],
+      branch_question: "Quick check — A or B?",
+      forked_answer_scaffold: "If A:\n\nIf B:\n",
+      ask_backs: [],
+      engine: "mirror+gateway:test"
+    }
+  });
+  assert.equal(m.status, "forks");
+  assert.equal(m.engine, "mirror+gateway:test");
+  assert.equal(m.branches[0].source, "mirror");
+});
+
+test("normalizeForkPayload: interpret mode delegates to buildForkModel", () => {
+  const m = L.normalizeForkPayload({
+    mode: "interpret",
+    data: mkInterpret({ reading_paraphrases: ["A", "B"] })
+  });
+  assert.equal(m.status, "forks");
+});
+
+test("normalizeForkPayload: error mode is status error", () => {
+  const m = L.normalizeForkPayload({ mode: "error", error: "boom" });
+  assert.equal(m.status, "error");
+  assert.equal(m.error, "boom");
+});
+
 test("questionForEntity prefers the question naming the entity", () => {
   const r = {
     clarifying_questions: ['What does "it" refer to?', 'What does "that thing" refer to?']

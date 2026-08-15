@@ -76,3 +76,64 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+
+/* ── Receiver-side fork card ── */
+.rpcs1-fork-card {
+  max-width: 380px;
+  padding-right: 26px;
+}
+
+.rpcs1-close {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  background: none;
+  border: none;
+  color: #d9d2c2;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.rpcs1-close:hover {
+  color: #f0c674;
+}
+
+.rpcs1-branches {
+  margin: 7px 0 0;
+  padding-left: 18px;
+}
+
+.rpcs1-branch {
+  margin: 5px 0;
+}
+
+.rpcs1-branch-consequence {
+  font-size: 11px;
+  color: #c9a86a;
+  margin-top: 2px;
+}
+
+.rpcs1-actions {
+  margin-top: 9px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.rpcs1-btn {
+  background: #d99000;
+  color: #1f1a12;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 9px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.rpcs1-btn:hover {
+  background: #f0c674;
+}

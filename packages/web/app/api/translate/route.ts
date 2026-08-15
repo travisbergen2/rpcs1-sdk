@@ -23,6 +23,7 @@ import {
   INTAKE_ITEMS,
   routeIntent,
   DEFAULT_INTENT_HYPOTHESES,
+  buildForkView,
 } from '@rpcs1/core';
 import { getGatewayBackend, consumeModelBudget, clientIp, REWRITE_GUARD } from '@/lib/gateway';
 import type { ReceiverProfile, IntakeAnswers } from '@rpcs1/core';
@@ -80,6 +81,29 @@ export async function POST(request: Request) {
           ? interpretProfiled(text, risk, profile)
           : interpret(text, risk);
         return NextResponse.json({ ...result, engine: 'rules' });
+      }
+      case 'fork': {
+        // Receiver-side fork view: deterministic mirror floor + model-path
+        // branch grower. The rules-path interpret output is excluded inside
+        // buildForkView (2026-08-15 calibration: rules flagged 47/47 items
+        // incl. all controls — no discrimination), so a budget-exhausted
+        // call still returns the honest mirror-only view.
+        const profile = resolveProfile(params);
+        const text = typeof params.text === 'string' ? params.text : '';
+        if (!text) return NextResponse.json({ error: 'text is required' }, { status: 400 });
+        const risk = params.risk || 'advice';
+        const context = Array.isArray(params.context)
+          ? (params.context as unknown[]).filter((t): t is string => typeof t === 'string').slice(-12)
+          : undefined;
+        const backend = getGatewayBackend();
+        let interp = null;
+        if (backend && consumeModelBudget(clientIp(request))) {
+          interp = await interpretWithModel(text, backend, { risk, profile, context, fallbackToRules: true });
+        } else {
+          interp = profile ? interpretProfiled(text, risk, profile) : interpret(text, risk);
+          interp = { ...interp, engine: 'rules' };
+        }
+        return NextResponse.json(buildForkView(text, interp));
       }
       case 'normalize': {
         const result = normalize(params.text || '');
@@ -150,6 +174,7 @@ export async function POST(request: Request) {
           version: '2.0.0',
           tools: {
             interpret: { description: 'Interpret a message using RPCS-1', parameters: { text: 'string (required)', risk: 'casual|advice|high-stakes|safety-critical', profile: 'optional ReceiverProfile', answers: 'optional intake answers' } },
+            fork: { description: 'Receiver-side fork view: how could this message read? Deterministic mirror floor + model readings; returns branches, ask-back question, forked-answer scaffold.', parameters: { text: 'string (required)', risk: 'casual|advice|high-stakes|safety-critical', context: 'optional string[] prior turns', profile: 'optional ReceiverProfile' } },
             normalize: { description: 'Normalize fragmented human input' },
             split: { description: 'Split mixed intents' },
             rewrite: { description: 'Rewrite for the user. Pass profile/answers to tune to the receiver vector; or style for a fixed style.', styles: ['technical', 'plain', 'socially_gentle', 'concise', 'detailed', 'direct'] },

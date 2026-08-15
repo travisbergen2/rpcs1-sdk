@@ -47,6 +47,30 @@ node --test test/
 Covers: the live AR0-placeholder fixture, the AR2-must-flag regression (the
 non-ordinal-scale trap), boundary/case/phrase span matching, card-copy caps.
 
+## Receiver-side mode (v0.4): "How could this read?"
+
+Select any text on any page → right-click → **How could this read?** A fork
+card opens at the selection:
+
+- **Forks** → the competing readings, each with a cost-if-wrong line where
+  derivable, plus two one-tap builders: **Copy ask-back** ("Quick check — do
+  you mean A, or B?") and **Copy forked answer** ("If you mean A: … / If you
+  mean B: …"). Answering the fork instead of collapsing it is the whole move.
+- **Referent** → one reading, but a pointer ("that thing") isn't recoverable
+  from the words alone; the ask-back is the engine's own clarify question.
+- **Clean** → "parses one way," with the best reading when it differs.
+- **Budget** → the deep check is rate-limited today; per the calibration the
+  fallback engine can't produce a trustworthy fork, so the card says so
+  instead of showing noise.
+
+Strictly on-demand: one explicit selection = one server call. No ambient
+scanning of incoming messages, in any mode.
+
+Endpoint strategy: the background tries `tool:"fork"` (mirror + model
+composition, server-side) and falls back to `tool:"interpret"` with local
+composition until the fork endpoint deploys. The card renders either shape.
+Chrome collapses newlines in `selectionText` — v0 limitation.
+
 ## Behavior
 
 - **Debounce 700 ms** on pause-in-typing; in-flight results are discarded if

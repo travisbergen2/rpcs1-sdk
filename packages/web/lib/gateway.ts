@@ -12,6 +12,7 @@
  *   2. The gateway credit itself is the hard stop: when it is exhausted the
  *      gateway returns errors and every request degrades to the rules engine.
  */
+import { timingSafeEqual } from 'node:crypto';
 import { GatewayBackend } from '@rpcs1/core';
 
 const PER_IP_DAILY_LIMIT = 30;
@@ -90,6 +91,32 @@ export function consumeModelBudget(ip: string): boolean {
     }
   }
   return true;
+}
+
+/**
+ * Calibration bypass: when RPCS1_CALIB_KEY is set in the environment and the
+ * request carries a matching x-rpcs1-calib header, model calls skip the daily
+ * budget counters. This grants BUDGET BYPASS ONLY — total spend stays bounded
+ * by the gateway credit itself (spend guard #2 in the module header).
+ * Constant-time comparison; unset env disables the path entirely.
+ */
+export function hasCalibBypass(request: Request): boolean {
+  const key = process.env.RPCS1_CALIB_KEY;
+  if (!key) return false;
+  const given = request.headers.get('x-rpcs1-calib');
+  if (!given) return false;
+  const a = Buffer.from(key);
+  const b = Buffer.from(given);
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(a, b);
+}
+
+/**
+ * The one gate for "may this request use the model?": calibration bypass
+ * first, then the per-IP/global daily budget.
+ */
+export function allowModelCall(request: Request): boolean {
+  return hasCalibBypass(request) || consumeModelBudget(clientIp(request));
 }
 
 /** Best-effort client IP from proxy headers (Vercel sets x-forwarded-for). */

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { MCP_SERVER_VERSION } from '@/lib/mcp-version';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,7 +11,7 @@ export function GET() {
       mcp: {
         endpoint: '/mcp',
         transport: 'streamable-http',
-        version: '0.3.0',
+        version: MCP_SERVER_VERSION,
       },
       translator: {
         // Presence flags only — never a key. Distinguishes "no key in this

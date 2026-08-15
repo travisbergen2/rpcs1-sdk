@@ -14,6 +14,7 @@ import {
 import { interpret, normalize, rewrite, rewriteForProfile } from '@/lib/translator';
 import { z } from 'zod';
 import { recommendInputSchema, recommendationOutputSchema } from './recommend-schema';
+import { MCP_SERVER_VERSION } from './mcp-version';
 
 // Shared zod shape for a ReceiverProfile travelling as a tool parameter.
 // The server is stateless: the user's profile lives client-side (project
@@ -33,7 +34,7 @@ export function createRpcs1McpServer() {
     {
       name: 'rpcs1-agent-tuner',
       title: 'RPCS-1 Agent Tuner & Translation Bridge',
-      version: '0.4.2',
+      version: MCP_SERVER_VERSION,
       websiteUrl: 'https://rpcs1.dev',
       description:
         'Three capabilities: (1) Diagnose why your AI agent will fail before rollout — get the right temperature, ' +
@@ -262,7 +263,7 @@ export function createRpcs1McpServer() {
           revision: card.directives.revision,
           ambiguity: card.directives.ambiguity,
         },
-        meta: { source: 'intake', generator: 'rpcs1-mcp@0.3.0' },
+        meta: { source: 'intake', generator: `rpcs1-mcp@${MCP_SERVER_VERSION}` },
       };
       return {
         structuredContent: doc as unknown as Record<string, unknown>,

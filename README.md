@@ -149,12 +149,15 @@ RPCS-1 is also available as a public, anonymous, read-only MCP server:
 https://rpcs1.dev/mcp
 ```
 
-It exposes seven read-only tools across three families:
+It exposes eight read-only tools across four families:
 
 - `recommend_agent_configuration` — diagnose an AI agent against environmental entropy,
   predictability, stakes, context horizon, and commitment style; receive runtime settings to try and a next test.
 - `interpret`, `normalize`, and `rewrite` — detect ambiguity, turn fragmented text into coherent prose,
   and return style-specific rewrite instructions.
+- `route_intent` — entropy routing over competing interpretations of a message: the calling model
+  proposes candidate readings (paraphrases and priors); the deterministic router computes the posterior
+  and decides commit, present options, or clarify. The commit-vs-clarify authority in the pipeline.
 - `calibrate_profile`, `prepare_prompt`, and `render_reply` — create a continuous communication-preference
   profile, recover intended meaning before an action, and render a reply for that profile.
 

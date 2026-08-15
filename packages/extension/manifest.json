@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "RPCS-1 Ambiguity Check",
-  "version": "0.3.0",
-  "description": "Amber-flags phrasing a reader could parse more than one way, before you send it. Powered by the rpcs1.dev translator.",
-  "permissions": ["storage"],
+  "version": "0.4.0",
+  "description": "Amber-flags phrasing a reader could parse more than one way — in your drafts before you send, and in anything you select. Powered by the rpcs1.dev translator.",
+  "permissions": ["storage", "contextMenus", "clipboardWrite"],
   "host_permissions": ["https://rpcs1.dev/*"],
   "background": {
     "service_worker": "background.js"

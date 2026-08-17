@@ -47,6 +47,31 @@ node --test test/
 Covers: the live AR0-placeholder fixture, the AR2-must-flag regression (the
 non-ordinal-scale trap), boundary/case/phrase span matching, card-copy caps.
 
+## Sender-side v0.5: the three-exit picker (Grammarly-for-ambiguity)
+
+Passive underlines now come from the deterministic mirror detectors via
+`tool:"fork"` with `floor:true` — the server makes **no model call** for
+passive checks (free, fast, silent-when-clean). The entity-gate squiggle was
+retired: CAL-1/2 measured it at no-signal on both engines.
+
+Click an underline → the picker: **"Which is closest to what you meant?"**
+with the readings as clickable buttons. Clicking one appends its one-line
+clarifier through the editor's own input pipeline (append-only; clipboard
+fallback). Because our readings may not contain what the sender meant
+(measured: 2/9 coverage on real misreads), every picker carries three exits:
+
+1. **None of these — try again** — re-asks with the rejected readings
+   excluded (server-side `rejected` list), capped at 2 re-rolls.
+2. **Say it in a few words** — the gloss box, always present: the sender's
+   own words become the clarifier. Ground truth beats mind-reading.
+3. **It's fine as I wrote it** — mutes that span for the session and logs
+   the dismissal. The sender's call is final; ambiguity is sometimes
+   intentional.
+
+Every reject/gloss/dismiss is logged locally (`chrome.storage.local`,
+last 200, never transmitted) — labeled coverage-failure data for improving
+reading generation.
+
 ## Receiver-side mode (v0.4): "How could this read?"
 
 Select any text on any page → right-click → **How could this read?** A fork

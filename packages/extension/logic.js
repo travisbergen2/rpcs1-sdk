@@ -238,6 +238,45 @@ function normalizeForkPayload(payload) {
   return buildForkModel(payload.data);
 }
 
+// ── v0.5 picker logic (sender-side three-exit picker) ──────────────────────
+
+// Passive underlining keys on deterministic mirror SPANS (floor mode, zero
+// model budget). CAL-1/2 killed entity-gate flagging; mirror's silence
+// contract is the calibrated passive signal.
+function shouldUnderline(forkData) {
+  return !!forkData && Array.isArray(forkData.spans) && forkData.spans.length > 0;
+}
+
+function buildPickerModel(forkData) {
+  const branches = (forkData && Array.isArray(forkData.branches) ? forkData.branches : [])
+    .filter((b) => b && b.summary)
+    .map((b) => ({
+      id: b.id,
+      source: b.source,
+      summary: b.summary,
+      clarifier: b.clarifier || null,
+      consequence: b.consequence || null
+    }));
+  return {
+    branches,
+    engine: (forkData && forkData.engine) || "?",
+    status: (forkData && forkData.status) || "clean"
+  };
+}
+
+// Deterministic gloss merge — identical composition to the server's model
+// branches. The user's own words are ground truth; we only frame them.
+function composeGlossClarifier(gloss) {
+  const g = typeof gloss === "string" ? gloss.trim().replace(/[.\s]+$/, "") : "";
+  return g ? `To be clear: I mean ${g}.` : null;
+}
+
+function mergeRejected(prev, branches) {
+  const set = new Set(prev || []);
+  for (const b of branches || []) if (b && b.summary) set.add(b.summary);
+  return [...set].slice(0, 12);
+}
+
 const RPCS1_LOGIC = {
   FLAG_LEVELS,
   isUnresolvedEntity,
@@ -250,6 +289,10 @@ const RPCS1_LOGIC = {
   composeForkedScaffold,
   buildForkModel,
   normalizeForkPayload,
+  shouldUnderline,
+  buildPickerModel,
+  composeGlossClarifier,
+  mergeRejected,
   escapeRegExp,
   surfaceRegex,
   locateEntitySpans,

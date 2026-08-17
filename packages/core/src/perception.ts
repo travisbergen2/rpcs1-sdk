@@ -298,6 +298,9 @@ export const PERCEPTION_SYSTEM_PROMPT =
   'confidence 0.8-0.95. (2) UNRESOLVED — no antecedent available: use a bracketed placeholder ' +
   'like "[the document being discussed]", confidence at most 0.6, and ALWAYS list it. Never ' +
   'give an unresolved referent confidence above 0.6; never bracket or down-score a resolved one. ' +
+  'READINGS MUST BE DISTINCT: each reading must differ in what the sender WANTS or MEANS, ' +
+  'never merely in phrasing. If two candidate readings would lead the receiver to the same ' +
+  'response, they are ONE reading — report it once. A paraphrase is not a second reading. ' +
   'RESOLVED includes referents identifiable from the message alone: quoted material ("rewrite ' +
   'this: \'...\'" — this IS the quote), attachments or objects the message itself names ("the ' +
   'attached guide"), and anything you can concretely state without guessing. If you find ' +

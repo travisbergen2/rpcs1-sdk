@@ -123,6 +123,30 @@ function isUnresolvedEntity(e: RecoveredEntity): boolean {
   return placeholder || lowConfidence;
 }
 
+// ── G6: restatement filter (CAL-3b finding, 2026-08-16) ─────────────────────
+// The model's reading_paraphrases are often surface restatements of one
+// meaning (measured: ~8/10 flagged drafts showed paraphrase pairs, not
+// competing readings). Near-duplicate branches make the picker a fake
+// choice. This lexical overlap filter catches surface restatements; the
+// perception prompt's distinctness instruction carries the semantic rest.
+const G6_STOP = new Set(['the','and','for','that','this','with','about','regarding','message','sender','user','asking','request','requests']);
+
+function tokenSet(s: string): Set<string> {
+  return new Set(
+    s.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/)
+      .filter((w) => w.length > 2 && !G6_STOP.has(w)),
+  );
+}
+
+/** Overlap coefficient >= 0.5 on content tokens = same reading, restated. */
+export function readingsTooSimilar(a: string, b: string): boolean {
+  const A = tokenSet(a), B = tokenSet(b);
+  if (!A.size || !B.size) return false;
+  let inter = 0;
+  for (const w of A) if (B.has(w)) inter++;
+  return inter / Math.min(A.size, B.size) >= 0.5;
+}
+
 // ── Public API ────────────────────────────────────────────────────────────────
 
 export function buildForkView(
@@ -174,6 +198,8 @@ export function buildForkView(
       const s = (p ?? '').trim();
       const key = s.toLowerCase();
       if (!s || seen.has(key)) continue;
+      // G6: drop surface restatements of an already-listed reading.
+      if (branches.some((b) => readingsTooSimilar(b.summary, s))) continue;
       seen.add(key);
       branches.push({
         id: `model:${branches.length + 1}`,

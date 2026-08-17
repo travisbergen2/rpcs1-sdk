@@ -11,8 +11,10 @@ import {
   PERCEPTION_TOOL,
   PERCEPTION_SYSTEM_PROMPT,
   sanitizePerception,
+  avoidReadingsBlock,
   type ModelBackend,
   type PerceptionResult,
+  type PerceiveOptions,
 } from './perception.js';
 
 export interface GatewayBackendOptions {
@@ -87,7 +89,7 @@ export class GatewayBackend implements ModelBackend {
     return resp.json();
   }
 
-  async perceive(text: string, context?: string[]): Promise<PerceptionResult> {
+  async perceive(text: string, context?: string[], options?: PerceiveOptions): Promise<PerceptionResult> {
     const contextBlock =
       context && context.length
         ? 'Prior conversation (oldest first), for grounding referents only:\n' +
@@ -100,6 +102,7 @@ export class GatewayBackend implements ModelBackend {
         role: 'user',
         content:
           contextBlock +
+          avoidReadingsBlock(options) +
           'Analyze this message and report your perception via the report_perception tool:\n' +
           '<message>\n' + text + '\n</message>',
       },

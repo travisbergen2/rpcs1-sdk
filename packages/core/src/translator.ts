@@ -382,6 +382,12 @@ interface InterpretModelOptions {
    * `engine` field always tells you which path actually ran.
    */
   fallbackToRules?: boolean;
+  /**
+   * Readings the user already rejected — passed to the perception backend so
+   * it proposes genuinely different readings (G5). Dedupe downstream still
+   * applies.
+   */
+  avoidReadings?: string[];
 }
 
 /**
@@ -401,7 +407,7 @@ async function interpretWithModel(
   const risk = options.risk ?? 'advice';
   let perception: PerceptionResult;
   try {
-    perception = await backend.perceive(text, options.context);
+    perception = await backend.perceive(text, options.context, { avoidReadings: options.avoidReadings });
   } catch (err) {
     if (options.fallbackToRules === false) throw err;
     const fallback = interpret(text, risk, options.profile);

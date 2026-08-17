@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildForkView } from '../src/fork';
+import { buildForkView, readingsTooSimilar } from '../src/fork';
 import type { TranslationOutput } from '../src/translator';
 
 const mkInterpret = (over: Partial<TranslationOutput> = {}): TranslationOutput => ({
@@ -151,6 +151,33 @@ describe('buildForkView — model contribution (engine-gated)', () => {
     // rejecting everything leaves an honest empty set (UI falls to gloss box)
     const r2 = buildForkView(forked, null, { rejected });
     expect(r2.branches).toHaveLength(0);
+  });
+
+  it('G6: CAL-3b restatement pair is filtered to one branch', () => {
+    // Verbatim restatement pair from the 2026-08-16 drafted-message census (D-16).
+    const r = buildForkView(
+      'Handle the vendor situation before Monday.',
+      mkInterpret({ reading_paraphrases: [
+        'The message serves as a formal notice and requests remediation for the apartment',
+        'The message requests a written response regarding the remediation of the apartment',
+      ] }),
+    );
+    expect(r.branches).toHaveLength(1);
+  });
+
+  it('G6: genuinely distinct readings both survive (CAL-3b D-26 pair)', () => {
+    expect(readingsTooSimilar(
+      'The message explains that the landlord has a legal obligation to maintain the property',
+      'The message could be interpreted as a request for the landlord to acknowledge the obligation',
+    )).toBe(false);
+    const r = buildForkView(
+      'Handle the vendor situation before Monday.',
+      mkInterpret({ reading_paraphrases: [
+        'Resolve the dispute with the vendor',
+        'Prepare the vendor presentation',
+      ] }),
+    );
+    expect(r.branches).toHaveLength(2);
   });
 
   it('caps branches at maxBranches', () => {

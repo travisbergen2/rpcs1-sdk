@@ -107,7 +107,7 @@ export async function POST(request: Request) {
         const backend = getGatewayBackend();
         let interp = null;
         if (backend && allowModelCall(request)) {
-          interp = await interpretWithModel(text, backend, { risk, profile, context, fallbackToRules: true });
+          interp = await interpretWithModel(text, backend, { risk, profile, context, fallbackToRules: true, avoidReadings: rejected });
         } else {
           interp = profile ? interpretProfiled(text, risk, profile) : interpret(text, risk);
           interp = { ...interp, engine: 'rules' };

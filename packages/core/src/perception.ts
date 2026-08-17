@@ -59,6 +59,30 @@ export interface PerceptionResult {
  * fixtures (MockBackend), or any future provider. The decision layer does
  * not know or care which.
  */
+export interface PerceiveOptions {
+  /**
+   * Readings the user has already rejected ("none of these"). The perception
+   * prompt instructs the model to propose readings genuinely DIFFERENT from
+   * these — the server-side dedupe in buildForkView still applies afterward
+   * (belt and suspenders; a model may repeat itself).
+   */
+  avoidReadings?: string[];
+}
+
+/** Prompt block for rejected readings (shared by all backends). */
+export function avoidReadingsBlock(options?: PerceiveOptions): string {
+  const avoid = (options?.avoidReadings ?? [])
+    .filter((r): r is string => typeof r === 'string' && !!r.trim())
+    .slice(0, 12);
+  if (!avoid.length) return '';
+  return (
+    'The user has already REJECTED the following readings as not what they meant. ' +
+    'Propose readings that are genuinely different from all of them — do not rephrase them:\n' +
+    avoid.map((r, i) => `[rejected ${i + 1}] ${r}`).join('\n') +
+    '\n\n'
+  );
+}
+
 export interface ModelBackend {
   /** Human-readable backend id, recorded in TranslationOutput.engine detail. */
   readonly name: string;
@@ -69,7 +93,7 @@ export interface ModelBackend {
    *                 backend may use to ground referents ("her" → a person
    *                 actually mentioned earlier).
    */
-  perceive(text: string, context?: string[]): Promise<PerceptionResult>;
+  perceive(text: string, context?: string[], options?: PerceiveOptions): Promise<PerceptionResult>;
 }
 
 // ── Validation / clamping ───────────────────────────────────────────
@@ -321,7 +345,7 @@ export class AnthropicBackend implements ModelBackend {
     this.name = `anthropic:${this.model}`;
   }
 
-  async perceive(text: string, context?: string[]): Promise<PerceptionResult> {
+  async perceive(text: string, context?: string[], options?: PerceiveOptions): Promise<PerceptionResult> {
     const contextBlock =
       context && context.length
         ? 'Prior conversation (oldest first), for grounding referents only:\n' +
@@ -330,6 +354,7 @@ export class AnthropicBackend implements ModelBackend {
         : '';
     const userContent =
       contextBlock +
+      avoidReadingsBlock(options) +
       'Analyze this message and report your perception via the report_perception tool:\n' +
       '<message>\n' + text + '\n</message>';
 
@@ -379,7 +404,7 @@ export class MockBackend implements ModelBackend {
   constructor(result: PerceptionResult | ((text: string) => PerceptionResult)) {
     this.result = result;
   }
-  async perceive(text: string): Promise<PerceptionResult> {
+  async perceive(text: string, _context?: string[], _options?: PerceiveOptions): Promise<PerceptionResult> {
     return typeof this.result === 'function' ? this.result(text) : this.result;
   }
 }

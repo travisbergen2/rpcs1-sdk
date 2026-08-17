@@ -36,11 +36,10 @@ function debounce(fn, ms) {
   };
 }
 
-function callInterpret(text, risk) {
+function sendBg(msg) {
   return new Promise((resolve) => {
-    chrome.runtime.sendMessage(
-      { type: "RPCS1_INTERPRET", payload: { text, risk } },
-      (response) => resolve(response || { ok: false, error: "no response" })
+    chrome.runtime.sendMessage(msg, (response) =>
+      resolve(response || { ok: false, error: "no response" })
     );
   });
 }
@@ -163,20 +162,270 @@ function findWordRange(el, word) {
   return null;
 }
 
-function renderInline(el, result) {
+function renderSpanUnderlines(el, fork) {
   clearOverlays(el);
   const st = stateFor(el);
-  for (const ent of L.unresolvedEntities(result)) {
-    const range = findWordRange(el, ent.original);
-    if (range) st.marks.push({ range, ent, result });
+  st.muted = st.muted || new Set();
+  const spans = (fork.spans || []).filter(
+    (sp) => sp && sp.text && !st.muted.has(sp.text.toLowerCase())
+  );
+  if (!spans.length) return;
+  if (el.isContentEditable) {
+    for (const sp of spans) {
+      const range = findWordRange(el, sp.text);
+      if (range) st.marks.push({ range, span: sp });
+    }
+    if (st.marks.length) {
+      activeFields.add(el);
+      drawStrips(el);
+      return;
+    }
   }
-  if (st.marks.length === 0) {
-    // Whole-message fork with no specific span to underline -> corner badge.
-    if (L.messageForks(result)) renderBadge(el, result);
-    return;
+  // <textarea>/<input> (no DOM text nodes to Range against): corner badge.
+  renderBadge(el, { spans });
+}
+
+// ── Three-exit picker (v0.5) ────────────────────────────────────────────────
+// Every choose-your-meaning surface carries an escape hatch: our enumeration
+// might not contain what they meant (measured branch coverage: 2/9 on real
+// misreads). Exits: try-again (rejected list, capped), the gloss box (always
+// present), and leave-as-is (mute; the sender's call is final).
+
+const MAX_REROLLS = 2;
+let pickerState = null;
+let activePicker = null;
+
+function removePicker() {
+  if (activePicker) {
+    activePicker.remove();
+    activePicker = null;
   }
-  activeFields.add(el);
-  drawStrips(el);
+  pickerState = null;
+}
+
+function logFlywheel(entry) {
+  // Local-only coverage-failure log (last 200 events). Every reject and
+  // gloss is a labeled example of where reading-generation missed — the
+  // data that improves branch coverage. Never leaves the machine in v0.
+  try {
+    chrome.storage.local.get({ rpcs1_flywheel: [] }, (d) => {
+      const arr = d.rpcs1_flywheel || [];
+      arr.push({ t: Date.now(), ...entry });
+      chrome.storage.local.set({ rpcs1_flywheel: arr.slice(-200) });
+    });
+  } catch (e) { /* storage unavailable — flywheel is best-effort */ }
+}
+
+// Append the clarifier through the editor's own input pipeline so managed
+// editors keep their internal model consistent. Append-only, at the end —
+// never splits the user's text mid-node. Falls back to clipboard.
+function applyClarifier(el, clarifier) {
+  const text = "\n\n" + clarifier;
+  try {
+    el.focus();
+    if (el.isContentEditable) {
+      const sel = window.getSelection();
+      sel.selectAllChildren(el);
+      sel.collapseToEnd();
+      if (document.execCommand("insertText", false, text)) return "inserted";
+    } else {
+      const end = (el.value || "").length;
+      el.setSelectionRange(end, end);
+      if (document.execCommand("insertText", false, text)) return "inserted";
+      el.value += text;
+      el.dispatchEvent(new Event("input", { bubbles: true }));
+      return "inserted";
+    }
+  } catch (e) { /* fall through to clipboard */ }
+  try { navigator.clipboard.writeText(clarifier); } catch (e) { /* ignore */ }
+  return "copied";
+}
+
+function openPicker(el, span) {
+  const draft = readFieldText(el);
+  pickerState = {
+    el,
+    span,
+    rejected: [],
+    rerolls: 0,
+    draft: draft.length > MAX_LEN ? draft.slice(-MAX_LEN) : draft
+  };
+  loadPicker();
+}
+
+async function loadPicker() {
+  if (!pickerState) return;
+  renderPickerCard({ loading: true });
+  const res = await sendBg({
+    type: "RPCS1_FORK",
+    payload: {
+      text: pickerState.draft,
+      risk: riskForThisPage(),
+      floor: false,
+      rejected: pickerState.rejected
+    }
+  });
+  if (!pickerState) return; // dismissed while loading
+  const model = res.ok
+    ? L.buildPickerModel(res.data)
+    : { branches: [], engine: "?", status: "error" };
+  renderPickerCard({ model });
+}
+
+function pickerAnchorRect() {
+  const st = pickerState && fieldState.get(pickerState.el);
+  const mark = st && st.marks.find((m) => m.span === pickerState.span);
+  if (mark) {
+    try {
+      const r = mark.range.getBoundingClientRect();
+      if (r && (r.width || r.height)) return r;
+    } catch (e) { /* range invalidated */ }
+  }
+  if (pickerState && pickerState.el.isConnected) {
+    return pickerState.el.getBoundingClientRect();
+  }
+  return { left: 40, bottom: 80 };
+}
+
+function renderPickerCard(state) {
+  if (activePicker) activePicker.remove();
+  const { el, span } = pickerState;
+  const card = document.createElement("div");
+  card.className = "rpcs1-card rpcs1-fork-card rpcs1-picker";
+  card.style.pointerEvents = "auto";
+
+  const title = document.createElement("div");
+  title.className = "rpcs1-card-title";
+  title.textContent = span
+    ? `"${span.text}" can be taken more than one way.`
+    : "This can be taken more than one way.";
+  card.appendChild(title);
+
+  const close = document.createElement("button");
+  close.className = "rpcs1-close";
+  close.type = "button";
+  close.textContent = "×";
+  close.addEventListener("click", removePicker);
+  card.appendChild(close);
+
+  const sub = document.createElement("div");
+  sub.className = "rpcs1-card-subline";
+  // Copy law: "closest to" — the list never claims to be complete.
+  sub.textContent = state.loading
+    ? "Reading it both ways…"
+    : "Which is closest to what you meant?";
+  card.appendChild(sub);
+
+  if (!state.loading) {
+    const branches = (state.model.branches || []).filter((b) => b.clarifier);
+    for (const b of branches) {
+      const btn = document.createElement("button");
+      btn.className = "rpcs1-btn rpcs1-branch-btn";
+      btn.type = "button";
+      btn.textContent = b.summary;
+      btn.title = b.clarifier;
+      btn.addEventListener("click", () => {
+        const how = applyClarifier(el, b.clarifier);
+        logFlywheel({ kind: "accept", span: span && span.text, branch: b.summary });
+        if (how === "copied") {
+          btn.textContent = "Copied — paste it at the end";
+          setTimeout(removePicker, 1600);
+        } else {
+          removePicker();
+        }
+      });
+      card.appendChild(btn);
+    }
+    if (!branches.length) {
+      const none = document.createElement("div");
+      none.className = "rpcs1-card-subline";
+      none.textContent =
+        state.model.status === "error"
+          ? "Couldn't fetch readings — your own words below still work."
+          : "No new readings — say it in your own words below.";
+      card.appendChild(none);
+    }
+
+    const exits = document.createElement("div");
+    exits.className = "rpcs1-actions rpcs1-exits";
+
+    if (pickerState.rerolls < MAX_REROLLS && branches.length) {
+      const again = document.createElement("button");
+      again.className = "rpcs1-btn rpcs1-btn-quiet";
+      again.type = "button";
+      again.textContent = "None of these — try again";
+      again.addEventListener("click", () => {
+        pickerState.rejected = L.mergeRejected(pickerState.rejected, state.model.branches);
+        pickerState.rerolls++;
+        logFlywheel({
+          kind: "reject",
+          span: span && span.text,
+          shown: state.model.branches.map((b) => b.summary)
+        });
+        loadPicker();
+      });
+      exits.appendChild(again);
+    }
+
+    const fine = document.createElement("button");
+    fine.className = "rpcs1-btn rpcs1-btn-quiet";
+    fine.type = "button";
+    fine.textContent = "It's fine as I wrote it";
+    fine.addEventListener("click", () => {
+      const stf = stateFor(el);
+      stf.muted = stf.muted || new Set();
+      if (span && span.text) stf.muted.add(span.text.toLowerCase());
+      logFlywheel({ kind: "dismiss", span: span && span.text });
+      clearOverlays(el);
+      removePicker();
+    });
+    exits.appendChild(fine);
+    card.appendChild(exits);
+
+    // The gloss box — the exit that always exists. The user's words are
+    // ground truth; the tool only frames them onto the end of the message.
+    const glossRow = document.createElement("div");
+    glossRow.className = "rpcs1-gloss-row";
+    const input = document.createElement("input");
+    input.className = "rpcs1-gloss-input";
+    input.type = "text";
+    input.placeholder = "Or say it in a few words…";
+    input.maxLength = 140;
+    const add = document.createElement("button");
+    add.className = "rpcs1-btn";
+    add.type = "button";
+    add.textContent = "Add";
+    add.addEventListener("click", () => {
+      const clarifier = L.composeGlossClarifier(input.value);
+      if (!clarifier) return;
+      const how = applyClarifier(el, clarifier);
+      logFlywheel({ kind: "gloss", span: span && span.text, gloss: input.value.trim() });
+      if (how === "copied") {
+        add.textContent = "Copied";
+        setTimeout(removePicker, 1600);
+      } else {
+        removePicker();
+      }
+    });
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") add.click();
+      e.stopPropagation();
+    });
+    glossRow.appendChild(input);
+    glossRow.appendChild(add);
+    card.appendChild(glossRow);
+
+    const tag = document.createElement("div");
+    tag.className = "rpcs1-card-engine";
+    tag.textContent = state.model.engine || "?";
+    card.appendChild(tag);
+  }
+
+  getOverlayRoot().appendChild(card);
+  const rect = pickerAnchorRect();
+  card.style.top = `${window.scrollY + rect.bottom + 8}px`;
+  card.style.left = `${Math.max(4, window.scrollX + rect.left)}px`;
+  activePicker = card;
 }
 
 function drawStrips(el) {
@@ -203,10 +452,8 @@ function drawStrips(el) {
       strip.style.left = `${window.scrollX + rect.left}px`;
       strip.style.top = `${window.scrollY + rect.bottom - 5}px`;
       strip.style.width = `${rect.width}px`;
-      strip.addEventListener("mouseenter", () =>
-        showCard(rect, `"${mark.ent.original}"`, mark.result, mark.ent)
-      );
-      strip.addEventListener("mouseleave", scheduleHideCard);
+      strip.title = `"${mark.span.text}" — can be taken more than one way. Click to fix.`;
+      strip.addEventListener("click", () => openPicker(el, mark.span));
       root.appendChild(strip);
       st.nodes.push(strip);
     }
@@ -215,7 +462,7 @@ function drawStrips(el) {
 
 // ── textarea/<input> + whole-message rendering (corner badge) ───────────────
 
-function renderBadge(el, result) {
+function renderBadge(el, fork) {
   clearOverlays(el);
   const st = stateFor(el);
   if (!el.isConnected) return;
@@ -224,12 +471,9 @@ function renderBadge(el, result) {
   badge.className = "rpcs1-badge";
   badge.style.left = `${window.scrollX + rect.right - 18}px`;
   badge.style.top = `${window.scrollY + rect.top + 5}px`;
-  const flagged = L.unresolvedEntities(result).map((e) => `"${e.original}"`);
-  const title = flagged.length
-    ? flagged.join(", ")
-    : "This message";
-  badge.addEventListener("mouseenter", () => showCard(rect, title, result, null));
-  badge.addEventListener("mouseleave", scheduleHideCard);
+  const spans = fork.spans || [];
+  badge.title = spans.map((sp) => `"${sp.text}"`).join(", ") + " — can be taken more than one way";
+  badge.addEventListener("click", () => openPicker(el, spans[0] || null));
   getOverlayRoot().appendChild(badge);
   st.nodes.push(badge);
   activeFields.add(el);
@@ -284,25 +528,22 @@ function handleField(el) {
     }
     if (text.length > MAX_LEN) text = text.slice(-MAX_LEN);
 
-    const result = await callInterpret(text, riskForThisPage());
+    // v0.5 passive mode: deterministic mirror floor (floor:true — the server
+    // makes NO model call; free and precise-by-contract). CAL-1/2 killed
+    // entity-gate flagging on both engines; mirror spans are the calibrated
+    // passive signal. The model joins only when the user opens the picker.
+    const result = await sendBg({ type: "RPCS1_FORK", payload: { text, risk: riskForThisPage(), floor: true } });
     if (!result.ok) return;
 
     // Stale-guard: the draft may have changed while the call was in flight.
     if (readFieldText(el) !== st.lastText) return;
 
-    // shouldRender = shouldFlag + engine gate: rules-path fallback results
-    // never drive UI (calibrated 47/47 flag rate incl. all controls — see
-    // logic.js). Only model-path results are selective enough to render.
-    if (!L.shouldRender(result.data)) {
+    if (!L.shouldUnderline(result.data)) {
       clearOverlays(el);
       removeCard();
       return;
     }
-    if (el.isContentEditable) {
-      renderInline(el, result.data);
-    } else {
-      renderBadge(el, result.data);
-    }
+    renderSpanUnderlines(el, result.data);
   }, DEBOUNCE_MS);
 
   el.addEventListener("input", () => {
@@ -458,10 +699,11 @@ function renderForkCard(model, selection) {
   if (!forkDismissBound) {
     forkDismissBound = true;
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") removeForkCard();
+      if (e.key === "Escape") { removeForkCard(); removePicker(); }
     });
     document.addEventListener("mousedown", (e) => {
       if (activeForkCard && !activeForkCard.contains(e.target)) removeForkCard();
+      if (activePicker && !activePicker.contains(e.target) && !(e.target.closest && e.target.closest(".rpcs1-strip"))) removePicker();
     });
   }
 }

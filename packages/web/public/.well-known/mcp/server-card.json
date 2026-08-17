@@ -133,6 +133,16 @@
       }
     },
     {
+      "name": "fork",
+      "description": "Fork view: deterministic structural ambiguity detectors with character-offset spans, per-reading clarifiers, ask-back question, and forked-answer scaffold. Silent on clean text. Mirror floor only over MCP (no model call).",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": true
+      }
+    },
+    {
       "name": "normalize",
       "description": "Clean up fragmented human input with ellipses and run-on thoughts into coherent prose.",
       "inputSchema": {
@@ -254,7 +264,7 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 5000,
-            "description": "The user’s raw message."
+            "description": "The user\u2019s raw message."
           },
           "risk": {
             "type": "string",
@@ -397,7 +407,7 @@
     {
       "name": "route_intent",
       "title": "Route an ambiguous request: commit, present options, or clarify",
-      "description": "Entropy routing over competing interpretations — the model proposes the candidate readings (3–7 hypotheses incl. typo/idiom/domain-sense readings, with likelihoods and an unambiguous paraphrase per reading for user verification), the deterministic router computes the posterior + normalized entropy and returns commit / commit_with_note / present_options / clarify (open-ended when nothing discriminates). Profile-aware thresholds. The commit-vs-clarify authority in the pipeline; the built-in default set is a product-routing starter only. Deterministic, stateless, read-only.",
+      "description": "Entropy routing over competing interpretations \u2014 the model proposes the candidate readings (3\u20137 hypotheses incl. typo/idiom/domain-sense readings, with likelihoods and an unambiguous paraphrase per reading for user verification), the deterministic router computes the posterior + normalized entropy and returns commit / commit_with_note / present_options / clarify (open-ended when nothing discriminates). Profile-aware thresholds. The commit-vs-clarify authority in the pipeline; the built-in default set is a product-routing starter only. Deterministic, stateless, read-only.",
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
@@ -438,7 +448,7 @@
                 },
                 "paraphrase": {
                   "type": "string",
-                  "description": "The user's message rewritten unambiguously under this reading — shown to the user for intent verification."
+                  "description": "The user's message rewritten unambiguously under this reading \u2014 shown to the user for intent verification."
                 }
               },
               "required": [
@@ -449,7 +459,7 @@
           },
           "likelihoods": {
             "type": "object",
-            "description": "Optional externally computed likelihood per hypothesis id — replaces the lexical scorer.",
+            "description": "Optional externally computed likelihood per hypothesis id \u2014 replaces the lexical scorer.",
             "additionalProperties": {
               "type": "number"
             }

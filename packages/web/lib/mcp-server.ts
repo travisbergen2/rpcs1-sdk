@@ -12,9 +12,17 @@ import {
   type Likelihoods,
 } from '@rpcs1/core';
 import { interpret, normalize, rewrite, rewriteForProfile } from '@/lib/translator';
+import { buildForkView } from '@rpcs1/core';
 import { z } from 'zod';
 import { recommendInputSchema, recommendationOutputSchema } from './recommend-schema';
 import { MCP_SERVER_VERSION } from './mcp-version';
+
+// Engine honesty stamp: every tool on this server runs deterministically —
+// no model call is ever made over MCP. Stamped into rendered output so no
+// client has to guess which brain answered (2026-08-17 finding: a client
+// architected on interpret's rules engine without knowing it was rules).
+const ENGINE_RULES = '\n\nEngine: rules (deterministic — no model call)';
+const ENGINE_MIRROR = '\n\nEngine: mirror-only (deterministic floor — no model call)';
 
 // Shared zod shape for a ReceiverProfile travelling as a tool parameter.
 // The server is stateless: the user's profile lives client-side (project
@@ -104,7 +112,7 @@ export function createRpcs1McpServer() {
               : '',
             `Best next check: ${nextTest}.`,
             `Want the full written diagnostic for this workload (memo, settings, next test)? Founding rate $99: https://rpcs1.dev/diagnostic`,
-          ].filter(Boolean).join(' '),
+          ].filter(Boolean).join(' ') + ENGINE_RULES,
         }],
       };
     },
@@ -153,7 +161,64 @@ export function createRpcs1McpServer() {
         lines.push('');
         lines.push(`Clarify: ${result.clarifying_questions[0]}`);
       }
-      return { structuredContent: { ...result } as Record<string, unknown>, content: [{ type: 'text', text: lines.join('\n') }] };
+      return { structuredContent: { ...result, engine: 'rules' } as Record<string, unknown>, content: [{ type: 'text', text: lines.join('\n') + ENGINE_RULES }] };
+    },
+  );
+
+  // ── Tool: fork ─────────────────────────────────────────────────
+
+  server.registerTool(
+    'fork',
+    {
+      title: 'Fork view — how could this message read?',
+      description:
+        'The calibrated ambiguity surface: deterministic structural fork detectors (reference, scope, grouping, ' +
+        'compare-vs-choose, polysemy) with character-offset spans, plus per-reading one-line clarifiers the sender ' +
+        'can append to lock a reading in. Returns competing readings, an ask-back question, and a forked-answer ' +
+        'scaffold. Silent on clean text by contract. Runs the deterministic mirror floor only over MCP (no model). ' +
+        'Prefer this over interpret for span-level ambiguity detection: interpret\u2019s entity list is a word-list ' +
+        'engine (calibrated 2026-08-15: no discrimination on conversational text) \u2014 advisory only.',
+      inputSchema: {
+        text: z.string().min(1).max(5000).describe('The message to analyze for forks.'),
+        rejected: z.array(z.string()).max(12).optional()
+          .describe('Reading summaries the user already rejected \u2014 never re-offered.'),
+      },
+      annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false, idempotentHint: true },
+    },
+    async (input) => {
+      const result = buildForkView(input.text, null, { rejected: input.rejected });
+      const lines: string[] = [];
+      lines.push(`INPUT: \"${result.original}\"`);
+      lines.push(`Status: ${result.status}`);
+      if (result.spans.length > 0) {
+        lines.push('');
+        lines.push('\u2500 Fork Spans (character offsets) \u2500');
+        for (const sp of result.spans) {
+          lines.push(`  [${sp.start}\u2013${sp.end}] \"${sp.text}\" (${sp.kind}): ${sp.why}`);
+        }
+      }
+      if (result.branches.length > 0) {
+        lines.push('');
+        lines.push('\u2500 Readings \u2500');
+        for (const b of result.branches) {
+          lines.push(`  \u2022 ${b.summary}`);
+          if (b.clarifier) lines.push(`    lock it in: \"${b.clarifier}\"`);
+          if (b.consequence) lines.push(`    if wrong: ${b.consequence}`);
+        }
+      }
+      if (result.branch_question) {
+        lines.push('');
+        lines.push(`Ask-back: ${result.branch_question}`);
+      }
+      if (result.forked_answer_scaffold) {
+        lines.push('');
+        lines.push(`Forked answer scaffold:\n${result.forked_answer_scaffold}`);
+      }
+      if (result.status === 'clean') {
+        lines.push('');
+        lines.push('No structural fork detected \u2014 the detectors stay silent on clean text by contract.');
+      }
+      return { structuredContent: { ...result } as Record<string, unknown>, content: [{ type: 'text', text: lines.join('\n') + ENGINE_MIRROR }] };
     },
   );
 
@@ -175,7 +240,7 @@ export function createRpcs1McpServer() {
       const result = normalize(input.text);
       return {
         structuredContent: { ...result } as Record<string, unknown>,
-        content: [{ type: 'text', text: result.normalized || input.text }],
+        content: [{ type: 'text', text: (result.normalized || input.text) + ENGINE_RULES }],
       };
     },
   );
@@ -310,7 +375,7 @@ export function createRpcs1McpServer() {
       }
       return {
         structuredContent: { ...result } as Record<string, unknown>,
-        content: [{ type: 'text', text: lines.join('\n') }],
+        content: [{ type: 'text', text: lines.join('\n') + ENGINE_RULES }],
       };
     },
   );
@@ -413,7 +478,7 @@ export function createRpcs1McpServer() {
           clarifyingQuestion: decision.clarifyingQuestion,
           options: decision.options,
         } as Record<string, unknown>,
-        content: [{ type: 'text', text: lines.join('\n') }],
+        content: [{ type: 'text', text: lines.join('\n') + ENGINE_RULES }],
       };
     },
   );

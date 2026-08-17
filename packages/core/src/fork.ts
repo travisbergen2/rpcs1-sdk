@@ -40,6 +40,12 @@ export interface ForkBranch {
   summary: string;
   /** The reading spelled out, when the engine provides one (model paraphrase) */
   canonical: string | null;
+  /**
+   * One line the SENDER can append to lock this reading in ("To be clear:
+   * ..."). Mirror branches carry their detector's clarifier; model branches
+   * get a deterministic composition. Null only when nothing sensible exists.
+   */
+  clarifier: string | null;
   /** One-line cost-if-wrong, when derivable from the fork kind */
   consequence: string | null;
 }
@@ -73,6 +79,13 @@ export interface ForkViewResult {
 export interface ForkViewOptions {
   /** Cap on branches surfaced (default 4 — a fork card, not a listing) */
   maxBranches?: number;
+  /**
+   * Reading summaries the user has already rejected ("none of these").
+   * Matching branches are excluded so a try-again never re-offers them.
+   * The list is never exhaustive-proof: when nothing new remains, the UI
+   * falls through to the gloss box.
+   */
+  rejected?: string[];
 }
 
 // ── Consequence templates (deterministic; no fake model authority) ────────────
@@ -123,7 +136,12 @@ export function buildForkView(
   const m = mirror(original);
 
   const branches: ForkBranch[] = [];
-  const seen = new Set<string>();
+  const seen = new Set<string>(
+    (options.rejected ?? [])
+      .filter((r): r is string => typeof r === 'string')
+      .map((r) => r.trim().toLowerCase())
+      .filter(Boolean),
+  );
 
   // Deterministic floor: the primary span's readings (mirror's chip contract —
   // further spans resolve after the first is locked; all spans are still
@@ -139,6 +157,7 @@ export function buildForkView(
         source: 'mirror',
         summary: r.summary.trim(),
         canonical: null,
+        clarifier: r.clarifier ?? null,
         consequence: KIND_CONSEQUENCE[kind] ?? null,
       });
       if (branches.length >= maxBranches) break;
@@ -161,6 +180,7 @@ export function buildForkView(
         source: 'model',
         summary: s,
         canonical: s,
+        clarifier: `To be clear: I mean ${s.replace(/[.\s]+$/, '')}.`,
         consequence: null,
       });
     }

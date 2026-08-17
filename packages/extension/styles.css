@@ -137,3 +137,63 @@
 .rpcs1-btn:hover {
   background: #f0c674;
 }
+
+/* ── v0.5 three-exit picker ── */
+.rpcs1-picker {
+  min-width: 300px;
+}
+
+.rpcs1-branch-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-top: 6px;
+  background: #2b2417;
+  color: #f5efe3;
+  border: 1px solid #6b5a2e;
+  font-weight: 500;
+}
+
+.rpcs1-branch-btn:hover {
+  background: #3a3120;
+  border-color: #d99000;
+  color: #f5efe3;
+}
+
+.rpcs1-btn-quiet {
+  background: none;
+  border: 1px solid #6b5a2e;
+  color: #d9d2c2;
+  font-weight: 500;
+}
+
+.rpcs1-btn-quiet:hover {
+  background: #2b2417;
+  color: #f0c674;
+}
+
+.rpcs1-exits {
+  margin-top: 10px;
+}
+
+.rpcs1-gloss-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.rpcs1-gloss-input {
+  flex: 1;
+  background: #14100a;
+  border: 1px solid #6b5a2e;
+  border-radius: 4px;
+  color: #f5efe3;
+  padding: 5px 8px;
+  font-size: 12.5px;
+  font-family: inherit;
+}
+
+.rpcs1-gloss-input:focus {
+  outline: none;
+  border-color: #d99000;
+}

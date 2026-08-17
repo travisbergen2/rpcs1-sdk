@@ -1,55 +1,52 @@
 import Link from 'next/link';
 import { ProfilePill } from '@/components/ProfilePill';
+import { StickerLogo } from '@/components/StickerLogo';
+import { BRAND_NAME } from '@/lib/brand';
 
 /**
- * One product for people (SendRight — the full Bridge lives at /send),
- * one product for agents (the Tuner + written diagnostic), one price page.
- * Calibrate, Translator, and the Guessing Test are now stations INSIDE the
- * Bridge flow or demos linked from within — they no longer compete in the nav.
- * Their routes stay live for links and search engines.
+ * One product fronts the site: the box on the landing page, under the
+ * consumer brand (lib/brand.ts). Every station that used to compete in the
+ * nav — SendRight, the Tuner, Calibrate, the Translator, R&D — now lives in
+ * /labs. Their routes stay live for links and search engines. The mechanism
+ * brand (RPCS-1) appears in the footer as "Powered by", per the house rule:
+ * outcome on the wrapper, mechanism one click deep.
  */
 export function Nav() {
   return (
-    <header className="border-b border-gray-800 bg-[#0a0f1a]/80 backdrop-blur-md sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <span className="text-lg font-bold text-white tracking-tight">
-            RPCS<span className="text-sky-400">-1</span>
+    <header className="sticky top-0 z-50 border-b border-gray-800 bg-[#0a0f1a]/80 backdrop-blur-md">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
+        <Link href="/" className="group flex items-center gap-2.5">
+          <StickerLogo size="nav" />
+          <span className="hidden text-sm font-bold tracking-tight text-white sm:block">
+            {BRAND_NAME}
           </span>
-          <span className="text-xs text-gray-500 hidden sm:block">say it once, land it right</span>
         </Link>
 
         <nav className="flex items-center gap-1">
           <ProfilePill />
           <Link
-            href="/send"
-            className="px-3 py-1.5 text-sm text-emerald-300 hover:text-emerald-200 transition-colors rounded-lg hover:bg-gray-800"
+            href="/labs"
+            className="rounded-lg px-3 py-1.5 text-sm text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-100"
           >
-            SendRight
-          </Link>
-          <Link
-            href="/tuner"
-            className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
-          >
-            Agent Tuner
+            Labs
           </Link>
           <Link
             href="/pricing"
-            className="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
+            className="rounded-lg px-3 py-1.5 text-sm text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-100"
           >
             Pricing
           </Link>
           <Link
-            href="/rd"
-            className="hidden sm:block px-3 py-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-800"
+            href="/docs"
+            className="hidden rounded-lg px-3 py-1.5 text-sm text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-100 sm:block"
           >
-            R&amp;D
+            Docs
           </Link>
           <Link
             href="/diagnostic"
-            className="ml-2 px-3 py-1.5 text-sm font-medium bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg transition-colors shadow-lg shadow-amber-500/20"
+            className="ml-2 rounded-lg bg-amber-500 px-3 py-1.5 text-sm font-medium text-slate-950 shadow-lg shadow-amber-500/20 transition-colors hover:bg-amber-400"
           >
-            Get the diagnostic →
+            Agent diagnostic →
           </Link>
         </nav>
       </div>

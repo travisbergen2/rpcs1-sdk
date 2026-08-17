@@ -6,23 +6,28 @@ import { Footer } from '@/components/Footer';
 import { Analytics } from '@vercel/analytics/next';
 import { ProfileProvider } from '@/components/ProfileProvider';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { BRAND_NAME, BRAND_TAGLINE } from '@/lib/brand';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
+// Domain follows the deployment: set NEXT_PUBLIC_APP_URL when the consumer
+// domain goes live; rpcs1.dev remains the fallback and the mechanism home.
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://rpcs1.dev';
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://rpcs1.dev'),
+  metadataBase: new URL(APP_URL),
   title: {
-    default: 'RPCS-1 — find your AI agent\u2019s failure mode and fix it',
-    template: '%s | RPCS-1',
+    default: `${BRAND_NAME} — ${BRAND_TAGLINE.replace(/\.$/, '').toLowerCase()}`,
+    template: `%s | ${BRAND_NAME}`,
   },
   description:
-    'Your agent loops, drowns, or stalls. RPCS-1 reads your workload and gives you the settings to change and the test that proves the fix \u2014 every number derived, not guessed.',
-  keywords: ['AI evaluation', 'agent observability', 'agent tuning', 'receiver primitives', 'IMM', 'MCP', 'rpcs1', 'agent configuration'],
+    'Everything you write can be read more than one way. Paste what you’re about to send, see the readings it forks into, pick the one you meant — and send the version that lands. Free, no account; the check runs in your browser.',
+  keywords: ['communication', 'ambiguity', 'prompt clarity', 'misread', 'AI prompts', 'receiver primitives', 'MCP', 'rpcs1', 'agent tuning'],
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://rpcs1.dev',
-    siteName: 'RPCS-1',
+    url: APP_URL,
+    siteName: BRAND_NAME,
   },
 };
 

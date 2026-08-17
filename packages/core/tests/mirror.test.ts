@@ -12,6 +12,33 @@ describe('mirror — fork detection', () => {
     expect(fork!.readings.map((x) => x.summary).join(' ')).toMatch(/pick/i);
   });
 
+  it('compare-or-choose: comparand boundaries are trimmed to content words', () => {
+    const r = mirror('What do you think about React or Vue for my project?');
+    const fork = r.ambiguousSpans.find((s) => s.kind === 'compare_or_choose');
+    expect(fork).toBeDefined();
+    expect(fork!.text).toBe('React or Vue');
+    expect(fork!.readings[0].summary).toBe('Compare React and Vue');
+    expect(fork!.readings[1].summary).toBe('Pick one of React / Vue for me');
+    // Offsets must still address the original text exactly.
+    const orig = 'What do you think about React or Vue for my project?';
+    expect(orig.slice(fork!.start, fork!.end)).toBe('React or Vue');
+  });
+
+  it('compare-or-choose: multi-word comparands keep their content words', () => {
+    const r = mirror('Should I use React Native or Flutter for the app?');
+    const fork = r.ambiguousSpans.find((s) => s.kind === 'compare_or_choose');
+    expect(fork).toBeDefined();
+    expect(fork!.text).toBe('React Native or Flutter');
+    expect(fork!.readings[0].summary).toBe('Compare React Native and Flutter');
+  });
+
+  it('compare-or-choose: a side made only of stopwords is not a comparand', () => {
+    const r = mirror('Should we go with this or the other option tomorrow?');
+    // "with this or the other" would previously fork on junk; the left side
+    // trims to nothing, so no compare_or_choose span may fire.
+    expect(r.ambiguousSpans.filter((s) => s.kind === 'compare_or_choose')).toHaveLength(0);
+  });
+
   it('compare-or-choose: explicit "compare" suppresses the fork', () => {
     const r = mirror('Compare React or Vue for my project?');
     expect(r.ambiguousSpans.filter((s) => s.kind === 'compare_or_choose')).toHaveLength(0);

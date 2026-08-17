@@ -11,6 +11,7 @@ let client: Client | undefined;
 const publicToolNames = [
   'recommend_agent_configuration',
   'interpret',
+  'fork',
   'normalize',
   'rewrite',
   'calibrate_profile',
@@ -27,7 +28,7 @@ afterEach(async () => {
 });
 
 describe('RPCS1 MCP server', () => {
-  it('advertises eight safe, read-only tools', async () => {
+  it('advertises nine safe, read-only tools', async () => {
     const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
     server = createRpcs1McpServer();
     client = new Client({ name: 'rpcs1-test-client', version: '1.0.0' });
@@ -37,7 +38,7 @@ describe('RPCS1 MCP server', () => {
 
     const { tools } = await client.listTools();
 
-    expect(tools).toHaveLength(8);
+    expect(tools).toHaveLength(9);
     expect(tools.map((t) => t.name)).toEqual(publicToolNames);
     for (const tool of tools) {
       expect(tool.annotations).toMatchObject({ readOnlyHint: true, destructiveHint: false });
@@ -352,5 +353,43 @@ describe('RPCS1 MCP server', () => {
     const structured = result.structuredContent as { canonical_translation: string; ar_level: string };
     expect(typeof structured.canonical_translation).toBe('string');
     expect(structured.ar_level).toMatch(/^AR[0-5]$/);
+  });
+
+  it('fork returns offset spans, clarifiers, and the mirror engine stamp', async () => {
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    server = createRpcs1McpServer();
+    client = new Client({ name: 'rpcs1-test-client', version: '1.0.0' });
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+
+    const result = await client.callTool({
+      name: 'fork',
+      arguments: { text: 'What do you think about React or Vue for my project?' },
+    });
+    const text = (result.content as Array<{ type: string; text: string }>)[0].text;
+    expect(text).toContain('"React or Vue"');
+    expect(text).toContain('compare_or_choose');
+    expect(text).toContain('lock it in:');
+    expect(text).toContain('Engine: mirror-only');
+    const sc = result.structuredContent as { spans: Array<{ start: number; end: number }>; status: string };
+    expect(sc.status).toBe('forks');
+    expect(sc.spans[0].start).toBeGreaterThanOrEqual(0);
+    expect(sc.spans[0].end).toBeGreaterThan(sc.spans[0].start);
+  });
+
+  it('interpret output carries the rules engine stamp', async () => {
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    server = createRpcs1McpServer();
+    client = new Client({ name: 'rpcs1-test-client', version: '1.0.0' });
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+
+    const result = await client.callTool({
+      name: 'interpret',
+      arguments: { text: 'can you fix that thing before they see it' },
+    });
+    const text = (result.content as Array<{ type: string; text: string }>)[0].text;
+    expect(text).toContain('Engine: rules (deterministic');
+    expect((result.structuredContent as { engine: string }).engine).toBe('rules');
   });
 });

@@ -277,6 +277,23 @@ function mergeRejected(prev, branches) {
   return [...set].slice(0, 12);
 }
 
+// ── v0.6: reply-context mute ────────────────────────────────────────────────
+// CAL-3b: every remaining floor fire on drafts was a message-initial
+// "this/that" — genuine on a standalone message, but in a REPLY the thread
+// supplies the antecedent the detector cannot see. In reply contexts the
+// dangling_pronoun detector is muted client-side.
+const REPLY_ATTR = /\b(reply|repl-|comment|respond|response)\b|reply/i;
+
+function looksLikeReplyAttrs(attrString) {
+  return typeof attrString === "string" && REPLY_ATTR.test(attrString);
+}
+
+function filterSpansForContext(spans, ctx) {
+  const list = Array.isArray(spans) ? spans : [];
+  if (!ctx || !ctx.isReply) return list;
+  return list.filter((sp) => sp && sp.kind !== "dangling_pronoun");
+}
+
 const RPCS1_LOGIC = {
   FLAG_LEVELS,
   isUnresolvedEntity,
@@ -290,6 +307,8 @@ const RPCS1_LOGIC = {
   buildForkModel,
   normalizeForkPayload,
   shouldUnderline,
+  looksLikeReplyAttrs,
+  filterSpansForContext,
   buildPickerModel,
   composeGlossClarifier,
   mergeRejected,

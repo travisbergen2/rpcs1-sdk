@@ -62,6 +62,31 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   return true; // keep the message channel open for the async fetch
 });
 
+// ── v0.5: generic fork relay for the content script ────────────────────────
+// floor:true = deterministic mirror floor (server makes NO model call — free,
+// cacheable). floor:false = full fork for the picker (model joins; carries
+// the user's rejected list so try-again never re-offers refused readings).
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.type !== "RPCS1_FORK") return false;
+  const { text, risk, floor, rejected } = msg.payload;
+  const cacheKey = floor ? `floor::${risk}::${text}` : null;
+  if (cacheKey && cache.has(cacheKey)) {
+    sendResponse({ ok: true, data: cache.get(cacheKey) });
+    return false;
+  }
+  const body = { tool: "fork", text, risk };
+  if (floor) body.floor = true;
+  if (Array.isArray(rejected) && rejected.length) body.rejected = rejected;
+  callTranslate(body)
+    .then(({ status, data }) => {
+      if (status !== 200 || (data && data.error)) throw new Error(`RPCS-1 API ${status}`);
+      if (cacheKey) cacheSet(cacheKey, data);
+      sendResponse({ ok: true, data });
+    })
+    .catch((err) => sendResponse({ ok: false, error: String(err) }));
+  return true;
+});
+
 // ── Receiver-side: "How could this read?" on any selection ─────────────────
 //
 // Strictly on-demand (spec §3/§6): one explicit user action = one server

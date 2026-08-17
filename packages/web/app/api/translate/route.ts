@@ -95,6 +95,15 @@ export async function POST(request: Request) {
         const context = Array.isArray(params.context)
           ? (params.context as unknown[]).filter((t): t is string => typeof t === 'string').slice(-12)
           : undefined;
+        const rejected = Array.isArray(params.rejected)
+          ? (params.rejected as unknown[]).filter((r): r is string => typeof r === 'string').slice(0, 12)
+          : undefined;
+        // floor:true = deterministic mirror floor only — no model call, no
+        // budget consumption. Passive underlining runs on this for free;
+        // the model joins only on explicit interaction (picker open/re-roll).
+        if (params.floor === true) {
+          return NextResponse.json(buildForkView(text, null, { rejected }));
+        }
         const backend = getGatewayBackend();
         let interp = null;
         if (backend && allowModelCall(request)) {
@@ -103,7 +112,7 @@ export async function POST(request: Request) {
           interp = profile ? interpretProfiled(text, risk, profile) : interpret(text, risk);
           interp = { ...interp, engine: 'rules' };
         }
-        return NextResponse.json(buildForkView(text, interp));
+        return NextResponse.json(buildForkView(text, interp, { rejected }));
       }
       case 'normalize': {
         const result = normalize(params.text || '');

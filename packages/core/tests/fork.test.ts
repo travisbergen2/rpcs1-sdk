@@ -131,6 +131,28 @@ describe('buildForkView — model contribution (engine-gated)', () => {
     expect(summaries).toContain('a genuinely new reading');
   });
 
+  it('branches carry clarifiers: mirror from detector, model composed', () => {
+    const r = buildForkView(
+      'What do you think about React or Vue for my project?',
+      mkInterpret({ reading_paraphrases: ['A genuinely new reading'] }),
+    );
+    const mirror = r.branches.find((b) => b.source === 'mirror');
+    const model = r.branches.find((b) => b.source === 'model');
+    expect(mirror!.clarifier).toMatch(/^To be clear:/);
+    expect(model!.clarifier).toBe('To be clear: I mean A genuinely new reading.');
+  });
+
+  it('rejected summaries are excluded so try-again never re-offers them', () => {
+    const forked = 'What do you think about React or Vue for my project?';
+    const base = buildForkView(forked);
+    const rejected = base.branches.map((b) => b.summary);
+    const r = buildForkView(forked, mkInterpret({ reading_paraphrases: ['A genuinely new reading'] }), { rejected });
+    expect(r.branches.map((b) => b.summary)).toEqual(['A genuinely new reading']);
+    // rejecting everything leaves an honest empty set (UI falls to gloss box)
+    const r2 = buildForkView(forked, null, { rejected });
+    expect(r2.branches).toHaveLength(0);
+  });
+
   it('caps branches at maxBranches', () => {
     const r = buildForkView(
       'Handle the vendor situation before Monday.',

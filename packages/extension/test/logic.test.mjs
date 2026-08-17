@@ -330,6 +330,23 @@ test("mergeRejected accumulates summaries, dedupes, caps at 12", () => {
   assert.equal(L.mergeRejected([], many).length, 12);
 });
 
+test("v0.6: reply context mutes dangling_pronoun spans only", () => {
+  const spans = [
+    { text: "This", kind: "dangling_pronoun" },
+    { text: "React or Vue", kind: "compare_or_choose" }
+  ];
+  assert.deepEqual(L.filterSpansForContext(spans, { isReply: true }).map(s => s.kind), ["compare_or_choose"]);
+  assert.equal(L.filterSpansForContext(spans, { isReply: false }).length, 2);
+  assert.equal(L.filterSpansForContext(spans, null).length, 2);
+});
+
+test("v0.6: reply attribute matcher", () => {
+  assert.equal(L.looksLikeReplyAttrs("msg-reply-box editable"), true);
+  assert.equal(L.looksLikeReplyAttrs("comment-editor"), true);
+  assert.equal(L.looksLikeReplyAttrs("compose-new-message"), false);
+  assert.equal(L.looksLikeReplyAttrs(null), false);
+});
+
 test("questionForEntity prefers the question naming the entity", () => {
   const r = {
     clarifying_questions: ['What does "it" refer to?', 'What does "that thing" refer to?']

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "RPCS-1 Ambiguity Check",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Amber-flags phrasing a reader could take more than one way \u2014 click the underline, pick the version you meant, or say it in your own words.",
   "permissions": [
     "storage",

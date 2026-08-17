@@ -167,6 +167,15 @@ function trimComparand(raw: string): { clean: string; offset: number } {
   return { clean, offset };
 }
 
+// CAL-3a hardening (2026-08-16; census specimens as regression tests):
+// rhetorical either/or questions are NOT compare-vs-pick forks.
+const FIRST_PERSON_SIDE = /\b(i|i'm|im|am|me|my)\b/i;           // "annoy you or am I being sensitive"
+const RETRO_OPENER = /^(was|were|is|are|does|did|do)\s+(it|this|that|he|she|they|there)\b/i; // "was it X or Y" wants a verdict, not a comparison
+const INVITATION_NOUNS = new Set([                                  // "any thoughts or perspectives" — an invitation, not two options
+  'thoughts', 'ideas', 'suggestions', 'perspectives', 'advice',
+  'comments', 'feedback', 'input', 'opinions', 'tips', 'recommendations',
+]);
+
 function detectCompareOrChoose(text: string, sentences: Sentence[]): AmbiguousSpan[] {
   const out: AmbiguousSpan[] = [];
   for (const s of sentences) {
@@ -175,9 +184,12 @@ function detectCompareOrChoose(text: string, sentences: Sentence[]): AmbiguousSp
     if (COMPARE_VERBS.test(s.text)) continue; // intent is explicit — no fork
     const m = /\b([A-Za-z0-9._-]+(?:\s[A-Za-z0-9._-]+)?)\s+(or|vs\.?|versus)\s+([A-Za-z0-9._-]+(?:\s[A-Za-z0-9._-]+)?)/i.exec(s.text);
     if (!m) continue;
+    if (RETRO_OPENER.test(s.text)) continue; // retrospective verdict question — no fork
     const xT = trimComparand(m[1]);
     const yT = trimComparand(m[3]);
     if (!xT.clean || !yT.clean) continue; // a side with no content words is not a comparand
+    if (FIRST_PERSON_SIDE.test(xT.clean) || FIRST_PERSON_SIDE.test(yT.clean)) continue; // rhetorical "…or am I…"
+    if (INVITATION_NOUNS.has(xT.clean.toLowerCase()) || INVITATION_NOUNS.has(yT.clean.toLowerCase())) continue; // synonym invitation pair
     const x = xT.clean, y = yT.clean;
     // Span tightened to "<x> <connector> <y>" - yRaw is the match tail by construction.
     const spanStart = s.start + m.index + xT.offset;
@@ -200,8 +212,14 @@ function detectScopeFork(text: string, sentences: Sentence[]): AmbiguousSpan[] {
     const scopeM = /\b(only|just)\b/i.exec(s.text);
     if (!scopeM) continue;
     const rest = s.text.slice(scopeM.index + scopeM[0].length);
+    // CAL-3a hardening: post-positioned "…your mom only," scopes backward — no fork.
+    if (/^\s*[,.;:!?]/.test(rest)) continue;
     const coordM = /\b(and|or)\b/i.exec(rest);
     if (!coordM) continue; // no coordination after the scope word — scope is unambiguous enough
+    // The coordination must be NEAR and in the same clause: a comma/semicolon
+    // between scope word and coordinator means a new clause, not a scoped list.
+    if (coordM.index > 60) continue;
+    if (/[,;:]/.test(rest.slice(0, coordM.index))) continue;
     const start = s.start + scopeM.index;
     out.push(span(start, start + scopeM[0].length, scopeM[0], 'scope_fork',
       `"${scopeM[0]}" sits before an "${coordM[0]}" — it can scope over the first item or over the whole list.`,

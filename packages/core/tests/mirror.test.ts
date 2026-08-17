@@ -59,6 +59,32 @@ describe('mirror — fork detection', () => {
     expect(fork!.text.toLowerCase()).toBe('the above');
   });
 
+  // ── CAL-3a regression fixtures (2026-08-16 census false positives) ──
+  it('CAL-3a T-2: rhetorical "…or am I being…" does not fork', () => {
+    const r = mirror('Would this annoy you or am I being sensitive?');
+    expect(r.ambiguousSpans.filter((s) => s.kind === 'compare_or_choose')).toHaveLength(0);
+  });
+
+  it('CAL-3a T-14: retrospective "Was it X or Y?" does not fork', () => {
+    const r = mirror('Was it disinterest or genuine forgetfulness?');
+    expect(r.ambiguousSpans.filter((s) => s.kind === 'compare_or_choose')).toHaveLength(0);
+  });
+
+  it('CAL-3a T-45: invitation pair "any thoughts or perspectives" does not fork', () => {
+    const r = mirror('So, any thoughts or perspectives on how this was weird or annoying?');
+    expect(r.ambiguousSpans.filter((s) => s.kind === 'compare_or_choose')).toHaveLength(0);
+  });
+
+  it('CAL-3a T-6: "only" with cross-clause coordination does not fork', () => {
+    const r = mirror('That only gets done maybe once a week, and I can only make myself do it at night.');
+    expect(r.ambiguousSpans.filter((s) => s.kind === 'scope_fork')).toHaveLength(0);
+  });
+
+  it('CAL-3a T-36: post-positioned "only," does not fork', () => {
+    const r = mirror('Communicate through your mom only, limit interaction, and tighten your privacy.');
+    expect(r.ambiguousSpans.filter((s) => s.kind === 'scope_fork')).toHaveLength(0);
+  });
+
   it('scope fork: "only" before a coordination forks', () => {
     const r = mirror('Update only the readme and the changelog entries.');
     const fork = r.ambiguousSpans.find((s) => s.kind === 'scope_fork');

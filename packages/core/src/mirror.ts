@@ -143,6 +143,30 @@ function detectExternalReference(text: string): AmbiguousSpan[] {
  * (The canonical founding example for this module.)
  */
 const COMPARE_VERBS = /\b(compare|comparison|versus analysis|pros and cons|differences?|choose|pick|select|recommend|which one|decide)\b/i;
+// Function words that leak into the X/Y captures ("about React", "Vue for").
+// Trimmed from capture edges so readings say "React or Vue", never
+// "about React or Vue for". A side that is ALL stopwords is not a real
+// comparand - the candidate is skipped.
+const COMPARAND_STOPWORDS = new Set([
+  'about', 'for', 'with', 'on', 'in', 'to', 'of', 'at', 'by', 'from', 'into',
+  'over', 'under', 'between', 'the', 'a', 'an', 'my', 'your', 'our', 'their',
+  'his', 'her', 'its', 'some', 'any', 'this', 'that', 'these', 'those',
+  'use', 'using', 'go', 'going', 'do', 'doing', 'be', 'being', 'is', 'it',
+]);
+
+function trimComparand(raw: string): { clean: string; offset: number } {
+  const words = raw.split(' ');
+  let a = 0;
+  let b = words.length;
+  while (a < b && COMPARAND_STOPWORDS.has(words[a].toLowerCase())) a++;
+  while (b > a && COMPARAND_STOPWORDS.has(words[b - 1].toLowerCase())) b--;
+  const clean = words.slice(a, b).join(' ');
+  // Offset of the cleaned part within the raw capture (single-space
+  // separators guaranteed by the capture pattern's single whitespace).
+  const offset = a === 0 ? 0 : words.slice(0, a).join(' ').length + 1;
+  return { clean, offset };
+}
+
 function detectCompareOrChoose(text: string, sentences: Sentence[]): AmbiguousSpan[] {
   const out: AmbiguousSpan[] = [];
   for (const s of sentences) {
@@ -151,9 +175,15 @@ function detectCompareOrChoose(text: string, sentences: Sentence[]): AmbiguousSp
     if (COMPARE_VERBS.test(s.text)) continue; // intent is explicit — no fork
     const m = /\b([A-Za-z0-9._-]+(?:\s[A-Za-z0-9._-]+)?)\s+(or|vs\.?|versus)\s+([A-Za-z0-9._-]+(?:\s[A-Za-z0-9._-]+)?)/i.exec(s.text);
     if (!m) continue;
-    const x = m[1], y = m[3];
-    const start = s.start + m.index;
-    out.push(span(start, start + m[0].length, m[0], 'compare_or_choose',
+    const xT = trimComparand(m[1]);
+    const yT = trimComparand(m[3]);
+    if (!xT.clean || !yT.clean) continue; // a side with no content words is not a comparand
+    const x = xT.clean, y = yT.clean;
+    // Span tightened to "<x> <connector> <y>" - yRaw is the match tail by construction.
+    const spanStart = s.start + m.index + xT.offset;
+    const yRawStart = s.start + m.index + m[0].length - m[3].length;
+    const spanEnd = yRawStart + yT.offset + y.length;
+    out.push(span(spanStart, spanEnd, text.slice(spanStart, spanEnd), 'compare_or_choose',
       `"${x} ${m[2]} ${y}" in a question can mean "compare them" or "pick one" — the model will choose for you.`,
       [
         { id: 'a', summary: `Compare ${x} and ${y}`, clarifier: `To be clear: I want a comparison of ${x} and ${y}, not a recommendation.` },

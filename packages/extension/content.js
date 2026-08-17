@@ -162,11 +162,26 @@ function findWordRange(el, word) {
   return null;
 }
 
+// v0.6: detect reply contexts by walking ancestor attributes (class/id/
+// aria-label/placeholder/name) — Gmail replies, forum comments, chat threads.
+function isReplyContext(el) {
+  let node = el;
+  for (let depth = 0; node && depth < 8; depth++) {
+    const attrs = [node.className, node.id, node.getAttribute && node.getAttribute("aria-label"),
+      node.getAttribute && node.getAttribute("placeholder"), node.getAttribute && node.getAttribute("name")]
+      .filter((v) => typeof v === "string").join(" ");
+    if (L.looksLikeReplyAttrs(attrs)) return true;
+    node = node.parentElement;
+  }
+  return false;
+}
+
 function renderSpanUnderlines(el, fork) {
   clearOverlays(el);
   const st = stateFor(el);
   st.muted = st.muted || new Set();
-  const spans = (fork.spans || []).filter(
+  if (st.isReply === undefined) st.isReply = isReplyContext(el);
+  const spans = L.filterSpansForContext(fork.spans, { isReply: st.isReply }).filter(
     (sp) => sp && sp.text && !st.muted.has(sp.text.toLowerCase())
   );
   if (!spans.length) return;

@@ -292,6 +292,44 @@ test("normalizeForkPayload: error mode is status error", () => {
   assert.equal(m.error, "boom");
 });
 
+// ── v0.5 picker logic ───────────────────────────────────────────────────────
+
+test("shouldUnderline keys on mirror spans, not entities or AR", () => {
+  assert.equal(L.shouldUnderline({ spans: [{ text: "React or Vue", kind: "compare_or_choose" }] }), true);
+  assert.equal(L.shouldUnderline({ spans: [] }), false);
+  assert.equal(L.shouldUnderline({ branches: [{ summary: "x" }] }), false);
+  assert.equal(L.shouldUnderline(null), false);
+});
+
+test("buildPickerModel keeps id/source/summary/clarifier and drops junk", () => {
+  const m = L.buildPickerModel({
+    engine: "mirror+gateway:test",
+    status: "forks",
+    branches: [
+      { id: "mirror:compare_or_choose:a", source: "mirror", summary: "Compare A and B", clarifier: "To be clear: compare.", consequence: "c" },
+      { id: "model:2", source: "model", summary: "" },
+      null
+    ]
+  });
+  assert.equal(m.branches.length, 1);
+  assert.equal(m.branches[0].clarifier, "To be clear: compare.");
+  assert.equal(m.engine, "mirror+gateway:test");
+});
+
+test("composeGlossClarifier frames the user's words, trims trailing punctuation", () => {
+  assert.equal(L.composeGlossClarifier("the vendor invoice, not the contract."), "To be clear: I mean the vendor invoice, not the contract.");
+  assert.equal(L.composeGlossClarifier("   "), null);
+  assert.equal(L.composeGlossClarifier(null), null);
+});
+
+test("mergeRejected accumulates summaries, dedupes, caps at 12", () => {
+  const r1 = L.mergeRejected([], [{ summary: "A" }, { summary: "B" }]);
+  const r2 = L.mergeRejected(r1, [{ summary: "B" }, { summary: "C" }]);
+  assert.deepEqual(r2, ["A", "B", "C"]);
+  const many = Array.from({ length: 20 }, (_, i) => ({ summary: "S" + i }));
+  assert.equal(L.mergeRejected([], many).length, 12);
+});
+
 test("questionForEntity prefers the question naming the entity", () => {
   const r = {
     clarifying_questions: ['What does "it" refer to?', 'What does "that thing" refer to?']

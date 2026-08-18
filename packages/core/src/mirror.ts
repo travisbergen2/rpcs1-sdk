@@ -286,15 +286,84 @@ function detectDanglingPronoun(
   return out;
 }
 
-/** D2 — references that point outside the prompt. */
+/**
+ * D2 — reference edges into the conversation, the session, or the receiver's
+ * own state: pointers whose target is presupposed to live outside the prompt.
+ *
+ * Census widening (2026-08-18, specimen T23: "what I just put in your custom
+ * instructions" sailed past six fixed phrases). Three frame families:
+ *   F1 — fixed idioms ("the above", "as discussed", …) — the original set.
+ *   F2 — history clauses: what/which/everything/the thing(s) + I/you/we
+ *        [+ temporal] + verb — claimed when a temporal marker is present
+ *        ("what I JUST put") or the verb is past-shaped (-ed, or the closed
+ *        irregular-past list: "what I SENT"). "what I want" stays silent.
+ *   F3 — session artifacts: your/my + custom instructions / system prompt /
+ *        memory / settings / history (inherently external), and
+ *        message/response/chat nouns only with a prior-marking qualifier
+ *        ("my LAST message" forks; "your response" is the upcoming one and
+ *        stays silent). Declared bounded lexicon, versioned — the D7/D8
+ *        strategy, not a position test.
+ *
+ * Discharge: a colon later in the same sentence ("explain what I did wrong
+ * in this code: …") or a masked region after the pointer means the referent
+ * is being supplied in-prompt. One span per sentence (earliest) — several
+ * pointers at one target are one fork, not three.
+ */
 const EXTERNAL_REFS = /\b(the above|as discussed|as mentioned|like before|the previous one|same as last time)\b/gi;
-function detectExternalReference(text: string): AmbiguousSpan[] {
+const IRREGULAR_PAST = new Set([
+  'said', 'told', 'wrote', 'sent', 'put', 'gave', 'made', 'showed', 'went',
+  'did', 'saw', 'spoke', 'took', 'built', 'shared',
+]);
+const ALWAYS_EXTERNAL_ARTIFACTS =
+  /\b(?:your|my)\s+(?:custom\s+instructions?|system\s+prompt|memory|settings|(?:chat\s+)?history)\b/gi;
+const QUALIFIED_ARTIFACTS =
+  /\b(?:your|my)\s+(?:previous|last|earlier|prior|first|original)\s+(?:message|response|reply|prompt|conversation|chat|question|answer)s?\b/gi;
+const HISTORY_CLAUSE =
+  /\b(?:what|which|everything|the\s+(?:thing|one)s?)\s+(?:i|you|we)\s+(?:(just|already|earlier|previously|before|recently)\s+)?([a-z]+)(\s+(?:just|already|earlier|previously|before|yesterday|recently)\b)?/gi;
+
+function detectExternalReference(
+  text: string,
+  sentences: Sentence[],
+  maskedRegions: Array<{ start: number; end: number }> = [],
+): AmbiguousSpan[] {
   const out: AmbiguousSpan[] = [];
-  let m: RegExpExecArray | null;
-  EXTERNAL_REFS.lastIndex = 0;
-  while ((m = EXTERNAL_REFS.exec(text)) !== null) {
-    out.push(span(m.index, m.index + m[0].length, m[0], 'external_reference',
-      `"${m[0]}" points at something outside this prompt — a fresh model session cannot see it.`,
+  for (const s of sentences) {
+    const candidates: Array<{ start: number; end: number }> = [];
+    const colonAt = s.text.indexOf(':');
+    const live = (localEnd: number): boolean => {
+      // A colon later in the sentence, or a paste (masked region) after the
+      // pointer, supplies the referent in-prompt — the edge is discharged.
+      if (colonAt !== -1 && colonAt >= localEnd) return false;
+      const absEnd = s.start + localEnd;
+      if (maskedRegions.some((r) => r.start >= absEnd)) return false;
+      return true;
+    };
+    let m: RegExpExecArray | null;
+    for (const re of [EXTERNAL_REFS, ALWAYS_EXTERNAL_ARTIFACTS, QUALIFIED_ARTIFACTS]) {
+      re.lastIndex = 0;
+      while ((m = re.exec(s.text)) !== null) {
+        if (live(m.index + m[0].length)) {
+          candidates.push({ start: s.start + m.index, end: s.start + m.index + m[0].length });
+        }
+      }
+    }
+    HISTORY_CLAUSE.lastIndex = 0;
+    while ((m = HISTORY_CLAUSE.exec(s.text)) !== null) {
+      const preTemporal = m[1];
+      const verb = (m[2] || '').toLowerCase();
+      const postTemporal = m[3];
+      if (FUNCTION_WORDS.has(verb)) continue; // junk frame, not a verb
+      const pastShaped = /ed$/.test(verb) || IRREGULAR_PAST.has(verb);
+      if (!(preTemporal || postTemporal || pastShaped)) continue; // "what I want" — present intent, not history
+      if (!live(m.index + m[0].length)) continue;
+      candidates.push({ start: s.start + m.index, end: s.start + m.index + m[0].length });
+    }
+    if (candidates.length === 0) continue;
+    candidates.sort((a, b) => a.start - b.start);
+    const c = candidates[0];
+    const w = text.slice(c.start, c.end);
+    out.push(span(c.start, c.end, w, 'external_reference',
+      `"${w}" points at something outside this prompt — a fresh model session cannot see it.`,
       [
         { id: 'a', summary: 'The referenced content is included elsewhere in this prompt', clarifier: 'The reference is to the content included above in this same message.' },
         { id: 'b', summary: 'The referenced content lives in another conversation', clarifier: 'For context, the earlier material was: [summarize it].' },
@@ -627,7 +696,7 @@ export function mirror(text: string): MirrorResult {
 
   const spans: AmbiguousSpan[] = [
     ...detectDanglingPronoun(masked, sentences, regions),
-    ...detectExternalReference(masked),
+    ...detectExternalReference(masked, sentences, regions),
     ...detectCompareOrChoose(masked, sentences),
     ...detectScopeFork(masked, sentences),
     ...detectGroupingFork(masked, sentences),

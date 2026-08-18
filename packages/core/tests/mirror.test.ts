@@ -255,6 +255,57 @@ describe('mirror — fork detection', () => {
     expect(r.ambiguousSpans.filter((s) => s.kind === 'scope_fork')).toHaveLength(0);
   });
 
+  // ── D2 widening (2026-08-18 census): structural external-reference frames ──
+  describe('D2 widening — history clauses and session artifacts', () => {
+    const extRefs = (p: string) => mirror(p).ambiguousSpans.filter((s) => s.kind === 'external_reference');
+
+    it('CENSUS T23: "Can you build what I just put in your custom instructions" forks', () => {
+      const r = extRefs('Can you build what I just put in your custom instructions');
+      expect(r.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it('one span per sentence: several pointers at one target are one fork', () => {
+      const r = extRefs('Can you build what I just put in your custom instructions');
+      expect(r).toHaveLength(1);
+    });
+
+    it('history clause with trailing temporal: "the thing you wrote earlier" forks', () => {
+      expect(extRefs('Summarize the thing you wrote earlier.').length).toBe(1);
+    });
+
+    it('irregular past: "summarize what I said yesterday" forks', () => {
+      expect(extRefs('Summarize what I said yesterday.').length).toBe(1);
+    });
+
+    it('qualified session artifact: "per my last message" forks', () => {
+      expect(extRefs('Do it per my last message.').length).toBe(1);
+    });
+
+    it('always-external artifact: "check your memory for the plan" forks', () => {
+      expect(extRefs('Check your memory for the plan we made.').length).toBe(1);
+    });
+
+    it('present-tense intent stays silent: "what I want is a clean design"', () => {
+      expect(extRefs('What I want is a clean design.')).toHaveLength(0);
+    });
+
+    it('opinion frame stays silent: "tell me what you think about React"', () => {
+      expect(extRefs('Tell me what you think about React.')).toHaveLength(0);
+    });
+
+    it('colon discharge: "explain what I did wrong in this code: return a - b" is silent', () => {
+      expect(extRefs('Explain what I did wrong in this code: return a - b')).toHaveLength(0);
+    });
+
+    it('paste discharge: a fence after the pointer supplies the referent', () => {
+      expect(extRefs('Explain what I did wrong\n```\nreturn a - b\n```')).toHaveLength(0);
+    });
+
+    it('upcoming-response noun stays silent: "keep your responses brief"', () => {
+      expect(extRefs('Keep your responses brief.')).toHaveLength(0);
+    });
+  });
+
   it('spans carry valid offsets into the original text', () => {
     const text = 'Please rewrite the above in a friendlier tone.';
     const r = mirror(text);

@@ -104,6 +104,26 @@ Every parameter recommendation traces back to this principle or the basin stabil
 
 The site can also explain the same product facts in technical, executive, plain-language, or literal-and-precise registers. The explanation changes; pricing, deliverables, and limitations do not.
 
+## Brand — Explicit Formula (product) / RPCS-1 (mechanism)
+
+The site fronts **one consumer product: Explicit Formula** — the box on the
+landing page. *Explicit*: says exactly what it means (the product's one job);
+*formula*: a repeatable method. The wordmark is an advisory-sticker homage
+(`components/StickerLogo.tsx`), deliberately distinct from the trademarked
+RIAA label.
+
+The mechanism brand — **RPCS-1**, the receiver engine, its laws, and its
+scorecard — is unchanged and renders as "Powered by RPCS-1" in the footer.
+House rule: outcome on the wrapper, mechanism one click deep.
+
+- The brand is a token: `packages/web/lib/brand.ts`. Renaming the product is
+  one env var (`NEXT_PUBLIC_BRAND_NAME`) or one line — no other code changes.
+- Every station that used to compete for the nav (SendRight, Bridge,
+  Translator, Calibrate, Tuner, R&D, …) stays live at its original route and
+  is indexed at [/labs](https://rpcs1.dev/labs) (`packages/web/lib/labs.ts`).
+- The consumer domain follows the deployment: set `NEXT_PUBLIC_APP_URL` when
+  it goes live. rpcs1.dev remains the mechanism home either way.
+
 ## SendRight (Interpretation Mirror + Hand-off)
 
 SendRight is the type-and-send front door: type a prompt the way you'd say it

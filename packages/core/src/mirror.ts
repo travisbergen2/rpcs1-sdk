@@ -99,6 +99,15 @@ const LOG_LINE_PATTERNS = [
   /^\s*[[(\-]*\[?(INFO|WARN|WARNING|ERROR|DEBUG|TRACE|FATAL)\b/i, // level-prefixed line
   /^\s*[A-Za-z]\w*Error\b/, // "SyntaxError: …", "TypeError: …"
   /^\s*at\s+[\w.$<>[\]]+\s*\(/, // stack frame
+  // Unfenced code lines (2026-08-18 census G3: raw .mq5/.js pastes with no
+  // backticks). Closed-syntax shapes only — deliberately conservative so
+  // ordinary prose that happens to end in a period is never masked.
+  /^\s*#(property|include|define|import|pragma|ifdef|endif)\b/, // C/MQL preprocessor
+  /^\s*(?:public|private|protected|static|final|void|const|let|var|def|class|func|function|import|export|package|return|if|for|while|switch|else)\b[^.!?]*[{};]\s*$/, // statement/decl ending in code punctuation
+  /[;{}]\s*$/,                    // any line ending in ; { or }
+  /^\s*[\w.$]+\s*\([^)]*\)\s*[;{]?\s*$/, // bare function call/def line
+  /^\s*[}\])]+[;,]?\s*$/,         // closing-bracket-only line
+  /\t.*\t/,                        // tab-columned line (compiler/error tables)
 ];
 
 function maskNonProse(text: string): MaskResult {
@@ -195,6 +204,11 @@ const AUX = new Set([
   'will', 'would', 'can', 'could', 'should', 'shall', 'may', 'might', 'must',
 ]);
 const WH = new Set(['what', 'when', 'where', 'why', 'how', 'which', 'who', 'whom', 'whose']);
+// Raising/seeming predicates that take a non-referential "it" subject.
+const EXPLETIVE_PREDICATES = new Set([
+  'seems', 'seemed', 'appears', 'appeared', 'turns', 'turned',
+  'looks', 'looked', 'happens', 'happened', 'follows', 'followed',
+]);
 /**
  * Closed-class function words. A token OUTSIDE this set counts as content —
  * i.e., as a candidate antecedent that can discharge a reference edge.
@@ -211,6 +225,7 @@ const FUNCTION_WORDS = new Set([
   'not', 'no', 'never', 'also', 'too', 'very', 'really', 'just', 'only',
   'quite', 'still', 'yet', 'already', 'again', 'there', 'here', 'now', 'soon',
   'please', 'ok', 'okay', 'yes', 'maybe', 'hi', 'hello', 'hey', 'thanks', 'thank',
+  'like', 'such', 'kind', 'sort', // "something like that", "kind of this" — discourse, not verb+object (2026-08-18 census)
   'some', 'any', 'all', 'every', 'each', 'much', 'many', 'more', 'most', 'few',
   'little', 'other', 'another', 'same', 'such',
 ]);
@@ -257,6 +272,26 @@ function detectDanglingPronoun(
         (((next !== null && AUX.has(next)) || t.hasAuxSuffix) &&
           prev !== null && FUNCTION_WORDS.has(prev)); // (c) subject before aux, function-word predecessor
       if (!claimed) continue;
+      // Expletive-"it" guard (2026-08-18 census): "it" is non-referential in
+      // extraposition ("It kills me that…", "It is important to…" — the real
+      // subject is the later that/to clause) and in raising/seeming frames
+      // ("it seems", "it appears", "it turns out", "it looks like"). Closed
+      // frames only; "that/this/these/those/they" are never expletive.
+      if (t.base === 'it') {
+        // Extraposition: a later "that" opening a clause (that + subject
+        // pronoun) is the real logical subject — "It kills me THAT I lose…".
+        // A demonstrative "that module" (that + noun) does NOT count, so
+        // referential "It broke that module" still fires.
+        let extraposition = false;
+        for (let k = i + 1; k + 1 < tokens.length; k++) {
+          if (tokens[k].base === 'that' && SUBJ_PRONOUNS.has(tokens[k + 1].base)) {
+            extraposition = true;
+            break;
+          }
+        }
+        const raising = next !== null && EXPLETIVE_PREDICATES.has(next);
+        if (extraposition || raising) continue;
+      }
       // Discharge check: any content word before the pronoun — in an earlier
       // sentence OR earlier in this same sentence ("The deploy failed and
       // that is bad") — is a candidate antecedent, and the edge is closed.
@@ -327,6 +362,11 @@ function detectExternalReference(
   maskedRegions: Array<{ start: number; end: number }> = [],
 ): AmbiguousSpan[] {
   const out: AmbiguousSpan[] = [];
+  // Message-level content budget before each sentence: a fixed idiom like
+  // "the above" or "the previous one" is discharged when substantial prior
+  // content exists (the referenced material is present in-prompt).
+  let priorChars = 0;
+  const NEGATED_MENTION = /\b(?:can'?t|cannot|do\s?n'?t|does\s?n'?t|wo\s?n'?t|never|without)\b/i;
   for (const s of sentences) {
     const candidates: Array<{ start: number; end: number }> = [];
     const colonAt = s.text.indexOf(':');
@@ -339,25 +379,29 @@ function detectExternalReference(
       return true;
     };
     let m: RegExpExecArray | null;
-    for (const re of [EXTERNAL_REFS, ALWAYS_EXTERNAL_ARTIFACTS, QUALIFIED_ARTIFACTS]) {
-      re.lastIndex = 0;
-      while ((m = re.exec(s.text)) !== null) {
-        if (live(m.index + m[0].length)) {
-          candidates.push({ start: s.start + m.index, end: s.start + m.index + m[0].length });
-        }
+    // Backward discharge (2026-08-18 census): "the above" / "the previous one"
+    // etc. point at earlier content — if a substantial block precedes them in
+    // the message, that block IS the referent. ~200 chars ≈ a paragraph.
+    const backwardDischarged = priorChars > 200 || maskedRegions.some((r) => r.end <= s.start);
+    EXTERNAL_REFS.lastIndex = 0;
+    while ((m = EXTERNAL_REFS.exec(s.text)) !== null) {
+      if (!backwardDischarged && live(m.index + m[0].length)) {
+        candidates.push({ start: s.start + m.index, end: s.start + m.index + m[0].length });
       }
     }
-    HISTORY_CLAUSE.lastIndex = 0;
-    while ((m = HISTORY_CLAUSE.exec(s.text)) !== null) {
-      const preTemporal = m[1];
-      const verb = (m[2] || '').toLowerCase();
-      const postTemporal = m[3];
-      if (FUNCTION_WORDS.has(verb)) continue; // junk frame, not a verb
-      const pastShaped = /ed$/.test(verb) || IRREGULAR_PAST.has(verb);
-      if (!(preTemporal || postTemporal || pastShaped)) continue; // "what I want" — present intent, not history
-      if (!live(m.index + m[0].length)) continue;
-      candidates.push({ start: s.start + m.index, end: s.start + m.index + m[0].length });
-    }
+    // ── D2 WIDENING BENCHED (2026-08-18 FP census) ──────────────────────────
+    // The session-artifact (ALWAYS_EXTERNAL_ARTIFACTS / QUALIFIED_ARTIFACTS)
+    // and history-clause (HISTORY_CLAUSE) frames shipped in #84 FAILED the
+    // wild false-positive census at 40–47% precision (gate: ≥60%). Dominant
+    // failure: mention-vs-use on "your memory" (discussing the artifact, not
+    // pointing into it) and relative-clause "which I built" caught as a
+    // history pointer. Per the killed-referent-gate precedent, these are
+    // BENCHED, not patched further, until a use/mention distinction that
+    // clears the census exists. T23 ("what I just put in your custom
+    // instructions") reverts to uncaught and is an E-GEN-1 seed.
+    void NEGATED_MENTION; void IRREGULAR_PAST; void ALWAYS_EXTERNAL_ARTIFACTS;
+    void QUALIFIED_ARTIFACTS; void HISTORY_CLAUSE; // benched — referenced to satisfy noUnusedLocals
+    priorChars += s.text.length + 1;
     if (candidates.length === 0) continue;
     candidates.sort((a, b) => a.start - b.start);
     const c = candidates[0];
@@ -534,7 +578,8 @@ function detectBareObject(
 ): AmbiguousSpan[] {
   const out: AmbiguousSpan[] = [];
   let priorContent = false;
-  for (const s of sentences) {
+  for (let si = 0; si < sentences.length; si++) {
+    const s = sentences[si];
     const tokens = tokenize(s.text);
     if (tokens.length === 0) continue;
     // Precompute which tokens sit in closed-class-licensed VERB positions —
@@ -548,12 +593,23 @@ function detectBareObject(
       if (SUBJ_PRONOUNS.has(p)) return true; // "I WANT…", "can you FIX…" — content after a subject pronoun is the verb (SVO)
       return false;
     };
+    // A later sentence carrying content is a cataphoric paste candidate: the
+    // referent of a bare object in the FIRST content sentence often follows
+    // ("optimize this. <code>"). Precompute once per sentence.
+    const laterContentExists = sentences.slice(si + 1).some(
+      (ss) => tokenize(ss.text).some((tk) => !FUNCTION_WORDS.has(tk.base)),
+    );
     for (let i = 0; i < tokens.length; i++) {
       const t = tokens[i];
       if (!OBJECT_ANAPHORS.has(t.base) && t.base !== 'that') continue;
       const prev = i > 0 ? tokens[i - 1] : null;
       if (!prev || FUNCTION_WORDS.has(prev.base)) continue; // object position needs a governing content word
       const next = i + 1 < tokens.length ? tokens[i + 1].base : null;
+      // Expletive / subject-of-embedded-clause guard (2026-08-18 census):
+      // an object anaphor followed by a copula/aux is really the SUBJECT of an
+      // embedded clause ("I think this IS a good direction"), and "make it SO"
+      // is the expletive resultative. Neither is a dangling object.
+      if (next !== null && (AUX.has(next) || next === 'so')) continue;
       let claimed = false;
       if (t.base === 'that') {
         // Restricted frames only — see comment above.
@@ -566,16 +622,22 @@ function detectBareObject(
       }
       if (!claimed) continue;
       const absOffset = s.start + t.start;
+      const end = absOffset + t.base.length;
       const earlierContent = tokens
         .slice(0, i)
         .some((tk, j) => !FUNCTION_WORDS.has(tk.base) && !isVerbPosition(j) && j !== i - 1);
       const maskedBefore = maskedRegions.some((r) => r.start < absOffset);
-      if (priorContent || earlierContent || maskedBefore) continue;
+      // Forward paste discharge: a colon after the pronoun, a masked region
+      // after it, or any later content sentence supplies the referent that a
+      // bare object points at. Same-sentence prose ("turn this into a video")
+      // is NOT a paste and stays caught.
+      const colonAfter = s.text.indexOf(':', t.start) !== -1;
+      const maskedAfter = maskedRegions.some((r) => r.start >= end);
+      if (priorContent || earlierContent || maskedBefore ||
+          maskedAfter || colonAfter || laterContentExists) continue;
       const verb = prev.raw.toLowerCase();
-      const start = absOffset;
-      const end = start + t.base.length;
-      const w = text.slice(start, end);
-      out.push(span(prev ? s.start + prev.start : start, end, text.slice(s.start + prev.start, end), 'bare_object',
+      const w = text.slice(absOffset, end);
+      out.push(span(s.start + prev.start, end, text.slice(s.start + prev.start, end), 'bare_object',
         `"${verb} ${w}" — the prompt never says what "${w}" is, so the model will pick its own target.`,
         [
           { id: 'a', summary: 'The target content should be pasted into this prompt', clarifier: 'Here is the content to work on: [paste it].' },

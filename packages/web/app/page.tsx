@@ -3,7 +3,10 @@
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { StickerLogo } from '@/components/StickerLogo';
-import { BRAND_NAME, BRAND_PROMISE } from '@/lib/brand';
+import { BRAND_PROMISE } from '@/lib/brand';
+import { useProfile } from '@/components/ProfileProvider';
+import { PROFILES } from '@/lib/profiles';
+import { LANDING_COPY } from '@/lib/landing-copy';
 
 // Code-split the box out of the initial hydration bundle. SSR stays on, so
 // the server-rendered HTML is identical and there is no layout shift — only
@@ -13,25 +16,14 @@ const SendBox = dynamic(() =>
   import('@/components/SendBox').then((m) => m.default),
 );
 
-const BEATS = [
-  {
-    n: '1',
-    title: 'Type like you talk',
-    body: 'No formats, no magic words. Paste a word-salad if that’s what you’ve got.',
-  },
-  {
-    n: '2',
-    title: 'See what you said',
-    body: 'The moment your words fork — “wait, did I mean compare them, or pick one?” — the box shows you the fork and every reading it could take. Clean messages sail straight through.',
-  },
-  {
-    n: '3',
-    title: 'Send the one you meant',
-    body: 'Pick the reading, and one tap opens your own ChatGPT, Claude, Perplexity, or Grok with the clear version filled in. Nothing is stored; the check runs in your browser.',
-  },
-] as const;
+// Beat titles are static; their bodies come from the reading profile —
+// the landing page is the product's own demo: same facts, read your way.
+const BEAT_TITLES = ['Type like you talk', 'See what you said', 'Send the one you meant'] as const;
 
 export default function HomePage() {
+  const { profile } = useProfile();
+  const copy = LANDING_COPY[profile];
+  const registerLabel = PROFILES[profile].label;
   return (
     <div className="bg-[#070b14] text-white">
       {/* ── Hero: the sticker and the box ─────────────────────── */}
@@ -48,11 +40,15 @@ export default function HomePage() {
             {BRAND_PROMISE}
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-white/70">
-            Everything you write can be read more than one way. {BRAND_NAME}{' '}
-            shows you the readings before the misread happens — you pick the
-            one you meant, and send that.
+            {copy.sub}
           </p>
-          <p className="mt-3 text-xs text-white/40">
+          <p className="mt-4 text-xs text-sky-300/70">
+            You&apos;re reading this page in the{' '}
+            <span className="font-semibold text-sky-300">{registerLabel}</span>{' '}
+            register — the &ldquo;Reading as&rdquo; switch in the header
+            changes it. Same facts, read your way.
+          </p>
+          <p className="mt-2 text-xs text-white/40">
             Free. No account. Your words never leave the page until you send
             them.
           </p>
@@ -67,17 +63,17 @@ export default function HomePage() {
       <section className="border-t border-white/5 bg-[#090e1a]">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
           <div className="grid gap-4 md:grid-cols-3">
-            {BEATS.map((b) => (
+            {BEAT_TITLES.map((title, i) => (
               <div
-                key={b.n}
+                key={title}
                 className="rounded-2xl border border-white/8 bg-white/[0.03] p-6"
               >
-                <p className="font-mono text-sm text-white/30">{b.n}</p>
+                <p className="font-mono text-sm text-white/30">{i + 1}</p>
                 <h2 className="mt-2 text-lg font-semibold text-white">
-                  {b.title}
+                  {title}
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-white/60">
-                  {b.body}
+                  {copy.beats[i]}
                 </p>
               </div>
             ))}

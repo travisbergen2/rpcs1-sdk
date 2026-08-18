@@ -25,7 +25,7 @@ import { CONFUSABLES, POLYSEMOUS } from './mirror-lexicon.js';
 // ─── Result contract ──────────────────────────────────────────────────────────
 
 export type ForkKind =
-  | 'dangling_pronoun'   // sentence-initial it/this/that/they with no antecedent in the prompt
+  | 'dangling_pronoun'   // subject-position it/this/that/they whose reference edge has no antecedent in the prompt
   | 'external_reference' // "the above", "as discussed", "like before" — points outside the prompt
   | 'compare_or_choose'  // "X or Y" / "X vs Y" question without an explicit compare/choose verb
   | 'scope_fork'         // "only/just/all/also" whose scope forks across a coordination
@@ -103,21 +103,122 @@ const span = (
 
 // ─── Detectors (each: (text, sentences) → AmbiguousSpan[]) ────────────────────
 
-/** D1 — sentence-initial pronoun with nothing before it to refer to. */
+/**
+ * D1 — reference edge: a subject-position anaphor (it/this/that/these/those/
+ * they) whose reference edge cannot be discharged inside the prompt.
+ *
+ * Structural rewrite, 2026-08-17 (was: sentence-initial only — which missed
+ * "when did that happen"). The law: a pronoun in SUBJECT position opens a
+ * reference edge that must land on prior content. The edge dangles when the
+ * text before the pronoun's sentence has no content word for it to bind to.
+ * "Sentence-initial" survives as a corollary: at the first word, the prior
+ * text is empty, so the edge trivially has zero targets.
+ *
+ * Claimed positions (closed-class grammar only — no curated content lists):
+ *   (a) clause-initial:               "That happened again."
+ *   (b) after an aux in an inverted   "When did that happen?" / "Was it broken?"
+ *       question frame (clause led by a wh-word or by the aux itself)
+ *   (c) before an aux/copula, when preceded by a function word:
+ *       "…and that is broken." — a content-word predecessor reads as a
+ *       relative head ("the file that is broken") and is left alone.
+ *
+ * Object-position pronouns ("fix that", "deposit this at the bank") are
+ * deliberately NOT claimed here — that is D6's lane (bare_object), whose
+ * curated-imperative guard is its own precision strategy.
+ *
+ * Documented misses (silence-on-clean outranks recall):
+ *   - expletive subjects as whole prompts ("It was a sunny day.")
+ *   - content verb + that-subject ("I think that is broken.")
+ *   - coordinator-initial standalone clauses ("and that surprised me")
+ */
+const ANAPHORS = new Set(['it', 'this', 'that', 'these', 'those', 'they']);
+const AUX = new Set([
+  'is', 'was', 'are', 'were', 'am', 'be', 'been', 'being',
+  'did', 'does', 'do', 'has', 'have', 'had',
+  'will', 'would', 'can', 'could', 'should', 'shall', 'may', 'might', 'must',
+]);
+const WH = new Set(['what', 'when', 'where', 'why', 'how', 'which', 'who', 'whom', 'whose']);
+/**
+ * Closed-class function words. A token OUTSIDE this set counts as content —
+ * i.e., as a candidate antecedent that can discharge a reference edge.
+ */
+const FUNCTION_WORDS = new Set([
+  ...ANAPHORS, ...AUX, ...WH,
+  'a', 'an', 'the', 'and', 'or', 'but', 'so', 'then', 'if', 'because', 'while',
+  'since', 'until', 'unless', 'although', 'though', 'as', 'than',
+  'i', 'you', 'he', 'she', 'we', 'me', 'him', 'her', 'us', 'them',
+  'my', 'your', 'his', 'its', 'our', 'their', 'mine', 'yours', 'ours', 'theirs',
+  'to', 'of', 'in', 'on', 'at', 'by', 'for', 'with', 'from', 'into', 'over',
+  'under', 'about', 'after', 'before', 'between', 'through', 'during',
+  'against', 'without', 'within', 'up', 'down', 'out', 'off', 'around',
+  'not', 'no', 'never', 'also', 'too', 'very', 'really', 'just', 'only',
+  'quite', 'still', 'yet', 'already', 'again', 'there', 'here', 'now', 'soon',
+  'please', 'ok', 'okay', 'yes', 'maybe', 'hi', 'hello', 'hey', 'thanks', 'thank',
+  'some', 'any', 'all', 'every', 'each', 'much', 'many', 'more', 'most', 'few',
+  'little', 'other', 'another', 'same', 'such',
+]);
+
+interface Token {
+  raw: string;   // as written, contractions intact ("that's")
+  base: string;  // contraction suffix stripped, lowercased ("that")
+  start: number; // offset within the sentence
+  hasAuxSuffix: boolean; // "'s" / "'ll" / "'re" / "'d" — pronoun+aux in one token
+}
+
+function tokenize(sentenceText: string): Token[] {
+  const out: Token[] = [];
+  const re = /[A-Za-z]+(?:'[A-Za-z]+)?/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(sentenceText)) !== null) {
+    const raw = m[0];
+    const suffix = /'(s|ll|re|d)$/i.exec(raw);
+    const base = (suffix ? raw.slice(0, suffix.index) : raw).toLowerCase();
+    out.push({ raw, base, start: m.index, hasAuxSuffix: suffix !== null });
+  }
+  return out;
+}
+
 function detectDanglingPronoun(text: string, sentences: Sentence[]): AmbiguousSpan[] {
-  if (sentences.length === 0) return [];
-  const first = sentences[0];
-  const m = /^(it|this|that|they|these|those)\b/i.exec(first.text);
-  if (!m) return [];
-  const w = m[0];
-  return [
-    span(first.start, first.start + w.length, w, 'dangling_pronoun',
-      `"${w}" opens the prompt, but the prompt contains nothing for it to refer to — the model will guess a referent.`,
-      [
-        { id: 'a', summary: `"${w}" refers to something from an earlier conversation`, clarifier: 'For context, I am referring to: [describe it briefly].' },
-        { id: 'b', summary: `"${w}" refers to content you meant to paste but did not`, clarifier: 'Here is the content I am referring to: [paste it].' },
-      ]),
-  ];
+  const out: AmbiguousSpan[] = [];
+  let priorContent = false; // any content word seen in earlier sentences?
+  for (const s of sentences) {
+    const tokens = tokenize(s.text);
+    if (tokens.length === 0) continue;
+    const clauseLead = tokens[0].base;
+    for (let i = 0; i < tokens.length; i++) {
+      const t = tokens[i];
+      if (!ANAPHORS.has(t.base)) continue;
+      const prev = i > 0 ? tokens[i - 1].base : null;
+      const next = i + 1 < tokens.length ? tokens[i + 1].base : null;
+      const claimed =
+        i === 0 || // (a) clause-initial
+        (prev !== null && AUX.has(prev) && (WH.has(clauseLead) || AUX.has(clauseLead))) || // (b) inverted question frame
+        (((next !== null && AUX.has(next)) || t.hasAuxSuffix) &&
+          prev !== null && FUNCTION_WORDS.has(prev)); // (c) subject before aux, function-word predecessor
+      if (!claimed) continue;
+      // Discharge check: any content word before the pronoun — in an earlier
+      // sentence OR earlier in this same sentence ("The deploy failed and
+      // that is bad") — is a candidate antecedent, and the edge is closed.
+      const sameSentenceContent = tokens
+        .slice(0, i)
+        .some((tk) => !FUNCTION_WORDS.has(tk.base));
+      if (priorContent || sameSentenceContent) continue;
+      const start = s.start + t.start;
+      const end = start + t.base.length;
+      const w = text.slice(start, end);
+      out.push(span(start, end, w, 'dangling_pronoun',
+        `"${w}" stands for something this prompt never names — the model will guess what "${w}" is.`,
+        [
+          { id: 'a', summary: `"${w}" refers to something from an earlier conversation`, clarifier: 'For context, I am referring to: [describe it briefly].' },
+          { id: 'b', summary: `"${w}" refers to content you meant to paste but did not`, clarifier: 'Here is the content I am referring to: [paste it].' },
+        ]));
+    }
+    // This sentence's content words become antecedent candidates for the next.
+    if (!priorContent && tokens.some((t) => !FUNCTION_WORDS.has(t.base))) {
+      priorContent = true;
+    }
+  }
+  return out;
 }
 
 /** D2 — references that point outside the prompt. */

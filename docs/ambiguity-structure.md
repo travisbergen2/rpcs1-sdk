@@ -51,7 +51,7 @@ edge is already closed, which is why they suppress:
 | Detector | Edge type | Opens the edge | Discharge test (the guards) |
 |----------|-----------|----------------|------------------------------|
 | `dangling_pronoun` (D1) | Reference | subject-position anaphor (it/this/that/these/those/they) | any content word before the pronoun (prior sentence or earlier in the same one) closes it; relative heads ("the file **that** is broken") and complementizer frames bind locally and are never claimed |
-| `external_reference` (D2) | Reference (presupposed context) | "the above", "as discussed", "like before" | none possible in a fresh session — always a fork |
+| `external_reference` (D2) | Reference (presupposed context) | "the above", "as discussed", "like before" (fixed phrases) | discharged when a paragraph+ of prior content or a paste precedes the pointer (the referent is present in-prompt). NOTE: the #84 history-clause / session-artifact widening was **benched** 2026-08-18 after failing the FP census at 40–47% precision (mention-vs-use on "your memory"); it awaits a use/mention distinction that clears the census |
 | `compare_or_choose` (D3) | Act (attachment-flavored) | "X or Y" inside a question | an explicit compare/choose verb closes the act edge; rhetorical "…or am I…", retrospective "was it X or Y", and invitation pairs ("thoughts or perspectives") are acts already discharged |
 | `scope_fork` (D4) | Scope | "only/just" before a coordination | post-position ("…your mom only,") scopes backward — closed; cross-clause coordination is out of reach — closed |
 | `grouping_fork` (D5) | Attachment | mixed "A and B or C" | uniform connectors ("A and B and C") have one parse — closed |

@@ -213,6 +213,72 @@ describe('mirror — fork detection', () => {
       const r = mirror('Please deposit this at the bank before it closes.');
       expect(r.ambiguousSpans.some((s) => s.kind === 'bare_object')).toBe(true);
     });
+
+    // ── D6 hardening (2026-08-18 FP census) ──
+    it('aux-decline: "I think this is a good direction" — "this" is a clause subject, silent', () => {
+      const r = mirror('I think this is a good direction.');
+      expect(r.ambiguousSpans.filter((s) => s.kind === 'bare_object')).toHaveLength(0);
+    });
+
+    it('expletive resultative: "make it so that everyone can join" is silent', () => {
+      const r = mirror('I want to make it so that everyone can join.');
+      expect(r.ambiguousSpans.filter((s) => s.kind === 'bare_object')).toHaveLength(0);
+    });
+
+    it('idiom-adjacent still fine: bare "convert this to mt5" forks (single sentence)', () => {
+      expect(mirror('Will you convert this to mt5 for me').ambiguousSpans.some((s) => s.kind === 'bare_object')).toBe(true);
+    });
+
+    it('forward paste discharge: "optimize this." + a code paste is silent', () => {
+      const r = mirror('Optimize this.\n```\nint x = 1;\n```');
+      expect(r.ambiguousSpans.filter((s) => s.kind === 'bare_object')).toHaveLength(0);
+    });
+
+    it('forward colon discharge: "check it out: <block>" is silent', () => {
+      const r = mirror('Check it out: the report is attached below.');
+      expect(r.ambiguousSpans.filter((s) => s.kind === 'bare_object')).toHaveLength(0);
+    });
+
+    it('T05/T15 preserved: same-sentence prose after the pronoun is NOT a paste', () => {
+      expect(mirror('I want to turn this into a helpful YouTube video for ssa claims').ambiguousSpans.some((s) => s.kind === 'bare_object')).toBe(true);
+      expect(mirror('I had to send this').ambiguousSpans.some((s) => s.kind === 'bare_object')).toBe(true);
+    });
+  });
+
+  // ── D1 expletive-it guard (2026-08-18 FP census) ──
+  describe('D1 — expletive "it" is not a dangling reference', () => {
+    it('extraposition: "It kills me that I lose my memory" is silent', () => {
+      const r = mirror('It kills me that I lose my memory.');
+      expect(r.ambiguousSpans.filter((s) => s.kind === 'dangling_pronoun')).toHaveLength(0);
+    });
+
+    it('raising: "It seems broken" is silent', () => {
+      const r = mirror('It seems broken.');
+      expect(r.ambiguousSpans.filter((s) => s.kind === 'dangling_pronoun')).toHaveLength(0);
+    });
+
+    it('referential "it" still fires: "It keeps crashing when I click save."', () => {
+      const r = mirror('It keeps crashing when I click save.');
+      expect(r.ambiguousSpans.some((s) => s.kind === 'dangling_pronoun')).toBe(true);
+    });
+
+    it('demonstrative not extraposition: "It broke that module" still fires', () => {
+      const r = mirror('It broke that module.');
+      expect(r.ambiguousSpans.some((s) => s.kind === 'dangling_pronoun')).toBe(true);
+    });
+  });
+
+  // ── Unfenced-code masking (2026-08-18 FP census G3) ──
+  describe('non-prose mask — unfenced code lines', () => {
+    it('a raw #property/code line does not fire detectors', () => {
+      const r = mirror('#property copyright "xAI"\ndouble x = only(a) and(b);');
+      expect(r.ambiguousSpans).toHaveLength(0);
+    });
+
+    it('tab-columned compiler output is masked', () => {
+      const r = mirror("'if' - semicolon expected\tFPF_Topology_EA.mq5\t477\t4");
+      expect(r.ambiguousSpans).toHaveLength(0);
+    });
   });
 
   // ── Input hygiene (2026-08-17 census): fence/log guard ──
@@ -255,54 +321,37 @@ describe('mirror — fork detection', () => {
     expect(r.ambiguousSpans.filter((s) => s.kind === 'scope_fork')).toHaveLength(0);
   });
 
-  // ── D2 widening (2026-08-18 census): structural external-reference frames ──
-  describe('D2 widening — history clauses and session artifacts', () => {
+  // ── D2 widening BENCHED (2026-08-18 FP census: 40–47% precision < 60% gate) ──
+  // The #84 history-clause and session-artifact frames over-fired in the wild
+  // (mention-vs-use on "your memory", relative-clause "which I built"). They
+  // are benched until a use/mention distinction clears the census. These tests
+  // pin the benched behavior so a future re-land is a deliberate change.
+  describe('D2 — fixed phrases live; #84 widening benched', () => {
     const extRefs = (p: string) => mirror(p).ambiguousSpans.filter((s) => s.kind === 'external_reference');
 
-    it('CENSUS T23: "Can you build what I just put in your custom instructions" forks', () => {
-      const r = extRefs('Can you build what I just put in your custom instructions');
-      expect(r.length).toBeGreaterThanOrEqual(1);
+    it('fixed phrase still fires with nothing before it: "rewrite the above…"', () => {
+      expect(extRefs('Rewrite the above in a friendlier tone.').length).toBe(1);
     });
 
-    it('one span per sentence: several pointers at one target are one fork', () => {
-      const r = extRefs('Can you build what I just put in your custom instructions');
-      expect(r).toHaveLength(1);
+    it('backward discharge: "the above" after a paragraph of content is silent', () => {
+      const long = 'Here is the full blueprint. '.repeat(12) + 'Now implement the above.';
+      expect(extRefs(long)).toHaveLength(0);
     });
 
-    it('history clause with trailing temporal: "the thing you wrote earlier" forks', () => {
-      expect(extRefs('Summarize the thing you wrote earlier.').length).toBe(1);
+    it('BENCHED: "what I just put in your custom instructions" (T23) no longer fires', () => {
+      expect(extRefs('Can you build what I just put in your custom instructions')).toHaveLength(0);
     });
 
-    it('irregular past: "summarize what I said yesterday" forks', () => {
-      expect(extRefs('Summarize what I said yesterday.').length).toBe(1);
+    it('BENCHED: history clause "the thing you wrote earlier" no longer fires', () => {
+      expect(extRefs('Summarize the thing you wrote earlier.')).toHaveLength(0);
     });
 
-    it('qualified session artifact: "per my last message" forks', () => {
-      expect(extRefs('Do it per my last message.').length).toBe(1);
-    });
-
-    it('always-external artifact: "check your memory for the plan" forks', () => {
-      expect(extRefs('Check your memory for the plan we made.').length).toBe(1);
+    it('mention-not-use no longer FPs: "how does your memory work" is silent', () => {
+      expect(extRefs('I know how does your memory work then.')).toHaveLength(0);
     });
 
     it('present-tense intent stays silent: "what I want is a clean design"', () => {
       expect(extRefs('What I want is a clean design.')).toHaveLength(0);
-    });
-
-    it('opinion frame stays silent: "tell me what you think about React"', () => {
-      expect(extRefs('Tell me what you think about React.')).toHaveLength(0);
-    });
-
-    it('colon discharge: "explain what I did wrong in this code: return a - b" is silent', () => {
-      expect(extRefs('Explain what I did wrong in this code: return a - b')).toHaveLength(0);
-    });
-
-    it('paste discharge: a fence after the pointer supplies the referent', () => {
-      expect(extRefs('Explain what I did wrong\n```\nreturn a - b\n```')).toHaveLength(0);
-    });
-
-    it('upcoming-response noun stays silent: "keep your responses brief"', () => {
-      expect(extRefs('Keep your responses brief.')).toHaveLength(0);
     });
   });
 

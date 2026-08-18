@@ -164,6 +164,97 @@ describe('mirror — fork detection', () => {
     expect(r.ambiguousSpans.filter((s) => s.kind === 'bare_object')).toHaveLength(0);
   });
 
+  // ── D6 unification (2026-08-17 census): object-position reference edges ──
+  // The curated imperative-verb list is gone; claims are structural and share
+  // D1's discharge machinery. Census specimens T05/T15 as regression tests.
+  describe('D6 unification — object references without the verb list', () => {
+    it('CENSUS T05: "turn this into a YouTube video…" forks on "this"', () => {
+      const r = mirror('I want to turn this into a helpful YouTube video for turning an autistic experience into legal definitions  for ssa claims for free  are there any tools I should know about that could help me accomplish that');
+      const fork = r.ambiguousSpans.find((s) => s.kind === 'bare_object');
+      expect(fork).toBeDefined();
+      expect(fork!.text.toLowerCase()).toContain('this');
+    });
+
+    it('CENSUS T15: "I had to send this" forks on "this"', () => {
+      const r = mirror('I had to send this');
+      const fork = r.ambiguousSpans.find((s) => s.kind === 'bare_object');
+      expect(fork).toBeDefined();
+    });
+
+    it('a real in-sentence antecedent discharges: "Take the report and send it to Bob" is silent', () => {
+      const r = mirror('Take the report and send it to Bob.');
+      expect(r.ambiguousSpans.filter((s) => s.kind === 'bare_object')).toHaveLength(0);
+    });
+
+    it("parity: \"let's summarize it\" still forks (old verb-list case, new machinery)", () => {
+      const r = mirror("let's summarize it");
+      expect(r.ambiguousSpans.some((s) => s.kind === 'bare_object')).toBe(true);
+    });
+
+    it('restricted "that" frame: "Can you translate that for me?" forks', () => {
+      const r = mirror('Can you translate that for me?');
+      expect(r.ambiguousSpans.some((s) => s.kind === 'bare_object')).toBe(true);
+    });
+
+    it('complementizer stays silent: "I know that you left early."', () => {
+      const r = mirror('I know that you left early.');
+      expect(r.ambiguousSpans.filter((s) => s.kind === 'bare_object')).toHaveLength(0);
+    });
+
+    it('determiner stays silent: "Please send this file to the team."', () => {
+      const r = mirror('Please send this file to the team.');
+      expect(r.ambiguousSpans.filter((s) => s.kind === 'bare_object')).toHaveLength(0);
+    });
+
+    it('new behavior, documented: "Please deposit this at the bank before it closes." now forks on "this"', () => {
+      // Previously silent only because the old detector's verb list lacked
+      // "deposit" — the object edge was always dangling. Not a frozen
+      // zero-fork control; the D8 test on this sentence filters polysemy only.
+      const r = mirror('Please deposit this at the bank before it closes.');
+      expect(r.ambiguousSpans.some((s) => s.kind === 'bare_object')).toBe(true);
+    });
+  });
+
+  // ── Input hygiene (2026-08-17 census): fence/log guard ──
+  describe('non-prose mask — code and logs neither fire nor starve detectors', () => {
+    const T28 = "```javascript\nSecurity policy violated in strategy | Use of functions is not allowed: ['getattr'] \n\nIf you wrote this code, you understand what it does, and you believe it is safe, you can disable Bot Studio checks. \nBe extra careful if this is code that someone else sent to you or you found it online! \n\nMore info: \nhttps://tradelocker.com/how-to/how-to-disable-bot-code-checks/\n```\n\njust make it for btc and it is  a single file input";
+
+    it('CENSUS T28 (wild false positive): fenced error dump + prose tail is clean', () => {
+      const r = mirror(T28);
+      expect(r.ambiguousSpans).toHaveLength(0);
+      expect(r.clean).toBe(true);
+    });
+
+    it('the fence counts as a referent: "make it" after a code block is discharged', () => {
+      const r = mirror('```\nconst x = 1;\n```\nnow fix it');
+      expect(r.ambiguousSpans.filter((s) => s.kind === 'bare_object')).toHaveLength(0);
+    });
+
+    it('log-shaped lines are ignored: timestamped dump with scope bait is clean', () => {
+      const r = mirror('2025.11.29 06:30:02.113\tCore 1\tonly buy and sell here\nERROR: only the first and second legs filled');
+      expect(r.ambiguousSpans).toHaveLength(0);
+    });
+
+    it('prose before a fence still forks, with offsets valid in the ORIGINAL text', () => {
+      const text = 'Should I use React or Vue for this?\n```\nconst x = only(1) and(2);\n```';
+      const r = mirror(text);
+      const fork = r.ambiguousSpans.find((s) => s.kind === 'compare_or_choose');
+      expect(fork).toBeDefined();
+      expect(text.slice(fork!.start, fork!.end)).toBe(fork!.text);
+      expect(r.ambiguousSpans.filter((s) => s.kind === 'scope_fork')).toHaveLength(0);
+    });
+
+    it('an input that is entirely one fence is clean', () => {
+      expect(mirror('```python\nprint("only a and b")\n```').clean).toBe(true);
+    });
+  });
+
+  // ── D4 hardening (census T28 tail): clause coordination is not a list ──
+  it('adverbial-just tail: "just make it for btc and it is a single file input" has no scope fork', () => {
+    const r = mirror('just make it for btc and it is  a single file input');
+    expect(r.ambiguousSpans.filter((s) => s.kind === 'scope_fork')).toHaveLength(0);
+  });
+
   it('spans carry valid offsets into the original text', () => {
     const text = 'Please rewrite the above in a friendlier tone.';
     const r = mirror(text);

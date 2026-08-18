@@ -88,9 +88,12 @@ describe('buildForkView — model contribution (engine-gated)', () => {
 
   it('mirror bare-object + model paraphrase compose to forks (live sentence)', () => {
     // interpret alone graded this AR0; mirror's bare_object detector still
-    // catches "fix that" — the composition is strictly stronger than either.
+    // catches bare "fix that" — the composition is strictly stronger than
+    // either. (2026-08-17: input changed from "fix that thing" — there
+    // 'that' is a DETERMINER and the old verb-list detector matched it by
+    // substring luck; the structural detector correctly declines it.)
     const r = buildForkView(
-      'Can you fix that thing before they see it',
+      'Can you fix that before they see it',
       mkInterpret({ reading_paraphrases: ['Repair the item before it is noticed'], ar_level: 'AR0' }),
     );
     expect(r.status).toBe('forks');

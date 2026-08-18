@@ -55,14 +55,16 @@ edge is already closed, which is why they suppress:
 | `compare_or_choose` (D3) | Act (attachment-flavored) | "X or Y" inside a question | an explicit compare/choose verb closes the act edge; rhetorical "…or am I…", retrospective "was it X or Y", and invitation pairs ("thoughts or perspectives") are acts already discharged |
 | `scope_fork` (D4) | Scope | "only/just" before a coordination | post-position ("…your mom only,") scopes backward — closed; cross-clause coordination is out of reach — closed |
 | `grouping_fork` (D5) | Attachment | mixed "A and B or C" | uniform connectors ("A and B and C") have one parse — closed |
-| `bare_object` (D6) | Argument | imperative verb + pronoun object | a long preamble likely contains the object — closed |
+| `bare_object` (D6) | Reference (object position) / Argument | a governing verb whose object is a bare pronoun ("fix it", "turn this into…", "I had to send this") | any earlier content word that is NOT in a closed-class-licensed verb position (clause-initial, after to/aux/modal, after a subject pronoun, after let's/please) closes it; a masked code/log region before the pronoun closes it (the paste is the referent); demonstrative + content word is a determiner ("send this file") and never claimed; bare mid-sentence "that" is claimed only in restricted frames (sentence-final, or before a non-subject/non-determiner function word) |
 | `confusable_typo` (D7) | Token identity | word whose neighbor fits the context | support for the word *as written* closes it |
 | `polysemy_fork` (D8) | Token identity | word with multiple senses | one-sided cue support means one identity — closed |
 
-Division of labor worth keeping explicit: **subject-position** pronoun edges
-belong to D1 (reference); **object-position** pronoun edges belong to D6
-(argument), whose curated-imperative guard is its own precision strategy.
-"fix **that**" is an argument fork, not a reference fork.
+Division of labor (unified 2026-08-17, census-driven): **subject-position**
+pronoun edges belong to D1 and **object-position** pronoun edges to D6 — but
+both are now instances of ONE mechanism: claim by structural position
+(closed-class tests), discharge by prior content. The curated imperative-verb
+list D6 carried is gone; it missed "turn this" and "send this" in the wild
+census. The two detectors differ only in which positions they claim.
 
 ## Implementation laws
 
@@ -82,6 +84,13 @@ belong to D1 (reference); **object-position** pronoun edges belong to D6
    skill without naming the rule. (The red squiggle names the rule and assigns
    shame; the fork chip shows the two readings and assigns a choice. This
    difference is the product.)
+4. **Input hygiene before detection.** Fenced code, inline code, and
+   log-shaped lines are masked to same-length whitespace before any detector
+   runs (offsets preserved) — prose detectors reading code produce noise
+   (census specimen T28). Masked regions still count as **discharge content**
+   for reference edges: in "```<code>``` just make it for btc", the paste IS
+   the referent, and masking must not manufacture a dangling edge the real
+   prompt discharges.
 
 ## Documented misses (current)
 

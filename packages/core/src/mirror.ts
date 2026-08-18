@@ -78,6 +78,63 @@ interface Sentence {
   start: number; // offset of sentence start in the full text
 }
 
+/**
+ * Non-prose mask — the input-hygiene guard (2026-08-17, from the census's
+ * wild specimens: EA error dumps and code pastes flowing through detectors).
+ *
+ * Fenced code, inline code, and log/error-shaped lines are blanked to
+ * same-length whitespace (newlines preserved) so every detector skips them
+ * with all offsets intact. The masked REGIONS are returned because they
+ * still count as discharge content: in "```<code>``` just make it for btc",
+ * the code block IS the antecedent of "it" — masking must not manufacture
+ * a dangling edge that the real prompt discharges.
+ */
+interface MaskResult {
+  masked: string;
+  regions: Array<{ start: number; end: number }>;
+}
+
+const LOG_LINE_PATTERNS = [
+  /^\s*[[(\-]*\d{4}[-./]\d{1,2}[-./]\d{1,2}[ T]\d{1,2}:\d{2}/, // timestamped log line
+  /^\s*[[(\-]*\[?(INFO|WARN|WARNING|ERROR|DEBUG|TRACE|FATAL)\b/i, // level-prefixed line
+  /^\s*[A-Za-z]\w*Error\b/, // "SyntaxError: …", "TypeError: …"
+  /^\s*at\s+[\w.$<>[\]]+\s*\(/, // stack frame
+];
+
+function maskNonProse(text: string): MaskResult {
+  const chars = text.split('');
+  const regions: Array<{ start: number; end: number }> = [];
+  const blank = (start: number, end: number) => {
+    for (let i = start; i < end; i++) {
+      if (chars[i] !== '\n') chars[i] = ' ';
+    }
+    regions.push({ start, end });
+  };
+  // Closed fences, then a trailing unclosed fence, then inline code.
+  const fence = /```[\s\S]*?```/g;
+  let m: RegExpExecArray | null;
+  while ((m = fence.exec(text)) !== null) blank(m.index, m.index + m[0].length);
+  const covered = (i: number) => regions.some((r) => i >= r.start && i < r.end);
+  const trailing = /```[\s\S]*$/.exec(text);
+  if (trailing && !covered(trailing.index)) blank(trailing.index, text.length);
+  const inline = /`[^`\n]+`/g;
+  while ((m = inline.exec(text)) !== null) {
+    if (!covered(m.index)) blank(m.index, m.index + m[0].length);
+  }
+  // Log/error-shaped lines.
+  let lineStart = 0;
+  for (let i = 0; i <= text.length; i++) {
+    if (i === text.length || text[i] === '\n') {
+      const line = text.slice(lineStart, i);
+      if (!covered(lineStart) && LOG_LINE_PATTERNS.some((p) => p.test(line))) {
+        blank(lineStart, i);
+      }
+      lineStart = i + 1;
+    }
+  }
+  return { masked: chars.join(''), regions };
+}
+
 /** Minimal sentence splitter — offsets preserved, no external deps. */
 function splitSentences(text: string): Sentence[] {
   const out: Sentence[] = [];
@@ -178,7 +235,11 @@ function tokenize(sentenceText: string): Token[] {
   return out;
 }
 
-function detectDanglingPronoun(text: string, sentences: Sentence[]): AmbiguousSpan[] {
+function detectDanglingPronoun(
+  text: string,
+  sentences: Sentence[],
+  maskedRegions: Array<{ start: number; end: number }> = [],
+): AmbiguousSpan[] {
   const out: AmbiguousSpan[] = [];
   let priorContent = false; // any content word seen in earlier sentences?
   for (const s of sentences) {
@@ -199,10 +260,14 @@ function detectDanglingPronoun(text: string, sentences: Sentence[]): AmbiguousSp
       // Discharge check: any content word before the pronoun — in an earlier
       // sentence OR earlier in this same sentence ("The deploy failed and
       // that is bad") — is a candidate antecedent, and the edge is closed.
+      // A masked region (code fence, log block) before the pronoun also
+      // discharges: the paste IS the thing being referred to.
+      const absOffset = s.start + t.start;
       const sameSentenceContent = tokens
         .slice(0, i)
         .some((tk) => !FUNCTION_WORDS.has(tk.base));
-      if (priorContent || sameSentenceContent) continue;
+      const maskedBefore = maskedRegions.some((r) => r.start < absOffset);
+      if (priorContent || sameSentenceContent || maskedBefore) continue;
       const start = s.start + t.start;
       const end = start + t.base.length;
       const w = text.slice(start, end);
@@ -321,6 +386,12 @@ function detectScopeFork(text: string, sentences: Sentence[]): AmbiguousSpan[] {
     // between scope word and coordinator means a new clause, not a scoped list.
     if (coordM.index > 60) continue;
     if (/[,;:]/.test(rest.slice(0, coordM.index))) continue;
+    // Census hardening (2026-08-17, wild specimen T28): a coordinator followed
+    // by subject-pronoun + auxiliary ("…for btc AND IT IS a single file
+    // input") starts a new clause, not a scoped list — the scope word cannot
+    // reach across it. Closed-class test only.
+    if (/^\s+(i|you|we|they|he|she|it|this|that)\s+(is|was|are|were|am|did|does|do|has|have|had|will|would|can|could|should|shall|may|might|must)\b/i
+      .test(rest.slice(coordM.index + coordM[0].length))) continue;
     const start = s.start + scopeM.index;
     out.push(span(start, start + scopeM[0].length, scopeM[0], 'scope_fork',
       `"${scopeM[0]}" sits before an "${coordM[0]}" — it can scope over the first item or over the whole list.`,
@@ -351,22 +422,100 @@ function detectGroupingFork(text: string, sentences: Sentence[]): AmbiguousSpan[
   return out;
 }
 
-/** D6 — imperative verb whose only object is a pronoun ("fix it", "improve this"). */
-const IMPERATIVES = /\b(fix|improve|summarize|rewrite|refactor|shorten|expand|translate|clean up|debug|optimize)\s+(it|this|that|them)\b/gi;
-function detectBareObject(text: string): AmbiguousSpan[] {
+/**
+ * D6 — object-position reference edge: a verb whose only object is a pronoun
+ * pointing at nothing in the prompt ("fix it", "turn this into a video",
+ * "I had to send this").
+ *
+ * Census unification (2026-08-17): the curated imperative-verb list is gone —
+ * it missed "turn this" and "send this" in the wild. The claim is now
+ * structural, sharing D1's discharge machinery:
+ *
+ * Claimed: pronoun in object position — immediately preceded by a content
+ * word (the governing verb). "that" is claimed only in restricted frames
+ * (sentence-final, or followed by a non-subject/non-determiner function
+ * word: "translate that for me") because bare mid-sentence "that" is usually
+ * a relativizer/complementizer ("the file that broke", "know that you left").
+ * Demonstratives (this/these/those) followed by a content word are
+ * determiners ("send this file") and are not claimed.
+ *
+ * Discharged (silent): any earlier content word that is NOT in a verb
+ * position — verb positions are closed-class-licensed: clause-initial
+ * ("Take the report…"), after to/aux/modal ("I want to TURN this"), after a
+ * clause-initial subject pronoun ("I WANT…"), after let's/please. A masked
+ * region (code fence, log block) before the pronoun also discharges — the
+ * paste is the referent. Prior-sentence content discharges as before
+ * (replacing the old 80-character preamble heuristic).
+ *
+ * Documented misses: do/have as main verbs ("do it") are hidden inside the
+ * aux closed class; "send that now"-style claims lean on the exception sets.
+ */
+const OBJECT_ANAPHORS = new Set(['it', 'them', 'this', 'these', 'those']);
+const SUBJ_PRONOUNS = new Set(['i', 'you', 'we', 'they', 'he', 'she', 'it']);
+const THAT_BLOCKERS = new Set([
+  ...SUBJ_PRONOUNS, ...WH, ...AUX,
+  'the', 'a', 'an', 'my', 'your', 'his', 'her', 'its', 'our', 'their',
+  'some', 'any', 'all', 'each', 'every', 'no', 'this', 'that', 'these', 'those',
+]);
+
+function detectBareObject(
+  text: string,
+  sentences: Sentence[],
+  maskedRegions: Array<{ start: number; end: number }> = [],
+): AmbiguousSpan[] {
   const out: AmbiguousSpan[] = [];
-  let m: RegExpExecArray | null;
-  IMPERATIVES.lastIndex = 0;
-  while ((m = IMPERATIVES.exec(text)) !== null) {
-    // Only a fork if the prompt is short enough that "it" has no plausible in-prompt referent.
-    const before = text.slice(0, m.index).trim();
-    if (before.length > 80) continue; // long preamble likely contains the referent
-    out.push(span(m.index, m.index + m[0].length, m[0], 'bare_object',
-      `"${m[0]}" — the prompt does not contain the thing to ${m[0].split(/\s+/)[0].toLowerCase()}.`,
-      [
-        { id: 'a', summary: 'The target content should be pasted into this prompt', clarifier: 'Here is the content to work on: [paste it].' },
-        { id: 'b', summary: 'The target is from an earlier conversation the model may not have', clarifier: 'The target is: [describe it briefly].' },
-      ]));
+  let priorContent = false;
+  for (const s of sentences) {
+    const tokens = tokenize(s.text);
+    if (tokens.length === 0) continue;
+    // Precompute which tokens sit in closed-class-licensed VERB positions —
+    // those never count as antecedents.
+    const isVerbPosition = (j: number): boolean => {
+      if (FUNCTION_WORDS.has(tokens[j].base)) return false; // function words aren't content at all
+      if (j === 0) return true; // clause-initial content = imperative verb
+      const p = tokens[j - 1].base;
+      if (p === 'to' || AUX.has(p) || tokens[j - 1].hasAuxSuffix) return true; // "to TURN", "can FIX", "let's…"
+      if (p === 'let' || p === 'lets' || p === 'please') return true;
+      if (SUBJ_PRONOUNS.has(p)) return true; // "I WANT…", "can you FIX…" — content after a subject pronoun is the verb (SVO)
+      return false;
+    };
+    for (let i = 0; i < tokens.length; i++) {
+      const t = tokens[i];
+      if (!OBJECT_ANAPHORS.has(t.base) && t.base !== 'that') continue;
+      const prev = i > 0 ? tokens[i - 1] : null;
+      if (!prev || FUNCTION_WORDS.has(prev.base)) continue; // object position needs a governing content word
+      const next = i + 1 < tokens.length ? tokens[i + 1].base : null;
+      let claimed = false;
+      if (t.base === 'that') {
+        // Restricted frames only — see comment above.
+        claimed = next === null || (FUNCTION_WORDS.has(next) && !THAT_BLOCKERS.has(next));
+      } else if (t.base === 'this' || t.base === 'these' || t.base === 'those') {
+        // Determiner use ("send this file") has a content word next.
+        claimed = next === null || FUNCTION_WORDS.has(next);
+      } else {
+        claimed = true; // it/them are never determiners or relativizers
+      }
+      if (!claimed) continue;
+      const absOffset = s.start + t.start;
+      const earlierContent = tokens
+        .slice(0, i)
+        .some((tk, j) => !FUNCTION_WORDS.has(tk.base) && !isVerbPosition(j) && j !== i - 1);
+      const maskedBefore = maskedRegions.some((r) => r.start < absOffset);
+      if (priorContent || earlierContent || maskedBefore) continue;
+      const verb = prev.raw.toLowerCase();
+      const start = absOffset;
+      const end = start + t.base.length;
+      const w = text.slice(start, end);
+      out.push(span(prev ? s.start + prev.start : start, end, text.slice(s.start + prev.start, end), 'bare_object',
+        `"${verb} ${w}" — the prompt never says what "${w}" is, so the model will pick its own target.`,
+        [
+          { id: 'a', summary: 'The target content should be pasted into this prompt', clarifier: 'Here is the content to work on: [paste it].' },
+          { id: 'b', summary: 'The target is from an earlier conversation the model may not have', clarifier: 'The target is: [describe it briefly].' },
+        ]));
+    }
+    if (!priorContent && tokens.some((tk) => !FUNCTION_WORDS.has(tk.base))) {
+      priorContent = true;
+    }
   }
   return out;
 }
@@ -470,17 +619,21 @@ export function mirror(text: string): MirrorResult {
   if (trimmed.trim().length === 0) {
     return { text: trimmed, clean: true, ambiguousSpans: [], readings: [{ id: 'as_written', summary: 'As written', clarifier: null }] };
   }
-  const sentences = splitSentences(trimmed);
+  // Input hygiene: fenced code, inline code, and log-shaped lines are blanked
+  // (offsets preserved) so detectors only read prose. The masked regions still
+  // count as discharge content for reference edges — a paste is a referent.
+  const { masked, regions } = maskNonProse(trimmed);
+  const sentences = splitSentences(masked);
 
   const spans: AmbiguousSpan[] = [
-    ...detectDanglingPronoun(trimmed, sentences),
-    ...detectExternalReference(trimmed),
-    ...detectCompareOrChoose(trimmed, sentences),
-    ...detectScopeFork(trimmed, sentences),
-    ...detectGroupingFork(trimmed, sentences),
-    ...detectBareObject(trimmed),
-    ...detectConfusableTypo(trimmed),
-    ...detectPolysemyFork(trimmed),
+    ...detectDanglingPronoun(masked, sentences, regions),
+    ...detectExternalReference(masked),
+    ...detectCompareOrChoose(masked, sentences),
+    ...detectScopeFork(masked, sentences),
+    ...detectGroupingFork(masked, sentences),
+    ...detectBareObject(masked, sentences, regions),
+    ...detectConfusableTypo(masked),
+    ...detectPolysemyFork(masked),
   ].sort((a, b) => a.start - b.start);
 
   if (spans.length === 0) {

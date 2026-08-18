@@ -52,6 +52,59 @@ describe('mirror — fork detection', () => {
     expect(r.ambiguousSpans[0].text.toLowerCase()).toBe('it');
   });
 
+  // ── D1 structural rewrite (2026-08-17): reference edge, subject position ──
+  // Founder bug: mid-sentence subject anaphors were invisible because the old
+  // detector only looked at the first word of the prompt.
+  describe('D1 rewrite — reference edge anywhere in subject position', () => {
+    it('REGRESSION (founder bug): "when did that happen" forks on "that"', () => {
+      const r = mirror('when did that happen');
+      expect(r.clean).toBe(false);
+      const fork = r.ambiguousSpans.find((s) => s.kind === 'dangling_pronoun');
+      expect(fork).toBeDefined();
+      expect(fork!.text.toLowerCase()).toBe('that');
+      expect('when did that happen'.slice(fork!.start, fork!.end)).toBe(fork!.text);
+    });
+
+    it('inverted question frames fork: "When did it break?" / "why is this failing"', () => {
+      for (const p of ['When did it break?', 'why is this failing']) {
+        const r = mirror(p);
+        expect(r.ambiguousSpans.some((s) => s.kind === 'dangling_pronoun'), p).toBe(true);
+      }
+    });
+
+    it('contraction subject forks: "that\'s broken again" flags "that"', () => {
+      const r = mirror("that's broken again");
+      const fork = r.ambiguousSpans.find((s) => s.kind === 'dangling_pronoun');
+      expect(fork).toBeDefined();
+      expect(fork!.text.toLowerCase()).toBe('that');
+    });
+
+    it('an antecedent in a prior sentence discharges the edge (silent)', () => {
+      const r = mirror('The deploy failed. When did that happen?');
+      expect(r.ambiguousSpans.filter((s) => s.kind === 'dangling_pronoun')).toHaveLength(0);
+    });
+
+    it('an antecedent earlier in the same sentence discharges the edge (silent)', () => {
+      const r = mirror('The deploy failed and that is bad.');
+      expect(r.ambiguousSpans.filter((s) => s.kind === 'dangling_pronoun')).toHaveLength(0);
+    });
+
+    it('relative-clause "that" is locally bound (silent): "The file that is broken…"', () => {
+      const r = mirror('The file that is broken needs review.');
+      expect(r.ambiguousSpans.filter((s) => s.kind === 'dangling_pronoun')).toHaveLength(0);
+    });
+
+    it('complementizer "that" is locally bound (silent): "The problem is that the tests keep failing."', () => {
+      const r = mirror('The problem is that the tests keep failing.');
+      expect(r.ambiguousSpans.filter((s) => s.kind === 'dangling_pronoun')).toHaveLength(0);
+    });
+
+    it('object-position pronouns stay in D6\'s lane: "I know that you left early." is silent here', () => {
+      const r = mirror('I know that you left early.');
+      expect(r.ambiguousSpans.filter((s) => s.kind === 'dangling_pronoun')).toHaveLength(0);
+    });
+  });
+
   it('external reference: "the above" flags as pointing outside the prompt', () => {
     const r = mirror('Please rewrite the above in a friendlier tone.');
     const fork = r.ambiguousSpans.find((s) => s.kind === 'external_reference');

@@ -24,6 +24,7 @@ import {
   routeIntent,
   DEFAULT_INTENT_HYPOTHESES,
   buildForkView,
+  buildSculpt,
 } from '@rpcs1/core';
 import { getGatewayBackend, allowModelCall, REWRITE_GUARD } from '@/lib/gateway';
 import type { ReceiverProfile, IntakeAnswers } from '@rpcs1/core';
@@ -114,6 +115,13 @@ export async function POST(request: Request) {
         }
         return NextResponse.json(buildForkView(text, interp, { rejected }));
       }
+      case 'sculpt': {
+        // Whole-prompt guidance (v0 deterministic — no model call, no budget).
+        // Accept/skip per change; preview never auto-applies (SC-1 design).
+        const text = typeof params.text === 'string' ? params.text : '';
+        if (!text) return NextResponse.json({ error: 'text is required' }, { status: 400 });
+        return NextResponse.json(buildSculpt(text));
+      }
       case 'normalize': {
         const result = normalize(params.text || '');
         return NextResponse.json(result);
@@ -183,6 +191,7 @@ export async function POST(request: Request) {
           version: '2.0.0',
           tools: {
             interpret: { description: 'Interpret a message using RPCS-1', parameters: { text: 'string (required)', risk: 'casual|advice|high-stakes|safety-critical', profile: 'optional ReceiverProfile', answers: 'optional intake answers' } },
+            sculpt: { description: 'Whole-prompt guidance toward the most comprehensible form: X\u2192Y substitutions with reasons, pointer fill-in holes, multi-ask enumeration. Deterministic; accept/skip per change.', parameters: { text: 'string (required)' } },
             fork: { description: 'Receiver-side fork view: how could this message read? Deterministic mirror floor + model readings; returns branches, ask-back question, forked-answer scaffold.', parameters: { text: 'string (required)', risk: 'casual|advice|high-stakes|safety-critical', context: 'optional string[] prior turns', profile: 'optional ReceiverProfile' } },
             normalize: { description: 'Normalize fragmented human input' },
             split: { description: 'Split mixed intents' },

@@ -139,6 +139,12 @@ export type {
 export { mirror, applyReading } from './mirror.js';
 export type { MirrorResult, AmbiguousSpan, ForkReading, ForkKind } from './mirror.js';
 
+// ── Sculpt (whole-prompt guidance: thesaurus-in-the-chat-box, v0 rules) ──
+export { buildSculpt } from './sculpt.js';
+export { SCULPT_SUBS } from './sculpt-lexicon.js';
+export type { SculptChange, SculptSpan, SculptResult } from './sculpt.js';
+export type { SculptSub } from './sculpt-lexicon.js';
+
 // ── Fork View (receiver-side: mirror floor + model branch-grower) ──
 export { buildForkView } from './fork.js';
 export type { ForkBranch, ForkViewStatus, ForkViewResult, ForkViewOptions } from './fork.js';

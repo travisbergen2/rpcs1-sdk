@@ -57,6 +57,9 @@ testing is in `fixture-vault/`.
 
 ## Scope (P1) and what's next
 
+Powered by [rpcs1.dev](https://rpcs1.dev) — the receiver engine behind
+Explicit Formula.
+
 P1 = the panel only, no vault reads. Coming per the Phase B spec:
 context from your own notes (opt-in, folder allowlist, per-round
 "what left your machine" log), session write-backs that wikilink to their

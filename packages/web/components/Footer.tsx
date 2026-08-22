@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { BRAND_NAME, BRAND_TAGLINE, POWERED_BY } from '@/lib/brand';
+import { BRAND_NAME, BRAND_TAGLINE } from '@/lib/brand';
 
 export function Footer() {
   return (
@@ -17,12 +17,14 @@ export function Footer() {
             </p>
             <p className="mt-3 text-xs text-gray-500">
               Powered by{' '}
-              <Link
-                href="/docs"
+              <a
+                href="https://rpcs1.dev"
+                target="_blank"
+                rel="noreferrer"
                 className="font-medium text-gray-400 underline-offset-4 hover:text-gray-200 hover:underline"
               >
-                {POWERED_BY}
-              </Link>{' '}
+                rpcs1.dev
+              </a>{' '}
               — the receiver engine, its laws, and its scorecard.
             </p>
             <div className="mt-4 flex flex-wrap gap-3">

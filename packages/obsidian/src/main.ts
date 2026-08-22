@@ -307,6 +307,12 @@ class LoopView extends ItemView {
     root.addClass('ef-loop-view');
 
     root.createEl('h4', { text: 'Say it once. Make sure it landed.' });
+    const credit = root.createEl('p', { text: 'powered by ' });
+    const creditLink = credit.createEl('a', { text: 'rpcs1.dev', href: 'https://rpcs1.dev' });
+    creditLink.setAttr('rel', 'noreferrer');
+    credit.style.fontSize = '0.72em';
+    credit.style.opacity = '0.55';
+    credit.style.marginTop = '-6px';
 
     if (this.stage === 'input') {
       const ta = root.createEl('textarea', {

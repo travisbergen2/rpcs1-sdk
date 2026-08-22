@@ -163,7 +163,19 @@ export async function POST(request: Request) {
         const prev = prevSpans.length > 0 && electedIds.length > 0
           ? { spans: prevSpans, electedIds }
           : undefined;
-        const messages = buildLoopMessages(dump, prev);
+        // Optional grounding snippets (Phase B vault priors). Shape-checked
+        // here; caps enforced deterministically inside buildLoopMessages.
+        const contextSnippets = Array.isArray(params.contextSnippets)
+          ? (params.contextSnippets as unknown[])
+              .filter(
+                (s): s is { source: string; text: string } =>
+                  !!s && typeof s === 'object' &&
+                  typeof (s as { source?: unknown }).source === 'string' &&
+                  typeof (s as { text?: unknown }).text === 'string',
+              )
+              .slice(0, 12)
+          : undefined;
+        const messages = buildLoopMessages(dump, prev, undefined, contextSnippets);
         let round = null;
         try {
           const raw = await backend.complete(messages.system, messages.user, 1200);

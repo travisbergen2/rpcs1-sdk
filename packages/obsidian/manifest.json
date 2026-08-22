@@ -1,0 +1,10 @@
+{
+  "id": "explicit-formula-loop",
+  "name": "Explicit Formula — The Loop",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Brain-dump it. See what the AI actually heard. Lock the lines that are right, redo the rest, then send a prompt that lands. Interpretation runs via the explicitformula.com service (network use disclosed in the README).",
+  "author": "Travis Bergen",
+  "authorUrl": "https://www.explicitformula.com",
+  "isDesktopOnly": false
+}

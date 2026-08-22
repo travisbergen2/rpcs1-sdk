@@ -1,0 +1,19 @@
+{
+  "name": "@rpcs1/obsidian-plugin",
+  "version": "0.1.0",
+  "description": "Explicit Formula — The Loop, inside Obsidian (Phase B P1: loop panel, no vault reads yet)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node esbuild.config.mjs",
+    "test": "vitest run --config ./vitest.config.ts",
+    "lint": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "esbuild": "^0.27.7",
+    "obsidian": "latest",
+    "typescript": "^5.4.0",
+    "vitest": "^4.1.8"
+  }
+}

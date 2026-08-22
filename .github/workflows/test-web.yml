@@ -8,6 +8,7 @@ on:
       - "package-lock.json"
       - "packages/core/**"
       - "packages/web/**"
+      - "packages/obsidian/**"
       - "server.json"
       - ".github/workflows/test-web.yml"
   pull_request:
@@ -16,6 +17,7 @@ on:
       - "package-lock.json"
       - "packages/core/**"
       - "packages/web/**"
+      - "packages/obsidian/**"
       - "server.json"
       - ".github/workflows/test-web.yml"
 
@@ -40,6 +42,15 @@ jobs:
 
       - name: Test MCP contract
         run: npm run test --workspace=packages/web
+
+      - name: Test Obsidian plugin
+        run: npm run test --workspace=packages/obsidian
+
+      - name: Lint Obsidian plugin
+        run: npm run lint --workspace=packages/obsidian
+
+      - name: Build Obsidian plugin
+        run: npm run build --workspace=packages/obsidian
 
       - name: Build production app
         run: npm run build

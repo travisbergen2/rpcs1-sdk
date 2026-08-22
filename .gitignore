@@ -19,3 +19,6 @@ dist/
 build/
 
 .vercel
+
+# Obsidian plugin build artifact
+packages/obsidian/main.js

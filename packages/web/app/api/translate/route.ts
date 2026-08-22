@@ -25,9 +25,12 @@ import {
   DEFAULT_INTENT_HYPOTHESES,
   buildForkView,
   buildSculpt,
+  buildLoopMessages,
+  finalizeRound,
+  LOOP_ANSWER_GUARD,
 } from '@rpcs1/core';
 import { getGatewayBackend, allowModelCall, REWRITE_GUARD } from '@/lib/gateway';
-import type { ReceiverProfile, IntakeAnswers } from '@rpcs1/core';
+import type { ReceiverProfile, IntakeAnswers, LoopSpan } from '@rpcs1/core';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -122,6 +125,108 @@ export async function POST(request: Request) {
         if (!text) return NextResponse.json({ error: 'text is required' }, { status: 400 });
         return NextResponse.json(buildSculpt(text));
       }
+      case 'loop': {
+        // The Loop (Phase A hero): brain dump → precise interpretation as
+        // elected-span rounds. Elected spans are enforced verbatim by the
+        // core ratchet (verify → mechanical repair) — never by trusting the
+        // model. Requires the model: there is no rules fallback that can
+        // reinterpret, so an unavailable gateway returns an honest 503.
+        const dump = typeof params.text === 'string' ? params.text.trim() : '';
+        if (!dump) return NextResponse.json({ error: 'text is required' }, { status: 400 });
+        if (dump.length > 8000) {
+          return NextResponse.json({ error: 'text too long (8000 char max for the loop)' }, { status: 400 });
+        }
+        const prevSpans = Array.isArray(params.spans)
+          ? (params.spans as unknown[]).filter(
+              (s): s is LoopSpan =>
+                !!s && typeof s === 'object' &&
+                typeof (s as LoopSpan).id === 'string' &&
+                typeof (s as LoopSpan).text === 'string',
+            ).slice(0, 64)
+          : [];
+        const electedIds = Array.isArray(params.electedIds)
+          ? (params.electedIds as unknown[]).filter((x): x is string => typeof x === 'string').slice(0, 64)
+          : [];
+        const backend = getGatewayBackend();
+        if (!backend) {
+          return NextResponse.json(
+            { error: 'model_unavailable', message: 'The loop needs the model and it is not configured right now.' },
+            { status: 503 },
+          );
+        }
+        if (!allowModelCall(request)) {
+          return NextResponse.json(
+            { error: 'budget_exhausted', message: 'Daily free budget reached — try again later.' },
+            { status: 429 },
+          );
+        }
+        const prev = prevSpans.length > 0 && electedIds.length > 0
+          ? { spans: prevSpans, electedIds }
+          : undefined;
+        const messages = buildLoopMessages(dump, prev);
+        let round = null;
+        try {
+          const raw = await backend.complete(messages.system, messages.user, 1200);
+          round = finalizeRound(raw, prev);
+          if (!round) {
+            // One stricter retry on unparseable output, then honest failure.
+            const retryRaw = await backend.complete(
+              messages.system + '\n\nREMINDER: output ONLY the JSON array. No prose. No code fence.',
+              messages.user,
+              1200,
+            );
+            round = finalizeRound(retryRaw, prev);
+          }
+        } catch {
+          return NextResponse.json(
+            { error: 'model_error', message: 'Model temporarily unavailable — try again.' },
+            { status: 502 },
+          );
+        }
+        if (!round) {
+          return NextResponse.json(
+            { error: 'unparseable', message: 'The model did not return a usable interpretation — try again.' },
+            { status: 502 },
+          );
+        }
+        return NextResponse.json({
+          spans: round.spans,
+          repaired: round.repaired,
+          violations: round.violations,
+          engine: backend.name,
+        });
+      }
+      case 'loop_answer': {
+        // Optional in-app answer for a converged loop prompt. Prompt-out
+        // (copy into the user's own AI) is always available without this.
+        const prompt = typeof params.prompt === 'string' ? params.prompt.trim() : '';
+        if (!prompt) return NextResponse.json({ error: 'prompt is required' }, { status: 400 });
+        if (prompt.length > 8000) {
+          return NextResponse.json({ error: 'prompt too long (8000 char max)' }, { status: 400 });
+        }
+        const backend = getGatewayBackend();
+        if (!backend) {
+          return NextResponse.json(
+            { error: 'model_unavailable', message: 'Answering here needs the model and it is not configured right now.' },
+            { status: 503 },
+          );
+        }
+        if (!allowModelCall(request)) {
+          return NextResponse.json(
+            { error: 'budget_exhausted', message: 'Daily free budget reached — copy the prompt into your own AI instead.' },
+            { status: 429 },
+          );
+        }
+        try {
+          const answer = await backend.complete(LOOP_ANSWER_GUARD, prompt, 1200);
+          return NextResponse.json({ answer, engine: backend.name });
+        } catch {
+          return NextResponse.json(
+            { error: 'model_error', message: 'Model temporarily unavailable — copy the prompt into your own AI instead.' },
+            { status: 502 },
+          );
+        }
+      }
       case 'normalize': {
         const result = normalize(params.text || '');
         return NextResponse.json(result);
@@ -191,7 +296,9 @@ export async function POST(request: Request) {
           version: '2.0.0',
           tools: {
             interpret: { description: 'Interpret a message using RPCS-1', parameters: { text: 'string (required)', risk: 'casual|advice|high-stakes|safety-critical', profile: 'optional ReceiverProfile', answers: 'optional intake answers' } },
-            sculpt: { description: 'Whole-prompt guidance toward the most comprehensible form: X\u2192Y substitutions with reasons, pointer fill-in holes, multi-ask enumeration. Deterministic; accept/skip per change.', parameters: { text: 'string (required)' } },
+            loop: { description: 'The Loop: brain dump → precise interpretation as selectable spans. Lock the spans that read right; each round re-derives ONLY the rest, with locked spans enforced verbatim by a mechanical ratchet (verify → repair). Repeat to convergence, then send the finished prompt.', parameters: { text: 'string (required) — the raw dump', spans: 'optional LoopSpan[] from the previous round', electedIds: 'optional string[] — ids of locked spans' } },
+            loop_answer: { description: 'Answer a converged loop prompt in-app (optional; copying the prompt into your own AI is always available).', parameters: { prompt: 'string (required)' } },
+            sculpt: { description: 'Whole-prompt guidance toward the most comprehensible form: X→Y substitutions with reasons, pointer fill-in holes, multi-ask enumeration. Deterministic; accept/skip per change.', parameters: { text: 'string (required)' } },
             fork: { description: 'Receiver-side fork view: how could this message read? Deterministic mirror floor + model readings; returns branches, ask-back question, forked-answer scaffold.', parameters: { text: 'string (required)', risk: 'casual|advice|high-stakes|safety-critical', context: 'optional string[] prior turns', profile: 'optional ReceiverProfile' } },
             normalize: { description: 'Normalize fragmented human input' },
             split: { description: 'Split mixed intents' },

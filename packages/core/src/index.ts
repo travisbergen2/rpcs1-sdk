@@ -176,6 +176,8 @@ export {
   repairRatchet,
   finalizeRound,
   assemblePrompt,
+  capContextSnippets,
+  CONTEXT_SNIPPET_LIMITS,
   LOOP_SYSTEM_PROMPT,
   LOOP_ANSWER_GUARD,
 } from './loop.js';
@@ -185,4 +187,5 @@ export type {
   LoopMessages,
   ParsedLoopResponse,
   RatchetCheck,
+  ContextSnippet,
 } from './loop.js';

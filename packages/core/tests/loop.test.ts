@@ -9,6 +9,8 @@ import {
   repairRatchet,
   finalizeRound,
   assemblePrompt,
+  capContextSnippets,
+  CONTEXT_SNIPPET_LIMITS,
   LOOP_SYSTEM_PROMPT,
   type LoopSpan,
 } from '../src/loop.js';
@@ -208,6 +210,40 @@ describe('assemblePrompt', () => {
   });
   it('skips empty spans', () => {
     expect(assemblePrompt(spans(['One.', '  ']))).toBe('One.');
+  });
+});
+
+describe('context snippets (Phase B vault priors)', () => {
+  it('caps snippet count and total characters deterministically', () => {
+    const many = Array.from({ length: 10 }, (_, i) => ({
+      source: `note-${i}`,
+      text: 'x'.repeat(500),
+    }));
+    const capped = capContextSnippets(many);
+    expect(capped.length).toBeLessThanOrEqual(CONTEXT_SNIPPET_LIMITS.maxSnippets);
+    const total = capped.reduce((n, s) => n + s.text.length, 0);
+    expect(total).toBeLessThanOrEqual(CONTEXT_SNIPPET_LIMITS.maxTotalChars);
+  });
+  it('drops empty snippets and preserves order', () => {
+    const capped = capContextSnippets([
+      { source: 'a', text: '  ' },
+      { source: 'b', text: 'keep me' },
+      { source: 'c', text: 'me too' },
+    ]);
+    expect(capped.map((s) => s.source)).toEqual(['b', 'c']);
+  });
+  it('buildLoopMessages includes a fenced background block when snippets given', () => {
+    const m = buildLoopMessages('the dump', undefined, undefined, [
+      { source: 'Weekly review tool', text: 'Constraint: must work offline.' },
+    ]);
+    expect(m.user).toContain('<background>');
+    expect(m.user).toContain('[Weekly review tool] Constraint: must work offline.');
+    expect(m.user).toContain('</background>');
+    expect(m.user.indexOf('<background>')).toBeLessThan(m.user.indexOf('<dump>'));
+  });
+  it('omits the background block when snippets are absent or empty', () => {
+    expect(buildLoopMessages('d').user).not.toContain('<background>');
+    expect(buildLoopMessages('d', undefined, undefined, []).user).not.toContain('<background>');
   });
 });
 

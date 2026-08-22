@@ -164,3 +164,25 @@ export type { SprawlResult, SprawlSegment, PerspectiveFlip, Conflict, Frame } fr
 // ── Bridge axes (Full-Duplex Bridge spec v0.2 — coordinate transforms) ──
 export { AXES, IDENTITY_COORDS, applyAxes } from './axes.js';
 export type { AxisId, AxisDef, AxisCoords, AxisMove, ApplyResult } from './axes.js';
+
+// ── The Loop (elected-span interpretation ratchet — Phase A hero) ──
+export {
+  normalizeSpanText,
+  segmentSentences,
+  spansFromTexts,
+  buildLoopMessages,
+  parseLoopResponse,
+  verifyRatchet,
+  repairRatchet,
+  finalizeRound,
+  assemblePrompt,
+  LOOP_SYSTEM_PROMPT,
+  LOOP_ANSWER_GUARD,
+} from './loop.js';
+export type {
+  LoopSpan,
+  LoopRoundResult,
+  LoopMessages,
+  ParsedLoopResponse,
+  RatchetCheck,
+} from './loop.js';

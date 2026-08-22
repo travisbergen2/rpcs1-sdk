@@ -172,7 +172,7 @@ export default function LoopPage() {
       </header>
 
       {error && (
-        <div className="mb-6 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <div className="mb-6 rounded-lg border border-red-500/50 bg-red-950/40 px-4 py-3 text-sm text-red-200">
           {error}
         </div>
       )}
@@ -183,14 +183,14 @@ export default function LoopPage() {
             value={dump}
             onChange={(e) => setDump(e.target.value)}
             placeholder="Dump it here exactly how it comes out — half-sentences, tangents, all of it."
-            className="h-56 w-full resize-y rounded-xl border border-neutral-300 bg-white p-4 text-base leading-relaxed shadow-sm outline-none focus:border-neutral-500"
+            className="h-56 w-full resize-y rounded-xl border border-neutral-600 bg-white/5 p-4 text-base leading-relaxed text-inherit outline-none placeholder:opacity-50 focus:border-amber-400"
             maxLength={8000}
           />
           <div className="mt-4 flex items-center gap-4">
             <button
               onClick={firstRound}
               disabled={busy || !dump.trim()}
-              className="rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-700 disabled:opacity-40"
+              className="rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-medium text-neutral-950 transition hover:bg-amber-400 disabled:opacity-40"
             >
               {busy ? 'Reading…' : 'Show me what it heard'}
             </button>
@@ -205,7 +205,7 @@ export default function LoopPage() {
             <h2 className="mb-2 text-sm font-medium uppercase tracking-wide opacity-60">
               What you said
             </h2>
-            <div className="whitespace-pre-wrap rounded-xl border border-neutral-200 bg-neutral-50 p-4 text-sm leading-relaxed opacity-80">
+            <div className="whitespace-pre-wrap rounded-xl border border-neutral-700 bg-white/5 p-4 text-sm leading-relaxed opacity-80">
               {dump}
             </div>
           </div>
@@ -214,7 +214,7 @@ export default function LoopPage() {
               What it heard — tap the lines that are right
             </h2>
             {held && (
-              <p className="mb-2 rounded-md bg-amber-50 px-3 py-1.5 text-xs text-amber-800">
+              <p className="mb-2 rounded-md bg-amber-950/40 px-3 py-1.5 text-xs text-amber-200">
                 Your locked lines were held in place.
               </p>
             )}
@@ -228,8 +228,8 @@ export default function LoopPage() {
                     className={
                       'rounded-lg border px-3 py-2 text-left text-sm leading-relaxed transition ' +
                       (locked
-                        ? 'border-emerald-500 bg-emerald-50 text-emerald-950'
-                        : 'border-neutral-300 bg-white hover:border-neutral-500')
+                        ? 'border-emerald-500 bg-emerald-950/40 text-emerald-100'
+                        : 'border-neutral-600 bg-transparent hover:border-neutral-300')
                     }
                     aria-pressed={locked}
                   >
@@ -243,7 +243,7 @@ export default function LoopPage() {
               <button
                 onClick={nextRound}
                 disabled={busy || elected.size === 0 || elected.size === spans.length}
-                className="rounded-lg border border-neutral-900 px-4 py-2 text-sm font-medium transition hover:bg-neutral-100 disabled:opacity-40"
+                className="rounded-lg border border-neutral-400 px-4 py-2 text-sm font-medium transition hover:bg-white/10 disabled:opacity-40"
                 title={
                   elected.size === 0
                     ? 'Lock at least one line first'
@@ -257,7 +257,7 @@ export default function LoopPage() {
               <button
                 onClick={() => setStage('final')}
                 disabled={busy || spans.length === 0}
-                className="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-700 disabled:opacity-40"
+                className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-amber-400 disabled:opacity-40"
               >
                 It&apos;s right — finish it
               </button>
@@ -274,20 +274,20 @@ export default function LoopPage() {
           <h2 className="mb-2 text-sm font-medium uppercase tracking-wide opacity-60">
             Your prompt, ready to land
           </h2>
-          <div className="whitespace-pre-wrap rounded-xl border border-neutral-300 bg-white p-4 text-base leading-relaxed shadow-sm">
+          <div className="whitespace-pre-wrap rounded-xl border border-neutral-600 bg-white/5 p-4 text-base leading-relaxed">
             {finalPrompt}
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <button
               onClick={copyPrompt}
-              className="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-700"
+              className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-amber-400"
             >
               {copied ? 'Copied ✓' : 'Copy it'}
             </button>
             <button
               onClick={answerHere}
               disabled={answerBusy || Boolean(answer)}
-              className="rounded-lg border border-neutral-900 px-4 py-2 text-sm font-medium transition hover:bg-neutral-100 disabled:opacity-40"
+              className="rounded-lg border border-neutral-400 px-4 py-2 text-sm font-medium transition hover:bg-white/10 disabled:opacity-40"
             >
               {answerBusy ? 'Answering…' : 'Answer it here'}
             </button>
@@ -306,7 +306,7 @@ export default function LoopPage() {
               <h3 className="mb-2 text-sm font-medium uppercase tracking-wide opacity-60">
                 The answer
               </h3>
-              <div className="whitespace-pre-wrap rounded-xl border border-neutral-200 bg-neutral-50 p-4 text-sm leading-relaxed">
+              <div className="whitespace-pre-wrap rounded-xl border border-neutral-700 bg-white/5 p-4 text-sm leading-relaxed">
                 {answer}
               </div>
             </div>

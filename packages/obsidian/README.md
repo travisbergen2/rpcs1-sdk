@@ -15,9 +15,16 @@ put back and the panel tells you so.
 This plugin sends **the text you type into the loop panel** (your dump, and
 the lines being re-derived) to the Explicit Formula service
 (`https://www.explicitformula.com` by default, configurable in settings) to
-run the interpretation. **Nothing else leaves your vault in this version** —
-no vault files are read, no telemetry is collected. Vault-aware context is a
-future, opt-in feature with a per-round disclosure log (see the Phase B spec).
+run the interpretation. No telemetry is collected.
+
+**Vault context is OFF by default.** If — and only if — you list folders in
+Settings → "Folders the loop may read", the plugin selects up to 6 small
+snippets (≤2400 characters total) from those folders to ground the
+interpretation, chosen locally by a deterministic scorer (your words ×
+your own note links × recency; nothing ships on link- or recency-proximity
+alone). **Every round shows exactly what left your machine** — each note
+name with its character count, inline above the lines. Empty the folder
+list and vault reads stop entirely.
 
 ## Install (manual, pre-listing)
 

@@ -1,7 +1,7 @@
 {
   "name": "@rpcs1/obsidian-plugin",
-  "version": "0.1.0",
-  "description": "Explicit Formula — The Loop, inside Obsidian (Phase B P1: loop panel, no vault reads yet)",
+  "version": "0.2.0",
+  "description": "Explicit Formula — The Loop, inside Obsidian (Phase B P2: loop panel + opt-in vault priors with the what-left-your-machine log)",
   "private": true,
   "type": "module",
   "scripts": {

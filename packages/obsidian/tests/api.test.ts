@@ -138,6 +138,36 @@ describe('LoopClient.answer', () => {
   });
 });
 
+describe('contextSnippets pass-through (P2)', () => {
+  function capturingFetch(): { fetchImpl: FetchLike; bodies: unknown[] } {
+    const bodies: unknown[] = [];
+    const fetchImpl = (async (_url: unknown, init?: { body?: string }) => {
+      bodies.push(JSON.parse(init?.body ?? '{}'));
+      return new Response(
+        JSON.stringify({ spans: [{ id: 's1', text: 'Line.', status: 'revised' }], repaired: false }),
+        { status: 200, headers: { 'content-type': 'application/json' } },
+      );
+    }) as unknown as FetchLike;
+    return { fetchImpl, bodies };
+  }
+  it('includes contextSnippets in the round-1 body when provided', async () => {
+    const { fetchImpl, bodies } = capturingFetch();
+    const client = new LoopClient({ endpoint: 'https://example.com', fetchImpl });
+    await client.startRound('dump', [{ source: 'Note A', text: 'grounding' }]);
+    expect((bodies[0] as { contextSnippets?: unknown }).contextSnippets).toEqual([
+      { source: 'Note A', text: 'grounding' },
+    ]);
+  });
+  it('omits the field entirely when no snippets are given', async () => {
+    const { fetchImpl, bodies } = capturingFetch();
+    const client = new LoopClient({ endpoint: 'https://example.com', fetchImpl });
+    await client.startRound('dump');
+    await client.startRound('dump', []);
+    expect('contextSnippets' in (bodies[0] as object)).toBe(false);
+    expect('contextSnippets' in (bodies[1] as object)).toBe(false);
+  });
+});
+
 describe('assembleFinalPrompt', () => {
   it('joins spans in order, skipping empties', () => {
     expect(assembleFinalPrompt(spans(['One.', '  ', 'Two.']))).toBe('One. Two.');

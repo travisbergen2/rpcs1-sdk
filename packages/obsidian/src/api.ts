@@ -88,8 +88,15 @@ export class LoopClient {
   }
 
   /** Round 1: fresh interpretation of the dump. */
-  async startRound(dump: string): Promise<LoopRound> {
-    const data = await this.post({ tool: 'loop', text: dump });
+  async startRound(
+    dump: string,
+    contextSnippets?: ReadonlyArray<{ source: string; text: string }>,
+  ): Promise<LoopRound> {
+    const data = await this.post({
+      tool: 'loop',
+      text: dump,
+      ...(contextSnippets && contextSnippets.length > 0 ? { contextSnippets } : {}),
+    });
     if (!data.spans || data.spans.length === 0) {
       throw new LoopClientError('bad_response', 'No interpretation came back — try again.');
     }
@@ -105,12 +112,14 @@ export class LoopClient {
     dump: string,
     prevSpans: ReadonlyArray<LoopSpan>,
     electedIds: ReadonlyArray<string>,
+    contextSnippets?: ReadonlyArray<{ source: string; text: string }>,
   ): Promise<LoopRound> {
     const data = await this.post({
       tool: 'loop',
       text: dump,
       spans: prevSpans,
       electedIds,
+      ...(contextSnippets && contextSnippets.length > 0 ? { contextSnippets } : {}),
     });
     if (!data.spans || data.spans.length === 0) {
       throw new LoopClientError('bad_response', 'No interpretation came back — try again.');

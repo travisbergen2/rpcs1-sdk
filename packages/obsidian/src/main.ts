@@ -12,21 +12,35 @@ import {
   Plugin,
   PluginSettingTab,
   Setting,
+  type TFile,
   type WorkspaceLeaf,
 } from 'obsidian';
 import type { LoopSpan } from '@rpcs1/core';
 import { LoopClient, LoopClientError, assembleFinalPrompt } from './api.js';
+import {
+  isAllowed,
+  selectSnippets,
+  type CandidateNote,
+  type SelectedSnippet,
+  type SelectionLogEntry,
+} from './selector.js';
 
 export const VIEW_TYPE_LOOP = 'explicit-formula-loop';
 
 interface LoopPluginSettings {
   endpoint: string;
   answerEnabled: boolean;
+  /**
+   * Comma-separated folder paths the loop may read for grounding.
+   * EMPTY = vault reads OFF (privacy law 3 — the default).
+   */
+  allowedFolders: string;
 }
 
 const DEFAULT_SETTINGS: LoopPluginSettings = {
   endpoint: 'https://www.explicitformula.com',
   answerEnabled: true,
+  allowedFolders: '',
 };
 
 export default class LoopPlugin extends Plugin {
@@ -109,6 +123,8 @@ class LoopView extends ItemView {
   private held = false;
   private busy = false;
   private answer: string | null = null;
+  /** The what-left-your-machine log for the latest round (disclosure law). */
+  private contextLog: SelectionLogEntry[] = [];
 
   constructor(leaf: WorkspaceLeaf, plugin: LoopPlugin) {
     super(leaf);
@@ -145,12 +161,81 @@ class LoopView extends ItemView {
     return new LoopClient({ endpoint: this.plugin.settings.endpoint });
   }
 
+  private allowedFolders(): string[] {
+    return this.plugin.settings.allowedFolders
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+
+  /**
+   * Gather allowlisted candidates (active note + 1/2-hop links + recent) and
+   * run the local selector. Context must NEVER block the loop: any failure
+   * returns empty and the round proceeds context-free.
+   */
+  private async gatherContext(): Promise<{ snippets: SelectedSnippet[]; log: SelectionLogEntry[] }> {
+    const allow = this.allowedFolders();
+    if (allow.length === 0) return { snippets: [], log: [] };
+    try {
+      const app = this.plugin.app;
+      const active = app.workspace.getActiveFile();
+      const resolved = app.metadataCache.resolvedLinks as Record<string, Record<string, number>>;
+      const hopOf = new Map<string, 0 | 1 | 2 | 3>();
+      if (active) {
+        hopOf.set(active.path, 0);
+        const out1 = Object.keys(resolved[active.path] ?? {});
+        const in1 = Object.keys(resolved).filter((src) => resolved[src]?.[active.path]);
+        for (const p of [...out1, ...in1]) if (!hopOf.has(p)) hopOf.set(p, 1);
+        for (const p of Array.from(hopOf.keys())) {
+          if (hopOf.get(p) !== 1) continue;
+          for (const q of Object.keys(resolved[p] ?? {}).slice(0, 30)) {
+            if (!hopOf.has(q)) hopOf.set(q, 2);
+          }
+        }
+      }
+      const files = app.vault.getMarkdownFiles();
+      const recent = [...files].sort((a, b) => b.stat.mtime - a.stat.mtime).slice(0, 15);
+      const pool = new Map<string, TFile>();
+      for (const f of files) if (hopOf.has(f.path)) pool.set(f.path, f);
+      for (const f of recent) if (!pool.has(f.path)) pool.set(f.path, f);
+      const candidates: CandidateNote[] = [];
+      for (const f of pool.values()) {
+        if (candidates.length >= 24) break; // bounded reads per round (mobile-friendly)
+        if (!isAllowed(f.path, allow)) continue;
+        if (f.stat.size > 200_000) continue; // skip huge notes
+        const cache = app.metadataCache.getFileCache(f);
+        const fmAliases = (cache?.frontmatter as Record<string, unknown> | undefined)?.aliases;
+        const aliases = Array.isArray(fmAliases)
+          ? fmAliases.map(String)
+          : typeof fmAliases === 'string'
+            ? [fmAliases]
+            : [];
+        const headings = (cache?.headings ?? []).map((h) => h.heading);
+        const content = await app.vault.cachedRead(f);
+        candidates.push({
+          path: f.path,
+          title: f.basename,
+          aliases,
+          headings,
+          content,
+          hop: hopOf.get(f.path) ?? 3,
+          mtime: f.stat.mtime,
+        });
+      }
+      return selectSnippets(this.dump, candidates, Date.now());
+    } catch {
+      return { snippets: [], log: [] };
+    }
+  }
+
   private async firstRound() {
     if (!this.dump.trim() || this.busy) return;
     this.busy = true;
     this.render();
     try {
-      const r = await this.client().startRound(this.dump);
+      const ctx = await this.gatherContext();
+      this.contextLog = ctx.log;
+      const r = await this.client().startRound(this.dump, ctx.snippets);
       this.spans = r.spans;
       this.elected.clear();
       this.round = 1;
@@ -172,7 +257,14 @@ class LoopView extends ItemView {
       const lockedTexts = new Set(
         this.spans.filter((s) => this.elected.has(s.id)).map((s) => s.text),
       );
-      const r = await this.client().nextRound(this.dump, this.spans, Array.from(this.elected));
+      const ctx = await this.gatherContext();
+      this.contextLog = ctx.log;
+      const r = await this.client().nextRound(
+        this.dump,
+        this.spans,
+        Array.from(this.elected),
+        ctx.snippets,
+      );
       this.spans = r.spans;
       this.elected = new Set(r.spans.filter((s) => lockedTexts.has(s.text)).map((s) => s.id));
       this.round += 1;
@@ -234,6 +326,18 @@ class LoopView extends ItemView {
       const orig = root.createEl('details');
       orig.createEl('summary', { text: 'What you said' });
       orig.createEl('div', { text: this.dump }).style.opacity = '0.75';
+
+      // Disclosure strip — the what-left-your-machine law, rendered inline.
+      const strip = root.createEl('p', {
+        text:
+          this.contextLog.length > 0
+            ? 'Left your machine this round: your dump + ' +
+              this.contextLog.map((e) => `${e.source} (${e.chars} chars)`).join(' · ')
+            : 'Left your machine this round: your dump only.',
+      });
+      strip.style.fontSize = '0.8em';
+      strip.style.opacity = '0.7';
+      strip.style.marginTop = '6px';
 
       root.createEl('p', { text: 'Tap the lines that are right:' }).style.marginTop = '8px';
       if (this.held) {
@@ -336,6 +440,23 @@ class LoopSettingTab extends PluginSettingTab {
           this.plugin.settings.endpoint = v.trim() || DEFAULT_SETTINGS.endpoint;
           await this.plugin.saveSettings();
         }),
+      );
+
+    new Setting(containerEl)
+      .setName('Folders the loop may read')
+      .setDesc(
+        'Comma-separated folder paths used to ground interpretations in your own notes. ' +
+          'EMPTY = the loop reads nothing from your vault (the default). Only small selected ' +
+          'snippets are sent, and every round shows exactly what left your machine.',
+      )
+      .addText((t) =>
+        t
+          .setPlaceholder('notes, projects')
+          .setValue(this.plugin.settings.allowedFolders)
+          .onChange(async (v) => {
+            this.plugin.settings.allowedFolders = v;
+            await this.plugin.saveSettings();
+          }),
       );
 
     new Setting(containerEl)

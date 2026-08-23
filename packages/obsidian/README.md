@@ -57,6 +57,18 @@ testing is in `fixture-vault/`.
 
 ## Scope (P1) and what's next
 
+## Your graph shows the work (P3)
+
+Finish a session and hit **Save to my vault**: the session lands as an
+ordinary note (`Loop/<date> <slug>.md`) that **wikilinks every note that
+grounded it** — open the graph view and each conversation appears wired
+into the knowledge it drew from. `Loop/learnings.md` gains one line per
+session (rounds, locked count, sources): fewer rounds over time means the
+loop is starting closer to what you mean. Both write-backs have
+off-switches; everything written is a visible, editable, deletable file.
+**Copy my context pack** puts your recent loop history on the clipboard
+to paste before a prompt in any AI.
+
 Powered by [rpcs1.dev](https://rpcs1.dev) — the receiver engine behind
 Explicit Formula.
 

@@ -24,6 +24,13 @@ import {
   type SelectedSnippet,
   type SelectionLogEntry,
 } from './selector.js';
+import {
+  composeContextPack,
+  composeLearningsLine,
+  composeSessionNote,
+  LEARNINGS_HEADER,
+  type SessionMeta,
+} from './writeback.js';
 
 export const VIEW_TYPE_LOOP = 'explicit-formula-loop';
 
@@ -35,12 +42,19 @@ interface LoopPluginSettings {
    * EMPTY = vault reads OFF (privacy law 3 — the default).
    */
   allowedFolders: string;
+  /** Folder for session notes + learnings (visible, editable files). */
+  writeBackFolder: string;
+  sessionNotesEnabled: boolean;
+  learningsEnabled: boolean;
 }
 
 const DEFAULT_SETTINGS: LoopPluginSettings = {
   endpoint: 'https://www.explicitformula.com',
   answerEnabled: true,
   allowedFolders: '',
+  writeBackFolder: 'Loop',
+  sessionNotesEnabled: true,
+  learningsEnabled: true,
 };
 
 export default class LoopPlugin extends Plugin {
@@ -69,6 +83,25 @@ export default class LoopPlugin extends Plugin {
           return;
         }
         this.activateView(sel);
+      },
+    });
+
+    this.addCommand({
+      id: 'copy-context-pack',
+      name: 'Copy my context pack',
+      callback: async () => {
+        const folder = this.settings.writeBackFolder.trim() || 'Loop';
+        const path = `${folder}/learnings.md`;
+        const file = this.app.vault.getAbstractFileByPath(path);
+        let lines: string[] = [];
+        if (file && 'stat' in file) {
+          const text = await this.app.vault.cachedRead(file as never);
+          lines = text.split('\n');
+        }
+        await navigator.clipboard.writeText(composeContextPack(lines));
+        new Notice(lines.some((l) => l.trim().startsWith('- '))
+          ? 'Context pack copied — paste it before your prompt in any AI.'
+          : 'Copied a starter pack — finish loop sessions to grow it.');
       },
     });
 
@@ -291,6 +324,52 @@ class LoopView extends ItemView {
     }
   }
 
+  /** P3: session note + learnings line — visible files, wikilinked sources. */
+  private async saveSession() {
+    const s = this.plugin.settings;
+    const folder = s.writeBackFolder.trim() || 'Loop';
+    const prompt = assembleFinalPrompt(this.spans);
+    const meta: SessionMeta = {
+      date: new Date().toISOString().slice(0, 16).replace('T', ' '),
+      rounds: this.round,
+      lockedCount: this.elected.size,
+      totalLines: this.spans.length,
+      sources: this.contextLog.map((e) => ({ source: e.source, path: e.path, chars: e.chars })),
+    };
+    try {
+      if (!this.plugin.app.vault.getAbstractFileByPath(folder)) {
+        await this.plugin.app.vault.createFolder(folder).catch(() => undefined);
+      }
+      let saved: string | null = null;
+      if (s.sessionNotesEnabled) {
+        const { basename, content } = composeSessionNote(prompt, this.answer, meta);
+        let path = `${folder}/${basename}.md`;
+        let n = 2;
+        while (this.plugin.app.vault.getAbstractFileByPath(path)) {
+          path = `${folder}/${basename}-${n}.md`;
+          n += 1;
+        }
+        await this.plugin.app.vault.create(path, content);
+        saved = path;
+      }
+      if (s.learningsEnabled) {
+        const lpath = `${folder}/learnings.md`;
+        const line = composeLearningsLine(meta);
+        const existing = this.plugin.app.vault.getAbstractFileByPath(lpath);
+        if (existing && 'stat' in existing) {
+          await this.plugin.app.vault.process(existing as never, (t: string) =>
+            t.endsWith('\n') ? t + line + '\n' : t + '\n' + line + '\n',
+          );
+        } else {
+          await this.plugin.app.vault.create(lpath, LEARNINGS_HEADER + line + '\n');
+        }
+      }
+      new Notice(saved ? `Saved to ${saved}` : 'Learnings updated.');
+    } catch {
+      new Notice('Could not save to the vault — check the write-back folder setting.');
+    }
+  }
+
   private insertIntoNote(text: string) {
     const view = this.plugin.app.workspace.getActiveViewOfType(MarkdownView);
     if (!view) {
@@ -405,6 +484,11 @@ class LoopView extends ItemView {
     const insert = row.createEl('button', { text: 'Insert into note' });
     insert.style.marginLeft = '6px';
     insert.addEventListener('click', () => this.insertIntoNote(prompt));
+    if (this.plugin.settings.sessionNotesEnabled || this.plugin.settings.learningsEnabled) {
+      const save = row.createEl('button', { text: 'Save to my vault' });
+      save.style.marginLeft = '6px';
+      save.addEventListener('click', () => void this.saveSession());
+    }
     if (this.plugin.settings.answerEnabled) {
       const ans = row.createEl('button', { text: this.busy ? 'Answering…' : 'Answer it here' });
       ans.style.marginLeft = '6px';
@@ -463,6 +547,39 @@ class LoopSettingTab extends PluginSettingTab {
             this.plugin.settings.allowedFolders = v;
             await this.plugin.saveSettings();
           }),
+      );
+
+    new Setting(containerEl)
+      .setName('Write-back folder')
+      .setDesc('Where finished sessions and the learnings note land — ordinary markdown files you can edit or delete. Session notes wikilink their source notes, so your graph view shows what grounded each prompt.')
+      .addText((t) =>
+        t
+          .setPlaceholder('Loop')
+          .setValue(this.plugin.settings.writeBackFolder)
+          .onChange(async (v) => {
+            this.plugin.settings.writeBackFolder = v.trim() || 'Loop';
+            await this.plugin.saveSettings();
+          }),
+      );
+
+    new Setting(containerEl)
+      .setName('Save session notes')
+      .setDesc('Off = "Save to my vault" only updates learnings.')
+      .addToggle((t) =>
+        t.setValue(this.plugin.settings.sessionNotesEnabled).onChange(async (v) => {
+          this.plugin.settings.sessionNotesEnabled = v;
+          await this.plugin.saveSettings();
+        }),
+      );
+
+    new Setting(containerEl)
+      .setName('Track learnings')
+      .setDesc('One line per finished session — fewer rounds over time means the loop is starting closer to what you mean.')
+      .addToggle((t) =>
+        t.setValue(this.plugin.settings.learningsEnabled).onChange(async (v) => {
+          this.plugin.settings.learningsEnabled = v;
+          await this.plugin.saveSettings();
+        }),
       );
 
     new Setting(containerEl)

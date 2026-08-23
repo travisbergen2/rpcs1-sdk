@@ -16,7 +16,7 @@ export function SupportLink({ live = DONATIONS_LIVE, url = SUPPORT_URL }: { live
         rel="noreferrer"
         className="font-medium text-amber-300 underline-offset-4 hover:text-amber-200 hover:underline"
       >
-        Chip in if you're able
+        Chip in if you&apos;re able
       </a>{' '}
       — every few dollars keeps thousands of rounds free for everyone.
     </p>

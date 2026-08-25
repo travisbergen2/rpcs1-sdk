@@ -23,8 +23,25 @@ jobs:
         run: ./mcp-publisher login github-oidc
 
       - name: Publish server metadata
-        run: ./mcp-publisher publish
+        # Idempotent: tolerate exactly the already-published case so a
+        # re-dispatch never blocks the other servers below; any other
+        # error still fails the step.
+        run: |
+          out=$(./mcp-publisher publish 2>&1) || {
+            echo "$out"
+            echo "$out" | grep -q "duplicate version" || exit 1
+            echo "::notice::tuner version already in the registry — skipping"
+            exit 0
+          }
+          echo "$out"
 
       - name: Publish second-brain metadata
         working-directory: packages/vault-mcp
-        run: ../../mcp-publisher publish
+        run: |
+          out=$(../../mcp-publisher publish 2>&1) || {
+            echo "$out"
+            echo "$out" | grep -q "duplicate version" || exit 1
+            echo "::notice::second-brain version already in the registry — skipping"
+            exit 0
+          }
+          echo "$out"

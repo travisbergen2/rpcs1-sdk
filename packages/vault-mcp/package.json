@@ -1,8 +1,11 @@
 {
-  "name": "second-brain-mcp",
+  "name": "@travisbergen2/second-brain-mcp",
   "version": "0.1.0",
   "description": "Your second brain, in every AI you use — a local MCP server for your Obsidian vault (or any markdown folder). Allowlist-gated, capped, disclosed, audited.",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "mcpName": "io.github.travisbergen2/second-brain",
   "repository": {

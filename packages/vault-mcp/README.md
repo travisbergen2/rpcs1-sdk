@@ -58,7 +58,7 @@ Settings → Developer → Edit Config, add:
   "mcpServers": {
     "second-brain": {
       "command": "npx",
-      "args": ["-y", "second-brain-mcp", "--vault", "/absolute/path/to/YourVault"]
+      "args": ["-y", "@travisbergen2/second-brain-mcp", "--vault", "/absolute/path/to/YourVault"]
     }
   }
 }
@@ -71,7 +71,7 @@ Settings → Developer → Edit Config, add:
 ### Claude Code
 
 ```
-claude mcp add second-brain -- npx -y second-brain-mcp --vault /absolute/path/to/YourVault
+claude mcp add second-brain -- npx -y @travisbergen2/second-brain-mcp --vault /absolute/path/to/YourVault
 ```
 
 ### Cursor (and most other MCP apps)

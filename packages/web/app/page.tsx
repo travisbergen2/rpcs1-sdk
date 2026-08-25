@@ -139,13 +139,10 @@ export default function HomePage() {
             </div>
             <div className="flex flex-col gap-2 text-sm">
               <Link href="/tuner" className="text-sky-400 underline-offset-4 hover:underline">
-                Free agent tuner →
+                The agent tuner →
               </Link>
               <Link href="/docs/mcp" className="text-sky-400 underline-offset-4 hover:underline">
                 MCP server for your agent stack →
-              </Link>
-              <Link href="/diagnostic" className="text-amber-300/90 underline-offset-4 hover:underline">
-                Founding diagnostic — written memo →
               </Link>
             </div>
           </div>
@@ -156,7 +153,7 @@ export default function HomePage() {
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div className="rounded-2xl border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),transparent)] p-6 sm:p-8">
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            You can trust it because we publish the misses.
+            The research behind it — including the misses.
           </h2>
           <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/55">
             Every recommendation traces to a law that was checked against
@@ -174,24 +171,39 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Closing CTA ───────────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 pb-24 pt-8 text-center sm:px-6">
-        <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          The next message you send is the demo.
-        </h2>
-        <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <a
-            href="#box"
-            className="inline-flex items-center justify-center rounded-xl bg-white px-6 py-3.5 text-base font-semibold text-black transition-colors hover:bg-white/85"
-          >
-            Try the box ↑
-          </a>
-          <Link
-            href="/labs"
-            className="inline-flex items-center justify-center px-2 py-3.5 text-base font-semibold text-white/60 underline-offset-4 transition-colors hover:text-white hover:underline"
-          >
-            Everything else lives in Labs →
-          </Link>
+      {/* ── Your notes, in every AI ───────────────────────────── */}
+      <section className="border-t border-white/5 bg-[#090e1a]">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+          <div className="max-w-3xl">
+            <p className="text-xs font-mono uppercase tracking-[0.24em] text-sky-400">
+              Your notes
+            </p>
+            <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
+              Your notes, in every AI you use.
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-white/60">
+              Your Obsidian vault — or any folder of notes — becomes memory
+              your AI can actually use, without leaving your machine. Nothing
+              is readable until you choose folders; every answer shows exactly
+              which notes it used; and anything the AI saves lands back in
+              your vault as an ordinary note, linked to its sources, visible
+              in your graph. Works in Claude Desktop, Claude Code, Cursor, and
+              anything else that speaks the open connector standard (MCP).
+            </p>
+            <div className="mt-5 flex flex-col gap-2 text-sm sm:flex-row sm:gap-6">
+              <a
+                href="https://github.com/travisbergen2/rpcs1-sdk/tree/main/packages/vault-mcp"
+                className="text-sky-400 underline-offset-4 hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Set it up (five minutes) →
+              </a>
+              <Link href="/labs" className="text-white/60 underline-offset-4 hover:text-white hover:underline">
+                Everything else lives in Labs →
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </div>

@@ -15,10 +15,12 @@ describe('pricing page — the free-for-people model (spec §3/§4)', () => {
     // No individual subscription pricing may reappear on this page.
     expect(pricing).not.toMatch(/\$9<|\$9\/mo|\$79|Founding supporter|tier=indie|tier=founding/);
   });
-  it('keeps the diagnostic as the organizations-side front door', () => {
-    expect(pricing).toContain('Written Agent Diagnostic');
-    expect(pricing).toContain('first 3 free, then $99');
-    expect(pricing).toContain('tier=diagnostic');
+  it('keeps the diagnostic as organizations-side information — never a funnel (the marketing-cut ratchet)', () => {
+    // The written diagnostic stays named on the organizations side…
+    expect(pricing).toMatch(/written agent diagnostic/i);
+    // …but no checkout funnel, seat-staging, or founding-rate pitch may
+    // reappear on this page (business-plan decision, 2026-08-25).
+    expect(pricing).not.toMatch(/tier=diagnostic|first 3 free|founding rate|\$99|Claim a free|Skip the queue/i);
   });
   it('links the institutions page', () => {
     expect(pricing).toContain('href="/institutions"');

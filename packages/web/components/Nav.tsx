@@ -42,12 +42,6 @@ export function Nav() {
           >
             Docs
           </Link>
-          <Link
-            href="/diagnostic"
-            className="ml-2 rounded-lg bg-amber-500 px-3 py-1.5 text-sm font-medium text-slate-950 shadow-lg shadow-amber-500/20 transition-colors hover:bg-amber-400"
-          >
-            Agent diagnostic →
-          </Link>
         </nav>
       </div>
     </header>

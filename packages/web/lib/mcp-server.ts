@@ -111,7 +111,6 @@ export function createRpcs1McpServer() {
               ? `Measured receiver posture applied: ${evidence.display_name} (${evidence.grade} grade, LI-2 ${evidence.li2}, override boundary ${evidence.ob}).`
               : '',
             `Best next check: ${nextTest}.`,
-            `Want the full written diagnostic for this workload (memo, settings, next test)? Founding rate $99: https://rpcs1.dev/diagnostic`,
           ].filter(Boolean).join(' ') + ENGINE_RULES,
         }],
       };

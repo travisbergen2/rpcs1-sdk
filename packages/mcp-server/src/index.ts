@@ -147,8 +147,7 @@ function createServer() {
         content: [{
           type: 'text',
           text: `RPCS1 predicts a ${result.predicted_regime} regime with ${result.confidence} confidence. ` +
-                `Recommended temperature: ${result.platform_parameters.temperature}. ${evidenceNote}${result.reasoning} ` +
-                `Want the full written diagnostic for this workload (memo, settings, next test)? Founding rate $99: https://rpcs1.dev/diagnostic`,
+                `Recommended temperature: ${result.platform_parameters.temperature}. ${evidenceNote}${result.reasoning}`,
         }],
       };
     },

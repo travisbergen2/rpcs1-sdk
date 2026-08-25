@@ -24,3 +24,7 @@ jobs:
 
       - name: Publish server metadata
         run: ./mcp-publisher publish
+
+      - name: Publish second-brain metadata
+        working-directory: packages/vault-mcp
+        run: ../../mcp-publisher publish

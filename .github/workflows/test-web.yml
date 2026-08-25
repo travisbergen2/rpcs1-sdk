@@ -9,6 +9,7 @@ on:
       - "packages/core/**"
       - "packages/web/**"
       - "packages/obsidian/**"
+      - "packages/vault-mcp/**"
       - "server.json"
       - ".github/workflows/test-web.yml"
   pull_request:
@@ -18,6 +19,7 @@ on:
       - "packages/core/**"
       - "packages/web/**"
       - "packages/obsidian/**"
+      - "packages/vault-mcp/**"
       - "server.json"
       - ".github/workflows/test-web.yml"
 
@@ -48,6 +50,12 @@ jobs:
 
       - name: Lint Obsidian plugin
         run: npm run lint --workspace=packages/obsidian
+
+      - name: Test second-brain MCP
+        run: npm run test --workspace=packages/vault-mcp
+
+      - name: Lint second-brain MCP
+        run: npm run lint --workspace=packages/vault-mcp
 
       - name: Build Obsidian plugin
         run: npm run build --workspace=packages/obsidian

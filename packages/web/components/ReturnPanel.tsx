@@ -149,7 +149,7 @@ export default function ReturnPanel({ ownText }: { ownText: string }) {
     <details className="mt-4 rounded-xl border border-white/10 bg-white/[0.02]" data-testid="return-panel">
       <summary className="cursor-pointer select-none px-4 py-3 text-sm text-neutral-300 hover:text-white">
         Bring the reply back
-        <span className="ml-2 text-xs text-neutral-500">
+        <span className="ml-2 text-xs text-neutral-400">
           paste any AI answer — read it the way you talk
         </span>
       </summary>
@@ -200,13 +200,13 @@ export default function ReturnPanel({ ownText }: { ownText: string }) {
           {!clipEnabled && (
             <button
               onClick={() => void enableClipboard()}
-              className="text-xs text-neutral-500 underline-offset-4 hover:text-neutral-300 hover:underline"
+              className="text-xs text-neutral-400 underline-offset-4 hover:text-neutral-300 hover:underline"
             >
               Skip the pasting — detect what I copy
             </button>
           )}
           {clipEnabled && (
-            <span className="text-xs text-neutral-500">
+            <span className="text-xs text-neutral-400">
               Copy detection is on — copy a reply anywhere, then come back to this tab.
             </span>
           )}
@@ -225,7 +225,7 @@ export default function ReturnPanel({ ownText }: { ownText: string }) {
                 <p className="text-xs text-neutral-400">{result.note}</p>
                 {result.rewrite_instructions && (
                   <>
-                    <p className="mt-2 text-xs text-neutral-500">
+                    <p className="mt-2 text-xs text-neutral-400">
                       Paste this into your own AI app as a system instruction, followed by the reply:
                     </p>
                     <pre className="mt-1 whitespace-pre-wrap rounded bg-black/30 p-3 text-xs text-gray-300">
@@ -236,12 +236,12 @@ export default function ReturnPanel({ ownText }: { ownText: string }) {
               </div>
             )}
             {result.engine && result.rewritten && (
-              <p className="mt-1 text-[11px] text-neutral-600">
+              <p className="mt-1 text-[11px] text-neutral-400">
                 Facts unchanged, register translated. Always check the original for anything that matters.
               </p>
             )}
             {!usedRhat && (
-              <p className="mt-2 text-xs text-neutral-500">
+              <p className="mt-2 text-xs text-neutral-400">
                 That used the {styleKey} register.{' '}
                 <a href="/calibrate" className="text-sky-500 underline-offset-4 hover:underline">
                   Calibrate once

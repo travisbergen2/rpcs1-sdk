@@ -32,9 +32,9 @@ function StatRows({ card }: { card: PersonaCard }) {
     <ul className="mt-2 space-y-0.5">
       {card.stats.map((s) => (
         <li key={s.label} className="flex items-baseline justify-between gap-2 text-xs">
-          <span className="text-neutral-500">{s.label}</span>
+          <span className="text-neutral-400">{s.label}</span>
           {s.value === null ? (
-            <span className="text-neutral-600 italic">not yet measured</span>
+            <span className="text-neutral-400 italic">not yet measured</span>
           ) : (
             <span className="text-neutral-300" title={`${s.source} (${s.asOf})`}>{s.value}</span>
           )}
@@ -74,9 +74,9 @@ export default function ModelPanel({ kind, onPick, clipboardVendors }: ModelPane
               <GradeBadge grade={card.grade} />
             </div>
             <span className="mt-1.5 text-sm font-medium text-neutral-100">{card.title}</span>
-            <span className="text-xs text-neutral-500">{card.describes}{clipboardVendors.has(card.vendor) ? ' · copy & paste' : ''}</span>
+            <span className="text-xs text-neutral-400">{card.describes}{clipboardVendors.has(card.vendor) ? ' · copy & paste' : ''}</span>
             <p className="mt-1.5 text-xs leading-relaxed text-neutral-400">{card.blurb}</p>
-            <p className="mt-1.5 text-[11px] text-neutral-600">{why}</p>
+            <p className="mt-1.5 text-[11px] text-neutral-400">{why}</p>
             <StatRows card={card} />
           </button>
         ))}
@@ -85,13 +85,13 @@ export default function ModelPanel({ kind, onPick, clipboardVendors }: ModelPane
       <div className="mt-2 flex items-center gap-4">
         <button
           onClick={() => setShowMore((v) => !v)}
-          className="text-xs text-neutral-500 hover:text-neutral-400"
+          className="text-xs text-neutral-400 hover:text-neutral-400"
         >
           {showMore ? 'fewer options' : `more options (${panel.unranked.length}, unranked)`}
         </button>
-        <details className="text-xs text-neutral-500">
+        <details className="text-xs text-neutral-400">
           <summary className="cursor-pointer hover:text-neutral-400">why this order?</summary>
-          <p className="mt-1 max-w-prose text-neutral-500">{panel.heuristic}</p>
+          <p className="mt-1 max-w-prose text-neutral-400">{panel.heuristic}</p>
         </details>
       </div>
 

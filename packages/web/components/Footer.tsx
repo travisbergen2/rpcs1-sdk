@@ -10,11 +10,11 @@ export function Footer() {
             <p className="text-sm font-semibold text-white">
               {BRAND_NAME} — {BRAND_TAGLINE.replace(/\.$/, '').toLowerCase()}
             </p>
-            <p className="mt-1 text-xs text-gray-600">
+            <p className="mt-1 text-xs text-gray-400">
               Free for people — no account, no ads, and the check runs in
               your browser. Licensed for organizations.
             </p>
-            <p className="mt-3 text-xs text-gray-500">
+            <p className="mt-3 text-xs text-gray-400">
               Powered by{' '}
               <a
                 href="https://rpcs1.dev"
@@ -41,7 +41,7 @@ export function Footer() {
               </Link>
             </div>
           </div>
-          <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-500">
+          <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-400">
             <Link href="/labs" className="transition-colors hover:text-gray-300">Labs</Link>
             <Link href="/pricing" className="transition-colors hover:text-gray-300">Pricing</Link>
             <Link href="/institutions" className="transition-colors hover:text-gray-300">Organizations</Link>
@@ -59,7 +59,7 @@ export function Footer() {
             </a>
           </nav>
         </div>
-        <p className="mt-8 text-xs text-gray-700">
+        <p className="mt-8 text-xs text-gray-400">
           © {new Date().getFullYear()} Travis Bergen. MIT License.
         </p>
       </div>

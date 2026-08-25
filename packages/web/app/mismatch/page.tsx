@@ -73,7 +73,7 @@ export default function MismatchPage() {
         <h2 className="text-xl font-semibold text-white mb-3">The Shift</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-4">
-            <p className="text-xs text-gray-500 mb-2">Narrow product question</p>
+            <p className="text-xs text-gray-400 mb-2">Narrow product question</p>
             <p className="text-gray-300">&quot;What temperature should I use?&quot;</p>
           </div>
           <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-4">
@@ -104,11 +104,11 @@ relevant distinctions preserved / compression cost increases`}
           {EXAMPLES.map(([human, ai]) => (
             <div key={human} className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-xl border border-gray-800 bg-gray-950 p-4">
-                <p className="text-xs text-gray-500 mb-1">Human may preserve</p>
+                <p className="text-xs text-gray-400 mb-1">Human may preserve</p>
                 <p className="text-gray-300">{human}</p>
               </div>
               <div className="rounded-xl border border-gray-800 bg-gray-950 p-4">
-                <p className="text-xs text-gray-500 mb-1">AI may preserve</p>
+                <p className="text-xs text-gray-400 mb-1">AI may preserve</p>
                 <p className="text-gray-300">{ai}</p>
               </div>
             </div>
@@ -134,7 +134,7 @@ relevant distinctions preserved / compression cost increases`}
             <div key={layer.name} className="rounded-xl border border-gray-800 bg-gray-950 p-5">
               <h3 className="font-semibold text-white mb-1">{layer.name}</h3>
               <p className="text-sm text-gray-400 mb-3">{layer.summary}</p>
-              <ul className="grid gap-1 text-sm text-gray-500 sm:grid-cols-2">
+              <ul className="grid gap-1 text-sm text-gray-400 sm:grid-cols-2">
                 {layer.items.map((item) => (
                   <li key={item}>- {item}</li>
                 ))}

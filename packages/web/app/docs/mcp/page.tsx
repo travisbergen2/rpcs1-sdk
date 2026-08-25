@@ -32,7 +32,7 @@ export default function McpIntegrationPage() {
           </div>
 
           <div className="mt-5 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-mono text-gray-500">listed in</span>
+            <span className="text-xs font-mono text-gray-400">listed in</span>
             <a
               href="https://registry.modelcontextprotocol.io/v0/servers?search=rpcs1-agent-tuner"
               target="_blank"

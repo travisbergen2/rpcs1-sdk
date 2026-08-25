@@ -34,7 +34,7 @@ export function AgentFailureDemo() {
           <div className="flex items-center justify-between gap-4 mb-5">
             <div>
               <p className="text-sm font-semibold text-white">Guessed configuration</p>
-              <p className="text-xs text-gray-500">High stakes, dynamic inputs, guessed defaults</p>
+              <p className="text-xs text-gray-400">High stakes, dynamic inputs, guessed defaults</p>
             </div>
             <span className="rounded-lg border border-red-500/25 bg-red-500/10 px-3 py-1 text-xs font-mono text-red-300">
               looping
@@ -78,7 +78,7 @@ export function AgentFailureDemo() {
           <div className="flex items-center justify-between gap-4 mb-5">
             <div>
               <p className="text-sm font-semibold text-white">RPCS-1 recommended posture</p>
-              <p className="text-xs text-gray-500">Operating conditions mapped to implementation settings</p>
+              <p className="text-xs text-gray-400">Operating conditions mapped to implementation settings</p>
             </div>
             <span className="rounded-lg border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-xs font-mono text-emerald-300">
               stable

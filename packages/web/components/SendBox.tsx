@@ -220,7 +220,7 @@ export default function SendBox() {
             appear here <span className="text-neutral-300">before</span> you send it — then one
             tap opens your own AI app with the clear version filled in.
           </p>
-          <p className="mt-3 text-xs text-neutral-500">Or watch it catch something — try one:</p>
+          <p className="mt-3 text-xs text-neutral-400">Or watch it catch something — try one:</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {EXAMPLES.map((ex) => (
               <button
@@ -232,7 +232,7 @@ export default function SendBox() {
               </button>
             ))}
           </div>
-          <p className="mt-3 text-[11px] text-neutral-600">
+          <p className="mt-3 text-[11px] text-neutral-400">
             Nothing is sent anywhere until you pick an app and hit send there yourself.
           </p>
         </div>
@@ -241,7 +241,7 @@ export default function SendBox() {
       {/* Reading chips — render ONLY when a fork is detected (silent-strip contract) */}
       {forked && (
         <div className="mt-3" data-testid="chip-strip">
-          <p className="mb-2 text-sm text-neutral-400">
+          <p role="status" className="mb-2 text-sm text-neutral-400">
             This could be read more than one way — tap what you meant:
           </p>
           <div className="flex flex-wrap gap-2">
@@ -256,10 +256,10 @@ export default function SendBox() {
             ))}
           </div>
           <details className="mt-2">
-            <summary className="cursor-pointer text-xs text-neutral-500 hover:text-neutral-400">
+            <summary className="cursor-pointer text-xs text-neutral-400 hover:text-neutral-400">
               why?
             </summary>
-            <ul className="mt-1 space-y-1 text-xs text-neutral-500">
+            <ul className="mt-1 space-y-1 text-xs text-neutral-400">
               {result!.ambiguousSpans.map((s, i) => (
                 <li key={i}>
                   <span className="text-neutral-300">&ldquo;{s.text}&rdquo;</span> — {s.why}

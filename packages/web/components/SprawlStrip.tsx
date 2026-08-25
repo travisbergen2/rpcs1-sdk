@@ -69,10 +69,10 @@ export default function SprawlStrip({ result, onSendSegment }: SprawlStripProps)
           {result.segments.map((seg, i) => (
             <li key={i} className="flex items-center justify-between gap-3 rounded-lg bg-neutral-800/60 px-3 py-1.5">
               <span className="min-w-0 truncate text-xs text-neutral-400">
-                <span className="mr-2 text-neutral-600">{i + 1}.</span>
+                <span className="mr-2 text-neutral-400">{i + 1}.</span>
                 {seg.label}
                 {seg.asks > 0 && (
-                  <span className="ml-2 text-neutral-600">({seg.asks} {seg.asks === 1 ? 'ask' : 'asks'})</span>
+                  <span className="ml-2 text-neutral-400">({seg.asks} {seg.asks === 1 ? 'ask' : 'asks'})</span>
                 )}
               </span>
               <button
@@ -86,7 +86,7 @@ export default function SprawlStrip({ result, onSendSegment }: SprawlStripProps)
         </ul>
       )}
 
-      <p className="mt-2 text-[11px] text-neutral-600">
+      <p className="mt-2 text-[11px] text-neutral-400">
         Sending as one message is always fine too — you stay the author.
       </p>
     </div>

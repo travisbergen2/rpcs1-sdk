@@ -159,7 +159,9 @@ export default function LoopPage() {
   }, []);
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-12">
+    // NOTE: a <div>, not <main> — the root layout already provides the single
+    // <main id="main"> landmark (duplicate main landmarks fail axe).
+    <div className="mx-auto max-w-5xl px-6 py-12">
       <header className="mb-8">
         <h1 className="text-3xl font-semibold tracking-tight">
           Say it once. Make sure it landed.
@@ -172,7 +174,7 @@ export default function LoopPage() {
       </header>
 
       {error && (
-        <div className="mb-6 rounded-lg border border-red-500/50 bg-red-950/40 px-4 py-3 text-sm text-red-200">
+        <div role="alert" className="mb-6 rounded-lg border border-red-500/50 bg-red-950/40 px-4 py-3 text-sm text-red-200">
           {error}
         </div>
       )}
@@ -183,7 +185,8 @@ export default function LoopPage() {
             value={dump}
             onChange={(e) => setDump(e.target.value)}
             placeholder="Dump it here exactly how it comes out — half-sentences, tangents, all of it."
-            className="h-56 w-full resize-y rounded-xl border border-neutral-600 bg-white/5 p-4 text-base leading-relaxed text-inherit outline-none placeholder:opacity-50 focus:border-amber-400"
+            aria-label="Brain dump — what you want to say"
+            className="h-56 w-full resize-y rounded-xl border border-neutral-500 bg-white/5 p-4 text-base leading-relaxed text-inherit outline-none placeholder:opacity-50 focus:border-amber-400"
             maxLength={8000}
           />
           <div className="mt-4 flex items-center gap-4">
@@ -214,7 +217,7 @@ export default function LoopPage() {
               What it heard — tap the lines that are right
             </h2>
             {held && (
-              <p className="mb-2 rounded-md bg-amber-950/40 px-3 py-1.5 text-xs text-amber-200">
+              <p role="status" className="mb-2 rounded-md bg-amber-950/40 px-3 py-1.5 text-xs text-amber-200">
                 Your locked lines were held in place.
               </p>
             )}
@@ -229,7 +232,7 @@ export default function LoopPage() {
                       'rounded-lg border px-3 py-2 text-left text-sm leading-relaxed transition ' +
                       (locked
                         ? 'border-emerald-500 bg-emerald-950/40 text-emerald-100'
-                        : 'border-neutral-600 bg-transparent hover:border-neutral-300')
+                        : 'border-neutral-500 bg-transparent hover:border-neutral-300')
                     }
                     aria-pressed={locked}
                   >
@@ -313,6 +316,6 @@ export default function LoopPage() {
           )}
         </section>
       )}
-    </main>
+    </div>
   );
 }

@@ -71,7 +71,7 @@ export default function RdPage() {
         <div className="mt-6 overflow-x-auto rounded-2xl border border-white/8">
           <table className="w-full min-w-[560px] text-left text-sm">
             <thead>
-              <tr className="border-b border-white/8 bg-white/[0.03] font-mono text-xs uppercase tracking-wider text-white/40">
+              <tr className="border-b border-white/8 bg-white/[0.03] font-mono text-xs uppercase tracking-wider text-white/60">
                 <th className="px-4 py-3">Product name</th>
                 <th className="px-4 py-3">Scientific name</th>
                 <th className="px-4 py-3">SDK field</th>
@@ -172,7 +172,7 @@ export default function RdPage() {
         <div className="mt-8 overflow-x-auto rounded-2xl border border-white/8">
           <table className="w-full min-w-[560px] text-left text-sm">
             <thead>
-              <tr className="border-b border-white/8 bg-white/[0.03] font-mono text-xs uppercase tracking-wider text-white/40">
+              <tr className="border-b border-white/8 bg-white/[0.03] font-mono text-xs uppercase tracking-wider text-white/60">
                 <th className="px-4 py-3">Check</th>
                 <th className="px-4 py-3">Predicted</th>
                 <th className="px-4 py-3">Measured</th>

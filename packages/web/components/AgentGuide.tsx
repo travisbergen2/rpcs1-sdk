@@ -29,13 +29,13 @@ const QUESTIONS: Record<
   time: {
     label: 'How fast?',
     answer:
-      'The free sample takes about a minute. Start from a support, coding, or research preset, then decide whether you want the paid memo and implementation guidance.',
-    cta: { href: '/tuner', label: 'Try the free sample' },
+      'About a minute. Start from a support, coding, or research preset, adjust any field, and run it again as often as you like.',
+    cta: { href: '/tuner', label: 'Open the tuner' },
   },
   price: {
     label: 'Free or paid?',
     answer:
-      'The web sample assessment is free and does not require an account. The written diagnostic memo is a $99 one-time founding pilot (first five, includes an anonymized case study), and the Founding supporter plan ($9/mo or $79/yr) covers the SDK for repeatable reviews and workflows.',
+      'Free for people — no account, no tiers. Organizations that put it in front of their teams license it, which is also where the written diagnostic memo lives.',
     cta: { href: '/pricing', label: 'View pricing' },
   },
 };
@@ -80,7 +80,7 @@ export function AgentGuide() {
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-800 hover:text-gray-200"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
                   aria-label="Close guide"
                 >
                   x

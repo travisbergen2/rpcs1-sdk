@@ -85,7 +85,7 @@ export function DiagnosticIntakeForm() {
           </a>
           <a
             href="/tuner?preset=support"
-            className="inline-flex items-center justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-semibold text-gray-200 hover:bg-gray-800 transition-colors"
+            className="inline-flex items-center justify-center rounded-lg border border-gray-500 px-5 py-3 text-sm font-semibold text-gray-200 hover:bg-gray-800 transition-colors"
           >
             Try sample assessment
           </a>

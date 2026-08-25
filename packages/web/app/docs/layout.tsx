@@ -21,7 +21,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
         {/* Sidebar */}
         <aside className="hidden lg:block w-48 flex-shrink-0">
           <div className="sticky top-20">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Documentation</p>
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Documentation</p>
             <nav className="space-y-1">
               {NAV.map(({ href, label }) => (
                 <Link

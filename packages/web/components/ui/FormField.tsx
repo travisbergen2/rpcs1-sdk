@@ -13,7 +13,7 @@ export function Label({ children, hint, className, ...props }: LabelProps) {
       {...props}
     >
       {children}
-      {hint && <span className="ml-2 text-xs text-gray-500 font-normal">{hint}</span>}
+      {hint && <span className="ml-2 text-xs text-gray-400 font-normal">{hint}</span>}
     </label>
   );
 }
@@ -52,7 +52,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       className={cn(
         'w-full rounded-lg border bg-gray-900 text-gray-100 px-3 py-2 text-sm',
         'focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent',
-        'transition-colors resize-none placeholder:text-gray-600',
+        'transition-colors resize-none placeholder:text-gray-400',
         error ? 'border-red-500' : 'border-gray-700 hover:border-gray-600',
         className,
       )}
@@ -73,7 +73,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       className={cn(
         'w-full rounded-lg border bg-gray-900 text-gray-100 px-3 py-2 text-sm',
         'focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent',
-        'transition-colors placeholder:text-gray-600',
+        'transition-colors placeholder:text-gray-400',
         error ? 'border-red-500' : 'border-gray-700 hover:border-gray-600',
         className,
       )}
@@ -88,5 +88,5 @@ export function ErrorMessage({ children }: { children: React.ReactNode }) {
 }
 
 export function FieldHint({ children }: { children: React.ReactNode }) {
-  return <p className="mt-1 text-xs text-gray-500">{children}</p>;
+  return <p className="mt-1 text-xs text-gray-400">{children}</p>;
 }

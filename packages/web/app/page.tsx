@@ -48,7 +48,7 @@ export default function HomePage() {
             register — the &ldquo;Reading as&rdquo; switch in the header
             changes it. Same facts, read your way.
           </p>
-          <p className="mt-2 text-xs text-white/40">
+          <p className="mt-2 text-xs text-white/60">
             Free. No account. Your words never leave the page until you send
             them.
           </p>
@@ -68,7 +68,7 @@ export default function HomePage() {
                 key={title}
                 className="rounded-2xl border border-white/8 bg-white/[0.03] p-6"
               >
-                <p className="font-mono text-sm text-white/30">{i + 1}</p>
+                <p className="font-mono text-sm text-white/50">{i + 1}</p>
                 <h2 className="mt-2 text-lg font-semibold text-white">
                   {title}
                 </h2>

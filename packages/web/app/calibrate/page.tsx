@@ -93,7 +93,7 @@ export default function CalibratePage() {
           never a category label. Output is then rendered for <em>your</em> profile instead of a
           one-size style. Answers stay in this tab; nothing is stored.
         </p>
-        <p className="mt-3 rounded-lg border border-gray-800 bg-gray-950/60 px-4 py-3 text-xs text-gray-500 leading-relaxed">
+        <p className="mt-3 rounded-lg border border-gray-800 bg-gray-950/60 px-4 py-3 text-xs text-gray-400 leading-relaxed">
           <strong className="text-gray-300">What this is — and isn&apos;t:</strong> these questions
           measure communication preferences — how you like information delivered. They are not a
           psychological assessment, produce no diagnosis or category, and haven&apos;t been
@@ -110,10 +110,10 @@ export default function CalibratePage() {
       {/* ── Step 1: intake ── */}
       <section className="space-y-5">
         <h2 className="text-sm font-semibold text-sky-400 uppercase tracking-wide">1 · Calibration</h2>
-        {items.length === 0 && !error && <p className="text-sm text-gray-500">Loading questions…</p>}
+        {items.length === 0 && !error && <p className="text-sm text-gray-400">Loading questions…</p>}
         {items.map((item) => (
           <fieldset key={item.primitive} className="border border-gray-800 rounded-xl p-4 bg-gray-900/40">
-            <legend className="px-1 text-xs font-mono text-gray-500">
+            <legend className="px-1 text-xs font-mono text-gray-400">
               {item.primitive} · {PRIMITIVE_META[item.primitive].plain}
             </legend>
             <p className="text-sm font-medium text-gray-200 mb-3">{item.prompt}</p>
@@ -158,19 +158,19 @@ export default function CalibratePage() {
                 <div className="h-2 rounded-full bg-gray-800 overflow-hidden">
                   <div className="h-full bg-sky-500/80" style={{ width: `${card.profile[k]}%` }} />
                 </div>
-                <p className="mt-1 text-xs text-gray-500">
+                <p className="mt-1 text-xs text-gray-400">
                   {card.directives.why[
                     k === 'TI' ? 'structure' : k === 'SG' ? 'warmth' : k === 'FT' ? 'explicitness' : k === 'UE' ? 'revision' : 'ambiguity'
                   ]}
                 </p>
               </div>
             ))}
-            <p className="text-xs text-gray-500 border-t border-gray-800 pt-3">
+            <p className="text-xs text-gray-400 border-t border-gray-800 pt-3">
               A quick intake is a noisy prior, not a verdict — the bridge refines it from real
               interaction at a rate your own UE governs. Retake any time.
             </p>
           </div>
-          <button onClick={() => { setCard(null); setAnswers({}); setOutput(null); setOutputKind(null); }} className="text-xs text-gray-500 hover:text-gray-300 underline underline-offset-4">
+          <button onClick={() => { setCard(null); setAnswers({}); setOutput(null); setOutputKind(null); }} className="text-xs text-gray-400 hover:text-gray-300 underline underline-offset-4">
             Retake calibration
           </button>
         </section>
@@ -184,7 +184,8 @@ export default function CalibratePage() {
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={3}
-            className="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm"
+            aria-label="Message to run through the bridge"
+            className="w-full bg-gray-950 border border-gray-500 rounded-lg px-4 py-2.5 text-white text-sm"
             placeholder="Paste a message…"
           />
           <div className="flex flex-wrap items-center gap-3">
@@ -202,9 +203,9 @@ export default function CalibratePage() {
             >
               {loading === 'interpret' ? 'Working…' : 'Interpret with my profile'}
             </button>
-            <label className="ml-auto flex items-center gap-2 text-xs text-gray-500">
+            <label className="ml-auto flex items-center gap-2 text-xs text-gray-400">
               risk
-              <select value={risk} onChange={(e) => setRisk(e.target.value)} className="bg-gray-950 border border-gray-700 rounded-lg px-2 py-1.5 text-sm text-white">
+              <select value={risk} onChange={(e) => setRisk(e.target.value)} className="bg-gray-950 border border-gray-500 rounded-lg px-2 py-1.5 text-sm text-white">
                 <option value="casual">casual</option>
                 <option value="advice">advice</option>
                 <option value="high-stakes">high-stakes</option>
@@ -216,11 +217,11 @@ export default function CalibratePage() {
           {output && outputKind === 'rewrite' && (
             <div className="border border-gray-800 rounded-xl p-5 bg-gray-900/40 space-y-3">
               <p className="text-xs font-mono text-sky-300">{String(output.style_label ?? 'Receiver-matched')}</p>
-              <p className="text-xs text-gray-500">{String(output.style_description ?? '')}</p>
+              <p className="text-xs text-gray-400">{String(output.style_description ?? '')}</p>
               {typeof output.rewrite_instructions === 'string' && (
                 <pre className="whitespace-pre-wrap text-sm text-gray-200 bg-gray-950 border border-gray-800 rounded-lg p-4">{output.rewrite_instructions}</pre>
               )}
-              {typeof output.note === 'string' && <p className="text-xs text-gray-500">{output.note}</p>}
+              {typeof output.note === 'string' && <p className="text-xs text-gray-400">{output.note}</p>}
             </div>
           )}
           {output && outputKind === 'interpret' && (

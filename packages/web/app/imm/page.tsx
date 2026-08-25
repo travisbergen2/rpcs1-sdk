@@ -72,7 +72,7 @@ export default function ImmPage() {
          integrate less, update faster, look more often,
          liberalize detection, commit sooner`}
         </pre>
-        <p className="mt-3 text-sm leading-relaxed text-gray-500">
+        <p className="mt-3 text-sm leading-relaxed text-gray-400">
           The five primitives are not five independent dimensions. They are a parameterization —
           a chart — over three coupled blocks. Legitimate as measurement coordinates, wrong as an
           ontology. Paper 18 supersedes the older &quot;five are forced&quot; claim on exactly this
@@ -86,7 +86,7 @@ export default function ImmPage() {
           {BLOCKS.map((b, i) => (
             <div key={b.name} className="rounded-2xl border border-gray-800 bg-gray-900/30 p-6">
               <div className="mb-2 flex flex-wrap items-baseline gap-3">
-                <span className="font-mono text-xs text-gray-600">0{i + 1}</span>
+                <span className="font-mono text-xs text-gray-400">0{i + 1}</span>
                 <h3 className="text-lg font-semibold text-white">{b.name}</h3>
                 <span className="rounded-full border border-gray-800 bg-gray-950 px-2.5 py-0.5 font-mono text-xs text-sky-300">
                   {b.primitives}
@@ -135,7 +135,7 @@ export default function ImmPage() {
             </div>
           ))}
         </div>
-        <p className="mt-4 text-xs leading-relaxed text-gray-600">
+        <p className="mt-4 text-xs leading-relaxed text-gray-400">
           Also stated plainly in the paper: nothing in the framework creates trading edge, and
           the three-block count is conditional on regime-switching environments with discrete,
           time-bound actions — the class that covers support, coding, research, and workflow
@@ -159,7 +159,7 @@ export default function ImmPage() {
             </div>
           ))}
         </div>
-        <p className="mt-3 text-xs text-gray-600">
+        <p className="mt-3 text-xs text-gray-400">
           This mapping is interpretive [A] and part of the registered test battery — labeled as
           such, not sold as established.
         </p>

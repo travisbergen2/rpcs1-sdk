@@ -160,7 +160,7 @@ function TunerPageContent() {
       </div>
 
       {error && (
-        <div className="mb-6 rounded-lg border border-red-500/30 bg-red-500/5 px-4 py-3">
+        <div role="alert" className="mb-6 rounded-lg border border-red-500/30 bg-red-500/5 px-4 py-3">
           <p className="text-sm text-red-400">{error}</p>
         </div>
       )}
@@ -174,10 +174,10 @@ function TunerPageContent() {
           {recommendation ? (
             <RecommendationOutput recommendation={recommendation} />
           ) : (
-            <div className="border border-dashed border-gray-800 rounded-xl p-12 text-center text-gray-600">
+            <div className="border border-dashed border-gray-800 rounded-xl p-12 text-center text-gray-400">
               <div className="text-4xl mb-3">⟳</div>
               <p className="text-sm">Complete the assessment to see the diagnosis and recommendations.</p>
-              <p className="text-xs mt-2 text-gray-700">
+              <p className="text-xs mt-2 text-gray-400">
                 Results include likely failure mode, plain-English reasoning, receiver profile,
                 and platform-specific implementation settings.
               </p>
@@ -187,7 +187,7 @@ function TunerPageContent() {
       </div>
 
       <div className="mt-12 pt-8 border-t border-gray-800">
-        <p className="mt-3 text-xs text-gray-600">
+        <p className="mt-3 text-xs text-gray-400">
           Web tuner: 10 recommendations per hour. Python SDK: 5 free calls per day.{' '}
           <a href="/pricing" className="text-sky-500 hover:text-sky-400">See pricing →</a>
         </p>

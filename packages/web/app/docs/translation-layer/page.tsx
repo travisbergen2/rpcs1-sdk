@@ -114,15 +114,15 @@ export default function TranslationLayerPage() {
           <h2 className="text-xl font-semibold text-white mb-3">Example behavior</h2>
           <div className="space-y-4 text-sm text-gray-400 leading-relaxed">
             <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-4">
-              <p className="text-xs text-gray-500 mb-1">Instead of</p>
+              <p className="text-xs text-gray-400 mb-1">Instead of</p>
               <p className="text-gray-300">“That is not what you mean.”</p>
             </div>
             <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-4">
-              <p className="text-xs text-gray-500 mb-1">Say</p>
+              <p className="text-xs text-gray-400 mb-1">Say</p>
               <p className="text-gray-300">“I think you may mean X. If so, here is the technical version.”</p>
             </div>
             <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-4">
-              <p className="text-xs text-gray-500 mb-1">Fallback</p>
+              <p className="text-xs text-gray-400 mb-1">Fallback</p>
               <p className="text-gray-300">If the assumption is risky, ask one narrow question and continue.</p>
             </div>
           </div>

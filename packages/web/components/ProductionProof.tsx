@@ -65,9 +65,9 @@ export function ProductionProof() {
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
         {METRICS.map((metric) => (
           <div key={metric.label} className="rounded-xl border border-gray-800 bg-gray-950 p-5">
-            <p className="text-xs text-gray-500 mb-2">{metric.label}</p>
+            <p className="text-xs text-gray-400 mb-2">{metric.label}</p>
             <p className="text-3xl font-bold text-white">{metric.value}</p>
-            <p className="mt-2 text-xs text-gray-500">{metric.detail}</p>
+            <p className="mt-2 text-xs text-gray-400">{metric.detail}</p>
           </div>
         ))}
       </div>
@@ -130,7 +130,7 @@ export function ProductionProof() {
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-950">
-        <div className="hidden md:grid grid-cols-5 border-b border-gray-800 bg-gray-900/70 text-xs font-semibold uppercase tracking-wide text-gray-500">
+        <div className="hidden md:grid grid-cols-5 border-b border-gray-800 bg-gray-900/70 text-xs font-semibold uppercase tracking-wide text-gray-400">
           <div className="p-4">Category</div>
           <div className="p-4">Examples</div>
           <div className="p-4">What they optimize</div>
@@ -140,19 +140,19 @@ export function ProductionProof() {
         {COMPARISON.map((row) => (
           <div key={row.category} className="grid grid-cols-1 md:grid-cols-5 border-b border-gray-800 last:border-b-0">
             <div className="p-4 text-sm font-semibold text-white">
-              <span className="mb-1 block text-xs font-normal uppercase tracking-wide text-gray-600 md:hidden">Category</span>
+              <span className="mb-1 block text-xs font-normal uppercase tracking-wide text-gray-400 md:hidden">Category</span>
               {row.category}
             </div>
             <div className="p-4 pt-0 text-sm text-gray-400 md:pt-4">
-              <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-600 md:hidden">Examples</span>
+              <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400 md:hidden">Examples</span>
               {row.examples}
             </div>
             <div className="p-4 pt-0 text-sm text-gray-400 md:pt-4">
-              <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-600 md:hidden">What they optimize</span>
+              <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400 md:hidden">What they optimize</span>
               {row.focus}
             </div>
             <div className="p-4 pt-0 text-sm text-gray-400 md:pt-4">
-              <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-600 md:hidden">Common gap</span>
+              <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400 md:hidden">Common gap</span>
               {row.gap}
             </div>
             <div className="p-4 text-sm text-sky-100 bg-sky-500/5">
@@ -163,7 +163,7 @@ export function ProductionProof() {
         ))}
       </div>
 
-      <p className="mt-4 text-xs text-gray-600 text-center">
+      <p className="mt-4 text-xs text-gray-400 text-center">
         Benchmark data is synthetic simulation output. Savings reflect regime-appropriate output
         budgets and must be reported with truncation and task-quality measurements in real deployments.
       </p>

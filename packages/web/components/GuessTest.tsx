@@ -41,12 +41,14 @@ export function GuessTest() {
 
   return (
     <div className="mx-auto max-w-3xl">
+      <label htmlFor="guess-input" className="sr-only">A message to test for misreadings</label>
       <textarea
+        id="guess-input"
         value={text}
         onChange={(e) => setText(e.target.value)}
         rows={3}
         placeholder="Paste the last message an AI got wrong — or any sentence you'd send one."
-        className="w-full rounded-xl border border-slate-700 bg-slate-900/60 p-4 text-slate-100 placeholder:text-slate-500 focus:border-sky-500 focus:outline-none"
+        className="w-full rounded-xl border border-slate-600 bg-slate-900/60 p-4 text-slate-100 placeholder:text-slate-400 focus:border-sky-500 focus:outline-none"
       />
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <Button onClick={() => setRan(text.trim())} disabled={text.trim().length === 0}>

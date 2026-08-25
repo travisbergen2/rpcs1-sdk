@@ -85,7 +85,7 @@ export default function InstitutionsPage() {
             Back to pricing
           </Link>
         </div>
-        <p className="mt-4 text-xs text-gray-500">
+        <p className="mt-4 text-xs text-gray-400">
           Early partners shape the pricing. If you run disability services, IT, or HR and this
           looks like something your people need, the first conversation costs nothing and
           commits you to nothing.

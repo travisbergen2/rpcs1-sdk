@@ -14,7 +14,7 @@ import Link from 'next/link';
 export function EvidenceCard({ compact = false }: { compact?: boolean }) {
   if (compact) {
     return (
-      <p className="text-xs leading-relaxed text-gray-500">
+      <p className="text-xs leading-relaxed text-gray-400">
         <span className="font-mono text-emerald-400">69% → 96%</span>{' '}
         <span className="text-gray-400">
           bare-output compliance across six frontier models when prompts were recomposed by the
@@ -39,7 +39,7 @@ export function EvidenceCard({ compact = false }: { compact?: boolean }) {
         models — roughly one extra correct-format output for every 3.7 calls (n=192 paired
         prompts, p&lt;0.00001).
       </p>
-      <p className="mt-2 text-xs leading-relaxed text-gray-500">
+      <p className="mt-2 text-xs leading-relaxed text-gray-400">
         Criteria were frozen before any data. One registered sub-prediction failed and its claim
         was withdrawn — that&apos;s part of the record too.{' '}
         <Link href="/rd#erx1" className="text-sky-500 underline-offset-4 hover:underline">

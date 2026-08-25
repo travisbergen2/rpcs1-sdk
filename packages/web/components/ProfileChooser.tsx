@@ -70,7 +70,7 @@ export function ProfileChooser() {
                 <span className="mt-4 block space-y-1.5">
                   {DIALS.map((d) => (
                     <span key={d.key} className="flex items-center gap-2">
-                      <span className="w-14 shrink-0 text-[10px] font-medium uppercase tracking-wider text-white/40">
+                      <span className="w-14 shrink-0 text-[10px] font-medium uppercase tracking-wider text-white/60">
                         {d.name}
                       </span>
                       <span className="relative h-1 flex-1 overflow-hidden rounded-full bg-white/10">

@@ -83,33 +83,33 @@ export default function PrimitivesPage() {
             </span>
             <div>
               <h2 className="text-base font-bold text-white">{p.name}</h2>
-              <p className="text-xs text-gray-500 font-mono">{p.range}</p>
+              <p className="text-xs text-gray-400 font-mono">{p.range}</p>
             </div>
           </div>
           <div className="px-6 py-5 space-y-3 text-sm">
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <p className="text-xs text-gray-600 uppercase tracking-wider mb-1 font-semibold">Driven by</p>
+                <p className="text-xs text-gray-400 uppercase tracking-wider mb-1 font-semibold">Driven by</p>
                 <p className="text-gray-400">{p.driveBy}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 uppercase tracking-wider mb-1 font-semibold">Maps to</p>
+                <p className="text-xs text-gray-400 uppercase tracking-wider mb-1 font-semibold">Maps to</p>
                 <p className="text-gray-400 font-mono text-xs">{p.mapsTo}</p>
               </div>
             </div>
             <div className="grid sm:grid-cols-2 gap-4 pt-3 border-t border-gray-800">
               <div>
-                <p className="text-xs text-gray-600 uppercase tracking-wider mb-1 font-semibold">Low value</p>
+                <p className="text-xs text-gray-400 uppercase tracking-wider mb-1 font-semibold">Low value</p>
                 <p className="text-gray-400">{p.low}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 uppercase tracking-wider mb-1 font-semibold">High value</p>
+                <p className="text-xs text-gray-400 uppercase tracking-wider mb-1 font-semibold">High value</p>
                 <p className="text-gray-400">{p.high}</p>
               </div>
             </div>
             <div className="pt-3 border-t border-gray-800">
-              <p className="text-xs text-gray-600 uppercase tracking-wider mb-1 font-semibold">Example</p>
-              <p className="text-gray-500 font-mono text-xs">{p.example}</p>
+              <p className="text-xs text-gray-400 uppercase tracking-wider mb-1 font-semibold">Example</p>
+              <p className="text-gray-400 font-mono text-xs">{p.example}</p>
             </div>
           </div>
         </div>

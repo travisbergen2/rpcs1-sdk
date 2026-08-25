@@ -33,7 +33,7 @@ export default function PricingPage() {
             <Badge variant="neutral">free forever</Badge>
           </div>
           <p className="text-4xl font-bold text-white mb-1">$0</p>
-          <p className="text-sm text-gray-500 mb-5">no account · no ads · no catch</p>
+          <p className="text-sm text-gray-400 mb-5">no account · no ads · no catch</p>
           <ul className="space-y-2.5 mb-6 flex-1">
             {[
               'The box — see how your message reads before you send it',
@@ -64,7 +64,7 @@ export default function PricingPage() {
             <Badge variant="paid">licensed</Badge>
           </div>
           <p className="text-4xl font-bold text-white mb-1">Let&apos;s talk</p>
-          <p className="text-sm text-gray-500 mb-5">companies · schools · government</p>
+          <p className="text-sm text-gray-400 mb-5">companies · schools · government</p>
           <p className="text-sm text-gray-400 mb-5 leading-relaxed">
             Your people may already use it free. Licensing makes it official: supported,
             private, and in writing — the way accommodation tools are supposed to arrive.
@@ -132,7 +132,7 @@ export default function PricingPage() {
           ].map(({ q, a }) => (
             <div key={q}>
               <p className="text-sm font-semibold text-gray-200 mb-1.5">{q}</p>
-              <p className="text-sm text-gray-500 leading-relaxed">{a}</p>
+              <p className="text-sm text-gray-400 leading-relaxed">{a}</p>
             </div>
           ))}
         </div>

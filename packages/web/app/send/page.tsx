@@ -55,7 +55,7 @@ export default function SendPage() {
           </div>
 
           {/* Trust strip */}
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-gray-500">
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-gray-400">
             <span className="inline-flex items-center gap-1.5">
               <span className="text-emerald-400">✓</span> No signup
             </span>
@@ -100,12 +100,12 @@ export default function SendPage() {
           Including the one you didn&apos;t know was in there. That&apos;s the difference between
           a nicer sentence and being understood the first time.
         </p>
-        <p className="mx-auto mt-8 max-w-xl rounded-xl border border-white/5 bg-white/[0.02] px-5 py-4 text-sm text-gray-500">
+        <p className="mx-auto mt-8 max-w-xl rounded-xl border border-white/5 bg-white/[0.02] px-5 py-4 text-sm text-gray-400">
           Model suggestions come with their receipts: measured ones say when and how they were
           measured; the rest say <span className="italic">&ldquo;not yet measured&rdquo;</span>.
           We&apos;d rather show you an empty cell than a made-up number.
         </p>
-        <p className="mt-6 text-xs text-gray-600">
+        <p className="mt-6 text-xs text-gray-400">
           SendRight hands off before the conversation starts and never sees the answer.
         </p>
       </section>

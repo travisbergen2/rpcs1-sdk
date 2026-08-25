@@ -26,7 +26,7 @@ export default function LabsPage() {
 
         {LAB_GROUPS.map((group) => (
           <section key={group} className="mt-12">
-            <h2 className="text-xs font-mono uppercase tracking-[0.24em] text-white/40">
+            <h2 className="text-xs font-mono uppercase tracking-[0.24em] text-white/60">
               {group}
             </h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

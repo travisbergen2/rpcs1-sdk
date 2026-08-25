@@ -38,7 +38,7 @@ export function ProfileCompare() {
           </div>
           <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-6">
             <div className="flex items-center justify-between gap-3">
-              <p className="font-mono text-xs uppercase tracking-wider text-white/40">
+              <p className="font-mono text-xs uppercase tracking-wider text-white/60">
                 Compared with
               </p>
               <select

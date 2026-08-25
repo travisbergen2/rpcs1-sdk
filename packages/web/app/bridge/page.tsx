@@ -151,7 +151,7 @@ export default function BridgePage() {
             {blocks.map((b, i) => (
               <div key={b.n} className="relative rounded-2xl border border-white/8 bg-white/[0.03] p-6">
                 <div className="flex items-baseline justify-between">
-                  <p className="font-mono text-xs text-white/30">{b.n}</p>
+                  <p className="font-mono text-xs text-white/50">{b.n}</p>
                   <p className="font-mono text-xs text-sky-300">{b.keys}</p>
                 </div>
                 <h3 className="mt-2 text-xl font-bold">{b.name}</h3>
@@ -188,7 +188,7 @@ export default function BridgePage() {
           </p>
           <div className="mt-10 overflow-hidden rounded-2xl border border-white/8">
             <div className="grid grid-cols-1 border-b border-white/8 md:grid-cols-2">
-              <p className="p-4 font-mono text-xs uppercase tracking-[0.2em] text-white/40">
+              <p className="p-4 font-mono text-xs uppercase tracking-[0.2em] text-white/60">
                 Standard prompting
               </p>
               <p className="p-4 font-mono text-xs uppercase tracking-[0.2em] text-sky-400">
@@ -283,7 +283,7 @@ export default function BridgePage() {
   "meta": { "source": "intake", "generator": "@rpcs1/core" }
 }`}
           </pre>
-          <p className="mt-3 font-mono text-xs text-white/40">
+          <p className="mt-3 font-mono text-xs text-white/60">
             {'// matches ReceiverProfile + deriveRenderingDirectives in @rpcs1/core · schema: '}
             <a href="/v1/receiver-profile.json" className="text-sky-400 hover:underline">
               /v1/receiver-profile.json

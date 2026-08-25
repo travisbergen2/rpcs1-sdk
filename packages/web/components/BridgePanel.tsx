@@ -99,7 +99,7 @@ export default function BridgePanel({
     >
       <summary className="cursor-pointer select-none px-4 py-3 text-sm text-neutral-300 hover:text-white">
         Tune for sending
-        <span className="ml-2 text-xs text-neutral-500">
+        <span className="ml-2 text-xs text-neutral-400">
           four dials, measured effect — 69%→96% format compliance in registered testing
         </span>
       </summary>
@@ -131,7 +131,7 @@ export default function BridgePanel({
                 className="mt-1 w-full accent-emerald-400"
                 aria-label={`${axis.label}: ${coords[axis.id] === 0 ? axis.lowLabel : axis.highLabel}`}
               />
-              <div className="flex justify-between text-[11px] text-neutral-500">
+              <div className="flex justify-between text-[11px] text-neutral-400">
                 <span>{axis.lowLabel}</span>
                 <span>{axis.highLabel}</span>
               </div>
@@ -139,7 +139,7 @@ export default function BridgePanel({
           ))}
         </div>
 
-        <p className="mt-3 text-[11px] text-neutral-600">
+        <p className="mt-3 text-[11px] text-neutral-400">
           Dial and reading labels verified faithful by a blinded multi-vendor panel
           (registered test E-INT-1, 2026-08-02).
         </p>
@@ -149,7 +149,7 @@ export default function BridgePanel({
           <div className="mt-4" data-testid="bridge-preview">
             {changed ? (
               <>
-                <p className="mb-1 text-xs text-neutral-500">
+                <p className="mb-1 text-xs text-neutral-400">
                   {result.moves.map((m) => m.note).join(' · ')}
                 </p>
                 {diff && (
@@ -179,13 +179,13 @@ export default function BridgePanel({
                   >
                     Use this version
                   </button>
-                  <span className="text-xs text-neutral-500">
+                  <span className="text-xs text-neutral-400">
                     You can still edit every word after applying.
                   </span>
                 </div>
               </>
             ) : (
-              <p className="text-xs text-neutral-500">
+              <p className="text-xs text-neutral-400">
                 Nothing in this prompt matches those dials — it already sends clean.
               </p>
             )}

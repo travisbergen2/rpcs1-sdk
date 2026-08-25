@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { EvidenceCard } from '@/components/EvidenceCard';
 
 export default function TranslatorPage() {
@@ -8,6 +8,7 @@ export default function TranslatorPage() {
   const [result, setResult] = useState<object | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
 
   // Form states
   const [interpretText, setInterpretText] = useState("I'm fine");
@@ -53,23 +54,44 @@ export default function TranslatorPage() {
     { id: 'score', label: 'Score' },
   ];
 
+  // Roving-tabindex arrow-key navigation (ARIA tabs pattern): Left/Right/Home/End
+  // move focus AND selection; Tab leaves the tablist.
+  const onTabKeyDown = useCallback((e: React.KeyboardEvent, currentIndex: number) => {
+    let next: number | null = null;
+    if (e.key === 'ArrowRight') next = (currentIndex + 1) % TABS.length;
+    else if (e.key === 'ArrowLeft') next = (currentIndex - 1 + TABS.length) % TABS.length;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = TABS.length - 1;
+    if (next === null) return;
+    e.preventDefault();
+    const id = TABS[next].id;
+    setActiveTab(id);
+    tabRefs.current.get(id)?.focus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const inputCls = 'w-full bg-gray-950 border border-gray-500 rounded-lg px-4 py-2.5 text-white text-sm';
+  const selectCls = 'bg-gray-950 border border-gray-500 rounded-lg px-3 py-1.5 text-sm text-white';
+  const buttonCls = 'bg-sky-500 hover:bg-sky-400 text-slate-950 px-5 py-2 rounded-lg text-sm font-semibold';
+
   function renderTabContent() {
     switch (activeTab) {
       case 'interpret':
         return (
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-300">Message to interpret</label>
-            <input value={interpretText} onChange={(e) => setInterpretText(e.target.value)}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm" />
+            <label htmlFor="interpret-text" className="block text-sm font-medium text-gray-300">Message to interpret</label>
+            <input id="interpret-text" value={interpretText} onChange={(e) => setInterpretText(e.target.value)}
+              className={inputCls} />
             <div className="flex items-center gap-3">
-              <label className="text-sm text-gray-400">Risk:</label>
-              <select value={interpretRisk} onChange={(e) => setInterpretRisk(e.target.value)}
-                className="bg-gray-950 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white">
+              <label htmlFor="interpret-risk" className="text-sm text-gray-400">Risk:</label>
+              <select id="interpret-risk" value={interpretRisk} onChange={(e) => setInterpretRisk(e.target.value)}
+                className={selectCls}>
                 {['casual','advice','high-stakes','safety-critical'].map(r => <option key={r} value={r}>{r}</option>)}
               </select>
               <button onClick={() => callApi('interpret', { text: interpretText, risk: interpretRisk })}
-                className="ml-auto bg-sky-500 hover:bg-sky-400 text-slate-950 px-5 py-2 rounded-lg text-sm font-semibold">
-                {loading ? '...' : 'Interpret'}
+                disabled={loading} aria-busy={loading}
+                className={`ml-auto ${buttonCls}`}>
+                {loading ? 'Working…' : 'Interpret'}
               </button>
             </div>
           </div>
@@ -77,42 +99,43 @@ export default function TranslatorPage() {
       case 'normalize':
         return (
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-300">Fragmented text</label>
-            <textarea value={normalizeText} onChange={(e) => setNormalizeText(e.target.value)}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm min-h-[80px]" />
+            <label htmlFor="normalize-text" className="block text-sm font-medium text-gray-300">Fragmented text</label>
+            <textarea id="normalize-text" value={normalizeText} onChange={(e) => setNormalizeText(e.target.value)}
+              className={`${inputCls} min-h-[80px]`} />
             <button onClick={() => callApi('normalize', { text: normalizeText })}
-              className="bg-sky-500 hover:bg-sky-400 text-slate-950 px-5 py-2 rounded-lg text-sm font-semibold">
-              {loading ? '...' : 'Normalize'}
+              disabled={loading} aria-busy={loading} className={buttonCls}>
+              {loading ? 'Working…' : 'Normalize'}
             </button>
           </div>
         );
       case 'split':
         return (
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-300">Mixed intents</label>
-            <textarea value={splitText} onChange={(e) => setSplitText(e.target.value)}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm min-h-[80px]" />
+            <label htmlFor="split-text" className="block text-sm font-medium text-gray-300">Mixed intents</label>
+            <textarea id="split-text" value={splitText} onChange={(e) => setSplitText(e.target.value)}
+              className={`${inputCls} min-h-[80px]`} />
             <button onClick={() => callApi('split', { text: splitText })}
-              className="bg-sky-500 hover:bg-sky-400 text-slate-950 px-5 py-2 rounded-lg text-sm font-semibold">
-              {loading ? '...' : 'Split'}
+              disabled={loading} aria-busy={loading} className={buttonCls}>
+              {loading ? 'Working…' : 'Split'}
             </button>
           </div>
         );
       case 'rewrite':
         return (
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-300">Text to rewrite</label>
-            <textarea value={rewriteText} onChange={(e) => setRewriteText(e.target.value)}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm min-h-[80px]" />
+            <label htmlFor="rewrite-text" className="block text-sm font-medium text-gray-300">Text to rewrite</label>
+            <textarea id="rewrite-text" value={rewriteText} onChange={(e) => setRewriteText(e.target.value)}
+              className={`${inputCls} min-h-[80px]`} />
             <div className="flex items-center gap-3">
-              <label className="text-sm text-gray-400">Style:</label>
-              <select value={rewriteStyle} onChange={(e) => setRewriteStyle(e.target.value)}
-                className="bg-gray-950 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white">
+              <label htmlFor="rewrite-style" className="text-sm text-gray-400">Style:</label>
+              <select id="rewrite-style" value={rewriteStyle} onChange={(e) => setRewriteStyle(e.target.value)}
+                className={selectCls}>
                 {['technical','plain','socially_gentle','concise','detailed','direct'].map(s => <option key={s} value={s}>{s}</option>)}
               </select>
               <button onClick={() => callApi('rewrite', { text: rewriteText, style: rewriteStyle })}
-                className="ml-auto bg-sky-500 hover:bg-sky-400 text-slate-950 px-5 py-2 rounded-lg text-sm font-semibold">
-                {loading ? '...' : 'Rewrite'}
+                disabled={loading} aria-busy={loading}
+                className={`ml-auto ${buttonCls}`}>
+                {loading ? 'Working…' : 'Rewrite'}
               </button>
             </div>
           </div>
@@ -121,39 +144,41 @@ export default function TranslatorPage() {
         return (
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <label className="text-sm text-gray-400">Task type:</label>
-              <select value={routeType} onChange={(e) => setRouteType(e.target.value)}
-                className="bg-gray-950 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white">
+              <label htmlFor="route-type" className="text-sm text-gray-400">Task type:</label>
+              <select id="route-type" value={routeType} onChange={(e) => setRouteType(e.target.value)}
+                className={selectCls}>
                 {['code','creative_writing','analysis','chat','translation','reasoning','planning','emotional'].map(t => <option key={t} value={t}>{t}</option>)}
               </select>
             </div>
-            <input value={routeObjective} onChange={(e) => setRouteObjective(e.target.value)}
+            <label htmlFor="route-objective" className="sr-only">Objective (optional)</label>
+            <input id="route-objective" value={routeObjective} onChange={(e) => setRouteObjective(e.target.value)}
               placeholder="Objective (optional)"
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm" />
+              className={inputCls} />
             <button onClick={() => callApi('route', { task_type: routeType, objective: routeObjective })}
-              className="bg-sky-500 hover:bg-sky-400 text-slate-950 px-5 py-2 rounded-lg text-sm font-semibold">
-              {loading ? '...' : 'Route'}
+              disabled={loading} aria-busy={loading} className={buttonCls}>
+              {loading ? 'Working…' : 'Route'}
             </button>
           </div>
         );
       case 'score':
         return (
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-300">Candidates JSON</label>
-            <textarea value={scoreCandidates} onChange={(e) => setScoreCandidates(e.target.value)}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm font-mono min-h-[180px]" />
+            <label htmlFor="score-candidates" className="block text-sm font-medium text-gray-300">Candidates JSON</label>
+            <textarea id="score-candidates" value={scoreCandidates} onChange={(e) => setScoreCandidates(e.target.value)}
+              className={`${inputCls} font-mono min-h-[180px]`} />
             <div className="flex items-center gap-3">
-              <label className="text-sm text-gray-400">Risk:</label>
-              <select value={scoreRisk} onChange={(e) => setScoreRisk(e.target.value)}
-                className="bg-gray-950 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white">
+              <label htmlFor="score-risk" className="text-sm text-gray-400">Risk:</label>
+              <select id="score-risk" value={scoreRisk} onChange={(e) => setScoreRisk(e.target.value)}
+                className={selectCls}>
                 {['casual','advice','high-stakes','safety-critical'].map(r => <option key={r} value={r}>{r}</option>)}
               </select>
               <button onClick={() => {
                 try { JSON.parse(scoreCandidates); } catch { setError('Invalid JSON'); return; }
                 callApi('score', { candidates: JSON.parse(scoreCandidates), risk: scoreRisk });
               }}
-                className="ml-auto bg-sky-500 hover:bg-sky-400 text-slate-950 px-5 py-2 rounded-lg text-sm font-semibold">
-                {loading ? '...' : 'Score'}
+                disabled={loading} aria-busy={loading}
+                className={`ml-auto ${buttonCls}`}>
+                {loading ? 'Working…' : 'Score'}
               </button>
             </div>
           </div>
@@ -173,39 +198,54 @@ export default function TranslatorPage() {
         <p className="text-lg text-gray-400 max-w-2xl">
           Intent extraction, ambiguity resolution, audience-aware rewriting, and task routing —
           powered by the{' '}
-          <a href="/docs/translation-layer" className="text-sky-400 hover:underline">HF-HATP v1.9</a> protocol.
+          <a href="/docs/translation-layer" className="text-sky-400 underline underline-offset-4 hover:text-sky-300">HF-HATP v1.9</a> protocol.
         </p>
       </div>
 
-      {/* Tabs */}
-      <div className="flex flex-wrap gap-2 mb-6 border-b border-gray-800 pb-2">
-        {TABS.map((tab) => (
-          <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 text-sm rounded-t-lg transition-colors ${activeTab === tab.id ? 'bg-sky-500/10 text-sky-300 border-b-2 border-sky-500' : 'text-gray-500 hover:text-gray-300'}`}>
+      {/* Tabs — ARIA tabs pattern: roving tabindex, arrow keys move selection */}
+      <div role="tablist" aria-label="Translator tools" className="flex flex-wrap gap-2 mb-6 border-b border-gray-800 pb-2">
+        {TABS.map((tab, i) => (
+          <button key={tab.id}
+            ref={(el) => { if (el) tabRefs.current.set(tab.id, el); }}
+            role="tab"
+            id={`tab-${tab.id}`}
+            aria-selected={activeTab === tab.id}
+            aria-controls="tool-panel"
+            tabIndex={activeTab === tab.id ? 0 : -1}
+            onClick={() => setActiveTab(tab.id)}
+            onKeyDown={(e) => onTabKeyDown(e, i)}
+            className={`px-4 py-2 text-sm rounded-t-lg transition-colors ${activeTab === tab.id ? 'bg-sky-500/10 text-sky-300 border-b-2 border-sky-500' : 'text-gray-400 hover:text-gray-300'}`}>
             {tab.label}
           </button>
         ))}
       </div>
 
       {/* Input */}
-      <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-5 mb-5">
+      <div role="tabpanel" id="tool-panel" aria-labelledby={`tab-${activeTab}`}
+        className="bg-gray-900/60 border border-gray-800 rounded-xl p-5 mb-5">
         {renderTabContent()}
       </div>
 
       {/* Error */}
       {error && (
-        <div className="bg-red-900/20 border border-red-800 rounded-xl p-4 mb-5">
+        <div role="alert" className="bg-red-900/20 border border-red-800 rounded-xl p-4 mb-5">
           <p className="text-red-400 text-sm font-mono">{error}</p>
         </div>
       )}
+
+      {/* Screen-reader announcement when a result lands (the JSON itself stays out of the live region) */}
+      <p className="sr-only" role="status">
+        {loading ? 'Working…' : result ? 'Result ready below.' : ''}
+      </p>
 
       {/* Result */}
       {result && (
         <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-5">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-gray-300">Result</h3>
+            <h2 className="text-sm font-semibold text-gray-300">Result</h2>
             <button onClick={() => navigator.clipboard.writeText(JSON.stringify(result, null, 2))}
-              className="text-xs text-gray-500 hover:text-gray-300">Copy</button>
+              aria-label="Copy result JSON to clipboard"
+              className="text-xs text-gray-400 hover:text-gray-300">Copy</button>
           </div>
           <pre className="bg-gray-950 border border-gray-800 rounded-lg p-4 overflow-x-auto text-sm text-gray-300 font-mono whitespace-pre-wrap">
             {JSON.stringify(result, null, 2)}
@@ -218,7 +258,7 @@ export default function TranslatorPage() {
 
       {/* Quick reference */}
       <div className="mt-12 border border-gray-800 rounded-xl p-5 bg-gray-900/30">
-        <h3 className="text-sm font-semibold text-white mb-3">About the RPCS-1 Translation Layer</h3>
+        <h2 className="text-sm font-semibold text-white mb-3">About the RPCS-1 Translation Layer</h2>
         <div className="grid sm:grid-cols-3 gap-4 text-sm text-gray-400">
           <div>
             <p className="text-sky-300 font-mono text-xs mb-1">AR Scale</p>

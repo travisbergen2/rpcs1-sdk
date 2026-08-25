@@ -52,7 +52,7 @@ function Param({ label, value }: { label: string; value: string | number | undef
   if (value === undefined) return null;
   return (
     <div className="flex items-center justify-between py-2 border-b border-gray-800 last:border-0">
-      <span className="text-xs text-gray-500 font-mono">{label}</span>
+      <span className="text-xs text-gray-400 font-mono">{label}</span>
       <span className="flex items-center text-sm text-gray-200 font-mono">
         {String(value)}
         <CopyButton value={value} />
@@ -72,7 +72,7 @@ function PrimitiveMeter({ label, value, description }: { label: string; value: n
     <div className="group">
       <div className="flex justify-between items-center mb-1">
         <span className="text-xs font-mono text-gray-400 font-semibold">{label}</span>
-        <span className="text-xs text-gray-500 font-mono">{pct}</span>
+        <span className="text-xs text-gray-400 font-mono">{pct}</span>
       </div>
       <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
         <div
@@ -80,7 +80,7 @@ function PrimitiveMeter({ label, value, description }: { label: string; value: n
           style={{ width: `${pct}%` }}
         />
       </div>
-      <p className="text-xs text-gray-600 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">{description}</p>
+      <p className="text-xs text-gray-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">{description}</p>
     </div>
   );
 }
@@ -148,7 +148,7 @@ export function RecommendationOutput({ recommendation: rec }: Props) {
       {/* Receiver profile */}
       <Card>
         <CardContent className="p-5">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
+          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
             Receiver Profile
           </h3>
           <div className="space-y-3">
@@ -164,7 +164,7 @@ export function RecommendationOutput({ recommendation: rec }: Props) {
       {/* Platform parameters */}
       <Card>
         <CardContent className="p-5">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
             Platform Parameters
           </h3>
           <Param label="temperature"        value={rec.platform_parameters.temperature} />
@@ -182,7 +182,7 @@ export function RecommendationOutput({ recommendation: rec }: Props) {
         <Card>
           <CardContent className="p-5">
             <div className="flex items-center justify-between gap-3 mb-4">
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
                 Translation Layer
               </h3>
               <Badge variant={translationBadge}>{getTranslationLabel(translationPosture)}</Badge>
@@ -196,11 +196,11 @@ export function RecommendationOutput({ recommendation: rec }: Props) {
             </div>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <div className="rounded-lg border border-gray-800 bg-gray-950 p-3">
-                <p className="text-xs text-gray-500 mb-1">Before</p>
+                <p className="text-xs text-gray-400 mb-1">Before</p>
                 <p className="text-sm text-gray-300 leading-relaxed">{translationExample.before}</p>
               </div>
               <div className="rounded-lg border border-gray-800 bg-gray-950 p-3">
-                <p className="text-xs text-gray-500 mb-1">After</p>
+                <p className="text-xs text-gray-400 mb-1">After</p>
                 <p className="text-sm text-gray-300 leading-relaxed">{translationExample.after}</p>
               </div>
             </div>
@@ -212,7 +212,7 @@ export function RecommendationOutput({ recommendation: rec }: Props) {
       {rec.platform_parameters.system_prompt_additions?.length ? (
         <Card>
           <CardContent className="p-5">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
               System Prompt Additions
             </h3>
             <div className="space-y-2">
@@ -242,13 +242,13 @@ export function RecommendationOutput({ recommendation: rec }: Props) {
       {/* Reasoning */}
       <Card>
         <CardContent className="p-5">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Reasoning</h3>
+          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Reasoning</h3>
           <p className="text-sm text-gray-400 leading-relaxed">{rec.reasoning}</p>
         </CardContent>
       </Card>
 
       {/* Written diagnostic (organizations) — plain pointer, no pitch */}
-      <p className="text-xs leading-relaxed text-gray-500">
+      <p className="text-xs leading-relaxed text-gray-400">
         Organizations can get this as a written memo for a deployed agent —{' '}
         <Link href="/pricing" className="text-gray-400 underline-offset-4 hover:text-gray-300 hover:underline">
           part of licensing
@@ -260,7 +260,7 @@ export function RecommendationOutput({ recommendation: rec }: Props) {
       <div>
         <button
           onClick={() => setShowPrinciples(v => !v)}
-          className="text-xs text-gray-600 hover:text-gray-400 transition-colors flex items-center gap-1"
+          className="text-xs text-gray-400 hover:text-gray-400 transition-colors flex items-center gap-1"
         >
           <span>{showPrinciples ? '▾' : '▸'}</span>
           IMM principles applied ({rec.imm_principles_applied.length})
@@ -268,7 +268,7 @@ export function RecommendationOutput({ recommendation: rec }: Props) {
         {showPrinciples && (
           <div className="mt-3 space-y-1">
             {rec.imm_principles_applied.map((p, i) => (
-              <p key={i} className="text-xs text-gray-600 font-mono pl-3 border-l border-gray-800">{p}</p>
+              <p key={i} className="text-xs text-gray-400 font-mono pl-3 border-l border-gray-800">{p}</p>
             ))}
           </div>
         )}

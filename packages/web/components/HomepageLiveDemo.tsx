@@ -216,7 +216,7 @@ export function HomepageLiveDemo() {
             )}
           >
             <p className="text-sm font-semibold text-white">{DEMOS[key].title}</p>
-            <p className="mt-1 text-[11px] leading-relaxed text-gray-500">{DEMOS[key].description}</p>
+            <p className="mt-1 text-[11px] leading-relaxed text-gray-400">{DEMOS[key].description}</p>
           </button>
         ))}
       </div>
@@ -251,12 +251,12 @@ export function HomepageLiveDemo() {
 
           <div className="rounded-2xl border border-gray-800 bg-gray-900/60 p-4">
             <p className="text-xs font-mono text-sky-400 mb-3">
-              Receiver profile <span className="text-gray-600">— estimate → detect → commit</span>
+              Receiver profile <span className="text-gray-400">— estimate → detect → commit</span>
             </p>
             <div className="grid grid-cols-3 gap-2">
               {BLOCKS.map((block) => (
                 <div key={block.name} className="rounded-xl border border-gray-800 bg-black/25 p-2.5">
-                  <p className="mb-2 text-[10px] font-mono uppercase tracking-wider text-gray-500">
+                  <p className="mb-2 text-[10px] font-mono uppercase tracking-wider text-gray-400">
                     {block.name}
                   </p>
                   <div className="space-y-2">
@@ -294,7 +294,7 @@ export function HomepageLiveDemo() {
             </div>
           )}
 
-          <div className="flex items-center justify-between gap-3 text-xs text-gray-500">
+          <div className="flex items-center justify-between gap-3 text-xs text-gray-400">
             <span>{active.title}</span>
             <Link href={`/tuner?preset=${selected}`} className="text-sky-400 hover:text-sky-300 underline underline-offset-4">
               Open full tuner →

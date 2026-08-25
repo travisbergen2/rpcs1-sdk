@@ -245,7 +245,7 @@ export default function TranslatorPage() {
             <h2 className="text-sm font-semibold text-gray-300">Result</h2>
             <button onClick={() => navigator.clipboard.writeText(JSON.stringify(result, null, 2))}
               aria-label="Copy result JSON to clipboard"
-              className="text-xs text-gray-400 hover:text-gray-300">Copy</button>
+              className="-m-2 p-2 text-xs text-gray-400 hover:text-gray-300">Copy</button>
           </div>
           <pre className="bg-gray-950 border border-gray-800 rounded-lg p-4 overflow-x-auto text-sm text-gray-300 font-mono whitespace-pre-wrap">
             {JSON.stringify(result, null, 2)}

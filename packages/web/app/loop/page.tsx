@@ -15,7 +15,7 @@
  * never spans/ratchet/parameters.
  */
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 interface UiSpan {
   id: string;
@@ -46,6 +46,25 @@ export default function LoopPage() {
   const [answer, setAnswer] = useState<string | null>(null);
   const [answerBusy, setAnswerBusy] = useState(false);
   const [copied, setCopied] = useState(false);
+  const dumpRef = useRef<HTMLTextAreaElement | null>(null);
+  const roundsHeadingRef = useRef<HTMLHeadingElement | null>(null);
+  const finalHeadingRef = useRef<HTMLHeadingElement | null>(null);
+
+  // Screen-reader focus management: each stage swap unmounts the control the
+  // user just activated, which would silently drop focus to <body>. Move it
+  // to the new stage's heading (input stage: back into the dump box).
+  // Guarded against the initial mount — autofocusing on page load would
+  // steal focus from the top of the document and bypass the skip link.
+  const stageMounted = useRef(false);
+  useEffect(() => {
+    if (!stageMounted.current) {
+      stageMounted.current = true;
+      return;
+    }
+    if (stage === 'rounds') roundsHeadingRef.current?.focus();
+    else if (stage === 'final') finalHeadingRef.current?.focus();
+    else if (stage === 'input') dumpRef.current?.focus();
+  }, [stage]);
 
   const finalPrompt = useMemo(
     () => spans.map((s) => s.text.trim()).filter(Boolean).join(' '),
@@ -182,6 +201,7 @@ export default function LoopPage() {
       {stage === 'input' && (
         <section>
           <textarea
+            ref={dumpRef}
             value={dump}
             onChange={(e) => setDump(e.target.value)}
             placeholder="Dump it here exactly how it comes out — half-sentences, tangents, all of it."
@@ -213,7 +233,11 @@ export default function LoopPage() {
             </div>
           </div>
           <div>
-            <h2 className="mb-2 text-sm font-medium uppercase tracking-wide opacity-60">
+            <h2
+              ref={roundsHeadingRef}
+              tabIndex={-1}
+              className="mb-2 text-sm font-medium uppercase tracking-wide opacity-60 outline-none"
+            >
               What it heard — tap the lines that are right
             </h2>
             {held && (
@@ -236,7 +260,7 @@ export default function LoopPage() {
                     }
                     aria-pressed={locked}
                   >
-                    {locked ? '✓ ' : ''}
+                    {locked ? <span aria-hidden>{'✓ '}</span> : null}
                     {s.text}
                   </button>
                 );
@@ -274,7 +298,11 @@ export default function LoopPage() {
 
       {stage === 'final' && (
         <section className="max-w-3xl">
-          <h2 className="mb-2 text-sm font-medium uppercase tracking-wide opacity-60">
+          <h2
+            ref={finalHeadingRef}
+            tabIndex={-1}
+            className="mb-2 text-sm font-medium uppercase tracking-wide opacity-60 outline-none"
+          >
             Your prompt, ready to land
           </h2>
           <div className="whitespace-pre-wrap rounded-xl border border-neutral-600 bg-white/5 p-4 text-base leading-relaxed">
@@ -294,10 +322,13 @@ export default function LoopPage() {
             >
               {answerBusy ? 'Answering…' : 'Answer it here'}
             </button>
-            <button onClick={() => setStage('rounds')} className="text-sm underline opacity-70">
+            <button
+              onClick={() => setStage('rounds')}
+              className="inline-flex min-h-11 items-center px-2 text-sm underline opacity-70"
+            >
               Back to the lines
             </button>
-            <button onClick={reset} className="text-sm underline opacity-70">
+            <button onClick={reset} className="inline-flex min-h-11 items-center px-2 text-sm underline opacity-70">
               Start over
             </button>
           </div>

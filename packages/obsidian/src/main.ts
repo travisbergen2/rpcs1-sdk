@@ -23,7 +23,7 @@ import {
   type CandidateNote,
   type SelectedSnippet,
   type SelectionLogEntry,
-} from './selector.js';
+} from '@rpcs1/core';
 import {
   composeContextPack,
   composeLearningsLine,

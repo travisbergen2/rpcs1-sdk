@@ -1,13 +1,19 @@
-// ── P2 context selector (pure: no Obsidian imports — fully unit-testable) ─────
+// ── Vault grounding primitives (canonical home) ───────────────────────────────
 //
-// Deterministic local selection of vault snippets to ground the loop's
-// interpretation (Phase B spec §3). All selection runs on-device; only the
-// snippets returned here ever leave the machine, and every one of them is
-// accounted for in the selection log (the what-left-your-machine law, §4).
+// Deterministic local selection of vault snippets to ground an interpretation
+// (Phase B spec §3), plus the note-naming helpers write-backs share. This is
+// the CANONICAL copy: the Obsidian plugin (packages/obsidian) and the
+// second-brain MCP server (packages/vault-mcp) both consume these exact
+// functions, so the privacy-relevant selection behavior cannot drift between
+// surfaces. All selection runs on-device; only the snippets returned here ever
+// leave the machine, and every one of them is accounted for in the selection
+// log (the what-left-your-machine law, §4).
 //
 // Scoring constants are PRODUCT constants — engineering calibration with the
 // rationale stated beside each, not registered-experiment constants. The two
 // epistemic registers stay separate (spec §3).
+
+import { CONTEXT_SNIPPET_LIMITS } from './loop.js';
 
 export interface CandidateNote {
   /** Vault path, e.g. "projects/Weekly review tool.md". */
@@ -46,9 +52,14 @@ export interface SelectionResult {
   log: SelectionLogEntry[];
 }
 
-// Caps mirror @rpcs1/core CONTEXT_SNIPPET_LIMITS (6 / 2400) — the server
-// enforces them again; the plugin never relies on the server for privacy.
-export const SELECT_CAPS = { maxSnippets: 6, maxTotalChars: 2400, maxPerNoteChars: 600 } as const;
+// Caps ARE @rpcs1/core CONTEXT_SNIPPET_LIMITS (6 / 2400) — one constant, one
+// law. The server enforces them again; clients never rely on the server for
+// privacy.
+export const SELECT_CAPS = {
+  maxSnippets: CONTEXT_SNIPPET_LIMITS.maxSnippets,
+  maxTotalChars: CONTEXT_SNIPPET_LIMITS.maxTotalChars,
+  maxPerNoteChars: 600,
+} as const;
 
 /**
  * Minimum score before a note may ship bytes off-machine.
@@ -170,16 +181,22 @@ export function isAllowed(path: string, allowedFolders: ReadonlyArray<string>): 
  * Select snippets for a dump from pre-gathered, ALREADY-ALLOWLISTED
  * candidates. Deterministic: score desc, ties by path asc. Every returned
  * snippet has a log entry — the disclosure is the same object that ships.
+ *
+ * minScore defaults to MIN_SCORE (the plugin's floor, unchanged). The MCP
+ * server passes a caller-specific floor: with no active note every candidate
+ * sits at hop 3 (graph score 0), so the hop-based part of the 2.5 rationale
+ * cannot apply there — see packages/vault-mcp for its stated floor.
  */
 export function selectSnippets(
   dump: string,
   candidates: ReadonlyArray<CandidateNote>,
   now: number,
+  minScore: number = MIN_SCORE,
 ): SelectionResult {
   const tokens = tokenize(dump);
   const scored = candidates
     .map((c) => ({ c, score: scoreCandidate(tokens, c, now) }))
-    .filter((s) => s.score >= MIN_SCORE)
+    .filter((s) => s.score >= minScore)
     .sort((a, b) => b.score - a.score || (a.c.path < b.c.path ? -1 : 1));
   const snippets: SelectedSnippet[] = [];
   const log: SelectionLogEntry[] = [];
@@ -195,4 +212,24 @@ export function selectSnippets(
     log.push({ source: c.title, path: c.path, chars: text.length, score: Math.round(score * 100) / 100 });
   }
   return { snippets, log };
+}
+
+// ── Note-naming helpers shared by write-backs ─────────────────────────────────
+
+/** Filename-safe slug from the prompt's opening words: [a-z0-9-], <= maxLen. */
+export function slugify(text: string, maxLen = 40): string {
+  const slug = text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .split(/\s+/)
+    .join('-')
+    .slice(0, maxLen)
+    .replace(/-+$/, '');
+  return slug || 'session';
+}
+
+/** Wikilink target from a vault path (drop the .md; Obsidian resolves it). */
+export function wikilink(path: string): string {
+  return `[[${path.replace(/\.md$/, '')}]]`;
 }

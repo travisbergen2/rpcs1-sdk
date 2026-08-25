@@ -10,7 +10,7 @@ import {
   MIN_SCORE,
   SELECT_CAPS,
   type CandidateNote,
-} from '../src/selector.js';
+} from '../src/vault-select.js';
 
 const NOW = 1_760_000_000_000;
 const DAY = 86_400_000;

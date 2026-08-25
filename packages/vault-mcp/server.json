@@ -1,0 +1,53 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.travisbergen2/second-brain",
+  "title": "Explicit Formula — Second Brain",
+  "description": "Your own notes, searched and cited by your AI — local-only, allowlist-gated, capped, and logged.",
+  "websiteUrl": "https://www.explicitformula.com",
+  "repository": {
+    "url": "https://github.com/travisbergen2/rpcs1-sdk",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "second-brain-mcp",
+      "version": "0.1.0",
+      "runtimeHint": "npx",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "named",
+          "name": "--vault",
+          "description": "Absolute path to the Obsidian vault (or any folder of .md notes).",
+          "isRequired": true,
+          "format": "filepath",
+          "valueHint": "/absolute/path/to/YourVault"
+        },
+        {
+          "type": "named",
+          "name": "--allow",
+          "description": "Optional override of the folder allowlist (comma-separated, relative to the vault). Normally omitted: the server follows the Explicit Formula Obsidian plugin's 'Folders the loop may read' setting live. Without either, all reads are off.",
+          "isRequired": false,
+          "valueHint": "notes,projects"
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "tools": [
+        "search_second_brain",
+        "read_second_brain_note",
+        "list_second_brain",
+        "save_to_second_brain"
+      ],
+      "privacy": "local-only; folder allowlist off by default; ≤6 snippets/2400 chars per search; per-call disclosure; vault-side access log (mcp-audit.md)",
+      "docs": "https://github.com/travisbergen2/rpcs1-sdk/tree/main/packages/vault-mcp"
+    }
+  }
+}

@@ -1,9 +1,10 @@
 {
-  "name": "@rpcs1/second-brain-mcp",
+  "name": "second-brain-mcp",
   "version": "0.1.0",
   "description": "Your second brain, in every AI you use — a local MCP server for your Obsidian vault (or any markdown folder). Allowlist-gated, capped, disclosed, audited.",
   "license": "MIT",
   "type": "module",
+  "mcpName": "io.github.travisbergen2/second-brain",
   "repository": {
     "type": "git",
     "url": "https://github.com/travisbergen2/rpcs1-sdk.git",
@@ -13,6 +14,15 @@
   "bugs": {
     "url": "https://github.com/travisbergen2/rpcs1-sdk/issues"
   },
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "obsidian",
+    "second-brain",
+    "notes",
+    "claude",
+    "local-first"
+  ],
   "bin": {
     "second-brain-mcp": "./dist/index.js"
   },
@@ -21,17 +31,19 @@
     "README.md"
   ],
   "scripts": {
-    "build": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.json",
+    "build": "node esbuild.config.mjs",
+    "prepublishOnly": "node esbuild.config.mjs",
     "test": "vitest run --config ./vitest.config.ts",
     "lint": "tsc --noEmit -p tsconfig.lint.json"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
-    "@rpcs1/core": "*",
     "zod": "^3.23.6"
   },
   "devDependencies": {
+    "@rpcs1/core": "*",
     "@types/node": "^20",
+    "esbuild": "^0.27.7",
     "typescript": "^5.4.0",
     "vitest": "^4.1.8"
   },

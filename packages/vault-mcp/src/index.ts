@@ -1,6 +1,5 @@
-#!/usr/bin/env node
-
 // ── Explicit Formula — Second Brain (local MCP server) ────────────────────────
+// (shebang is added by esbuild.config.mjs at build time)
 //
 // Exposes the user's own notes (an Obsidian vault, or any folder of markdown)
 // to ANY MCP-capable AI app — Claude Desktop, Claude Code, Cursor, and the

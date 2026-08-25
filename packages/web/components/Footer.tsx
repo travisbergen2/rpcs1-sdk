@@ -29,13 +29,13 @@ export function Footer() {
             <div className="mt-4 flex flex-wrap gap-3">
               <Link
                 href="/#box"
-                className="text-sm font-medium text-gray-300 underline-offset-4 hover:text-white hover:underline"
+                className="inline-flex min-h-11 items-center text-sm font-medium text-gray-300 underline-offset-4 hover:text-white hover:underline"
               >
                 Try the box →
               </Link>
               <Link
                 href="/diagnostic"
-                className="text-sm font-medium text-amber-300/90 underline-offset-4 hover:text-amber-200 hover:underline"
+                className="inline-flex min-h-11 items-center text-sm font-medium text-amber-300/90 underline-offset-4 hover:text-amber-200 hover:underline"
               >
                 Founding pilot →
               </Link>

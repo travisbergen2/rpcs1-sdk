@@ -11,9 +11,8 @@ export function Footer() {
               {BRAND_NAME} — {BRAND_TAGLINE.replace(/\.$/, '').toLowerCase()}
             </p>
             <p className="mt-1 text-xs text-gray-600">
-              The box is free — no account, and the check runs in your
-              browser. Founding agent diagnostic: first 3 seats free, then
-              $99.
+              Free for people — no account, no ads, and the check runs in
+              your browser. Licensed for organizations.
             </p>
             <p className="mt-3 text-xs text-gray-500">
               Powered by{' '}

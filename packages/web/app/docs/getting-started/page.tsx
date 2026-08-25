@@ -78,11 +78,11 @@ client = anthropic.Anthropic()
 message = client.messages.create(**params)
 print(message.content[0].text)`}</code></pre>
 
-      <h3>SDK license key (paid tier)</h3>
+      <h3>SDK license key (organizations)</h3>
       <p>
-        The SDK is open to install. Free tier allows 5 calls per day.
-        The Founding supporter plan ($9/month or $79/year — $40/month at v1) unlocks unlimited calls.
-        After payment you receive a license key by email. Pass it in your environment:
+        The SDK is open to install and free for individuals (5 hosted calls per day).
+        Organizations that license it for their people receive a license key by email —
+        see <a href="/pricing">how licensing works</a>. Pass the key in your environment:
       </p>
       <pre><code>{`export RPCS1_LICENSE_KEY="your-license-key"
 `}</code></pre>

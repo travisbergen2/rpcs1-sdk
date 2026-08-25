@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { EvidenceCard } from '@/components/EvidenceCard';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 import { SupportLink } from '@/components/SupportLink';
@@ -40,8 +39,8 @@ export default function PricingPage() {
               'The box — see how your message reads before you send it',
               'The loop — dump it, lock the lines that are right, send a prompt that lands',
               'The Obsidian plugin — your own notes become the memory, and every round shows exactly what left your machine',
+              'The second brain connector — those same notes, inside Claude Desktop, Cursor, and the other AI apps you already use, without leaving your machine',
               'The tuner and translator, docs and examples',
-              'Works with the AI tools you already use',
             ].map((f) => (
               <li key={f} className="flex gap-2 text-sm text-gray-400">
                 <span className="text-emerald-400 shrink-0">✓</span>
@@ -53,7 +52,7 @@ export default function PricingPage() {
             href="/loop"
             className="inline-flex items-center justify-center rounded-lg w-full px-4 py-2.5 text-sm font-semibold transition-colors text-center bg-sky-500 hover:bg-sky-400 text-slate-950"
           >
-            Try the loop — nothing to sign up for
+            Open the loop
           </Link>
           <SupportLink />
         </div>
@@ -101,54 +100,9 @@ export default function PricingPage() {
         </div>
       </div>
 
-      {/* Founding pilot — the organizations-side front door (kept, staged honestly) */}
-      <section
-        id="diagnostic"
-        className="mb-12 rounded-2xl border border-gray-800 bg-gradient-to-r from-amber-500/5 to-sky-500/5 p-6 sm:p-8"
-      >
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-          <div className="max-w-xl">
-            <div className="flex items-center gap-3 mb-3">
-              <Badge variant="paid">For teams running AI</Badge>
-              <span className="text-sm text-gray-500">One-time · staged honestly</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-              Written Agent Diagnostic — first 3 free, then $99
-            </h2>
-            <p className="text-gray-400 leading-relaxed">
-              One written decision memo for one deployed agent: what it&apos;s doing, where it&apos;s
-              likely to fail, the settings to change, and the next test to run — delivered to
-              your inbox. Staged the same way we publish claims: the first{' '}
-              <strong className="text-white">three case-study seats are free</strong> in exchange
-              for an anonymized public case study — you get the memo, we earn the receipts. Once
-              those are published, the next seats pay the{' '}
-              <strong className="text-white">$99 founding rate</strong> with the evidence in
-              front of them. No one is asked to pay for an unproven service.
-            </p>
-            <div className="mt-4">
-              <EvidenceCard compact />
-            </div>
-          </div>
-          <div className="flex flex-col gap-3 shrink-0">
-            <Link
-              href="/diagnostic"
-              className="inline-flex items-center justify-center rounded-lg bg-amber-500 px-6 py-3 text-sm font-semibold text-slate-950 hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/20"
-            >
-              Claim a free case-study seat →
-            </Link>
-            <Link
-              href="/api/checkout?tier=diagnostic"
-              className="inline-flex items-center justify-center rounded-lg border border-amber-500/40 px-6 py-3 text-sm font-semibold text-amber-300 hover:bg-amber-500/10 transition-colors"
-            >
-              Skip the queue — $99, no case study
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* FAQ */}
       <div className="rounded-xl border border-gray-800 p-6 sm:p-8">
-        <h2 className="text-lg font-semibold text-white mb-4">Honest questions, honest answers</h2>
+        <h2 className="text-lg font-semibold text-white mb-4">Questions</h2>
         <div className="grid sm:grid-cols-2 gap-6">
           {[
             {
@@ -165,7 +119,7 @@ export default function PricingPage() {
             },
             {
               q: 'How does the written diagnostic work?',
-              a: 'Two stages. First: three free case-study seats — submit a brief about one agent, get the full written memo, and agree to an anonymized public case study. Second: once those are published, seats pay the $99 founding rate with the receipts visible before you buy. You can skip the free queue anytime by paying $99 with no case-study obligation.',
+              a: 'It is part of an organization license: one deployed agent, one written decision memo — what it is doing, where it is likely to fail, the settings to change, and the next test to run. Ask about it when you get in touch about licensing.',
             },
             {
               q: 'Does any of this send my writing somewhere?',

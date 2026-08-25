@@ -12,12 +12,13 @@ export default function DiagnosticPage() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20">
       <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 items-start">
         <section>
-          <p className="text-xs font-mono text-amber-400 mb-3">paid diagnostic intake</p>
+          <p className="text-xs font-mono text-sky-400 mb-3">agent diagnostic — for organizations</p>
           <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight mb-5">
             Submit the brief.
           </h1>
           <p className="text-lg text-gray-400 leading-relaxed max-w-2xl mb-8">
-            After checkout, send one workflow, one failure mode, and the context needed for your written memo.
+            The written diagnostic is part of an organization license. Send one workflow, one
+            failure mode, and the context needed for your written memo — we&apos;ll take it from there.
           </p>
           <div className="grid sm:grid-cols-3 gap-3 mb-8">
             {[
@@ -60,18 +61,12 @@ export default function DiagnosticPage() {
                 configuration is to fail under pressure.
               </p>
             </div>
-            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            <div className="mt-6">
               <Link
-                href="/api/checkout?tier=diagnostic"
-                className="inline-flex items-center justify-center rounded-lg bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/20"
-              >
-                Buy report now
-              </Link>
-              <Link
-                href="/pricing#diagnostic"
+                href="/pricing"
                 className="inline-flex items-center justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-semibold text-gray-200 hover:bg-gray-800 transition-colors"
               >
-                Review pricing
+                How licensing works
               </Link>
             </div>
           </div>

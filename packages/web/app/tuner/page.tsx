@@ -77,7 +77,7 @@ function TunerPageContent() {
 
       if (res.status === 429) {
         track('Tuner Failed', { reason: 'rate_limit', source });
-        setError('Rate limit reached. Free tier allows 10 requests per hour. Upgrade to Indie for unlimited access.');
+        setError('Rate limit reached — 10 requests per hour. Please try again in a bit.');
         return;
       }
 
@@ -144,7 +144,7 @@ function TunerPageContent() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Run the free sample.</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Run the tuner.</h1>
         <p className="text-gray-400 max-w-2xl">
           Describe one workflow and its operating conditions. RPCS-1 will flag likely quality risks,
           recommend a runtime posture, and show the implementation settings behind it.
@@ -157,24 +157,6 @@ function TunerPageContent() {
         <div className="mt-6">
           <EvidenceCard compact />
         </div>
-        <div className="mt-4 flex flex-col sm:flex-row gap-3">
-          <a
-            href="/api/checkout?tier=diagnostic"
-            className="inline-flex items-center justify-center rounded-full bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-amber-400 shadow-lg shadow-amber-500/20"
-          >
-            Buy the written diagnostic
-          </a>
-          <a
-            href="/diagnostic"
-            className="inline-flex items-center justify-center rounded-full border border-gray-700 bg-gray-950 px-5 py-3 text-sm font-semibold text-gray-200 transition-colors hover:border-sky-500/40 hover:text-white"
-          >
-            Submit the brief
-          </a>
-        </div>
-        <p className="mt-3 text-xs text-gray-500 max-w-2xl">
-          Free tuner results are directional. The paid diagnostic is a written report with a clearer
-          failure-mode diagnosis and implementation settings for your team.
-        </p>
       </div>
 
       {error && (
@@ -205,28 +187,6 @@ function TunerPageContent() {
       </div>
 
       <div className="mt-12 pt-8 border-t border-gray-800">
-        <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-6 sm:p-7">
-          <p className="text-xs font-mono text-amber-400 mb-3">sales tunnel</p>
-          <h2 className="text-xl font-semibold text-white mb-3">Need the written memo?</h2>
-          <p className="text-gray-400 max-w-2xl">
-            The free tuner is for fast iteration. The paid diagnostic gives you a report you can hand to a team,
-            with the failure mode, recommended posture, and implementation notes already organized.
-          </p>
-          <div className="mt-5 flex flex-col sm:flex-row gap-3">
-            <a
-              href="/api/checkout?tier=diagnostic"
-              className="inline-flex items-center justify-center rounded-full bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-amber-400 shadow-lg shadow-amber-500/20"
-            >
-              Buy the diagnostic
-            </a>
-            <a
-              href="/pricing#diagnostic"
-              className="inline-flex items-center justify-center rounded-full border border-gray-700 bg-gray-950 px-5 py-3 text-sm font-semibold text-gray-200 transition-colors hover:border-sky-500/40 hover:text-white"
-            >
-              Review the offer
-            </a>
-          </div>
-        </div>
         <p className="mt-3 text-xs text-gray-600">
           Web tuner: 10 recommendations per hour. Python SDK: 5 free calls per day.{' '}
           <a href="/pricing" className="text-sky-500 hover:text-sky-400">See pricing →</a>

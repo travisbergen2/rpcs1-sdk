@@ -17,8 +17,8 @@ const QUESTIONS: Record<
   what: {
     label: 'What is this?',
     answer:
-      'RPCS-1 measures TI, SG, FT, UE, and AR for a configured agent. It flags likely overload, oscillation, freeze, and underdetermination risks, then recommends a safer runtime posture. The free sample is a fast way to test the workflow before buying a paid diagnostic.',
-    cta: { href: '/api/checkout?tier=diagnostic', label: 'Buy the diagnostic' },
+      'RPCS-1 measures TI, SG, FT, UE, and AR for a configured agent. It flags likely overload, oscillation, freeze, and underdetermination risks, then recommends a safer runtime posture.',
+    cta: { href: '/docs/matching', label: 'See the framework' },
   },
   why: {
     label: 'Why use it?',

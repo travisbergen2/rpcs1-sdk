@@ -228,3 +228,42 @@
     border-color: rgba(52, 211, 153, 0.45);
   }
 }
+
+/* ── Accessibility baseline ─────────────────────────────────────────────
+   Focus is always visible, the keyboard gets a skip link, and animation
+   respects the user's motion setting. UI/UX-first, per the product plan. */
+
+.skip-link {
+  position: absolute;
+  left: 0.75rem;
+  top: 0.75rem;
+  z-index: 100;
+  transform: translateY(-300%);
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
+  background: #0ea5e9;
+  color: #020617;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: transform 0.15s ease;
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

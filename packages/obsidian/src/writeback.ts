@@ -8,6 +8,13 @@
 // stored in the user's vault, owned by them. Nothing here is hidden state —
 // every write-back is a visible, editable, deletable markdown file.
 
+import { slugify, wikilink } from '@rpcs1/core';
+
+// Naming helpers are canonical in @rpcs1/core (vault-select.ts) so the plugin
+// and the second-brain MCP server name write-backs identically. Re-exported
+// here so existing imports keep working.
+export { slugify, wikilink };
+
 export interface SessionSource {
   source: string;
   path: string;
@@ -22,24 +29,6 @@ export interface SessionMeta {
   totalLines: number;
   engine?: string;
   sources: SessionSource[];
-}
-
-/** Filename-safe slug from the prompt's opening words: [a-z0-9-], <= maxLen. */
-export function slugify(text: string, maxLen = 40): string {
-  const slug = text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .trim()
-    .split(/\s+/)
-    .join('-')
-    .slice(0, maxLen)
-    .replace(/-+$/, '');
-  return slug || 'session';
-}
-
-/** Wikilink target from a vault path (drop the .md; Obsidian resolves it). */
-export function wikilink(path: string): string {
-  return `[[${path.replace(/\.md$/, '')}]]`;
 }
 
 /**

@@ -1,0 +1,8 @@
+{
+  "endpoint": "https://www.explicitformula.com",
+  "answerEnabled": true,
+  "allowedFolders": "notes, projects",
+  "writeBackFolder": "Loop",
+  "sessionNotesEnabled": true,
+  "learningsEnabled": true
+}

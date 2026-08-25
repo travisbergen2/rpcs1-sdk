@@ -189,3 +189,25 @@ export type {
   RatchetCheck,
   ContextSnippet,
 } from './loop.js';
+
+// ── Vault grounding primitives (shared by the Obsidian plugin + vault-mcp) ──
+export {
+  SELECT_CAPS,
+  MIN_SCORE,
+  tokenize,
+  lexicalScore,
+  graphScore,
+  recencyScore,
+  scoreCandidate,
+  excerptAround,
+  isAllowed,
+  selectSnippets,
+  slugify,
+  wikilink,
+} from './vault-select.js';
+export type {
+  CandidateNote,
+  SelectedSnippet,
+  SelectionLogEntry,
+  SelectionResult,
+} from './vault-select.js';

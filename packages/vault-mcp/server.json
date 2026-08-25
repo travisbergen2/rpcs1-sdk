@@ -13,7 +13,7 @@
     {
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
-      "identifier": "second-brain-mcp",
+      "identifier": "@travisbergen2/second-brain-mcp",
       "version": "0.1.0",
       "runtimeHint": "npx",
       "transport": {

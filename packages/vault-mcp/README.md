@@ -47,15 +47,7 @@ that shipped), they don't abolish it.
 
 ## Setup
 
-Requires Node 20+. From this repo (pre-npm-publish):
-
-```
-npm install
-npm run build --workspace=packages/core
-npm run build --workspace=packages/vault-mcp
-```
-
-The server binary is then `packages/vault-mcp/dist/index.js`.
+Requires Node 20+.
 
 ### Claude Desktop
 
@@ -65,22 +57,21 @@ Settings → Developer → Edit Config, add:
 {
   "mcpServers": {
     "second-brain": {
-      "command": "node",
-      "args": [
-        "/absolute/path/to/rpcs1-sdk/packages/vault-mcp/dist/index.js",
-        "--vault", "/absolute/path/to/YourVault"
-      ]
+      "command": "npx",
+      "args": ["-y", "second-brain-mcp", "--vault", "/absolute/path/to/YourVault"]
     }
   }
 }
 ```
 
-(Once published to npm, `"command": "npx", "args": ["-y", "@rpcs1/second-brain-mcp", "--vault", "..."]`.)
+(Before the npm publish, or to run from a checkout: build with
+`npm install && npm run build --workspace=packages/vault-mcp`, then use
+`"command": "node", "args": ["/absolute/path/to/rpcs1-sdk/packages/vault-mcp/dist/index.js", "--vault", "..."]`.)
 
 ### Claude Code
 
 ```
-claude mcp add second-brain -- node /absolute/path/to/rpcs1-sdk/packages/vault-mcp/dist/index.js --vault /absolute/path/to/YourVault
+claude mcp add second-brain -- npx -y second-brain-mcp --vault /absolute/path/to/YourVault
 ```
 
 ### Cursor (and most other MCP apps)
@@ -122,8 +113,13 @@ surface with one fewer signal.
 ```
 npm run test --workspace=packages/vault-mcp    # unit tests (gates, caps, audit, write fences)
 npm run lint --workspace=packages/vault-mcp    # tsc --noEmit (core resolved from source)
-npm run build --workspace=packages/vault-mcp   # tsc -> dist (build packages/core first)
+npm run build --workspace=packages/vault-mcp   # esbuild -> single-file dist/index.js
 ```
+
+The build bundles `@rpcs1/core` from source into `dist/index.js` (the same
+alias pattern as the Obsidian plugin), so the published npm package depends
+only on `@modelcontextprotocol/sdk` and `zod`. `server.json` in this folder is
+the MCP-registry metadata (validated against the 2025-12-11 schema).
 
 Tests run against `tests/fixture-vault/` (copied to a temp dir when a test
 writes). The selection scorer itself lives in `@rpcs1/core`

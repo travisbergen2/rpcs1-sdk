@@ -31,6 +31,7 @@ import {
   LEARNINGS_HEADER,
   type SessionMeta,
 } from './writeback.js';
+import { ImportModal } from './import-modal.js';
 
 export const VIEW_TYPE_LOOP = 'explicit-formula-loop';
 
@@ -66,6 +67,12 @@ export default class LoopPlugin extends Plugin {
     this.registerView(VIEW_TYPE_LOOP, (leaf) => new LoopView(leaf, this));
 
     this.addRibbonIcon('message-circle-question', 'Open the Loop', () => this.activateView());
+
+    this.addCommand({
+      id: 'import-ai-history',
+      name: 'Import my AI history (ChatGPT / Claude)',
+      callback: () => new ImportModal(this.app).open(),
+    });
 
     this.addCommand({
       id: 'open-loop-panel',

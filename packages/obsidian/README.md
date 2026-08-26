@@ -57,6 +57,23 @@ testing is in `fixture-vault/`.
 
 ## Scope (P1) and what's next
 
+## Import my AI history (P4)
+
+Command palette → **"Import my AI history (ChatGPT / Claude)"** — a file
+picker, zero terminal. Hand it whatever you have: the ChatGPT export zip,
+Claude's `conversations-000.zip`, either vendor's `conversations.json`, or
+Claude's `claude_data.json` manifest (the modal shows the manifest's
+one-time download link to open in your own browser — this plugin never
+fetches it; its network use stays explicitformula.com only).
+
+The law, same as everywhere: every conversation's **full text lands in
+`Private/Archive/<source>/`** — keep Private off your allowlist and no
+connected AI can read any of it. Conversations matching research/build
+vocabulary get a small **index stub** in `Notes/Archive index/` (title +
+topic terms only, no content), plus an import report listing **possibly
+forgotten threads** — research topics that appear rarely across your whole
+history. Re-imports never overwrite: colliding names get suffixed.
+
 ## Your graph shows the work (P3)
 
 Finish a session and hit **Save to my vault**: the session lands as an

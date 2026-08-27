@@ -74,6 +74,21 @@ topic terms only, no content), plus an import report listing **possibly
 forgotten threads** — research topics that appear rarely across your whole
 history. Re-imports never overwrite: colliding names get suffixed.
 
+## Wire the archive into topics (P5)
+
+After importing, command palette → **Wire my archive into topics (graph
+clusters)**. Each archive stub links to auto-generated `Notes/Topics/<term>`
+hub notes, collapsing the disconnected import point-cloud into topic-centred
+clusters in the graph view. Hubs are regenerable; each stub is linked once.
+
+**Honest scope (pre-registered):** E-WIRE-1 tested whether this also improves
+*retrieval* and the frozen grammar returned **FAIL** — hubs compete with
+stubs for the 6-snippet search budget (reach improved when a hub surfaced,
+but ranking displacement failed the null). So this ships as a **graph-
+legibility feature, not a retrieval feature**. Making topics improve search
+needs a reserved hub lane in the server (the E-WIRE-2 candidate), not this
+wiring.
+
 ## Your graph shows the work (P3)
 
 Finish a session and hit **Save to my vault**: the session lands as an

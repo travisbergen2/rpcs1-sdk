@@ -32,6 +32,7 @@ import {
   type SessionMeta,
 } from './writeback.js';
 import { ImportModal } from './import-modal.js';
+import { planTopicWiring, type StubIn } from './topic-wiring.js';
 
 export const VIEW_TYPE_LOOP = 'explicit-formula-loop';
 
@@ -67,6 +68,38 @@ export default class LoopPlugin extends Plugin {
     this.registerView(VIEW_TYPE_LOOP, (leaf) => new LoopView(leaf, this));
 
     this.addRibbonIcon('message-circle-question', 'Open the Loop', () => this.activateView());
+
+    this.addCommand({
+      id: 'wire-archive-topics',
+      name: 'Wire my archive into topics (graph clusters)',
+      callback: async () => {
+        const idx = 'Notes/Archive index';
+        const files = this.app.vault.getMarkdownFiles().filter(
+          (f) => f.path.startsWith(idx + '/') && !f.name.startsWith('_'),
+        );
+        if (!files.length) {
+          new Notice('No archive stubs found — run "Import my AI history" first.');
+          return;
+        }
+        const stubs: StubIn[] = [];
+        for (const f of files) stubs.push({ path: f.path, content: await this.app.vault.cachedRead(f) });
+        const plan = planTopicWiring(stubs);
+        const topicsDir = 'Notes/Topics';
+        if (!this.app.vault.getAbstractFileByPath(topicsDir)) {
+          await this.app.vault.createFolder(topicsDir).catch(() => { /* exists */ });
+        }
+        for (const h of plan.hubs) {
+          const existing = this.app.vault.getAbstractFileByPath(h.path);
+          if (existing && 'stat' in existing) await this.app.vault.modify(existing as never, h.content);
+          else await this.app.vault.create(h.path, h.content);
+        }
+        for (const p of plan.patches) {
+          const f = this.app.vault.getAbstractFileByPath(p.path);
+          if (f && 'stat' in f) await this.app.vault.modify(f as never, p.content);
+        }
+        new Notice(`Wired: ${plan.counts.hubs} topic hubs, ${plan.counts.patched} stubs linked (${plan.counts.terms} terms). Open the graph.`);
+      },
+    });
 
     this.addCommand({
       id: 'import-ai-history',

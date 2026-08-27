@@ -1,6 +1,6 @@
 {
   "name": "@rpcs1/obsidian-plugin",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Explicit Formula — The Loop, inside Obsidian (Phase B P3: panel + vault priors + graph-visible write-backs)",
   "private": true,
   "type": "module",

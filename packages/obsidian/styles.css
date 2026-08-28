@@ -1,0 +1,167 @@
+/* ── Explicit Formula — The Loop: panel styles ─────────────────────────────────
+   M1 mobile + accessibility pass.
+   Rules:
+   - Obsidian CSS variables only (inherits the user's theme, including
+     high-contrast themes) — no hardcoded colors.
+   - Lock state is never color-only: ✓ prefix + border weight + font weight.
+   - Text scale is panel-local via --ef-scale (set from plugin settings);
+     it never overrides Obsidian's app-wide font settings.
+   - No animations are defined. If any transition is ever added, it must sit
+     inside the prefers-reduced-motion guard at the bottom of this file.      */
+
+.ef-loop-view {
+  font-size: calc(1em * var(--ef-scale, 1));
+}
+
+.ef-credit {
+  font-size: 0.72em;
+  opacity: 0.55;
+  margin-top: -6px;
+}
+
+/* ── Capture ── */
+
+.ef-dump {
+  width: 100%;
+  font-size: 1em;
+}
+
+.ef-go {
+  margin-top: 8px;
+}
+
+.ef-dictation-hint {
+  font-size: 0.8em;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ── Rounds ── */
+
+.ef-orig-text {
+  opacity: 0.75;
+}
+
+.ef-strip {
+  font-size: 0.8em;
+  opacity: 0.7;
+  margin-top: 6px;
+}
+
+.ef-held-note {
+  font-size: 0.85em;
+  opacity: 0.8;
+}
+
+.ef-tap-prompt {
+  margin-top: 8px;
+}
+
+.ef-line {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 4px 0;
+  white-space: normal;
+}
+
+.ef-line.is-locked {
+  border-color: var(--color-green);
+  border-width: 2px;
+  font-weight: 600;
+}
+
+.ef-actions {
+  margin-top: 8px;
+}
+
+.ef-actions button + button {
+  margin-left: 6px;
+}
+
+.ef-meta {
+  font-size: 0.85em;
+  opacity: 0.7;
+}
+
+/* ── Final ── */
+
+.ef-prompt-box {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  padding: 8px;
+  user-select: text;
+}
+
+.ef-answer-label {
+  margin-top: 10px;
+}
+
+.ef-answer {
+  opacity: 0.9;
+  user-select: text;
+}
+
+/* ── Screen-reader-only live region (persistent; see LoopView.onOpen) ── */
+
+.ef-sr-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Keyboard/switch access: always-visible focus ── */
+
+.ef-loop-view button:focus-visible,
+.ef-loop-view textarea:focus-visible,
+.ef-loop-view .ef-prompt-box:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+}
+
+/* ── Mobile ergonomics (root gets .ef-mobile via Platform.isMobile) ──
+   44px min targets exceed the WCAG 2.2 AA minimum (24px) and meet the
+   AAA/platform guideline; 8px vertical spacing guards against mis-taps. */
+
+.ef-mobile .ef-line {
+  min-height: 44px;
+  padding: 10px 12px;
+  margin: 8px 0;
+}
+
+.ef-mobile .ef-actions button {
+  min-height: 44px;
+  padding: 10px 14px;
+  margin: 6px 8px 6px 0;
+}
+
+.ef-mobile .ef-actions button + button {
+  margin-left: 0;
+}
+
+.ef-mobile .ef-go {
+  min-height: 44px;
+  padding: 10px 14px;
+}
+
+.ef-mobile .ef-dump {
+  font-size: max(16px, 1em);
+}
+
+/* ── Motion guard: nothing animates today; anything added later inherits this. ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .ef-loop-view *,
+  .ef-loop-view *::before,
+  .ef-loop-view *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -101,6 +101,36 @@ off-switches; everything written is a visible, editable, deletable file.
 **Copy my context pack** puts your recent loop history on the clipboard
 to paste before a prompt in any AI.
 
+## Built for access (P4 — mobile + accessibility pass)
+
+The Loop is designed to work when reading dense text, fine motor control,
+or instant-response pressure are the obstacle — that's the point of the
+product, so it's the spec, not a retrofit:
+
+- **Works on phones and tablets.** The plugin runs in Obsidian Mobile
+  (iOS and Android). On mobile, every tap target is at least 44px with
+  spacing to prevent mis-taps.
+- **Voice input**: on mobile, your keyboard's mic key dictates straight
+  into the dump box — nothing extra to install, nothing extra leaves
+  your machine.
+- **Screen readers**: lock state is announced on every line
+  (`aria-pressed`), finished rounds and "what left your machine" are
+  announced politely without interrupting, and focus lands somewhere
+  useful after every step instead of vanishing.
+- **Buttons for everything** — no gesture is ever required.
+- **Panel text size** (Settings): Default / Large / Larger, scoped to the
+  Loop panel; your Obsidian and theme settings stay in charge everywhere
+  else. Lock state is never shown by color alone (✓ prefix + border
+  weight).
+- **Response pacing** (Settings): a minimum time between asking and
+  seeing results, for anyone who needs answers to not appear instantly.
+  Slow connections count toward it — pacing never adds delay on top.
+- **Reduced motion**: the panel defines no animations, and a
+  `prefers-reduced-motion` guard covers anything added later.
+
+If an accessibility barrier still bites you, open an issue — barriers
+are treated as bugs, not feature requests.
+
 Powered by [rpcs1.dev](https://rpcs1.dev) — the receiver engine behind
 Explicit Formula.
 

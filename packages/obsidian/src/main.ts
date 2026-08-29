@@ -9,6 +9,7 @@ import {
   ItemView,
   MarkdownView,
   Notice,
+  Platform,
   Plugin,
   PluginSettingTab,
   Setting,
@@ -34,6 +35,15 @@ import {
 import { ImportModal } from './import-modal.js';
 import { planTopicWiring, type StubIn } from './topic-wiring.js';
 import { buildConstellationSvg, pointFromStub, type ConstellationPoint } from './constellation.js';
+import {
+  clampResponseDelay,
+  dictationHint,
+  normalizeTextScale,
+  paceMs,
+  srSpanLabel,
+  TEXT_SCALE_FACTORS,
+  type TextScale,
+} from './ui-prefs.js';
 
 export const VIEW_TYPE_LOOP = 'explicit-formula-loop';
 
@@ -49,6 +59,13 @@ interface LoopPluginSettings {
   writeBackFolder: string;
   sessionNotesEnabled: boolean;
   learningsEnabled: boolean;
+  /** Panel-local text scale — never overrides Obsidian's app-wide settings. */
+  textScale: TextScale;
+  /**
+   * Pacing FLOOR (ms) between asking and seeing results — an accommodation
+   * for users who need the AI to not respond instantly. 0 = off.
+   */
+  responseDelayMs: number;
 }
 
 const DEFAULT_SETTINGS: LoopPluginSettings = {
@@ -58,7 +75,11 @@ const DEFAULT_SETTINGS: LoopPluginSettings = {
   writeBackFolder: 'Loop',
   sessionNotesEnabled: true,
   learningsEnabled: true,
+  textScale: 'default',
+  responseDelayMs: 0,
 };
+
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 export default class LoopPlugin extends Plugin {
   settings: LoopPluginSettings = DEFAULT_SETTINGS;
@@ -206,10 +227,17 @@ export default class LoopPlugin extends Plugin {
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    // Normalize defensively — data.json may predate these fields or hold junk.
+    this.settings.textScale = normalizeTextScale(this.settings.textScale);
+    this.settings.responseDelayMs = clampResponseDelay(this.settings.responseDelayMs);
   }
 
   async saveSettings() {
     await this.saveData(this.settings);
+    // Live-apply panel preferences (text scale, pacing) to any open Loop views.
+    for (const leaf of this.app.workspace.getLeavesOfType(VIEW_TYPE_LOOP)) {
+      if (leaf.view instanceof LoopView) leaf.view.refresh();
+    }
   }
 }
 
@@ -227,6 +255,16 @@ class LoopView extends ItemView {
   private answer: string | null = null;
   /** The what-left-your-machine log for the latest round (disclosure law). */
   private contextLog: SelectionLogEntry[] = [];
+  /**
+   * Focus target applied on the next render — keyboard/screen-reader
+   * continuity across full re-renders. 'lines' = first unlocked line,
+   * 'prompt' = the finished prompt box, number = line index (after a toggle).
+   */
+  private pendingFocus: 'lines' | 'prompt' | number | null = null;
+  /** Persistent polite live region (created once — see onOpen). */
+  private statusEl: HTMLElement | null = null;
+  /** Re-rendered body (everything except the live region). */
+  private bodyEl: HTMLElement | null = null;
 
   constructor(leaf: WorkspaceLeaf, plugin: LoopPlugin) {
     super(leaf);
@@ -246,7 +284,34 @@ class LoopView extends ItemView {
   }
 
   async onOpen() {
+    const c = this.contentEl;
+    c.addClass('ef-loop-view');
+    if (Platform.isMobile) c.addClass('ef-mobile');
+    // Persistent polite live region, created ONCE: screen readers only announce
+    // mutations inside a region they already observe — a region rebuilt on every
+    // render never announces. Visually hidden; visual equivalents live in the body.
+    this.statusEl = c.createDiv({
+      cls: 'ef-sr-status',
+      attr: { 'aria-live': 'polite', role: 'status' },
+    });
+    this.bodyEl = c.createDiv();
     this.render();
+  }
+
+  /** Public so the settings tab can live-apply text scale to open panels. */
+  refresh() {
+    this.render();
+  }
+
+  private announce(text: string) {
+    this.statusEl?.setText(text);
+  }
+
+  private disclosureText(): string {
+    return this.contextLog.length > 0
+      ? 'Left your machine this round: your dump + ' +
+          this.contextLog.map((e) => `${e.source} (${e.chars} chars)`).join(' · ')
+      : 'Left your machine this round: your dump only.';
   }
 
   startWithDump(dump: string) {
@@ -334,15 +399,20 @@ class LoopView extends ItemView {
     if (!this.dump.trim() || this.busy) return;
     this.busy = true;
     this.render();
+    const t0 = Date.now();
     try {
       const ctx = await this.gatherContext();
       this.contextLog = ctx.log;
       const r = await this.client().startRound(this.dump, ctx.snippets);
+      // Pacing floor counts from the tap — slow networks already satisfy it.
+      await sleep(paceMs(this.plugin.settings.responseDelayMs, Date.now() - t0));
       this.spans = r.spans;
       this.elected.clear();
       this.round = 1;
       this.held = false;
       this.stage = 'rounds';
+      this.pendingFocus = 'lines';
+      this.announce(`Interpretation ready — ${r.spans.length} lines. ${this.disclosureText()}`);
     } catch (e) {
       new Notice(e instanceof LoopClientError ? e.message : 'Something went wrong — try again.');
     } finally {
@@ -355,6 +425,7 @@ class LoopView extends ItemView {
     if (this.busy) return;
     this.busy = true;
     this.render();
+    const t0 = Date.now();
     try {
       const lockedTexts = new Set(
         this.spans.filter((s) => this.elected.has(s.id)).map((s) => s.text),
@@ -367,10 +438,17 @@ class LoopView extends ItemView {
         Array.from(this.elected),
         ctx.snippets,
       );
+      await sleep(paceMs(this.plugin.settings.responseDelayMs, Date.now() - t0));
       this.spans = r.spans;
       this.elected = new Set(r.spans.filter((s) => lockedTexts.has(s.text)).map((s) => s.id));
       this.round += 1;
       this.held = r.serverRepaired || r.clientRepaired;
+      this.pendingFocus = 'lines';
+      this.announce(
+        `Round ${this.round} — ${this.elected.size} of ${this.spans.length} locked.` +
+          (this.held ? ' Your locked lines were held in place.' : '') +
+          ` ${this.disclosureText()}`,
+      );
     } catch (e) {
       new Notice(e instanceof LoopClientError ? e.message : 'Something went wrong — try again.');
     } finally {
@@ -383,8 +461,12 @@ class LoopView extends ItemView {
     if (this.busy) return;
     this.busy = true;
     this.render();
+    const t0 = Date.now();
     try {
-      this.answer = await this.client().answer(assembleFinalPrompt(this.spans));
+      const answer = await this.client().answer(assembleFinalPrompt(this.spans));
+      await sleep(paceMs(this.plugin.settings.responseDelayMs, Date.now() - t0));
+      this.answer = answer;
+      this.announce('Answer ready.');
     } catch (e) {
       new Notice(e instanceof LoopClientError ? e.message : 'Could not answer here — copy the prompt instead.');
     } finally {
@@ -450,28 +532,38 @@ class LoopView extends ItemView {
   }
 
   private render() {
-    const root = this.contentEl;
+    const root = this.bodyEl ?? this.contentEl;
+    this.contentEl.style.setProperty(
+      '--ef-scale',
+      String(TEXT_SCALE_FACTORS[normalizeTextScale(this.plugin.settings.textScale)]),
+    );
     root.empty();
-    root.addClass('ef-loop-view');
+    root.setAttr('aria-busy', String(this.busy));
 
     root.createEl('h4', { text: 'Say it once. Make sure it landed.' });
-    const credit = root.createEl('p', { text: 'powered by ' });
+    const credit = root.createEl('p', { cls: 'ef-credit', text: 'powered by ' });
     const creditLink = credit.createEl('a', { text: 'rpcs1.dev', href: 'https://rpcs1.dev' });
     creditLink.setAttr('rel', 'noreferrer');
-    credit.style.fontSize = '0.72em';
-    credit.style.opacity = '0.55';
-    credit.style.marginTop = '-6px';
 
     if (this.stage === 'input') {
       const ta = root.createEl('textarea', {
-        attr: { placeholder: 'Dump it here exactly how it comes out — half-sentences, tangents, all of it.', maxlength: '8000', rows: '10' },
+        cls: 'ef-dump',
+        attr: {
+          placeholder: 'Dump it here exactly how it comes out — half-sentences, tangents, all of it.',
+          maxlength: '8000',
+          rows: '10',
+          'aria-label': 'Brain dump',
+        },
       });
-      ta.style.width = '100%';
       ta.value = this.dump;
       ta.addEventListener('input', () => (this.dump = ta.value));
-      const go = root.createEl('button', { text: this.busy ? 'Reading…' : 'Show me what it heard' });
+      const hint = dictationHint(Platform.isMobile);
+      if (hint) root.createEl('p', { cls: 'ef-dictation-hint', text: hint });
+      const go = root.createEl('button', {
+        cls: 'ef-go',
+        text: this.busy ? 'Reading…' : 'Show me what it heard',
+      });
       go.disabled = this.busy;
-      go.style.marginTop = '8px';
       go.addEventListener('click', () => void this.firstRound());
       return;
     }
@@ -479,102 +571,101 @@ class LoopView extends ItemView {
     if (this.stage === 'rounds') {
       const orig = root.createEl('details');
       orig.createEl('summary', { text: 'What you said' });
-      orig.createEl('div', { text: this.dump }).style.opacity = '0.75';
+      orig.createEl('div', { cls: 'ef-orig-text', text: this.dump });
 
       // Disclosure strip — the what-left-your-machine law, rendered inline.
-      const strip = root.createEl('p', {
-        text:
-          this.contextLog.length > 0
-            ? 'Left your machine this round: your dump + ' +
-              this.contextLog.map((e) => `${e.source} (${e.chars} chars)`).join(' · ')
-            : 'Left your machine this round: your dump only.',
-      });
-      strip.style.fontSize = '0.8em';
-      strip.style.opacity = '0.7';
-      strip.style.marginTop = '6px';
+      // (Also announced via the persistent live region when a round lands.)
+      root.createEl('p', { cls: 'ef-strip', text: this.disclosureText() });
 
-      root.createEl('p', { text: 'Tap the lines that are right:' }).style.marginTop = '8px';
+      root.createEl('p', { cls: 'ef-tap-prompt', text: 'Tap the lines that are right:' });
       if (this.held) {
-        const note = root.createEl('p', { text: 'Your locked lines were held in place.' });
-        note.style.fontSize = '0.85em';
-        note.style.opacity = '0.8';
+        root.createEl('p', { cls: 'ef-held-note', text: 'Your locked lines were held in place.' });
       }
-      const list = root.createDiv();
-      for (const s of this.spans) {
+      const list = root.createDiv({ attr: { role: 'group', 'aria-label': 'Interpretation lines' } });
+      this.spans.forEach((s, idx) => {
         const locked = this.elected.has(s.id);
-        const b = list.createEl('button', { text: (locked ? '✓ ' : '') + s.text });
-        b.style.display = 'block';
-        b.style.width = '100%';
-        b.style.textAlign = 'left';
-        b.style.margin = '4px 0';
-        b.style.whiteSpace = 'normal';
-        if (locked) b.style.borderColor = 'var(--color-green)';
+        const b = list.createEl('button', {
+          cls: 'ef-line' + (locked ? ' is-locked' : ''),
+          text: (locked ? '✓ ' : '') + s.text,
+          attr: {
+            'aria-pressed': String(locked),
+            'aria-label': srSpanLabel(s.text, locked, s.status),
+          },
+        });
         b.addEventListener('click', () => {
           if (this.elected.has(s.id)) this.elected.delete(s.id);
           else this.elected.add(s.id);
+          this.pendingFocus = idx; // keep keyboard/switch focus on the toggled line
           this.render();
         });
-      }
-      const row = root.createDiv();
-      row.style.marginTop = '8px';
+      });
+      const row = root.createDiv({ cls: 'ef-actions' });
       const redo = row.createEl('button', { text: this.busy ? 'Redoing…' : 'Redo the unlocked lines' });
       redo.disabled = this.busy || this.elected.size === 0 || this.elected.size === this.spans.length;
       redo.addEventListener('click', () => void this.nextRound());
       const done = row.createEl('button', { text: "It's right — finish it" });
-      done.style.marginLeft = '6px';
       done.disabled = this.busy || this.spans.length === 0;
       done.addEventListener('click', () => {
         this.stage = 'final';
+        this.pendingFocus = 'prompt';
         this.render();
       });
-      const meta = root.createEl('p', {
+      root.createEl('p', {
+        cls: 'ef-meta',
         text: `Round ${this.round} · ${this.elected.size}/${this.spans.length} locked`,
       });
-      meta.style.fontSize = '0.85em';
-      meta.style.opacity = '0.7';
+      if (this.pendingFocus !== null) {
+        const buttons = Array.from(list.querySelectorAll<HTMLButtonElement>('button.ef-line'));
+        let target: HTMLButtonElement | undefined;
+        if (typeof this.pendingFocus === 'number') {
+          target = buttons[Math.min(this.pendingFocus, buttons.length - 1)];
+        } else if (this.pendingFocus === 'lines') {
+          target = buttons.find((el) => el.getAttribute('aria-pressed') === 'false') ?? buttons[0];
+        }
+        this.pendingFocus = null;
+        target?.focus();
+      }
       return;
     }
 
     // final
     const prompt = assembleFinalPrompt(this.spans);
     root.createEl('p', { text: 'Your prompt, ready to land:' });
-    const box = root.createEl('div', { text: prompt });
-    box.style.border = '1px solid var(--background-modifier-border)';
-    box.style.borderRadius = '6px';
-    box.style.padding = '8px';
-    box.style.userSelect = 'text';
-    const row = root.createDiv();
-    row.style.marginTop = '8px';
+    const box = root.createEl('div', {
+      cls: 'ef-prompt-box',
+      text: prompt,
+      attr: { tabindex: '0', 'aria-label': 'Your finished prompt' },
+    });
+    const row = root.createDiv({ cls: 'ef-actions' });
     const copy = row.createEl('button', { text: 'Copy it' });
     copy.addEventListener('click', async () => {
       await navigator.clipboard.writeText(prompt);
       new Notice('Copied — paste it into any AI.');
     });
     const insert = row.createEl('button', { text: 'Insert into note' });
-    insert.style.marginLeft = '6px';
     insert.addEventListener('click', () => this.insertIntoNote(prompt));
     if (this.plugin.settings.sessionNotesEnabled || this.plugin.settings.learningsEnabled) {
       const save = row.createEl('button', { text: 'Save to my vault' });
-      save.style.marginLeft = '6px';
       save.addEventListener('click', () => void this.saveSession());
     }
     if (this.plugin.settings.answerEnabled) {
       const ans = row.createEl('button', { text: this.busy ? 'Answering…' : 'Answer it here' });
-      ans.style.marginLeft = '6px';
       ans.disabled = this.busy || Boolean(this.answer);
       ans.addEventListener('click', () => void this.answerHere());
     }
     const back = row.createEl('button', { text: 'Back to the lines' });
-    back.style.marginLeft = '6px';
     back.addEventListener('click', () => {
       this.stage = 'rounds';
+      this.pendingFocus = 'lines';
       this.render();
     });
     if (this.answer) {
-      root.createEl('p', { text: 'The answer:' }).style.marginTop = '10px';
-      const a = root.createEl('div', { text: this.answer });
-      a.style.opacity = '0.9';
-      a.style.userSelect = 'text';
+      root.createEl('p', { cls: 'ef-answer-label', text: 'The answer:' });
+      root.createEl('div', { cls: 'ef-answer', text: this.answer });
+    }
+    if (this.pendingFocus === 'prompt') {
+      this.pendingFocus = null;
+      box.focus();
     }
   }
 }
@@ -659,6 +750,36 @@ class LoopSettingTab extends PluginSettingTab {
           this.plugin.settings.answerEnabled = v;
           await this.plugin.saveSettings();
         }),
+      );
+
+    new Setting(containerEl)
+      .setName('Panel text size')
+      .setDesc(
+        'Scales text inside the Loop panel only — your Obsidian and theme settings stay in charge everywhere else.',
+      )
+      .addDropdown((d) =>
+        d
+          .addOptions({ default: 'Default', large: 'Large', larger: 'Larger' })
+          .setValue(this.plugin.settings.textScale)
+          .onChange(async (v) => {
+            this.plugin.settings.textScale = normalizeTextScale(v);
+            await this.plugin.saveSettings();
+          }),
+      );
+
+    new Setting(containerEl)
+      .setName('Response pacing')
+      .setDesc(
+        'A minimum time between asking and seeing results, for anyone who needs answers to not appear instantly. Slow connections already count toward it — pacing never adds on top.',
+      )
+      .addDropdown((d) =>
+        d
+          .addOptions({ '0': 'Instant', '1000': 'After 1 second', '2000': 'After 2 seconds' })
+          .setValue(String(this.plugin.settings.responseDelayMs))
+          .onChange(async (v) => {
+            this.plugin.settings.responseDelayMs = clampResponseDelay(Number(v));
+            await this.plugin.saveSettings();
+          }),
       );
   }
 }

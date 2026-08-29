@@ -6,6 +6,7 @@ import { Footer } from '@/components/Footer';
 import { Analytics } from '@vercel/analytics/next';
 import { ProfileProvider } from '@/components/ProfileProvider';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { SwRegister } from '@/components/SwRegister';
 import { BRAND_NAME, BRAND_TAGLINE } from '@/lib/brand';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
@@ -45,6 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </ProfileProvider>
         <Analytics />
         <SpeedInsights />
+        <SwRegister />
       </body>
     </html>
   );

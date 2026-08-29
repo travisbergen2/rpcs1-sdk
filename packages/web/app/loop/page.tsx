@@ -15,7 +15,33 @@
  * never spans/ratchet/parameters.
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import {
+  clampResponseDelay,
+  dictationHint,
+  normalizeTextScale,
+  paceMs,
+  TEXT_SCALE_FACTORS,
+} from '@/lib/loop-prefs';
+import {
+  getCoarseServerSnapshot,
+  getCoarseSnapshot,
+  getPrefsServerSnapshot,
+  getPrefsSnapshot,
+  subscribeCoarse,
+  subscribePrefs,
+  updateLoopPrefs,
+} from '@/lib/loop-prefs-store';
+import {
+  CURRENT_ID,
+  defaultDraftStore,
+  makeDraftAutosaver,
+  saveOfflineDump,
+  type Draft,
+  type DraftStore,
+} from '@/lib/offline-drafts';
+
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 interface UiSpan {
   id: string;
@@ -46,6 +72,17 @@ export default function LoopPage() {
   const [answer, setAnswer] = useState<string | null>(null);
   const [answerBusy, setAnswerBusy] = useState(false);
   const [copied, setCopied] = useState(false);
+  // M2: accessibility prefs, screen-reader announcements, offline drafts.
+  // Prefs + pointer type ride useSyncExternalStore (the house pattern —
+  // localStorage/media query as external stores; no set-state-in-effect).
+  const prefs = useSyncExternalStore(subscribePrefs, getPrefsSnapshot, getPrefsServerSnapshot);
+  const coarse = useSyncExternalStore(subscribeCoarse, getCoarseSnapshot, getCoarseServerSnapshot);
+  const [announce, setAnnounce] = useState('');
+  const [restorable, setRestorable] = useState<Draft | null>(null);
+  const [offlineSaved, setOfflineSaved] = useState(false);
+  const prefsRef = useRef(prefs);
+  const storeRef = useRef<DraftStore | null>(null);
+  const autosaveRef = useRef<((text: string) => void) | null>(null);
   const dumpRef = useRef<HTMLTextAreaElement | null>(null);
   const roundsHeadingRef = useRef<HTMLHeadingElement | null>(null);
   const finalHeadingRef = useRef<HTMLHeadingElement | null>(null);
@@ -66,6 +103,26 @@ export default function LoopPage() {
     else if (stage === 'input') dumpRef.current?.focus();
   }, [stage]);
 
+  // M2 mount: open the draft store and surface the newest recoverable draft
+  // (setState here happens only in the async subscription callback — the
+  // sanctioned "external system reports back" shape).
+  useEffect(() => {
+    const store = defaultDraftStore();
+    storeRef.current = store;
+    autosaveRef.current = makeDraftAutosaver(store);
+    let cancelled = false;
+    void store.list().then((drafts) => {
+      if (!cancelled && drafts.length > 0) setRestorable(drafts[0]);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    prefsRef.current = prefs;
+  }, [prefs]);
+
   const finalPrompt = useMemo(
     () => spans.map((s) => s.text.trim()).filter(Boolean).join(' '),
     [spans],
@@ -75,6 +132,7 @@ export default function LoopPage() {
     async (body: Record<string, unknown>): Promise<LoopApiResponse | null> => {
       setBusy(true);
       setError(null);
+      const t0 = Date.now();
       try {
         const res = await fetch('/api/translate', {
           method: 'POST',
@@ -86,6 +144,9 @@ export default function LoopPage() {
           setError(data.message || 'Something went wrong — try again.');
           return null;
         }
+        // Response pacing (accommodation): a FLOOR on time-to-render, never
+        // an addend — a slow network already counts toward it.
+        await sleep(paceMs(prefsRef.current.responseDelayMs, Date.now() - t0));
         return data;
       } catch {
         setError('Network hiccup — try again.');
@@ -99,13 +160,26 @@ export default function LoopPage() {
 
   const firstRound = useCallback(async () => {
     if (!dump.trim()) return;
+    setOfflineSaved(false);
     const data = await callLoop({ text: dump });
-    if (!data?.spans) return;
+    if (!data?.spans) {
+      // Offline send: the dump is too valuable to lose — preserve it durably.
+      // Nothing auto-sends later; interpretation only runs on the user's tap.
+      if (typeof navigator !== 'undefined' && !navigator.onLine && storeRef.current) {
+        await saveOfflineDump(storeRef.current, dump);
+        setError(null);
+        setOfflineSaved(true);
+        setAnnounce("You're offline — your dump is saved on this device and will be here when you're back.");
+      }
+      return;
+    }
     setSpans(data.spans);
     setElected(new Set());
     setRound(1);
     setHeld(false);
     setStage('rounds');
+    setAnnounce(`Interpretation ready — ${data.spans.length} lines.`);
+    void storeRef.current?.remove(CURRENT_ID);
   }, [dump, callLoop]);
 
   const nextRound = useCallback(async () => {
@@ -124,7 +198,11 @@ export default function LoopPage() {
     setElected(new Set(data.spans.filter((s) => lockedTexts.has(s.text)).map((s) => s.id)));
     setRound((r) => r + 1);
     setHeld(Boolean(data.repaired));
-  }, [dump, spans, elected, callLoop]);
+    setAnnounce(
+      `Round ${round + 1} — lines updated.` +
+        (data.repaired ? ' Your locked lines were held in place.' : ''),
+    );
+  }, [dump, spans, elected, round, callLoop]);
 
   const toggle = useCallback((id: string) => {
     setElected((prev) => {
@@ -148,6 +226,7 @@ export default function LoopPage() {
   const answerHere = useCallback(async () => {
     setAnswerBusy(true);
     setError(null);
+    const t0 = Date.now();
     try {
       const res = await fetch('/api/translate', {
         method: 'POST',
@@ -159,7 +238,9 @@ export default function LoopPage() {
         setError(data.message || 'Could not answer here — copy the prompt into your own AI.');
         return;
       }
+      await sleep(paceMs(prefsRef.current.responseDelayMs, Date.now() - t0));
       setAnswer(data.answer);
+      setAnnounce('Answer ready.');
     } catch {
       setError('Network hiccup — copy the prompt into your own AI.');
     } finally {
@@ -180,11 +261,60 @@ export default function LoopPage() {
   return (
     // NOTE: a <div>, not <main> — the root layout already provides the single
     // <main id="main"> landmark (duplicate main landmarks fail axe).
-    <div className="mx-auto max-w-5xl px-6 py-12">
+    <div
+      className="mx-auto max-w-5xl px-6 py-12"
+      // Panel-local text scale (M2 accommodation): CSS zoom scales this page
+      // only — the rest of the site and the user's browser zoom are untouched.
+      style={{ zoom: TEXT_SCALE_FACTORS[prefs.textScale] }}
+    >
+      {/* Persistent polite live region — mounted once for the whole page and
+          text-swapped, so screen readers actually announce round completions
+          across stage changes (a region remounted per stage never announces). */}
+      <div aria-live="polite" role="status" className="sr-only">
+        {announce}
+      </div>
       <header className="mb-8">
-        <h1 className="text-3xl font-semibold tracking-tight">
-          Say it once. Make sure it landed.
-        </h1>
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <h1 className="text-3xl font-semibold tracking-tight">
+            Say it once. Make sure it landed.
+          </h1>
+          <details className="relative text-sm">
+            <summary className="inline-flex min-h-11 cursor-pointer list-none items-center rounded-lg border border-neutral-600 px-3 py-2 opacity-80 transition hover:opacity-100">
+              Display &amp; pacing
+            </summary>
+            <div className="absolute right-0 z-10 mt-2 w-72 rounded-xl border border-neutral-700 bg-neutral-950 p-4 shadow-xl">
+              <label className="block text-xs uppercase tracking-wide opacity-60" htmlFor="ef-text-size">
+                Text size (this page)
+              </label>
+              <select
+                id="ef-text-size"
+                value={prefs.textScale}
+                onChange={(e) => updateLoopPrefs({ ...prefs, textScale: normalizeTextScale(e.target.value) })}
+                className="mt-1 w-full rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-2"
+              >
+                <option value="default">Default</option>
+                <option value="large">Large</option>
+                <option value="larger">Larger</option>
+              </select>
+              <label className="mt-4 block text-xs uppercase tracking-wide opacity-60" htmlFor="ef-pacing">
+                Response pacing
+              </label>
+              <select
+                id="ef-pacing"
+                value={String(prefs.responseDelayMs)}
+                onChange={(e) => updateLoopPrefs({ ...prefs, responseDelayMs: clampResponseDelay(Number(e.target.value)) })}
+                className="mt-1 w-full rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-2"
+              >
+                <option value="0">Instant</option>
+                <option value="1000">After 1 second</option>
+                <option value="2000">After 2 seconds</option>
+              </select>
+              <p className="mt-2 text-xs opacity-60">
+                A minimum time before results appear — slow connections already count toward it.
+              </p>
+            </div>
+          </details>
+        </div>
         <p className="mt-2 max-w-2xl text-base opacity-80">
           Brain-dump what you want. See exactly what the AI heard. Lock the
           lines it got right — it redoes only the rest. When it finally reads
@@ -200,10 +330,32 @@ export default function LoopPage() {
 
       {stage === 'input' && (
         <section>
+          {offlineSaved && (
+            <p role="status" className="mb-3 rounded-lg border border-sky-500/50 bg-sky-950/40 px-4 py-3 text-sm text-sky-200">
+              You&apos;re offline — your dump is saved on this device. It&apos;ll be here when
+              you&apos;re back.
+            </p>
+          )}
+          {restorable && !dump && (
+            <button
+              onClick={() => {
+                setDump(restorable.text);
+                void storeRef.current?.remove(restorable.id);
+                setRestorable(null);
+                dumpRef.current?.focus();
+              }}
+              className="mb-3 inline-flex min-h-11 items-center rounded-lg border border-neutral-600 px-3 py-2 text-sm opacity-80 transition hover:opacity-100"
+            >
+              Pick up where you left off ({new Date(restorable.savedAt).toLocaleString()})
+            </button>
+          )}
           <textarea
             ref={dumpRef}
             value={dump}
-            onChange={(e) => setDump(e.target.value)}
+            onChange={(e) => {
+              setDump(e.target.value);
+              autosaveRef.current?.(e.target.value);
+            }}
             placeholder="Dump it here exactly how it comes out — half-sentences, tangents, all of it."
             aria-label="Brain dump — what you want to say"
             className="h-56 w-full resize-y rounded-xl border border-neutral-500 bg-white/5 p-4 text-base leading-relaxed text-inherit outline-none placeholder:opacity-50 focus:border-amber-400"
@@ -213,12 +365,15 @@ export default function LoopPage() {
             <button
               onClick={firstRound}
               disabled={busy || !dump.trim()}
-              className="rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-medium text-neutral-950 transition hover:bg-amber-400 disabled:opacity-40"
+              className="min-h-11 rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-medium text-neutral-950 transition hover:bg-amber-400 disabled:opacity-40"
             >
               {busy ? 'Reading…' : 'Show me what it heard'}
             </button>
             <span className="text-xs opacity-60">{dump.length}/8000</span>
           </div>
+          {dictationHint(coarse) && (
+            <p className="mt-2 text-xs opacity-60">{dictationHint(coarse)}</p>
+          )}
         </section>
       )}
 
@@ -253,7 +408,7 @@ export default function LoopPage() {
                     key={s.id}
                     onClick={() => toggle(s.id)}
                     className={
-                      'rounded-lg border px-3 py-2 text-left text-sm leading-relaxed transition ' +
+                      'min-h-11 rounded-lg border px-3 py-2 text-left text-sm leading-relaxed transition ' +
                       (locked
                         ? 'border-emerald-500 bg-emerald-950/40 text-emerald-100'
                         : 'border-neutral-500 bg-transparent hover:border-neutral-300')
@@ -270,7 +425,7 @@ export default function LoopPage() {
               <button
                 onClick={nextRound}
                 disabled={busy || elected.size === 0 || elected.size === spans.length}
-                className="rounded-lg border border-neutral-400 px-4 py-2 text-sm font-medium transition hover:bg-white/10 disabled:opacity-40"
+                className="min-h-11 rounded-lg border border-neutral-400 px-4 py-2 text-sm font-medium transition hover:bg-white/10 disabled:opacity-40"
                 title={
                   elected.size === 0
                     ? 'Lock at least one line first'
@@ -284,7 +439,7 @@ export default function LoopPage() {
               <button
                 onClick={() => setStage('final')}
                 disabled={busy || spans.length === 0}
-                className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-amber-400 disabled:opacity-40"
+                className="min-h-11 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-amber-400 disabled:opacity-40"
               >
                 It&apos;s right — finish it
               </button>
@@ -311,14 +466,14 @@ export default function LoopPage() {
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <button
               onClick={copyPrompt}
-              className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-amber-400"
+              className="min-h-11 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-amber-400"
             >
               {copied ? 'Copied ✓' : 'Copy it'}
             </button>
             <button
               onClick={answerHere}
               disabled={answerBusy || Boolean(answer)}
-              className="rounded-lg border border-neutral-400 px-4 py-2 text-sm font-medium transition hover:bg-white/10 disabled:opacity-40"
+              className="min-h-11 rounded-lg border border-neutral-400 px-4 py-2 text-sm font-medium transition hover:bg-white/10 disabled:opacity-40"
             >
               {answerBusy ? 'Answering…' : 'Answer it here'}
             </button>

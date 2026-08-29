@@ -1,0 +1,34 @@
+{
+ "counts": {
+  "calibration": 240,
+  "strong": 240,
+  "medium": 80,
+  "weak": 80,
+  "warranted": 40
+ },
+ "errors": 249,
+ "e1_auc": 1.0,
+ "e1_ci": [
+  1.0,
+  1.0
+ ],
+ "fa_per_convo": 0.049,
+ "e2": {
+  "strong": [
+   1.0,
+   0
+  ],
+  "medium": [
+   1.0,
+   0
+  ],
+  "weak": [
+   0.999,
+   2
+  ]
+ },
+ "dose_monotone": true,
+ "e3a_fires": 0.057,
+ "e3b_fires": 0.226,
+ "verdict": "PASS-SYNTHETIC (Tier S1 shipping licensed; E1-lit/C-LIT arm still pending for Tier S2)"
+}

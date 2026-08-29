@@ -33,6 +33,7 @@ import {
 } from './writeback.js';
 import { ImportModal } from './import-modal.js';
 import { planTopicWiring, type StubIn } from './topic-wiring.js';
+import { buildConstellationSvg, pointFromStub, type ConstellationPoint } from './constellation.js';
 
 export const VIEW_TYPE_LOOP = 'explicit-formula-loop';
 
@@ -68,6 +69,34 @@ export default class LoopPlugin extends Plugin {
     this.registerView(VIEW_TYPE_LOOP, (leaf) => new LoopView(leaf, this));
 
     this.addRibbonIcon('message-circle-question', 'Open the Loop', () => this.activateView());
+
+    this.addCommand({
+      id: 'draw-constellation',
+      name: 'Draw my constellation (archive as a chart)',
+      callback: async () => {
+        const idx = 'Notes/Archive index';
+        const files = this.app.vault.getMarkdownFiles().filter(
+          (f) => f.path.startsWith(idx + '/') && !f.name.startsWith('_'),
+        );
+        const points: ConstellationPoint[] = [];
+        for (const f of files) {
+          const p = pointFromStub(await this.app.vault.cachedRead(f));
+          if (p) points.push(p);
+        }
+        const svg = buildConstellationSvg(points);
+        const svgPath = 'Constellation.svg';
+        const existing = this.app.vault.getAbstractFileByPath(svgPath);
+        if (existing && 'stat' in existing) await this.app.vault.modify(existing as never, svg);
+        else await this.app.vault.create(svgPath, svg);
+        const mdPath = 'Constellation.md';
+        const md = '![[Constellation.svg]]\n\n*Regenerate anytime: command palette → "Draw my constellation". Topic labels and dates only — no conversation content.*\n';
+        const mdFile = this.app.vault.getAbstractFileByPath(mdPath);
+        if (mdFile && 'stat' in mdFile) await this.app.vault.modify(mdFile as never, md);
+        else await this.app.vault.create(mdPath, md);
+        new Notice(`Constellation drawn: ${points.length} conversations charted. Open Constellation.md.`);
+        void this.app.workspace.openLinkText('Constellation', '', true);
+      },
+    });
 
     this.addCommand({
       id: 'wire-archive-topics',

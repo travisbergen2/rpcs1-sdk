@@ -35,6 +35,7 @@ import {
 import { ImportModal } from './import-modal.js';
 import { planTopicWiring, type StubIn } from './topic-wiring.js';
 import { buildConstellationSvg, pointFromStub, type ConstellationPoint } from './constellation.js';
+import { composeAccommodationRecord } from './accommodation.js';
 import {
   clampResponseDelay,
   dictationHint,
@@ -66,6 +67,8 @@ interface LoopPluginSettings {
    * for users who need the AI to not respond instantly. 0 = off.
    */
   responseDelayMs: number;
+  /** Free-text accommodation notes — the user's own words for their export (M3). */
+  accommodationNotes: string;
 }
 
 const DEFAULT_SETTINGS: LoopPluginSettings = {
@@ -77,6 +80,7 @@ const DEFAULT_SETTINGS: LoopPluginSettings = {
   learningsEnabled: true,
   textScale: 'default',
   responseDelayMs: 0,
+  accommodationNotes: '',
 };
 
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
@@ -155,6 +159,36 @@ export default class LoopPlugin extends Plugin {
       id: 'import-ai-history',
       name: 'Import my AI history (ChatGPT / Claude)',
       callback: () => new ImportModal(this.app).open(),
+    });
+
+    this.addCommand({
+      id: 'export-accommodation-profile',
+      name: 'Export my accommodation profile',
+      callback: async () => {
+        const s = this.settings;
+        const record = composeAccommodationRecord(
+          {
+            textScale: s.textScale,
+            responseDelayMs: s.responseDelayMs,
+            sessionNotesEnabled: s.sessionNotesEnabled,
+            learningsEnabled: s.learningsEnabled,
+            accommodationNotes: s.accommodationNotes,
+          },
+          {
+            version: this.manifest.version,
+            date: new Date().toISOString().slice(0, 10),
+          },
+        );
+        const path = 'Accommodation profile.md';
+        const existing = this.app.vault.getAbstractFileByPath(path);
+        if (existing && 'stat' in existing) {
+          await this.app.vault.modify(existing as never, record);
+        } else {
+          await this.app.vault.create(path, record);
+        }
+        new Notice('Accommodation profile exported — an ordinary note you can share or print.');
+        void this.app.workspace.openLinkText('Accommodation profile', '', true);
+      },
     });
 
     this.addCommand({
@@ -778,6 +812,23 @@ class LoopSettingTab extends PluginSettingTab {
           .setValue(String(this.plugin.settings.responseDelayMs))
           .onChange(async (v) => {
             this.plugin.settings.responseDelayMs = clampResponseDelay(Number(v));
+            await this.plugin.saveSettings();
+          }),
+      );
+
+    new Setting(containerEl)
+      .setName('Accommodation notes')
+      .setDesc(
+        'Your own words about what you need — included in "Export my accommodation profile" '
+          + '(command palette). The export is an ordinary note: your settings + these notes, '
+          + 'never any vault content or folder names.',
+      )
+      .addTextArea((t) =>
+        t
+          .setPlaceholder('e.g. I process written information best; instant walls of text are hard…')
+          .setValue(this.plugin.settings.accommodationNotes)
+          .onChange(async (v) => {
+            this.plugin.settings.accommodationNotes = v.slice(0, 2000);
             await this.plugin.saveSettings();
           }),
       );

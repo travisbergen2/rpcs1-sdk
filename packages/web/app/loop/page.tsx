@@ -19,10 +19,12 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 import {
   clampResponseDelay,
   dictationHint,
+  normalizeNotes,
   normalizeTextScale,
   paceMs,
   TEXT_SCALE_FACTORS,
 } from '@/lib/loop-prefs';
+import { composeAccommodationRecord } from '@/lib/accommodation';
 import {
   getCoarseServerSnapshot,
   getCoarseSnapshot,
@@ -248,6 +250,23 @@ export default function LoopPage() {
     }
   }, [finalPrompt]);
 
+  // M3: the accommodation record — user-configured settings + their own
+  // words, downloadable as a file to attach to a request. Nothing else.
+  const exportRecord = useCallback(() => {
+    const md = composeAccommodationRecord(prefs, {
+      surface: 'explicitformula.com web app',
+      date: new Date().toISOString().slice(0, 10),
+    });
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'accommodation-record.md';
+    a.click();
+    URL.revokeObjectURL(url);
+    setAnnounce('Accommodation record downloaded.');
+  }, [prefs]);
+
   const reset = useCallback(() => {
     setStage('input');
     setSpans([]);
@@ -311,6 +330,27 @@ export default function LoopPage() {
               </select>
               <p className="mt-2 text-xs opacity-60">
                 A minimum time before results appear — slow connections already count toward it.
+              </p>
+              <label className="mt-4 block text-xs uppercase tracking-wide opacity-60" htmlFor="ef-notes">
+                Accommodation notes
+              </label>
+              <textarea
+                id="ef-notes"
+                value={prefs.notes}
+                maxLength={2000}
+                onChange={(e) => updateLoopPrefs({ ...prefs, notes: normalizeNotes(e.target.value) })}
+                placeholder="Your own words about what you need — included in the download below."
+                className="mt-1 h-24 w-full resize-y rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-2 text-sm"
+              />
+              <button
+                onClick={exportRecord}
+                className="mt-3 min-h-11 w-full rounded-lg border border-neutral-400 px-3 py-2 text-sm font-medium transition hover:bg-white/10"
+              >
+                Download accommodation record
+              </button>
+              <p className="mt-1 text-xs opacity-60">
+                Your settings + your notes as a file to attach to an accommodation request.
+                Nothing else is included.
               </p>
             </div>
           </details>

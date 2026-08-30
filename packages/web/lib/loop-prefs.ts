@@ -44,9 +44,16 @@ export function dictationHint(coarsePointer: boolean): string | null {
 export interface LoopPrefs {
   textScale: TextScale;
   responseDelayMs: number;
+  /** Free-text accommodation notes — the user's own words for their export. */
+  notes: string;
 }
 
-export const DEFAULT_PREFS: LoopPrefs = { textScale: 'default', responseDelayMs: 0 };
+export const DEFAULT_PREFS: LoopPrefs = { textScale: 'default', responseDelayMs: 0, notes: '' };
+
+/** Notes are user-authored; cap defensively (matches accommodation.ts). */
+export function normalizeNotes(v: unknown): string {
+  return typeof v === 'string' ? v.slice(0, 2000) : '';
+}
 
 export const PREFS_KEY = 'ef-loop-prefs-v1';
 
@@ -62,6 +69,7 @@ export function loadPrefs(store: KVStore | null): LoopPrefs {
     return {
       textScale: normalizeTextScale(p.textScale),
       responseDelayMs: clampResponseDelay(p.responseDelayMs),
+      notes: normalizeNotes(p.notes),
     };
   } catch {
     return DEFAULT_PREFS;
@@ -76,6 +84,7 @@ export function savePrefs(store: KVStore | null, prefs: LoopPrefs): void {
       JSON.stringify({
         textScale: normalizeTextScale(prefs.textScale),
         responseDelayMs: clampResponseDelay(prefs.responseDelayMs),
+        notes: normalizeNotes(prefs.notes),
       }),
     );
   } catch {

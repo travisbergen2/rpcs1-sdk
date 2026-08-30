@@ -58,11 +58,11 @@ describe('dictationHint', () => {
 describe('prefs persistence (injectable storage)', () => {
   it('round-trips valid prefs', () => {
     const s = fakeStore();
-    savePrefs(s, { textScale: 'large', responseDelayMs: 1000 });
-    expect(loadPrefs(s)).toEqual({ textScale: 'large', responseDelayMs: 1000 });
+    savePrefs(s, { textScale: 'large', responseDelayMs: 1000, notes: 'my words' });
+    expect(loadPrefs(s)).toEqual({ textScale: 'large', responseDelayMs: 1000, notes: 'my words' });
   });
   it('normalizes junk on load', () => {
-    const s = fakeStore({ 'ef-loop-prefs-v1': '{"textScale":"huge","responseDelayMs":"soon"}' });
+    const s = fakeStore({ 'ef-loop-prefs-v1': '{"textScale":"huge","responseDelayMs":"soon","notes":42}' });
     expect(loadPrefs(s)).toEqual(DEFAULT_PREFS);
   });
   it('survives corrupt JSON and null store', () => {

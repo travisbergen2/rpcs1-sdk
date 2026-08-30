@@ -42,6 +42,17 @@ import {
   type Draft,
   type DraftStore,
 } from '@/lib/offline-drafts';
+import { evaluateSeries, GAUGE_STRINGS, l1Score } from '@/lib/gauge';
+import { GaugeBadge } from '@/components/GaugeBadge';
+
+/**
+ * M4 feature flag — the gauge badge ships DEFAULT OFF; enable by setting
+ * NEXT_PUBLIC_EF_GAUGE=1 at build time. License: E-SYC-1 PASS-SYNTHETIC
+ * (Tier S1, 2026-08-29). Honest surface note: loop sessions rarely reach the
+ * 8-reply warmup, so on this surface the badge mostly reports 'watching' —
+ * its full value arrives on longer-conversation surfaces.
+ */
+const GAUGE_ON = process.env.NEXT_PUBLIC_EF_GAUGE === '1';
 
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
@@ -82,6 +93,8 @@ export default function LoopPage() {
   const [announce, setAnnounce] = useState('');
   const [restorable, setRestorable] = useState<Draft | null>(null);
   const [offlineSaved, setOfflineSaved] = useState(false);
+  /** M4: per-session L1 scores of in-app answers (client-side only). */
+  const [answerScores, setAnswerScores] = useState<number[]>([]);
   const prefsRef = useRef(prefs);
   const storeRef = useRef<DraftStore | null>(null);
   const autosaveRef = useRef<((text: string) => void) | null>(null);
@@ -242,13 +255,24 @@ export default function LoopPage() {
       }
       await sleep(paceMs(prefsRef.current.responseDelayMs, Date.now() - t0));
       setAnswer(data.answer);
-      setAnnounce('Answer ready.');
+      if (GAUGE_ON) {
+        const nextScores = [...answerScores, l1Score(data.answer)];
+        setAnswerScores(nextScores);
+        const reading = evaluateSeries(nextScores);
+        setAnnounce(
+          reading.state === 'flagged'
+            ? `Answer ready. ${GAUGE_STRINGS.flagged}`
+            : 'Answer ready.',
+        );
+      } else {
+        setAnnounce('Answer ready.');
+      }
     } catch {
       setError('Network hiccup — copy the prompt into your own AI.');
     } finally {
       setAnswerBusy(false);
     }
-  }, [finalPrompt]);
+  }, [finalPrompt, answerScores]);
 
   // M3: the accommodation record — user-configured settings + their own
   // words, downloadable as a file to attach to a request. Nothing else.
@@ -532,9 +556,12 @@ export default function LoopPage() {
           </p>
           {answer && (
             <div className="mt-6">
-              <h3 className="mb-2 text-sm font-medium uppercase tracking-wide opacity-60">
-                The answer
-              </h3>
+              <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                <h3 className="text-sm font-medium uppercase tracking-wide opacity-60">
+                  The answer
+                </h3>
+                {GAUGE_ON && <GaugeBadge reading={evaluateSeries(answerScores)} />}
+              </div>
               <div className="whitespace-pre-wrap rounded-xl border border-neutral-700 bg-white/5 p-4 text-sm leading-relaxed">
                 {answer}
               </div>

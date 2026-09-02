@@ -191,14 +191,9 @@ export default function HomePage() {
               anything else that speaks the open connector standard (MCP).
             </p>
             <div className="mt-5 flex flex-col gap-2 text-sm sm:flex-row sm:gap-6">
-              <a
-                href="https://github.com/travisbergen2/rpcs1-sdk/tree/main/packages/vault-mcp"
-                className="text-sky-400 underline-offset-4 hover:underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Set it up (five minutes) →
-              </a>
+              <Link href="/connect" className="text-sky-400 underline-offset-4 hover:underline">
+                Connect your AI (two minutes) →
+              </Link>
               <Link href="/labs" className="text-white/60 underline-offset-4 hover:text-white hover:underline">
                 Everything else lives in Labs →
               </Link>

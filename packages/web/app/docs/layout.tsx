@@ -5,6 +5,7 @@ const NAV = [
   { href: '/docs',                   label: 'Overview' },
   { href: '/docs/getting-started',   label: 'Getting started' },
   { href: '/docs/mcp',               label: 'MCP integration' },
+  { href: '/connect',                label: 'Second brain' },
   { href: '/docs/examples',          label: 'Examples' },
   { href: '/imm',                    label: 'IMM primer' },
   { href: '/docs/primitives',        label: 'The five primitives' },

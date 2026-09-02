@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ['/send', 0.9],
     ['/tuner', 0.9],
     ['/bridge', 0.9],
+    ['/connect', 0.8],
     ['/translator', 0.8],
     ['/calibrate', 0.8],
     ['/pricing', 0.8],

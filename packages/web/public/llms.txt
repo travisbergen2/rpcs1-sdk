@@ -21,6 +21,7 @@ Public interfaces:
 - REST API: POST https://rpcs1.dev/api/recommend
 - OpenAPI schema: https://rpcs1.dev/openapi.json
 - MCP server: https://rpcs1.dev/mcp
+- Second brain connector (local MCP server for a user's own notes; one-click setup per AI app): https://explicitformula.com/connect
 - Python SDK: pip install rpcs1
 - Source: https://github.com/travisbergen2/rpcs1-sdk
 

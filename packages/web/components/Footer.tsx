@@ -46,6 +46,7 @@ export function Footer() {
             <Link href="/pricing" className="transition-colors hover:text-gray-300">Pricing</Link>
             <Link href="/institutions" className="transition-colors hover:text-gray-300">Organizations</Link>
             <Link href="/docs" className="transition-colors hover:text-gray-300">Docs</Link>
+            <Link href="/connect" className="transition-colors hover:text-gray-300">Second brain</Link>
             <Link href="/rd" className="transition-colors hover:text-gray-300">R&amp;D</Link>
             <Link href="/docs/mcp" className="transition-colors hover:text-gray-300">MCP</Link>
             <Link href="/privacy" className="transition-colors hover:text-gray-300">Privacy</Link>

@@ -42,6 +42,7 @@ export default function DocsPage() {
       <h2>Quick links</h2>
       <ul>
         <li><Link href="/tuner">Free tuner</Link> - run a sample workflow in under a minute</li>
+        <li><Link href="/connect">Second brain connector</Link> - your own notes inside Claude Desktop, Cursor, VS Code, and other local MCP apps; one-click add-on</li>
         <li><Link href="/pricing#diagnostic">Paid diagnostic</Link> - the written memo and sample preview</li>
         <li><Link href="/docs/getting-started">Getting started</Link> - install the Python SDK</li>
         <li><Link href="/docs/mcp">MCP integration</Link> - connect the public read-only server</li>

@@ -47,9 +47,24 @@ that shipped), they don't abolish it.
 
 ## Setup
 
-Requires Node 20+.
+The guided version of everything below, with one-click links per AI app, is
+at **[explicitformula.com/connect](https://www.explicitformula.com/connect)**.
 
-### Claude Desktop
+### Claude Desktop — one-click add-on (no Node needed)
+
+Download
+[`second-brain-0.1.0.mcpb`](https://github.com/travisbergen2/rpcs1-sdk/releases/download/second-brain-mcpb-v0.1.0/second-brain-0.1.0.mcpb)
+from the [release page](https://github.com/travisbergen2/rpcs1-sdk/releases/tag/second-brain-mcpb-v0.1.0),
+double-click it, click Install, and answer two questions (your notes folder;
+the folders inside it the AI may read). The server file inside the bundle is
+byte-identical to this package's published `dist/index.js`; digests and the
+smoke-test record are in the release notes. Note: while the add-on is
+installed, its folder setting takes precedence over the Obsidian plugin's
+live switch (`--allow` precedence, below).
+
+Everything below requires Node 20+.
+
+### Claude Desktop (manual)
 
 Settings → Developer → Edit Config, add:
 

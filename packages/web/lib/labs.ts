@@ -28,6 +28,12 @@ export const LABS: LabEntry[] = [
     group: 'For people',
   },
   {
+    href: '/connect',
+    name: 'Second Brain',
+    desc: 'Your notes, inside the AI apps you already use — one-click setup for Claude Desktop, Cursor, VS Code, and more. Nothing leaves your machine until you choose folders.',
+    group: 'For people',
+  },
+  {
     href: '/bridge',
     name: 'Translation Bridge',
     desc: 'Full duplex: decode what a reply actually meant, and rewrite for the specific person receiving it.',

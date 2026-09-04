@@ -330,6 +330,22 @@ describe('E-GRD-1 retest fields and evidence constants (v2 season)', () => {
     }
   });
 
+  it('retest fields are absent on entries without an E-LIT-3 measurement (folded from #50)', () => {
+    for (const id of ['kimi-k2.6', 'grok-4.5', 'gpt-5.6-sol', 'gemini-3.5-flash', 'fable-5']) {
+      const e = lookupReceiver(id)!;
+      expect(e.elit3_measured_on, id).toBeUndefined();
+      expect(e.sb_retest, id).toBeUndefined();
+      expect(e.cb_retest, id).toBeUndefined();
+      expect(e.sb_band, id).toBeUndefined();
+      expect(e.cb_band, id).toBeUndefined();
+    }
+  });
+
+  it('table version was bumped for the retest schema (0.2.0 -> 0.3.0, folded from #50/#51)', async () => {
+    const mod = await import('../src/receivers.js');
+    expect(mod.RECEIVER_TABLE_VERSION).toBe('0.3.0');
+  });
+
   it('all ten E-LIT-3 subjects carry retest data', () => {
     const withRetest = RECEIVER_TABLE.filter((e) => e.sb_retest !== undefined);
     expect(withRetest.length).toBe(10);

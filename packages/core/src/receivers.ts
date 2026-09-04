@@ -92,12 +92,13 @@ export interface ReceiverEntry {
   cb_band?: [number, number];
 }
 
-export const RECEIVER_TABLE_VERSION = '0.2.0';
+export const RECEIVER_TABLE_VERSION = '0.3.0';
 export const RECEIVER_TABLE_MEASURED = '2026-07-26';
 export const RECEIVER_TABLE_ELIT3_MEASURED = '2026-07-26';
 export const RECEIVER_TABLE_SCOPE =
-  'E-LIT measurements: deployed defaults, agent scaffold, k=3, single date. ' +
-  'Field behavior, not model-internal constants.';
+  'E-LIT measurements: deployed defaults, agent scaffold, k=3; first-date coordinates, with an ' +
+  'E-GRD-1 second-date retest on the ten E-LIT-3 subjects (sb_retest/cb_retest — read SB/CB as ' +
+  '+/-1-rung bands). Field behavior, not model-internal constants.';
 
 /** E-GRD-1 (2026-07-28): the scoring itself is panel-validated. */
 export const RECEIVER_TABLE_SCORING_VALIDATION =

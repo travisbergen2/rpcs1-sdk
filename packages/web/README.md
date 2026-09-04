@@ -3,6 +3,56 @@
 Next.js app serving explicitformula.com (and rpcs1.dev, the mechanism home):
 the `/loop` capture surface, the translator/tuner APIs, docs, and billing.
 
+## The homepage is the instrument (2026-09-04)
+
+`app/page.tsx` renders `components/Instrument.tsx` and a three-link row —
+nothing else. No beats, no pitch sections, no offer copy on the face
+(`tests/instrument.test.ts` ratchets this at the source level). Organizations
+still reach licensing through the site-wide nav and footer.
+
+**Two panes.** Left — *You*: the words as typed, with the deterministic fork
+squiggles from `mirror()` (tap a squiggle or a chip to lock a reading; the
+clarifier is appended exactly as on `/send`). Right — *What the model hears*:
+the message as core's `interpret()` parses it (unresolved referents
+bracketed), the questions the model would need answered, whether it should
+check its reading first, the **standing instruction built from the dials**,
+and a collapsible "exact text that will be sent" preview that is byte-for-
+byte the hand-off payload.
+
+**Five dials = the receiver profile R̂.** One slider per primitive, 0–100:
+Pace (TI), Tone (SG), Directness (FT), Flexibility (UE), Ambiguity (AR) — the
+same human-side names core's profile card uses. They read and write
+`localStorage['rpcs1.rhat.v1']`, the key `/calibrate` writes and the Bridge
+return leg reads, so a calibration and a slider move are the same object
+(`lib/rhat-store.ts`, `useSyncExternalStore`, server renders neutral 50s).
+
+**The equation is literal.** `lib/instrument.ts` derives every displayed
+string from `@rpcs1/core`'s own functions: the instruction paragraph is
+`directivesToInstructions(deriveRenderingDirectives(R̂))` — identical to
+`rewriteForProfile(...).rewrite_instructions`; the per-dial trace lines are
+core's `why` strings; "Show the math" prints `mapToParameters(R̂, 'generic')`
+and `evaluateRegime(R̂)` with the rule stated next to each value. The test
+suite pins the instruction equality on a grid and checks each stated formula
+(temperature, top_p, max_tokens, the context/tool/retry thresholds, the
+regime rule) against core across the full 0–100 range — so if core's mapping
+changes, the page's stated math fails loudly instead of drifting.
+
+**Payload.** `buildPayload(text, R̂)` = `How to answer me: <instruction>` +
+blank line + `My message:` + the trimmed text. The "Send the dials with it"
+checkbox (default on) controls whether the instruction travels; the right
+pane says so when it is off. Send uses core's `buildHandoff` (URL prefill
+for ChatGPT/Claude/Perplexity/Grok; clipboard-then-open for Gemini/Copilot).
+Nothing is sent from the page.
+
+**Info bubble.** "What is this doing?" opens a region whose copy comes from
+`lib/landing-copy.ts` in the visitor's *Reading as* register (`sub`, three
+`beats`, and the new `dials` field) — the pill in the nav keeps its job.
+Register copy is offer-free by test.
+
+**Deliberately not on the face:** the Bridge dials (`/bridge`), the return
+leg's reply decoder (`/bridge`), the model persona panel (`/send`), sprawl
+segmentation (`/send`). `/send` keeps the full `SendBox`.
+
 ## /loop as an installable app (M2 — Mobile Arc Build Spec)
 
 The `/loop` page is the zero-install surface of the two-surface mobile

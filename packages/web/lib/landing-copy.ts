@@ -32,7 +32,7 @@ export const LANDING_COPY: Record<ProfileKey, LandingCopy> = {
       'Pick a reading and its clarifier is appended; one tap opens your own model app with the previewed text filled in. The call is never proxied.',
     ],
     dials:
-      'The five sliders are the receiver profile R̂ — the five RPCS-1 primitives on [0,100]. A fixed band rule (below 40 / 40–60 / above 60) selects one instruction clause per dial; the paragraph is produced by the same function the engine uses everywhere and is prepended to your message on send. Identical dials, identical paragraph. Values persist in this browser only and leave it only inside a message you send.',
+      'Two fader banks, five channels each. Yours is the receiver profile R̂ — the five RPCS-1 primitives on [0,100]; a fixed band rule (below 40 / 40–60 / above 60) selects one instruction clause per channel and the paragraph travels with your message. The model’s bank is the same five primitives read as an agent configuration: temperature and top_p from SG, max_tokens and context strategy from TI, tool-use gating from FT and AR, retry from UE, plus the regime check — its derived stance travels too, and the numeric settings are listed for apps that can apply them. Identical faders, identical output. Values persist in this browser only and leave it only inside a message you send.',
   },
   executive: {
     sub: 'Every "that’s not what I meant" is a wasted round trip. This catches the misread before it ships: see how your words will land, pick the meaning you intended, send once.',
@@ -42,7 +42,7 @@ export const LANDING_COPY: Record<ProfileKey, LandingCopy> = {
       'One tap sends the clear version through your own AI. Fewer round trips, same tools.',
     ],
     dials:
-      'Five sliders set how you want answers delivered — pace, tone, directness, flexibility, and what to do when your words could mean two things. They become a short standing instruction that travels with your message, so every model you use answers you the same way.',
+      'Two small mixing boards. Yours sets how you want answers delivered — pace, tone, directness, flexibility, and what to do when your words could mean two things. The model’s sets how it should run — how much it holds, how crisp or exploratory it is, how much it double-checks, how readily it retries, how fast it commits. Both travel with your message as a short standing instruction, so every model you use answers you the same way.',
   },
   plain: {
     sub: 'Words can land two different ways. The left box is what you typed; the right box is what the AI will actually get. If something could be taken two ways, you see it before you send — and you pick.',
@@ -52,7 +52,7 @@ export const LANDING_COPY: Record<ProfileKey, LandingCopy> = {
       'Pick your meaning and send it from your own AI app, like always.',
     ],
     dials:
-      'The five sliders are about you: how fast to get to the point, how warm to be, whether to say things outright, whether to push back, and whether to ask or just pick when something is unclear. They turn into a few plain sentences that go along with your message.',
+      'Two sets of sliders, like a stereo equalizer. Yours are about you: how fast to get to the point, how warm to be, whether to say things outright, whether to push back, and whether to ask or just pick when something is unclear. The model’s are about how it should work: how much it remembers, how careful it is, how often it checks, and how quickly it decides. Both turn into a few plain sentences that go along with your message.',
   },
   literal: {
     sub: 'Exact behavior: your text is checked in this browser tab; nothing is transmitted or stored by this site. If a sentence supports more than one reading, every reading is listed. If it supports exactly one, nothing appears. The right pane shows the exact text that will be handed to the AI app you choose.',
@@ -62,6 +62,6 @@ export const LANDING_COPY: Record<ProfileKey, LandingCopy> = {
       'Selecting a reading appends one clarifying sentence. The hand-off fills your chosen AI app with the exact previewed text; this site does not send it.',
     ],
     dials:
-      'Five sliders, each 0 to 100. Each slider selects one of three fixed sentences by its range: below 40, 40 to 60, above 60. The five selected sentences are joined into one paragraph and placed before your message when you send. The same slider values always produce the same paragraph. Slider values are kept in this browser and leave it only inside a message you choose to send.',
+      'Two boards of five sliders, each 0 to 100. Your board: each slider selects one of three fixed sentences by its range (below 40, 40 to 60, above 60); the five sentences are joined and placed before your message. The model’s board: the five values are converted by fixed formulas into settings (temperature, top_p, max_tokens, context, tool use, retry) and into stance sentences; both are placed before your message, and the settings are marked as applying only where the receiving app can use them. The same values always produce the same text. Values are kept in this browser and leave it only inside a message you choose to send.',
   },
 };

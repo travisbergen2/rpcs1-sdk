@@ -12,11 +12,14 @@ import {
   AGENT_PLATFORM,
   DIALS,
   DIAL_ORDER,
+  MODEL_DIALS,
+  MODEL_RHAT_STORAGE_KEY,
   NEUTRAL_PROFILE,
   PAYLOAD_HEADINGS,
   RHAT_STORAGE_KEY,
   bandOf,
   buildEquation,
+  buildModelEquation,
   buildPayload,
   clampProfile,
   hear,
@@ -37,35 +40,50 @@ for (const TI of [0, 39, 40, 61, 100]) {
   }
 }
 
-// ─── Dials ────────────────────────────────────────────────────────────────────
+// ─── The two boards ───────────────────────────────────────────────────────────
 
-describe('the five dials', () => {
-  it('are exactly five, one per receiver primitive, in canonical order', () => {
-    expect(DIALS).toHaveLength(5);
-    expect(DIALS.map((d) => d.key)).toEqual(DIAL_ORDER);
+describe('the two boards', () => {
+  it('each has exactly five channels, one per receiver primitive, in canonical order', () => {
     expect(DIAL_ORDER).toEqual(['TI', 'SG', 'FT', 'UE', 'AR']);
     expect(Object.keys(NEUTRAL_PROFILE)).toEqual(DIAL_ORDER);
-  });
-
-  it('carry a human-side name, a scientific name, a gloss, and two end labels — all distinct, none empty', () => {
-    for (const d of DIALS) {
-      for (const s of [d.name, d.scientific, d.gloss, d.low, d.high]) expect(s.trim().length, d.key).toBeGreaterThan(0);
-      expect(d.low).not.toBe(d.high);
+    for (const board of [DIALS, MODEL_DIALS]) {
+      expect(board).toHaveLength(5);
+      expect(board.map((d) => d.key)).toEqual(DIAL_ORDER);
     }
-    expect(new Set(DIALS.map((d) => d.name)).size).toBe(5);
-    expect(new Set(DIALS.map((d) => d.directive)).size).toBe(5);
   });
 
-  it("each dial drives a real directive field in core's deriveRenderingDirectives", () => {
+  it('every channel carries a name, a scientific name, a gloss, and two distinct end labels', () => {
+    for (const board of [DIALS, MODEL_DIALS]) {
+      for (const d of board) {
+        for (const s of [d.name, d.scientific, d.gloss, d.low, d.high]) expect(s.trim().length, d.key).toBeGreaterThan(0);
+        expect(d.low).not.toBe(d.high);
+      }
+      expect(new Set(board.map((d) => d.name)).size).toBe(5);
+    }
+  });
+
+  it('your board uses core’s profile-card names; the model’s board uses different names (they are different readers)', () => {
+    expect(DIALS.map((d) => d.name)).toEqual(['Pace', 'Tone', 'Directness', 'Flexibility', 'Ambiguity']);
+    expect(MODEL_DIALS.map((d) => d.name)).toEqual(['Memory', 'Gain', 'Trigger', 'Agility', 'Commit']);
+    const overlap = DIALS.map((d) => d.name).filter((n) => MODEL_DIALS.some((m) => m.name === n));
+    expect(overlap).toEqual([]);
+  });
+
+  it("each of your channels drives a real directive field in core's deriveRenderingDirectives", () => {
     const d = deriveRenderingDirectives(NEUTRAL_PROFILE);
+    expect(new Set(DIALS.map((s) => s.directive)).size).toBe(5);
     for (const spec of DIALS) {
       expect(spec.directive in d, spec.key).toBe(true);
       expect(spec.directive in d.why, spec.key).toBe(true);
     }
   });
 
-  it('use the same human-side names as core’s profile card (Pace/Tone/Directness/Flexibility/Ambiguity)', () => {
-    expect(DIALS.map((d) => d.name)).toEqual(['Pace', 'Tone', 'Directness', 'Flexibility', 'Ambiguity']);
+  it('the two boards store under different keys, yours being the /calibrate key', () => {
+    expect(RHAT_STORAGE_KEY).toBe('rpcs1.rhat.v1');
+    expect(MODEL_RHAT_STORAGE_KEY).toBe('rpcs1.rhat.model.v1');
+    expect(MODEL_RHAT_STORAGE_KEY).not.toBe(RHAT_STORAGE_KEY);
+    expect(read('app/calibrate/page.tsx')).toContain(`'${RHAT_STORAGE_KEY}'`);
+    expect(read('components/ReturnPanel.tsx')).toContain(`'${RHAT_STORAGE_KEY}'`);
   });
 });
 
@@ -93,27 +111,20 @@ describe('clampProfile / storage round trip', () => {
     for (const p of GRID) {
       const raw = serializeProfile(p);
       expect(parseStoredProfile(raw)).toEqual(p);
-      // ReturnPanel.loadRhat's rule, re-stated: every key is a number.
       const parsed = JSON.parse(raw) as Record<string, unknown>;
       expect(['TI', 'SG', 'FT', 'UE', 'AR'].every((k) => typeof parsed[k] === 'number')).toBe(true);
     }
   });
 
-  it('uses the storage key /calibrate writes and ReturnPanel reads', () => {
-    expect(RHAT_STORAGE_KEY).toBe('rpcs1.rhat.v1');
-    expect(read('app/calibrate/page.tsx')).toContain(`'${RHAT_STORAGE_KEY}'`);
-    expect(read('components/ReturnPanel.tsx')).toContain(`'${RHAT_STORAGE_KEY}'`);
-  });
-
-  it('profilesEqual compares all five dials', () => {
+  it('profilesEqual compares all five channels', () => {
     expect(profilesEqual(NEUTRAL_PROFILE, { ...NEUTRAL_PROFILE })).toBe(true);
     expect(profilesEqual(NEUTRAL_PROFILE, profile({ AR: 51 }))).toBe(false);
   });
 });
 
-// ─── The equation is the equation that runs ───────────────────────────────────
+// ─── Your board: the equation is the equation that runs ───────────────────────
 
-describe('buildEquation — every displayed string is core’s own output', () => {
+describe('buildEquation (your board) — every displayed string is core’s own output', () => {
   it('the instruction paragraph equals rewriteForProfile(...).rewrite_instructions, on the whole grid', () => {
     for (const p of GRID) {
       const eq = buildEquation(p);
@@ -122,7 +133,7 @@ describe('buildEquation — every displayed string is core’s own output', () =
     }
   });
 
-  it('each term’s why-line and mode are core’s, keyed by the dial’s directive', () => {
+  it('each term’s why-line and mode are core’s, keyed by the channel’s directive', () => {
     for (const p of GRID) {
       const d = deriveRenderingDirectives(p);
       const eq = buildEquation(p);
@@ -153,14 +164,8 @@ describe('buildEquation — every displayed string is core’s own output', () =
     }
   });
 
-  it('the vector notation lists all five dials in order with their values', () => {
-    expect(buildEquation({ TI: 1, SG: 2, FT: 3, UE: 4, AR: 5 }).vector).toBe('R̂ = (TI 1, SG 2, FT 3, UE 4, AR 5)');
-  });
-
-  it('agent-side lines stay ASCII-safe apart from the hat on R (fallback fonts render ⟨⟩, subscripts and ∧ as boxes)', () => {
-    for (const line of buildEquation(NEUTRAL_PROFILE).agent.lines) {
-      expect(line, line).toMatch(/^[\x20-\x7E]+$/);
-    }
+  it('the vector names the board and lists all five channels in order', () => {
+    expect(buildEquation({ TI: 1, SG: 2, FT: 3, UE: 4, AR: 5 }).vector).toBe('R̂(you) = (TI 1, SG 2, FT 3, UE 4, AR 5)');
   });
 
   it('is deterministic and clamps its input', () => {
@@ -170,13 +175,79 @@ describe('buildEquation — every displayed string is core’s own output', () =
   });
 });
 
+// ─── The model’s board: the agent equation ────────────────────────────────────
+
+describe('buildModelEquation (the model’s board) — every displayed string is core’s own output', () => {
+  it('params and regime are the verbatim core calls; the vector names the board', () => {
+    for (const p of GRID) {
+      const eq = buildModelEquation(p);
+      expect(eq.params).toEqual(mapToParameters(p, AGENT_PLATFORM));
+      expect(eq.regime).toBe(evaluateRegime(p));
+    }
+    expect(buildModelEquation({ TI: 1, SG: 2, FT: 3, UE: 4, AR: 5 }).vector).toBe('R̂(model) = (TI 1, SG 2, FT 3, UE 4, AR 5)');
+  });
+
+  it('each channel’s why-line names the setting it drives, with core’s value', () => {
+    for (const p of GRID) {
+      const params = mapToParameters(p, AGENT_PLATFORM);
+      const eq = buildModelEquation(p);
+      const why = Object.fromEntries(eq.terms.map((t) => [t.key, t.why])) as Record<string, string>;
+      expect(why.TI).toContain(`max_tokens ${params.max_tokens}`);
+      expect(why.TI).toContain(`context ${params.context_strategy}`);
+      expect(why.SG).toContain(`temperature ${params.temperature}`);
+      expect(why.SG).toContain(`top_p ${params.top_p}`);
+      expect(why.UE).toContain(`retry ${params.retry_strategy}`);
+      expect(why.AR).toContain(`tool use ${params.tool_use_strategy}`);
+      if (p.FT >= 65) {
+        expect(params.tool_use_strategy).toBe('explicit_confirmation');
+        expect(why.FT).toContain('explicit confirmation');
+      } else {
+        expect(why.FT).toContain('follows AR');
+      }
+      for (const t of eq.terms) expect(t.value).toBe(p[t.key]);
+    }
+  });
+
+  it('the stance is core’s system_prompt_additions joined, never empty; the settings line carries every parameter', () => {
+    for (const p of GRID) {
+      const params = mapToParameters(p, AGENT_PLATFORM);
+      const eq = buildModelEquation(p);
+      expect(eq.stance).toBe((params.system_prompt_additions ?? []).join(' '));
+      expect(eq.stance.length).toBeGreaterThan(0);
+      for (const piece of [
+        `temperature ${params.temperature}`,
+        `top_p ${params.top_p}`,
+        `max_tokens ${params.max_tokens}`,
+        `context ${params.context_strategy}`,
+        `tool use ${params.tool_use_strategy}`,
+        `retry ${params.retry_strategy}`,
+      ]) {
+        expect(eq.settingsLine).toContain(piece);
+      }
+    }
+  });
+
+  it('the stance follows the model board: low Commit adds the ambiguity caution; high Trigger adds the high-stakes check', () => {
+    expect(buildModelEquation(profile({ AR: 20 })).stance).toContain('explicitly acknowledge the uncertainty');
+    expect(buildModelEquation(profile({ AR: 80 })).stance).not.toContain('explicitly acknowledge the uncertainty');
+    expect(buildModelEquation(profile({ FT: 70 })).stance).toContain('verify your understanding by restating the request');
+    expect(buildModelEquation(profile({ FT: 30 })).stance).not.toContain('verify your understanding');
+  });
+
+  it('agent-side lines stay ASCII-safe (fallback fonts render ⟨⟩, subscripts and ∧ as boxes)', () => {
+    for (const line of buildModelEquation(NEUTRAL_PROFILE).lines) {
+      expect(line, line).toMatch(/^[\x20-\x7E]+$/);
+    }
+  });
+});
+
 describe('agent-side lines — the stated formulas reproduce core over the full range', () => {
   it('temperature and top_p: stated SG formulas equal mapToParameters on the generic platform, SG = 0..100', () => {
     for (let SG = 0; SG <= 100; SG += 1) {
       const params = mapToParameters(profile({ SG }), AGENT_PLATFORM);
       expect(params.temperature, `SG=${SG}`).toBe(Math.round((1.0 - (SG / 100) * (1.0 - 0.0)) * 100) / 100);
       expect(params.top_p, `SG=${SG}`).toBe(Math.round(((1 - SG / 100) * 0.6 + 0.4) * 100) / 100);
-      const lines = buildEquation(profile({ SG })).agent.lines.join('\n');
+      const lines = buildModelEquation(profile({ SG })).lines.join('\n');
       expect(lines).toContain(`= ${params.temperature}`);
       expect(lines).toContain(`= ${params.top_p}`);
     }
@@ -186,7 +257,7 @@ describe('agent-side lines — the stated formulas reproduce core over the full 
     for (let TI = 0; TI <= 100; TI += 1) {
       const params = mapToParameters(profile({ TI }), AGENT_PLATFORM);
       expect(params.max_tokens, `TI=${TI}`).toBe(Math.round((256 + (TI / 100) * (4096 - 256)) / 256) * 256);
-      expect(buildEquation(profile({ TI })).agent.lines.join('\n')).toContain(`= ${params.max_tokens}`);
+      expect(buildModelEquation(profile({ TI })).lines.join('\n')).toContain(`= ${params.max_tokens}`);
     }
   });
 
@@ -208,6 +279,19 @@ describe('agent-side lines — the stated formulas reproduce core over the full 
     }
   });
 
+  it('the stated stance rules match core at every boundary (FT 60/75, TI 25, AR 35)', () => {
+    const has = (p: ReceiverProfile, needle: string) =>
+      (mapToParameters(p, AGENT_PLATFORM).system_prompt_additions ?? []).some((s) => s.includes(needle));
+    expect(has(profile({ FT: 60 }), 'verify your understanding')).toBe(true);
+    expect(has(profile({ FT: 59 }), 'verify your understanding')).toBe(false);
+    expect(has(profile({ FT: 75 }), 'Treat uncertain signals as noise')).toBe(true);
+    expect(has(profile({ FT: 74 }), 'Treat uncertain signals as noise')).toBe(false);
+    expect(has(profile({ TI: 25 }), 'Be concise')).toBe(true);
+    expect(has(profile({ TI: 26 }), 'Be concise')).toBe(false);
+    expect(has(profile({ AR: 35 }), 'acknowledge the uncertainty')).toBe(true);
+    expect(has(profile({ AR: 36 }), 'acknowledge the uncertainty')).toBe(false);
+  });
+
   it('the stated regime rule matches evaluateRegime, and the line carries the value', () => {
     const cases: Array<[ReceiverProfile, string]> = [
       [profile({ TI: 65, SG: 55 }), 'near_oscillation'],
@@ -218,21 +302,9 @@ describe('agent-side lines — the stated formulas reproduce core over the full 
     ];
     for (const [p, regime] of cases) {
       expect(evaluateRegime(p)).toBe(regime);
-      const eq = buildEquation(p);
-      expect(eq.agent.regime).toBe(regime);
-      expect(eq.agent.lines.join('\n')).toContain(`regime = ${regime}`);
-    }
-  });
-
-  it('every line names its value verbatim from the same mapToParameters call', () => {
-    for (const p of GRID) {
-      const eq = buildEquation(p);
-      const params = mapToParameters(p, AGENT_PLATFORM);
-      expect(eq.agent.params).toEqual(params);
-      const joined = eq.agent.lines.join('\n');
-      expect(joined).toContain(`context = ${params.context_strategy}`);
-      expect(joined).toContain(`tool use = ${params.tool_use_strategy}`);
-      expect(joined).toContain(`retry = ${params.retry_strategy}`);
+      const eq = buildModelEquation(p);
+      expect(eq.regime).toBe(regime);
+      expect(eq.lines.join('\n')).toContain(`regime = ${regime}`);
     }
   });
 });
@@ -240,31 +312,45 @@ describe('agent-side lines — the stated formulas reproduce core over the full 
 // ─── The payload is what the right pane shows ─────────────────────────────────
 
 describe('buildPayload — exactly what the hand-off sends', () => {
-  it('contains the instruction paragraph verbatim, then the trimmed message, under the two headings', () => {
-    const p = profile({ TI: 80, FT: 80, AR: 20 });
-    const text = '  Fix it and send them the file.  ';
-    const payload = buildPayload(text, p);
-    const { instruction } = buildEquation(p);
-    expect(payload.startsWith(`${PAYLOAD_HEADINGS.instruction}: ${instruction}`)).toBe(true);
-    expect(payload.endsWith(`${PAYLOAD_HEADINGS.message}:\nFix it and send them the file.`)).toBe(true);
+  it('carries your instruction, the model’s stance and settings, then the trimmed message, under the four headings, in order', () => {
+    const you = profile({ TI: 80, FT: 80, AR: 20 });
+    const model = profile({ SG: 90, FT: 70, AR: 30 });
+    const payload = buildPayload('  Fix it and send them the file.  ', you, model);
+    const yours = buildEquation(you);
+    const theirs = buildModelEquation(model);
+    const iInstr = payload.indexOf(`${PAYLOAD_HEADINGS.instruction}: ${yours.instruction}`);
+    const iStance = payload.indexOf(`${PAYLOAD_HEADINGS.stance}: ${theirs.stance}`);
+    const iSettings = payload.indexOf(`${PAYLOAD_HEADINGS.settings}: ${theirs.settingsLine}`);
+    const iMsg = payload.indexOf(`${PAYLOAD_HEADINGS.message}:\nFix it and send them the file.`);
+    expect(iInstr).toBe(0);
+    expect(iStance).toBeGreaterThan(iInstr);
+    expect(iSettings).toBeGreaterThan(iStance);
+    expect(iMsg).toBeGreaterThan(iSettings);
+    expect(payload.endsWith('Fix it and send them the file.')).toBe(true);
   });
 
-  it('with the dials switched off, the message travels alone', () => {
-    expect(buildPayload('  hello  ', NEUTRAL_PROFILE, { includeInstruction: false })).toBe('hello');
+  it('with the boards switched off, the message travels alone', () => {
+    expect(buildPayload('  hello  ', NEUTRAL_PROFILE, NEUTRAL_PROFILE, { includeInstruction: false })).toBe('hello');
   });
 
-  it('moving a dial changes the payload (the sliders drive what is sent)', () => {
-    const a = buildPayload('hello', profile({ AR: 20 }));
-    const b = buildPayload('hello', profile({ AR: 80 }));
-    expect(a).not.toBe(b);
-    expect(a).toContain('surface the possible readings and ask');
-    expect(b).toContain('choose the most likely reading and answer it directly');
+  it('moving a fader on either board changes the payload', () => {
+    const base = buildPayload('hello', NEUTRAL_PROFILE, NEUTRAL_PROFILE);
+    expect(buildPayload('hello', profile({ AR: 20 }), NEUTRAL_PROFILE)).toContain('surface the possible readings and ask');
+    expect(buildPayload('hello', profile({ AR: 80 }), NEUTRAL_PROFILE)).toContain('choose the most likely reading and answer it directly');
+    const hot = buildPayload('hello', NEUTRAL_PROFILE, profile({ SG: 0 }));
+    expect(hot).not.toBe(base);
+    expect(hot).toContain('temperature 1');
+    expect(buildPayload('hello', NEUTRAL_PROFILE, profile({ SG: 100 }))).toContain('temperature 0;');
+  });
+
+  it('the settings heading tells the receiving app it may ignore what it cannot apply', () => {
+    expect(PAYLOAD_HEADINGS.settings).toMatch(/otherwise ignore/);
   });
 });
 
 // ─── The hearing ──────────────────────────────────────────────────────────────
 
-describe('hear — how the message parses, given the dials', () => {
+describe('hear — how the message parses, given your board', () => {
   it('is null for empty input', () => {
     expect(hear('', NEUTRAL_PROFILE)).toBeNull();
     expect(hear('   \n', NEUTRAL_PROFILE)).toBeNull();
@@ -285,13 +371,13 @@ describe('hear — how the message parses, given the dials', () => {
     expect(h.wouldAsk).toEqual([]);
   });
 
-  it('the Ambiguity dial bends check-first vs answer-now, exactly as core does', () => {
+  it('your Ambiguity channel bends check-first vs answer-now, exactly as core does', () => {
     const clean = 'Summarize the attached quarterly report in three bullet points.';
     expect(hear(clean, profile({ AR: 20 }))!.playback).toBe(true); // "Ask me" → check the reading first
     expect(hear(clean, profile({ AR: 80 }))!.playback).toBe(false); // "Pick one and answer"
   });
 
-  it('a high Directness dial adds the literal-check question when there is ambiguity evidence', () => {
+  it('a high Directness channel adds the literal-check question when there is ambiguity evidence', () => {
     const h = hear('Can you sort out that thing from before?', profile({ FT: 80 }))!;
     expect(h.wouldAsk.length).toBeGreaterThan(0);
   });
@@ -302,15 +388,30 @@ describe('hear — how the message parses, given the dials', () => {
 describe('the homepage is the instrument (source ratchets)', () => {
   const page = read('app/page.tsx');
   const instrument = read('components/Instrument.tsx');
+  const board = read('components/FaderBoard.tsx');
+  const fader = read('components/Fader.tsx');
+  const css = read('app/globals.css');
 
   it('mounts the instrument and keeps the #box anchor the footer links to', () => {
     expect(page).toContain('<Instrument />');
     expect(instrument).toContain('id="box"');
   });
 
-  it('renders one slider per dial from the single DIALS source', () => {
-    expect(instrument).toContain('DIALS.map(');
-    expect(instrument).toContain('type="range"');
+  it('renders two boards — yours and the model’s — each from its single DIALS source', () => {
+    expect(instrument).toContain('side="you"');
+    expect(instrument).toContain('side="model"');
+    expect(instrument).toContain('dials={DIALS}');
+    expect(instrument).toContain('dials={MODEL_DIALS}');
+    expect(board).toContain('<Fader');
+    expect(board).toContain('dials.map(');
+  });
+
+  it('faders are native vertical range inputs (keyboard, touch, and screen readers for free)', () => {
+    expect(fader).toContain('type="range"');
+    expect(fader).toContain('aria-orientation="vertical"');
+    expect(fader).toContain('aria-valuetext=');
+    expect(css).toMatch(/\.fader\s*\{[^}]*rotate\(-90deg\)/);
+    expect(css).toContain('--fader-v');
   });
 
   it('links the Obsidian second brain (/connect), the reply leg (/bridge), and Labs — and names Obsidian', () => {
@@ -321,7 +422,7 @@ describe('the homepage is the instrument (source ratchets)', () => {
   });
 
   it('carries no offer or pitch copy: no prices, no "free", no tiers, no pilot or diagnostic funnel', () => {
-    for (const [name, src] of [['page', page], ['instrument', instrument]] as const) {
+    for (const [name, src] of [['page', page], ['instrument', instrument], ['board', board], ['fader', fader]] as const) {
       // Source files legitimately contain `${...}` template literals; a price is a dollar sign followed by a digit.
       expect(/\$\d/.test(src), `${name}: price`).toBe(false);
       expect(/\bfree\b/i.test(src), `${name}: offer language`).toBe(false);

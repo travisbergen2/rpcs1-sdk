@@ -26,18 +26,15 @@ export function Footer() {
               </a>{' '}
               — the receiver engine, its laws, and its scorecard.
             </p>
+            {/* No pitch in the footer (Travis, 2026-09-04). Organizations reach
+                licensing through the Pricing and Organizations links below;
+                /diagnostic stays live at its route. */}
             <div className="mt-4 flex flex-wrap gap-3">
               <Link
                 href="/#box"
                 className="inline-flex min-h-11 items-center text-sm font-medium text-gray-300 underline-offset-4 hover:text-white hover:underline"
               >
                 Try the box →
-              </Link>
-              <Link
-                href="/diagnostic"
-                className="inline-flex min-h-11 items-center text-sm font-medium text-amber-300/90 underline-offset-4 hover:text-amber-200 hover:underline"
-              >
-                Founding pilot →
               </Link>
             </div>
           </div>

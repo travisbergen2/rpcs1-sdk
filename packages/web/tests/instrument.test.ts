@@ -339,4 +339,13 @@ describe('the homepage is the instrument (source ratchets)', () => {
   it('states the hand-off contract: nothing is sent from the page', () => {
     expect(instrument).toMatch(/Nothing is sent from this page/);
   });
+
+  it('the site footer carries no pitch link: no Founding pilot, no /diagnostic call-to-action (2026-09-04 decision)', () => {
+    const footer = read('components/Footer.tsx');
+    expect(footer).not.toMatch(/founding/i);
+    expect(footer).not.toContain('href="/diagnostic"');
+    // Organizations stay reachable — the ratchet removes the pitch, not the path.
+    expect(footer).toContain('href="/pricing"');
+    expect(footer).toContain('href="/institutions"');
+  });
 });

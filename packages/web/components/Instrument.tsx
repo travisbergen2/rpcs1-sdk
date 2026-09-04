@@ -28,7 +28,6 @@ import {
   type ReceiverProfile,
   type VendorId,
 } from '@rpcs1/core';
-import { StickerLogo } from '@/components/StickerLogo';
 import { useProfile } from '@/components/ProfileProvider';
 import { LANDING_COPY } from '@/lib/landing-copy';
 import { BRAND_PROMISE } from '@/lib/brand';
@@ -147,10 +146,8 @@ export default function Instrument() {
     <section id="box" className="mx-auto max-w-6xl scroll-mt-20 px-4 pt-8 sm:px-6" aria-label="The instrument">
       {/* ── Header: sticker, promise, info bubble ─────────────────────────── */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <StickerLogo size="nav" />
-          <h1 className="text-sm font-semibold tracking-tight text-white/80 sm:text-base">{BRAND_PROMISE}</h1>
-        </div>
+        {/* The sticker already sits in the nav; repeating it here doubled the chrome on phones. */}
+        <h1 className="text-sm font-semibold tracking-tight text-white/80 sm:text-base">{BRAND_PROMISE}</h1>
         <button
           type="button"
           onClick={() => setInfoOpen((o) => !o)}
@@ -459,7 +456,7 @@ export default function Instrument() {
 
       {/* ── Send row ──────────────────────────────────────────────────────── */}
       <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl border border-white/10 bg-[#0a0f1a] p-4">
-        <label className="flex min-h-11 items-center gap-2 text-sm text-white/70">
+        <label className="flex min-h-11 items-center gap-2 whitespace-nowrap text-sm text-white/70">
           Send to
           <select
             value={vendor}

@@ -198,7 +198,7 @@ export interface AgentReading {
 export interface Equation {
   profile: ReceiverProfile;
   terms: EquationTerm[];
-  /** Compact vector notation: R̂ = ⟨TI 50, SG 50, FT 50, UE 50, AR 50⟩ */
+  /** Compact vector notation: R̂ = (TI 50, SG 50, FT 50, UE 50, AR 50) */
   vector: string;
   /**
    * The instruction paragraph the model receives — verbatim
@@ -234,19 +234,23 @@ export function buildEquation(input: ReceiverProfile): Equation {
   }));
 
   const instruction = directivesToInstructions(d);
-  const vector = `R̂ = ⟨${DIAL_ORDER.map((k) => `${k} ${profile[k]}`).join(', ')}⟩`;
+  // Parentheses, not ⟨⟩: the mathematical angle brackets render as boxes in
+  // common fallback fonts (seen in the phone-width render check).
+  const vector = `R̂ = (${DIAL_ORDER.map((k) => `${k} ${profile[k]}`).join(', ')})`;
 
   const params = mapToParameters(profile, AGENT_PLATFORM);
   const regime = evaluateRegime(profile);
   const { TI, SG } = profile;
+  // ASCII-safe notation on purpose (no subscripts or logic glyphs): these
+  // lines render in the monospace stack, whose glyph coverage varies.
   const lines = [
-    `temperature = 1.0 − (SG/100)·(1.0 − 0.0) = 1.0 − ${SG}/100 = ${params.temperature}`,
-    `top_p = 0.4 + 0.6·(1 − SG/100) = ${params.top_p}`,
-    `max_tokens = round₂₅₆(256 + (TI/100)·(4096 − 256)) = round₂₅₆(256 + ${TI}/100·3840) = ${params.max_tokens}`,
-    `context = ${params.context_strategy}   [TI ≥ 65 → long_window · TI ≥ 35 → rolling_summary · else frequent_grounding]`,
-    `tool use = ${params.tool_use_strategy}   [FT ≥ 65 → explicit_confirmation · AR ≤ 35 → cautious_chaining · AR ≥ 65 → aggressive · else fail_fast]`,
-    `retry = ${params.retry_strategy}   [UE ≥ 65 → aggressive · UE ≥ 35 → moderate · else minimal]`,
-    `regime = ${regime}   [TI ≥ 65 ∧ SG ≥ 55 → near_oscillation · TI ≤ 35 ∧ SG ≥ 65 → near_overload · UE ≤ 35 ∧ FT ≥ 65 → near_freeze · else stable]`,
+    `temperature = 1.0 - (SG/100) * (1.0 - 0.0) = 1.0 - ${SG}/100 = ${params.temperature}`,
+    `top_p = 0.4 + 0.6 * (1 - SG/100) = ${params.top_p}`,
+    `max_tokens = round256(256 + (TI/100) * (4096 - 256)) = round256(256 + ${TI}/100 * 3840) = ${params.max_tokens}`,
+    `context = ${params.context_strategy}   [TI >= 65 -> long_window; TI >= 35 -> rolling_summary; else frequent_grounding]`,
+    `tool use = ${params.tool_use_strategy}   [FT >= 65 -> explicit_confirmation; AR <= 35 -> cautious_chaining; AR >= 65 -> aggressive; else fail_fast]`,
+    `retry = ${params.retry_strategy}   [UE >= 65 -> aggressive; UE >= 35 -> moderate; else minimal]`,
+    `regime = ${regime}   [TI >= 65 and SG >= 55 -> near_oscillation; TI <= 35 and SG >= 65 -> near_overload; UE <= 35 and FT >= 65 -> near_freeze; else stable]`,
   ];
 
   return { profile, terms, vector, instruction, agent: { params, regime, lines } };

@@ -154,7 +154,13 @@ describe('buildEquation — every displayed string is core’s own output', () =
   });
 
   it('the vector notation lists all five dials in order with their values', () => {
-    expect(buildEquation({ TI: 1, SG: 2, FT: 3, UE: 4, AR: 5 }).vector).toBe('R̂ = ⟨TI 1, SG 2, FT 3, UE 4, AR 5⟩');
+    expect(buildEquation({ TI: 1, SG: 2, FT: 3, UE: 4, AR: 5 }).vector).toBe('R̂ = (TI 1, SG 2, FT 3, UE 4, AR 5)');
+  });
+
+  it('agent-side lines stay ASCII-safe apart from the hat on R (fallback fonts render ⟨⟩, subscripts and ∧ as boxes)', () => {
+    for (const line of buildEquation(NEUTRAL_PROFILE).agent.lines) {
+      expect(line, line).toMatch(/^[\x20-\x7E]+$/);
+    }
   });
 
   it('is deterministic and clamps its input', () => {

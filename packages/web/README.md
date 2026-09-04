@@ -10,44 +10,66 @@ nothing else. No beats, no pitch sections, no offer copy on the face
 (`tests/instrument.test.ts` ratchets this at the source level). Organizations
 still reach licensing through the site-wide nav and footer.
 
-**Two panes.** Left — *You*: the words as typed, with the deterministic fork
+**Two panes, each with a board on top — mixing-desk style.** Left — *You*:
+your five faders above your words, which carry the deterministic fork
 squiggles from `mirror()` (tap a squiggle or a chip to lock a reading; the
-clarifier is appended exactly as on `/send`). Right — *What the model hears*:
-the message as core's `interpret()` parses it (unresolved referents
-bracketed), the questions the model would need answered, whether it should
-check its reading first, the **standing instruction built from the dials**,
-and a collapsible "exact text that will be sent" preview that is byte-for-
-byte the hand-off payload.
+clarifier is appended exactly as on `/send`). Right — *The model*: its five
+faders above *What the model hears*: the message as core's `interpret()`
+parses it (unresolved referents bracketed), the questions the model would need
+answered, whether it should check its reading first, **how it will run** (from
+its board), **how to answer you** (from yours), and a collapsible "exact text
+that will be sent" preview that is byte-for-byte the hand-off payload.
 
-**Five dials = the receiver profile R̂.** One slider per primitive, 0–100:
-Pace (TI), Tone (SG), Directness (FT), Flexibility (UE), Ambiguity (AR) — the
-same human-side names core's profile card uses. They read and write
-`localStorage['rpcs1.rhat.v1']`, the key `/calibrate` writes and the Bridge
-return leg reads, so a calibration and a slider move are the same object
-(`lib/rhat-store.ts`, `useSyncExternalStore`, server renders neutral 50s).
+**Faders** (`components/Fader.tsx`, `.fader` in `globals.css`): a native
+`<input type="range">` rotated −90°, so min is at the bottom and max at the
+top, with a flat cap for a thumb and a level fill rising from the bottom like
+an EQ band. Native control = keyboard, touch, and screen readers for free
+(`aria-orientation="vertical"`, `aria-valuetext` carries the channel's trace
+line). `components/FaderBoard.tsx` arranges five faders with a 0–100 scale
+column (center detent at 50 = the neutral profile) and an LCD-style strip that
+shows the touched channel — name, value, what down/up mean, the engine's trace
+line — or the board's vector when idle.
 
-**The equation is literal.** `lib/instrument.ts` derives every displayed
-string from `@rpcs1/core`'s own functions: the instruction paragraph is
-`directivesToInstructions(deriveRenderingDirectives(R̂))` — identical to
-`rewriteForProfile(...).rewrite_instructions`; the per-dial trace lines are
-core's `why` strings; "Show the math" prints `mapToParameters(R̂, 'generic')`
-and `evaluateRegime(R̂)` with the rule stated next to each value. The test
-suite pins the instruction equality on a grid and checks each stated formula
-(temperature, top_p, max_tokens, the context/tool/retry thresholds, the
-regime rule) against core across the full 0–100 range — so if core's mapping
-changes, the page's stated math fails loudly instead of drifting.
+**Your board = the receiver profile R̂(you).** Pace (TI), Tone (SG),
+Directness (FT), Flexibility (UE), Ambiguity (AR) — the human-side names
+core's profile card uses. It reads and writes `localStorage['rpcs1.rhat.v1']`,
+the key `/calibrate` writes and the Bridge return leg reads, so a calibration
+and a fader move are the same object.
 
-**Payload.** `buildPayload(text, R̂)` = `How to answer me: <instruction>` +
-blank line + `My message:` + the trimmed text. The "Send the dials with it"
-checkbox (default on) controls whether the instruction travels; the right
-pane says so when it is off. Send uses core's `buildHandoff` (URL prefill
-for ChatGPT/Claude/Perplexity/Grok; clipboard-then-open for Gemini/Copilot).
-Nothing is sent from the page.
+**The model's board = R̂(model).** Memory (TI), Gain (SG), Trigger (FT),
+Agility (UE), Commit (AR) — the same five primitives read as an agent
+configuration through core's `mapToParameters(R̂, 'generic')`: temperature
+and top_p from SG, max_tokens and context strategy from TI, tool-use gating
+from FT and AR, retry from UE, plus `evaluateRegime`. Stored under its own key
+`localStorage['rpcs1.rhat.model.v1']`. Both stores live in
+`lib/rhat-store.ts` (`useSyncExternalStore`; the server renders neutral 50s).
+
+**The equations are literal.** `lib/instrument.ts` derives every displayed
+string from `@rpcs1/core`'s own functions. Your board: the instruction
+paragraph is `directivesToInstructions(deriveRenderingDirectives(R̂))` —
+identical to `rewriteForProfile(...).rewrite_instructions`; the per-channel
+trace lines are core's `why` strings. The model's board: the stance is
+`system_prompt_additions` joined; the settings line and per-channel trace
+lines name core's returned values; "Show the math" prints each formula with
+the numbers substituted. The test suite pins the instruction equality on a
+grid and checks each stated formula (temperature, top_p, max_tokens, the
+context/tool/retry thresholds, the stance thresholds, the regime rule)
+against core across the full 0–100 range — so if core's mapping changes, the
+page's stated math fails loudly instead of drifting.
+
+**Payload.** `buildPayload(text, R̂you, R̂model)` =
+`How to answer me: <your instruction>` / `How to run: <model stance>` /
+`Requested settings (apply where your app allows; otherwise ignore): <settings>`
+/ `My message:` + the trimmed text, blank-line separated. The "Send the boards
+with it" checkbox (default on) controls whether the first three travel; the
+right pane says so when it is off. Send uses core's `buildHandoff` (URL
+prefill for ChatGPT/Claude/Perplexity/Grok; clipboard-then-open for
+Gemini/Copilot). Nothing is sent from the page.
 
 **Info bubble.** "What is this doing?" opens a region whose copy comes from
 `lib/landing-copy.ts` in the visitor's *Reading as* register (`sub`, three
-`beats`, and the new `dials` field) — the pill in the nav keeps its job.
-Register copy is offer-free by test.
+`beats`, and the `dials` field describing both boards) — the pill in the nav
+keeps its job. Register copy is offer-free by test.
 
 **Deliberately not on the face:** the Bridge dials (`/bridge`), the return
 leg's reply decoder (`/bridge`), the model persona panel (`/send`), sprawl

@@ -3,13 +3,17 @@
 /**
  * Instrument — the homepage IS the tool.
  *
- * Two panes: YOU (your words, as typed, with the deterministic fork squiggles)
- * and WHAT THE MODEL HEARS (the message as it parses, the questions it would
- * need answered, and the standing instruction built from the five dials).
- * Under them, the five dials — the receiver profile R̂ — and the literal
- * equation they produce. One send row that opens the user's own model app
- * with the exact previewed text. One info bubble that explains what is
- * happening, in the visitor's chosen reading register.
+ * Two panes, each with its own board on top, mixing-desk style:
+ *   YOU        — your five faders (the receiver profile R̂) above your words,
+ *                with the deterministic fork squiggles.
+ *   THE MODEL  — its five faders (the same primitives read as an agent
+ *                configuration) above what it receives: your message as it
+ *                parses, the questions it would need answered, how it will run
+ *                (from its board), how to answer you (from yours), and the
+ *                exact text that will be sent.
+ * One send row that opens the user's own model app with the previewed text.
+ * One info bubble that explains what is happening, in the visitor's chosen
+ * reading register.
  *
  * Everything shown is computed client-side from @rpcs1/core's pure functions.
  * Nothing leaves the page until the user presses Send, and Send only opens
@@ -28,13 +32,26 @@ import {
   type ReceiverProfile,
   type VendorId,
 } from '@rpcs1/core';
+import { FaderBoard } from '@/components/FaderBoard';
 import { useProfile } from '@/components/ProfileProvider';
 import { LANDING_COPY } from '@/lib/landing-copy';
 import { BRAND_PROMISE } from '@/lib/brand';
-import { DIALS, buildEquation, buildPayload, hear, type DialKey } from '@/lib/instrument';
-import { useRhat } from '@/lib/rhat-store';
+import {
+  DIALS,
+  MODEL_DIALS,
+  buildEquation,
+  buildModelEquation,
+  buildPayload,
+  hear,
+  type DialKey,
+} from '@/lib/instrument';
+import { useModelRhat, useRhat } from '@/lib/rhat-store';
 
 const DEBOUNCE_MS = 250;
+
+/** Board accents: sky for you, violet for the model. */
+const ACCENT_YOU = '#38bdf8';
+const ACCENT_MODEL = '#a78bfa';
 
 /** Static beat titles; bodies come from the reading register (lib/landing-copy.ts). */
 const BEAT_TITLES = ['Type like you talk', 'See what you said', 'Send the one you meant'] as const;
@@ -48,7 +65,8 @@ const EXAMPLES: Array<{ label: string; prompt: string }> = [
 
 export default function Instrument() {
   const [text, setText] = useState('');
-  const [rhat, setRhat] = useRhat();
+  const [you, setYou] = useRhat();
+  const [model, setModel] = useModelRhat();
   const [includeDials, setIncludeDials] = useState(true);
   const [vendor, setVendor] = useState<VendorId>('chatgpt');
   const [infoOpen, setInfoOpen] = useState(false);
@@ -76,11 +94,20 @@ export default function Instrument() {
     };
   }, [text]);
 
-  const equation = useMemo(() => buildEquation(rhat), [rhat]);
-  const hearing = useMemo(() => hear(text, rhat), [text, rhat]);
+  const yours = useMemo(() => buildEquation(you), [you]);
+  const theirs = useMemo(() => buildModelEquation(model), [model]);
+  const hearing = useMemo(() => hear(text, you), [text, you]);
   const payload = useMemo(
-    () => buildPayload(text, rhat, { includeInstruction: includeDials }),
-    [text, rhat, includeDials],
+    () => buildPayload(text, you, model, { includeInstruction: includeDials }),
+    [text, you, model, includeDials],
+  );
+  const yourWhy = useMemo(
+    () => Object.fromEntries(yours.terms.map((t) => [t.key, t.why])) as Record<DialKey, string>,
+    [yours],
+  );
+  const theirWhy = useMemo(
+    () => Object.fromEntries(theirs.terms.map((t) => [t.key, t.why])) as Record<DialKey, string>,
+    [theirs],
   );
 
   const forked = result !== null && !result.clean && text.trim().length > 0;
@@ -120,7 +147,8 @@ export default function Instrument() {
     setHandoffNote(null);
   };
 
-  const setDial = (key: DialKey, value: number) => setRhat({ ...rhat, [key]: value } as ReceiverProfile);
+  const setYourFader = (key: DialKey, value: number) => setYou({ ...you, [key]: value } as ReceiverProfile);
+  const setModelFader = (key: DialKey, value: number) => setModel({ ...model, [key]: value } as ReceiverProfile);
 
   const send = async () => {
     const handoff = buildHandoff(vendor, payload);
@@ -144,9 +172,8 @@ export default function Instrument() {
 
   return (
     <section id="box" className="mx-auto max-w-6xl scroll-mt-20 px-4 pt-8 sm:px-6" aria-label="The instrument">
-      {/* ── Header: sticker, promise, info bubble ─────────────────────────── */}
+      {/* ── Header: promise, info bubble ──────────────────────────────────── */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        {/* The sticker already sits in the nav; repeating it here doubled the chrome on phones. */}
         <h1 className="text-sm font-semibold tracking-tight text-white/80 sm:text-base">{BRAND_PROMISE}</h1>
         <button
           type="button"
@@ -179,7 +206,7 @@ export default function Instrument() {
               </li>
             ))}
           </ol>
-          <p className="mt-3 font-semibold text-white">The five dials</p>
+          <p className="mt-3 font-semibold text-white">The two boards</p>
           <p className="mt-1 text-xs text-white/60">{copy.dials}</p>
           <p className="mt-3 text-xs text-white/50">
             You&apos;re reading this in the <span className="text-sky-300">{register}</span> register — the &ldquo;Reading
@@ -192,266 +219,260 @@ export default function Instrument() {
         </div>
       )}
 
-      {/* ── Two panes ─────────────────────────────────────────────────────── */}
+      {/* ── Two panes, each with its board on top ──────────────────────────── */}
       <div className="mt-4 grid gap-4 md:grid-cols-2">
         {/* Left: YOU */}
-        <div className="rounded-2xl border border-white/10 bg-[#0a0f1a] p-4">
-          <div className="flex items-baseline justify-between">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/50">You</h2>
-            <span className="text-[11px] text-white/35">as typed</span>
-          </div>
+        <div className="flex flex-col gap-3">
+          <FaderBoard
+            side="you"
+            title="Your board"
+            accent={ACCENT_YOU}
+            dials={DIALS}
+            profile={you}
+            why={yourWhy}
+            vector={yours.vector}
+            onChange={setYourFader}
+            footer={
+              <Link href="/calibrate" className="inline-flex min-h-9 items-center underline-offset-4 hover:text-white hover:underline">
+                Set this board by answering five questions →
+              </Link>
+            }
+          />
 
-          <div className="relative mt-3 rounded-xl border border-white/10 bg-[#070b14] focus-within:border-emerald-400/50">
-            {segments !== null && (
-              <div
-                ref={backdropRef}
-                aria-hidden
-                data-testid="squiggle-backdrop"
-                className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words p-4 text-base leading-relaxed text-transparent"
-              >
-                {segments.map((seg, i) =>
-                  seg.span === null ? (
-                    <span key={i}>{seg.str}</span>
-                  ) : (
-                    <span
-                      key={i}
-                      style={{
-                        textDecorationLine: 'underline',
-                        textDecorationStyle: 'wavy',
-                        textDecorationColor: seg.span === activeSpan ? '#fbbf24' : '#d97706',
-                        textDecorationThickness: '2px',
-                        textUnderlineOffset: '4px',
-                      }}
+          <div className="rounded-2xl border border-white/10 bg-[#0a0f1a] p-4">
+            <div className="flex items-baseline justify-between">
+              <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/50">You</h2>
+              <span className="text-[11px] text-white/35">as typed</span>
+            </div>
+
+            <div className="relative mt-3 rounded-xl border border-white/10 bg-[#070b14] focus-within:border-emerald-400/50">
+              {segments !== null && (
+                <div
+                  ref={backdropRef}
+                  aria-hidden
+                  data-testid="squiggle-backdrop"
+                  className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words p-4 text-base leading-relaxed text-transparent"
+                >
+                  {segments.map((seg, i) =>
+                    seg.span === null ? (
+                      <span key={i}>{seg.str}</span>
+                    ) : (
+                      <span
+                        key={i}
+                        style={{
+                          textDecorationLine: 'underline',
+                          textDecorationStyle: 'wavy',
+                          textDecorationColor: seg.span === activeSpan ? '#fbbf24' : '#d97706',
+                          textDecorationThickness: '2px',
+                          textUnderlineOffset: '4px',
+                        }}
+                      >
+                        {seg.str}
+                      </span>
+                    ),
+                  )}
+                </div>
+              )}
+              <textarea
+                value={text}
+                onChange={(e) => onTextChange(e.target.value)}
+                onClick={(e) => revealSpanAtCaret(e.currentTarget)}
+                onKeyUp={(e) => revealSpanAtCaret(e.currentTarget)}
+                onScroll={(e) => {
+                  if (backdropRef.current) backdropRef.current.scrollTop = e.currentTarget.scrollTop;
+                }}
+                placeholder="Say it your way…"
+                rows={7}
+                aria-label="Your words"
+                className="relative w-full resize-y rounded-xl bg-transparent p-4 text-base leading-relaxed text-gray-100 placeholder-gray-500 focus:outline-none"
+              />
+            </div>
+
+            {/* Span callout — the caret landed on a squiggle */}
+            {activeSpan !== null && spans[activeSpan] && (
+              <div className="mt-2 rounded-xl border border-amber-400/30 bg-amber-500/[0.06] p-3" role="status">
+                <p className="text-xs text-amber-200/80">
+                  <span className="font-medium text-amber-200">&ldquo;{spans[activeSpan].text}&rdquo;</span>
+                  {' — '}
+                  {spans[activeSpan].why}
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {spans[activeSpan].readings.map((r) => (
+                    <button
+                      key={r.id}
+                      type="button"
+                      onClick={() => lockReading(r.summary, r.clarifier)}
+                      className="min-h-9 rounded-full border border-amber-400/40 bg-amber-500/10 px-3 py-1 text-xs text-amber-200 transition-colors hover:bg-amber-500/20"
                     >
-                      {seg.str}
-                    </span>
-                  ),
-                )}
+                      {r.summary}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
-            <textarea
-              value={text}
-              onChange={(e) => onTextChange(e.target.value)}
-              onClick={(e) => revealSpanAtCaret(e.currentTarget)}
-              onKeyUp={(e) => revealSpanAtCaret(e.currentTarget)}
-              onScroll={(e) => {
-                if (backdropRef.current) backdropRef.current.scrollTop = e.currentTarget.scrollTop;
-              }}
-              placeholder="Say it your way…"
-              rows={7}
-              aria-label="Your words"
-              className="relative w-full resize-y rounded-xl bg-transparent p-4 text-base leading-relaxed text-gray-100 placeholder-gray-500 focus:outline-none"
-            />
+
+            {/* Fork chips — render only when a fork is detected (silent-strip contract) */}
+            {forked && activeSpan === null && (
+              <div className="mt-3" data-testid="chip-strip">
+                <p role="status" className="mb-2 text-xs text-white/50">
+                  This could be read more than one way — tap what you meant:
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {result!.readings.map((r) => (
+                    <button
+                      key={r.id}
+                      type="button"
+                      onClick={() => lockReading(r.summary, r.clarifier)}
+                      className="min-h-9 rounded-full border border-amber-400/40 bg-amber-500/10 px-3 py-1 text-xs text-amber-200 transition-colors hover:bg-amber-500/20"
+                    >
+                      {r.summary}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {lockedNote && (
+              <p className="mt-2 text-xs text-emerald-400" role="status">
+                {lockedNote}
+              </p>
+            )}
+
+            {/* Empty state — quiet, one line, three examples */}
+            {text.trim().length === 0 && (
+              <div className="mt-3" data-testid="empty-state">
+                <p className="text-xs text-white/45">Try one:</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {EXAMPLES.map((ex) => (
+                    <button
+                      key={ex.label}
+                      type="button"
+                      onClick={() => onTextChange(ex.prompt)}
+                      className="min-h-9 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-gray-300 transition-colors hover:border-emerald-400/40 hover:text-emerald-200"
+                    >
+                      {ex.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-
-          {/* Span callout — the caret landed on a squiggle */}
-          {activeSpan !== null && spans[activeSpan] && (
-            <div className="mt-2 rounded-xl border border-amber-400/30 bg-amber-500/[0.06] p-3" role="status">
-              <p className="text-xs text-amber-200/80">
-                <span className="font-medium text-amber-200">&ldquo;{spans[activeSpan].text}&rdquo;</span>
-                {' — '}
-                {spans[activeSpan].why}
-              </p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {spans[activeSpan].readings.map((r) => (
-                  <button
-                    key={r.id}
-                    type="button"
-                    onClick={() => lockReading(r.summary, r.clarifier)}
-                    className="min-h-9 rounded-full border border-amber-400/40 bg-amber-500/10 px-3 py-1 text-xs text-amber-200 transition-colors hover:bg-amber-500/20"
-                  >
-                    {r.summary}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Fork chips — render only when a fork is detected (silent-strip contract) */}
-          {forked && activeSpan === null && (
-            <div className="mt-3" data-testid="chip-strip">
-              <p role="status" className="mb-2 text-xs text-white/50">
-                This could be read more than one way — tap what you meant:
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {result!.readings.map((r) => (
-                  <button
-                    key={r.id}
-                    type="button"
-                    onClick={() => lockReading(r.summary, r.clarifier)}
-                    className="min-h-9 rounded-full border border-amber-400/40 bg-amber-500/10 px-3 py-1 text-xs text-amber-200 transition-colors hover:bg-amber-500/20"
-                  >
-                    {r.summary}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {lockedNote && (
-            <p className="mt-2 text-xs text-emerald-400" role="status">
-              {lockedNote}
-            </p>
-          )}
-
-          {/* Empty state — quiet, one line, three examples */}
-          {text.trim().length === 0 && (
-            <div className="mt-3" data-testid="empty-state">
-              <p className="text-xs text-white/45">Try one:</p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {EXAMPLES.map((ex) => (
-                  <button
-                    key={ex.label}
-                    type="button"
-                    onClick={() => onTextChange(ex.prompt)}
-                    className="min-h-9 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-gray-300 transition-colors hover:border-emerald-400/40 hover:text-emerald-200"
-                  >
-                    {ex.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
-        {/* Right: WHAT THE MODEL HEARS */}
-        <div className="rounded-2xl border border-white/10 bg-[#0a0f1a] p-4">
-          <div className="flex items-baseline justify-between">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/50">What the model hears</h2>
-            <span className="text-[11px] text-white/35">as it will receive it</span>
-          </div>
+        {/* Right: THE MODEL */}
+        <div className="flex flex-col gap-3">
+          <FaderBoard
+            side="model"
+            title="The model's board"
+            accent={ACCENT_MODEL}
+            dials={MODEL_DIALS}
+            profile={model}
+            why={theirWhy}
+            vector={theirs.vector}
+            extra={`regime: ${theirs.regime}`}
+            onChange={setModelFader}
+            footer={
+              <Link href="/tuner" className="inline-flex min-h-9 items-center underline-offset-4 hover:text-white hover:underline">
+                Derive this board from a workload description →
+              </Link>
+            }
+          />
 
-          <div className="mt-3 space-y-3 text-sm">
-            {hearing === null ? (
-              <p className="text-white/35">Nothing yet — type on the left.</p>
-            ) : (
-              <>
-                <div>
-                  <p className="font-mono text-[11px] uppercase tracking-wider text-white/40">Reads as</p>
-                  <p className="mt-1 whitespace-pre-wrap leading-relaxed text-gray-100">{hearing.readsAs}</p>
-                  <p className="mt-1 text-[11px] text-white/40">
-                    taken as: {hearing.intent.replace('_', ' ')} (a guess)
-                    {forked && <> · {result!.readings.length} readings — tap one on the left to lock it</>}
-                  </p>
-                </div>
-                {hearing.wouldAsk.length > 0 && (
+          <div className="rounded-2xl border border-white/10 bg-[#0a0f1a] p-4">
+            <div className="flex items-baseline justify-between">
+              <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/50">What the model hears</h2>
+              <span className="text-[11px] text-white/35">as it will receive it</span>
+            </div>
+
+            <div className="mt-3 space-y-3 text-sm">
+              {hearing === null ? (
+                <p className="text-white/35">Nothing yet — type on the left.</p>
+              ) : (
+                <>
                   <div>
-                    <p className="font-mono text-[11px] uppercase tracking-wider text-amber-300/70">It would need to ask</p>
-                    <ul className="mt-1 space-y-1 text-amber-100/80">
-                      {hearing.wouldAsk.map((q) => (
-                        <li key={q}>{q}</li>
-                      ))}
-                    </ul>
+                    <p className="font-mono text-[11px] uppercase tracking-wider text-white/40">Reads as</p>
+                    <p className="mt-1 whitespace-pre-wrap leading-relaxed text-gray-100">{hearing.readsAs}</p>
+                    <p className="mt-1 text-[11px] text-white/40">
+                      taken as: {hearing.intent.replace('_', ' ')} (a guess)
+                      {forked && <> · {result!.readings.length} readings — tap one on the left to lock it</>}
+                    </p>
+                  </div>
+                  {hearing.wouldAsk.length > 0 && (
+                    <div>
+                      <p className="font-mono text-[11px] uppercase tracking-wider text-amber-300/70">It would need to ask</p>
+                      <ul className="mt-1 space-y-1 text-amber-100/80">
+                        {hearing.wouldAsk.map((q) => (
+                          <li key={q}>{q}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  <p className="text-[11px] text-white/40">
+                    {hearing.playback
+                      ? 'It should check its reading with you before answering.'
+                      : 'It can answer without checking first.'}
+                  </p>
+                </>
+              )}
+
+              <div className="border-t border-white/8 pt-3">
+                <p className="font-mono text-[11px] uppercase tracking-wider" style={{ color: ACCENT_MODEL }}>
+                  How it will run — from its board
+                </p>
+                <p className="mt-1 leading-relaxed text-white/75">{theirs.stance}</p>
+                <p className="mt-1 break-words font-mono text-[11px] text-white/45">{theirs.settingsLine}</p>
+                <button
+                  type="button"
+                  onClick={() => setShowMath((s) => !s)}
+                  aria-expanded={showMath}
+                  aria-controls={mathId}
+                  className="mt-1 min-h-9 text-[11px] underline-offset-4 hover:underline"
+                  style={{ color: ACCENT_MODEL }}
+                >
+                  {showMath ? 'Hide the math' : 'Show the math'}
+                </button>
+                {showMath && (
+                  <div id={mathId} className="mt-2 rounded-xl border border-white/8 bg-[#070b14] p-3">
+                    <p className="text-[11px] text-white/45">
+                      The model board&apos;s five numbers through the engine&apos;s mapping (generic platform ranges). A chat app
+                      cannot take the numeric settings from a prefilled message — the stance sentences are what it can
+                      act on; the settings are listed for apps that can apply them. Each line states the rule and the
+                      value it produced; the rules are checked against the engine in the test suite.
+                    </p>
+                    <pre className="mt-2 overflow-x-auto whitespace-pre-wrap break-words font-mono text-[11px] leading-relaxed text-white/70">
+                      {theirs.lines.join('\n')}
+                    </pre>
+                    <p className="mt-2 font-mono text-[11px] text-white/40">
+                      your board&apos;s band rule: value &lt; 40 → low · 40–60 → mid · value &gt; 60 → high
+                      {hearing ? ` · commit-vs-clarify level: ${hearing.arLevel}` : ''}
+                    </p>
                   </div>
                 )}
-                <p className="text-[11px] text-white/40">
-                  {hearing.playback
-                    ? 'It should check its reading with you before answering.'
-                    : 'It can answer without checking first.'}
-                </p>
-              </>
-            )}
+              </div>
 
-            <div className="border-t border-white/8 pt-3">
-              <p className="font-mono text-[11px] uppercase tracking-wider text-sky-300/70">
-                Standing instruction — from your dials
-              </p>
-              <p className="mt-1 leading-relaxed text-white/75">{equation.instruction}</p>
-              {!includeDials && (
-                <p className="mt-1 text-[11px] text-white/40">Not sent — &ldquo;send the dials&rdquo; is off.</p>
+              <div className="border-t border-white/8 pt-3">
+                <p className="font-mono text-[11px] uppercase tracking-wider" style={{ color: ACCENT_YOU }}>
+                  How to answer you — from your board
+                </p>
+                <p className="mt-1 leading-relaxed text-white/75">{yours.instruction}</p>
+                {!includeDials && (
+                  <p className="mt-1 text-[11px] text-white/40">Not sent — &ldquo;send the boards&rdquo; is off.</p>
+                )}
+              </div>
+
+              {text.trim().length > 0 && (
+                <details className="border-t border-white/8 pt-3">
+                  <summary className="cursor-pointer text-[11px] text-white/45 hover:text-white/70">
+                    Exact text that will be sent
+                  </summary>
+                  <pre className="mt-2 whitespace-pre-wrap break-words rounded-xl border border-white/8 bg-[#070b14] p-3 font-mono text-[12px] leading-relaxed text-white/70">
+                    {payload}
+                  </pre>
+                </details>
               )}
             </div>
-
-            {text.trim().length > 0 && (
-              <details className="border-t border-white/8 pt-3">
-                <summary className="cursor-pointer text-[11px] text-white/45 hover:text-white/70">
-                  Exact text that will be sent
-                </summary>
-                <pre className="mt-2 whitespace-pre-wrap break-words rounded-xl border border-white/8 bg-[#070b14] p-3 font-mono text-[12px] leading-relaxed text-white/70">
-                  {payload}
-                </pre>
-              </details>
-            )}
           </div>
         </div>
-      </div>
-
-      {/* ── Five dials — the receiver profile, literally ───────────────────── */}
-      <div className="mt-4 rounded-2xl border border-white/10 bg-[#0a0f1a] p-4">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/50">Five dials</h2>
-          <code className="font-mono text-xs text-sky-300">{equation.vector}</code>
-        </div>
-
-        <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-          {DIALS.map((spec) => {
-            const term = equation.terms.find((t) => t.key === spec.key)!;
-            const id = `dial-${spec.key}`;
-            return (
-              <div key={spec.key}>
-                <div className="flex items-baseline justify-between">
-                  <label htmlFor={id} className="text-sm font-semibold text-white">
-                    {spec.name}
-                  </label>
-                  <output htmlFor={id} className="font-mono text-xs text-sky-300">
-                    {spec.key} {term.value}
-                  </output>
-                </div>
-                <p className="mt-0.5 text-[11px] text-white/40">{spec.scientific}</p>
-                <div className="flex min-h-11 items-center">
-                  <input
-                    id={id}
-                    type="range"
-                    min={0}
-                    max={100}
-                    step={1}
-                    value={term.value}
-                    onChange={(e) => setDial(spec.key, Number(e.target.value))}
-                    aria-valuetext={`${term.value} — ${term.why}`}
-                    className="w-full cursor-pointer accent-sky-400"
-                  />
-                </div>
-                <div className="flex justify-between text-[11px] text-white/45">
-                  <span>{spec.low}</span>
-                  <span>{spec.high}</span>
-                </div>
-                <p className="mt-1 text-[11px] leading-snug text-white/55">{term.why}</p>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-white/45">
-          <button
-            type="button"
-            onClick={() => setShowMath((s) => !s)}
-            aria-expanded={showMath}
-            aria-controls={mathId}
-            className="min-h-9 text-sky-300/80 underline-offset-4 hover:underline"
-          >
-            {showMath ? 'Hide the math' : 'Show the math'}
-          </button>
-          <Link href="/calibrate" className="min-h-9 inline-flex items-center underline-offset-4 hover:text-white hover:underline">
-            Set the dials by answering five questions →
-          </Link>
-        </div>
-
-        {showMath && (
-          <div id={mathId} className="mt-3 rounded-xl border border-white/8 bg-[#070b14] p-3">
-            <p className="text-[11px] text-white/45">
-              The same five numbers, read as an agent configuration (generic platform ranges). A chat app cannot take
-              these from a prefilled message — the standing instruction above is what travels. Each line states the rule
-              and the value it produced; the rules are checked against the engine in the test suite.
-            </p>
-            <pre className="mt-2 overflow-x-auto whitespace-pre-wrap break-words font-mono text-[11px] leading-relaxed text-white/70">
-              {equation.agent.lines.join('\n')}
-            </pre>
-            <p className="mt-2 font-mono text-[11px] text-white/40">
-              band rule: value &lt; 40 → low · 40–60 → mid · value &gt; 60 → high
-              {hearing ? ` · commit-vs-clarify level: ${hearing.arLevel}` : ''}
-            </p>
-          </div>
-        )}
       </div>
 
       {/* ── Send row ──────────────────────────────────────────────────────── */}
@@ -479,7 +500,7 @@ export default function Instrument() {
             onChange={(e) => setIncludeDials(e.target.checked)}
             className="h-4 w-4 accent-sky-400"
           />
-          Send the dials with it
+          Send the boards with it
         </label>
         <button
           type="button"
@@ -491,7 +512,7 @@ export default function Instrument() {
         </button>
         <p className="basis-full text-[11px] text-white/40">
           Nothing is sent from this page. Your own app opens with the text filled in; you press send there. Your words
-          and dials stay in this browser until then.
+          and both boards stay in this browser until then.
         </p>
         {handoffNote && (
           <p className="basis-full text-xs text-white/60" role="status">

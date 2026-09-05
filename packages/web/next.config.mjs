@@ -2,6 +2,11 @@
 const nextConfig = {
   transpilePackages: ['@rpcs1/core'],
   poweredByHeader: false,
+  // /research never existed as a route; the research page is /rd. Permanent
+  // redirect so old links (and the retired homepage link) stop 404ing.
+  async redirects() {
+    return [{ source: '/research', destination: '/rd', permanent: true }];
+  },
   async headers() {
     return [
       {

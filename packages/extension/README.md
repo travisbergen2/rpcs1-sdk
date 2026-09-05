@@ -1,4 +1,12 @@
-# RPCS-1 Ambiguity Check (browser extension, v0.2.0)
+# Explicit Formula — browser extension (v0.7.0)
+
+Formerly *RPCS-1 Ambiguity Check*. Since 0.7.0 the store-facing name follows the
+consumer brand (`packages/web/lib/brand.ts`); internal identifiers — `rpcs1-*` CSS
+classes, `RPCS1_*` message types, storage keys, the `@rpcs1/extension` package
+name, and the `rpcs1.dev` API host — are unchanged on purpose: renaming them
+buys nothing and would break installed copies' stored state. The store listing
+package (fields, permission justifications, data disclosures, submission steps)
+is `LISTING.md`; icons are in `icons/`; `npm run pack` builds the upload zip.
 
 Amber-flags phrasing a reader could parse more than one way — **before you send it**.
 Spellcheck's red line says "that's not a word." This amber line says "those words
@@ -41,11 +49,14 @@ test/logic.test.mjs  unit tests (node --test)
 ## Run the tests
 
 ```
-node --test test/
+npm test        # = node --test  (Node >= 21; the old `node --test test/` directory form no longer works)
 ```
 
 Covers: the live AR0-placeholder fixture, the AR2-must-flag regression (the
-non-ordinal-scale trap), boundary/case/phrase span matching, card-copy caps.
+non-ordinal-scale trap), boundary/case/phrase span matching, card-copy caps —
+plus `test/manifest.test.mjs`: brand strings, store limits (name ≤ 45,
+description ≤ 132), version agreement across manifest/package/README, icon
+files and sizes, the unchanged API surface, and the listing document.
 
 ## Sender-side v0.5: the three-exit picker (Grammarly-for-ambiguity)
 

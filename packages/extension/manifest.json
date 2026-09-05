@@ -1,8 +1,16 @@
 {
   "manifest_version": 3,
-  "name": "RPCS-1 Ambiguity Check",
-  "version": "0.6.0",
-  "description": "Amber-flags phrasing a reader could take more than one way \u2014 click the underline, pick the version you meant, or say it in your own words.",
+  "name": "Explicit Formula",
+  "short_name": "Explicit Formula",
+  "version": "0.7.0",
+  "description": "Underlines words a reader could take two ways, before you send. Tap it, pick what you meant, or say it in your own words.",
+  "homepage_url": "https://www.explicitformula.com",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
   "permissions": [
     "storage",
     "contextMenus",
@@ -30,6 +38,12 @@
     }
   ],
   "action": {
-    "default_title": "RPCS-1 Ambiguity Check"
+    "default_title": "Explicit Formula — says what it means",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
   }
 }

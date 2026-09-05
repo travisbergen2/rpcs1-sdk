@@ -10,11 +10,18 @@
  * Everything is served by the existing API; this page is wiring, not engine code.
  */
 
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
+import { INTAKE_ITEMS } from '@rpcs1/core';
 
 // ── API shapes (mirror @rpcs1/core types; kept local so this stays a leaf page) ──
 interface IntakeOption { id: string; label: string; anchor: number }
 interface IntakeItem { primitive: 'TI' | 'SG' | 'FT' | 'UE' | 'AR'; prompt: string; options: IntakeOption[] }
+
+// The five questions are static data in @rpcs1/core, so they render in the
+// prerendered HTML instead of arriving after hydration + an API round trip
+// (the /calibrate first paint used to be empty — Speed Insights 21/100).
+// Scoring, rewrite, and interpret still go through /api/translate below.
+const items: IntakeItem[] = INTAKE_ITEMS;
 interface Profile { TI: number; SG: number; FT: number; UE: number; AR: number }
 interface Directives {
   structure: string; warmth: string; explicitness: string; revision: string; ambiguity: string;
@@ -42,7 +49,6 @@ async function api(tool: string, body: Record<string, unknown>) {
 }
 
 export default function CalibratePage() {
-  const [items, setItems] = useState<IntakeItem[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [card, setCard] = useState<ProfileCard | null>(null);
   const [text, setText] = useState("Honestly it's fine, don't worry about the deadline thing");
@@ -52,13 +58,7 @@ export default function CalibratePage() {
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    api('intake', {})
-      .then((d) => setItems(d.items ?? []))
-      .catch((e) => setError(e.message));
-  }, []);
-
-  const answered = items.length > 0 && items.every((i) => answers[i.primitive]);
+  const answered = items.every((i) => answers[i.primitive]);
 
   const buildCard = useCallback(async () => {
     setLoading('card'); setError(null);
@@ -110,7 +110,6 @@ export default function CalibratePage() {
       {/* ── Step 1: intake ── */}
       <section className="space-y-5">
         <h2 className="text-sm font-semibold text-sky-400 uppercase tracking-wide">1 · Calibration</h2>
-        {items.length === 0 && !error && <p className="text-sm text-gray-400">Loading questions…</p>}
         {items.map((item) => (
           <fieldset key={item.primitive} className="border border-gray-800 rounded-xl p-4 bg-gray-900/40">
             <legend className="px-1 text-xs font-mono text-gray-400">
@@ -133,15 +132,13 @@ export default function CalibratePage() {
             </div>
           </fieldset>
         ))}
-        {items.length > 0 && (
-          <button
-            onClick={buildCard}
-            disabled={!answered || loading === 'card'}
-            className="bg-sky-500 hover:bg-sky-400 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 px-5 py-2 rounded-lg text-sm font-semibold transition-colors"
-          >
-            {loading === 'card' ? 'Scoring…' : answered ? 'Show my profile' : 'Answer all five to continue'}
-          </button>
-        )}
+        <button
+          onClick={buildCard}
+          disabled={!answered || loading === 'card'}
+          className="bg-sky-500 hover:bg-sky-400 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 px-5 py-2 rounded-lg text-sm font-semibold transition-colors"
+        >
+          {loading === 'card' ? 'Scoring…' : answered ? 'Show my profile' : 'Answer all five to continue'}
+        </button>
       </section>
 
       {/* ── Step 2: profile card ── */}

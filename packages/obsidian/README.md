@@ -1,4 +1,4 @@
-# Explicit Formula — The Loop (Obsidian plugin)
+# Explicit Formula - The Loop (Obsidian plugin)
 
 Brain-dump what you want. See exactly what the AI heard. **Lock the lines it
 got right — it redoes only the rest.** When it finally reads like your own
@@ -26,12 +26,35 @@ alone). **Every round shows exactly what left your machine** — each note
 name with its character count, inline above the lines. Empty the folder
 list and vault reads stop entirely.
 
-## Install (manual, pre-listing)
+## Publishing to the community directory (maintainer)
+
+This package is the canonical source, but the Obsidian directory reads
+`manifest.json`, `README.md`, and `LICENSE` from the **root** of the plugin's
+repository and pulls `main.js` / `manifest.json` / `styles.css` from a GitHub
+release whose tag equals the manifest version — rules a monorepo package cannot
+meet. So the plugin is published from a dedicated mirror repo,
+**travisbergen2/explicit-formula-loop**, regenerated from here:
+
+```
+npm run mirror --workspace=packages/obsidian     # → dist/explicit-formula-loop (root files, src/, vendor/rpcs1-core)
+cd dist/explicit-formula-loop && node esbuild.config.mjs production   # → main.js (minified)
+```
+
+Then push the mirror, create a release tagged exactly `manifest.version` with
+`main.js`, `manifest.json`, `styles.css` attached, and (first time only) add the
+plugin at community.obsidian.md → *Add plugin* with the mirror repo. Updates
+flow from new releases automatically. `tests/listing.test.ts` pins the
+directory's manifest/name/description rules and the repo-file requirements;
+`vendor/rpcs1-core` in the mirror is a snapshot of `packages/core/src` (MIT)
+because the bundle ships the engine and a plugin cannot resolve workspace
+packages at runtime. Never edit the mirror by hand.
+
+## Install (manual)
 
 1. Build: `npm run build --workspace=packages/obsidian` (from the repo root)
 2. Copy `manifest.json` and `main.js` into
    `<your vault>/.obsidian/plugins/explicit-formula-loop/`
-3. Enable "Explicit Formula — The Loop" in Settings → Community plugins
+3. Enable "Explicit Formula - The Loop" in Settings → Community plugins
 
 Works on desktop and mobile (`isDesktopOnly: false`).
 

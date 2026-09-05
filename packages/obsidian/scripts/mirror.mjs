@@ -1,0 +1,147 @@
+// Build the community-directory mirror of this plugin.
+//
+// Why a mirror: the Obsidian directory reads manifest.json (and README/LICENSE)
+// from the ROOT of the plugin's repository and pulls main.js/manifest.json/
+// styles.css from a GitHub release whose tag equals the manifest version. A
+// monorepo package cannot satisfy the root rule, so the plugin is published from
+// a dedicated repo (travisbergen2/explicit-formula-loop) that this script
+// regenerates from the canonical source here. Never edit the mirror by hand.
+//
+// What the mirror contains (buildable on its own, no workspace needed):
+//   manifest.json, versions.json, README.md, LICENSE, styles.css, src/,
+//   vendor/rpcs1-core/  (snapshot of packages/core/src — the ratchet engine the
+//                        bundle ships; the plugin cannot resolve workspace
+//                        packages at runtime), esbuild.config.mjs, tsconfig.json,
+//   package.json (standalone), .gitignore, MIRROR.md
+//
+// Usage: npm run mirror [-- <outDir>]     default: <repo>/dist/explicit-formula-loop
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const here = dirname(fileURLToPath(import.meta.url));
+const pkgRoot = join(here, '..');
+const repoRoot = join(pkgRoot, '..', '..');
+const coreSrc = join(repoRoot, 'packages', 'core', 'src');
+const out = resolve(process.argv[2] ?? join(repoRoot, 'dist', 'explicit-formula-loop'));
+
+/** Files copied verbatim from the package root into the mirror root. */
+export const ROOT_FILES = ['manifest.json', 'versions.json', 'README.md', 'LICENSE', 'styles.css'];
+
+const manifest = JSON.parse(readFileSync(join(pkgRoot, 'manifest.json'), 'utf8'));
+for (const f of ROOT_FILES) {
+  if (!existsSync(join(pkgRoot, f))) throw new Error(`missing ${f} in ${pkgRoot}`);
+}
+
+// Fresh output, preserving a .git directory if the mirror checkout lives there.
+if (existsSync(out)) {
+  for (const entry of readdirSync(out)) {
+    if (entry === '.git') continue;
+    rmSync(join(out, entry), { recursive: true, force: true });
+  }
+}
+mkdirSync(out, { recursive: true });
+
+for (const f of ROOT_FILES) cpSync(join(pkgRoot, f), join(out, f));
+cpSync(join(pkgRoot, 'src'), join(out, 'src'), { recursive: true });
+cpSync(coreSrc, join(out, 'vendor', 'rpcs1-core'), { recursive: true });
+
+writeFileSync(
+  join(out, 'vendor', 'rpcs1-core', 'NOTICE.md'),
+  `# Vendored snapshot of @rpcs1/core\n\nCopied verbatim from \`packages/core/src\` of travisbergen2/rpcs1-sdk (MIT) by\n\`packages/obsidian/scripts/mirror.mjs\`. Do not edit here; edit the monorepo and re-run the mirror.\n`,
+);
+
+writeFileSync(
+  join(out, 'esbuild.config.mjs'),
+  `import esbuild from 'esbuild';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const here = path.dirname(fileURLToPath(import.meta.url));
+const prod = process.argv[2] === 'production';
+
+// The engine ships inside main.js (vendor/rpcs1-core); "obsidian" stays external.
+await esbuild.build({
+  entryPoints: [path.join(here, 'src/main.ts')],
+  outfile: path.join(here, 'main.js'),
+  bundle: true,
+  format: 'cjs',
+  platform: 'browser',
+  target: 'es2020',
+  external: ['obsidian', 'electron', '@codemirror/*'],
+  alias: { '@rpcs1/core': path.join(here, 'vendor/rpcs1-core/index.ts') },
+  minify: prod,
+  sourcemap: prod ? false : 'inline',
+  logLevel: 'info',
+});
+`,
+);
+
+writeFileSync(
+  join(out, 'tsconfig.json'),
+  JSON.stringify(
+    {
+      compilerOptions: {
+        target: 'ES2020',
+        module: 'ESNext',
+        moduleResolution: 'bundler',
+        lib: ['ES2022', 'DOM'],
+        strict: true,
+        noEmit: true,
+        esModuleInterop: true,
+        skipLibCheck: true,
+        isolatedModules: true,
+        paths: { '@rpcs1/core': ['./vendor/rpcs1-core/index.ts'] },
+      },
+      include: ['src/**/*.ts', 'vendor/**/*.ts'],
+    },
+    null,
+    2,
+  ) + '\n',
+);
+
+writeFileSync(
+  join(out, 'package.json'),
+  JSON.stringify(
+    {
+      name: manifest.id,
+      version: manifest.version,
+      description: manifest.description,
+      private: true,
+      type: 'module',
+      scripts: {
+        build: 'node esbuild.config.mjs production',
+        dev: 'node esbuild.config.mjs',
+        lint: 'tsc --noEmit',
+      },
+      devDependencies: {
+        '@types/node': '^20',
+        esbuild: '^0.27.7',
+        obsidian: 'latest',
+        typescript: '^5.4.0',
+      },
+    },
+    null,
+    2,
+  ) + '\n',
+);
+
+writeFileSync(join(out, '.gitignore'), 'node_modules/\nmain.js\n*.map\n');
+
+writeFileSync(
+  join(out, 'MIRROR.md'),
+  `# This repository is a mirror
+
+Canonical source: [travisbergen2/rpcs1-sdk](https://github.com/travisbergen2/rpcs1-sdk), \`packages/obsidian\`.
+This repo exists because the Obsidian community directory reads \`manifest.json\` from the
+root of the plugin's repository and pulls release assets from this repo's GitHub releases.
+
+Regenerated by \`npm run mirror\` in the monorepo; \`vendor/rpcs1-core\` is a snapshot of the
+engine the bundle ships. Build here with \`npm install && npm run build\` → \`main.js\`.
+Releases: tag = manifest version (e.g. \`${manifest.version}\`), assets \`main.js\`, \`manifest.json\`, \`styles.css\`.
+
+Please open issues and pull requests against the monorepo, not here.
+`,
+);
+
+console.log(`mirror written: ${out} (plugin ${manifest.id} v${manifest.version})`);

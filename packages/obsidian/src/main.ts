@@ -1,4 +1,4 @@
-// ── Explicit Formula — The Loop (Obsidian plugin, Phase B P1) ─────────────────
+// ── Explicit Formula - The Loop (Obsidian plugin) ────────────────────────────
 //
 // P1 scope: the loop panel (dump → lines → lock → redo → finish → copy /
 // insert / answer). NO vault reads in P1 — context selection, write-backs,

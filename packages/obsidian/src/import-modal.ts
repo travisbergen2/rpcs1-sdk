@@ -38,10 +38,10 @@ export class ImportModal extends Modal {
         'lists threads you may have forgotten.',
     });
 
-    const input = contentEl.createEl('input', { type: 'file' });
+    // Styling lives in styles.css (community-directory guideline: no inline styles).
+    const input = contentEl.createEl('input', { type: 'file', cls: 'ef-import-file' });
     input.accept = '.json,.zip';
     input.multiple = true;
-    input.style.margin = '0.75em 0';
 
     const status = contentEl.createEl('p', { cls: 'setting-item-description' });
     const results = contentEl.createDiv();

@@ -165,3 +165,8 @@
     transition: none !important;
   }
 }
+
+/* Import modal file picker (moved out of JS: no inline styles per the directory guidelines). */
+.ef-import-file {
+  margin: 0.75em 0;
+}

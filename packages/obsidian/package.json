@@ -1,13 +1,14 @@
 {
   "name": "@rpcs1/obsidian-plugin",
-  "version": "0.6.0",
-  "description": "Explicit Formula — The Loop, inside Obsidian (Phase B P3: panel + vault priors + graph-visible write-backs)",
+  "version": "0.7.0",
+  "description": "Explicit Formula - The Loop, inside Obsidian (panel + vault priors + graph-visible write-backs). Canonical source; the community-directory repo is a mirror built by scripts/mirror.mjs.",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "node esbuild.config.mjs",
     "test": "vitest run --config ./vitest.config.ts",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "mirror": "node scripts/mirror.mjs"
   },
   "devDependencies": {
     "@types/node": "^20",

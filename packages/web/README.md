@@ -148,6 +148,13 @@ and sitemap.
 `lib/connect.ts` (and `npmVersion` if the package bumped — the test fails
 loudly if it drifts from `packages/vault-mcp/package.json`).
 
+## Redirects
+
+`next.config.mjs` owns the redirect table. Current entries: `/research` → `/rd`
+(permanent; `/research` never existed as a route). `tests/redirects.test.ts`
+checks every internal destination is a real `app/<route>/page.tsx` and that
+no source shadows an existing page.
+
 ## Development
 
 ```

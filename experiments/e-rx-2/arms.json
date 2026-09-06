@@ -1,0 +1,5467 @@
+[
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-01",
+    "arm": "A",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls",
+    "sha256": "eb531a4a4900e74c26ba5b502714ead66507336fb62e61fd463e7b3db0d8c7ff",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-01",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n- No explanation.\n\nwhats 17 times 24?? no explanation just the number pls\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9521f33f8adb4cb5c9a1baa26eeffc94428d42f6f83f4e91c9673c5a333bf7c3",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 128,
+    "deleted_chars": 49,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-01",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n- No explanation.\n\nwhats 17 times 24?? no explanation just the number pls",
+    "sha256": "ab2bcc12de01f68a95f743b8424914873b81d7082da7e59d4b04cc536124e5e0",
+    "applied": [
+      "T-URG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 75,
+    "deleted_chars": 49,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-01",
+    "arm": "B-swap",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls\n\nOutput the number only.",
+    "sha256": "99dbace21b8f8b0b97c68aaeb11df817a2074ce2a08c52412a7b9976c98f5708",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-01",
+    "arm": "C",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls\n\nA careful, exact reply is what is needed here. Take care with the details.",
+    "sha256": "895952c4ffea7158cd31ae6aa81f9385edb978e9ea53f0aec1581e28a8ce0b65",
+    "applied": [],
+    "inserted_chars": 76,
+    "deleted_chars": 0,
+    "placebo_target_chars": 75,
+    "placebo_sentences": [
+      "A careful, exact reply is what is needed here.",
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-02",
+    "arm": "A",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else",
+    "sha256": "09c10b90c1f7f3681829fbc89d3784dd0deb0237f0beadb386519123581c0bc8",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-02",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Return a single JSON object.\n- Keys: name and port.\n- name is the string gateway; port is the number 8080.\n- Nothing else in the reply.\n\ncan you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nOutput the requested text only, with no commentary.",
+    "sha256": "117dcb7c3555c4f533b964dcf7734b66625a8259a279bbd75dab0bbee340b48c",
+    "applied": [
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 217,
+    "deleted_chars": 64,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-02",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Return a single JSON object.\n- Keys: name and port.\n- name is the string gateway; port is the number 8080.\n- Nothing else in the reply.\n\ncan you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else",
+    "sha256": "715a5c2d8835d1f776bbd46b00364eaf81251d56c951a029f13197829aa1db7f",
+    "applied": [
+      "T-REG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 164,
+    "deleted_chars": 64,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-02",
+    "arm": "B-swap",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nOutput the JSON object only.",
+    "sha256": "33717354e1e16009f91be470d3d88db70e1ce4dde4496c8e0609b7cd97a3ba39",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 30,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-02",
+    "arm": "C",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nPlease answer exactly what is asked, in the form requested. Please read the request carefully before answering. Take care with the details. Accuracy matters here.",
+    "sha256": "b9461c383f35e3c3d67548ad5d17e23306414d2f2da187c62a250450603134eb",
+    "applied": [],
+    "inserted_chars": 164,
+    "deleted_chars": 0,
+    "placebo_target_chars": 164,
+    "placebo_sentences": [
+      "Please answer exactly what is asked, in the form requested.",
+      "Please read the request carefully before answering.",
+      "Take care with the details.",
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-03",
+    "arm": "A",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else",
+    "sha256": "6fcabb4e1f62e6bdcbe109ba80ffd63a5b14058814222acf9c317990f92c8f39",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-03",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Reply with exactly: FRAGILE HANDLE WITH CARE\n- All capitals.\n- Nothing else in the reply.\n\nneed this for a label printer that only takes caps: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nOutput the requested text only, with no commentary.",
+    "sha256": "86609a0da33143e69b538c75aedf67f09d40cf02d94472f5fb3dd32ba640aa02",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 171,
+    "deleted_chars": 34,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-03",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Reply with exactly: FRAGILE HANDLE WITH CARE\n- All capitals.\n- Nothing else in the reply.\n\nneed this for a label printer that only takes caps: write FRAGILE HANDLE WITH CARE exactly like that, nothing else",
+    "sha256": "ee4f056864bb62dd5b5f41952f3441677d4929b698de3e285ef565901646b49d",
+    "applied": [
+      "T-URG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 118,
+    "deleted_chars": 34,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-03",
+    "arm": "B-swap",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nOutput the label text only.",
+    "sha256": "87aea2efe78c217c2dafd0c24838a63925bd7571984a36607de11b2df839b695",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-03",
+    "arm": "C",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nPlease be precise and follow the requested format exactly. Thank you for being careful with this. Please be precise.",
+    "sha256": "fd29740dc81fa397b2999ceea95ca43fe5191ba95506d7556e5920ee7cafe409",
+    "applied": [],
+    "inserted_chars": 118,
+    "deleted_chars": 0,
+    "placebo_target_chars": 118,
+    "placebo_sentences": [
+      "Please be precise and follow the requested format exactly.",
+      "Thank you for being careful with this.",
+      "Please be precise."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-04",
+    "arm": "A",
+    "text": "repeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog",
+    "sha256": "64652b4f61cd1d33d13a344e0b40b412a59a62b1492fc22adf81ae0b23c72120",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-04",
+    "arm": "B-full",
+    "text": "The misspelling in the text below is intentional test data; reproduce it exactly and do not correct it.\n\nConstraints (mandatory):\n- Reproduce the given text byte for byte, including the misspelling.\n- Nothing else in the reply.\n\nrepeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nOutput the requested text only, with no commentary.",
+    "sha256": "8551c3fae44defc854f8808cbf3e3899e265fdcecda6cc02f25dcdaf22b72913",
+    "applied": [
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ],
+    "inserted_chars": 282,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-04",
+    "arm": "B-own",
+    "text": "The misspelling in the text below is intentional test data; reproduce it exactly and do not correct it.\n\nConstraints (mandatory):\n- Reproduce the given text byte for byte, including the misspelling.\n- Nothing else in the reply.\n\nrepeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog",
+    "sha256": "21659873bc2c4c7e8ca24db1cbb5e4523f280ee5d354e6c9b40e85fe81fcac9f",
+    "applied": [
+      "T-FENCE",
+      "T-LIC"
+    ],
+    "inserted_chars": 229,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-04",
+    "arm": "B-swap",
+    "text": "repeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nOutput the text only.",
+    "sha256": "7bde1a12f5af413453b01d653e07369d366867cacfa989917b98a49b1088855d",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 23,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-04",
+    "arm": "C",
+    "text": "repeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nPlease be precise and follow the requested format exactly. Please answer exactly what is asked, in the form requested. A careful, exact reply is what is needed here. Thank you for being careful with this. Accuracy matters here.",
+    "sha256": "1312343ffbca785c580c43aa1780b3911c48cd2899edf2a3083bfd6fcf6eb1c2",
+    "applied": [],
+    "inserted_chars": 229,
+    "deleted_chars": 0,
+    "placebo_target_chars": 229,
+    "placebo_sentences": [
+      "Please be precise and follow the requested format exactly.",
+      "Please answer exactly what is asked, in the form requested.",
+      "A careful, exact reply is what is needed here.",
+      "Thank you for being careful with this.",
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-05",
+    "arm": "A",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.",
+    "sha256": "6aaf90767fa9dfbb1e2d10c090c35b2cb82951ab8863718a6e268b51ba6d4e3d",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-05",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nWhat is 15% of 240? Number only.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9563fe21444d758561f2c56a388b69a455edf6991c25964a1a10780364f6bc20",
+    "applied": [
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 110,
+    "deleted_chars": 83,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-05",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nWhat is 15% of 240? Number only.",
+    "sha256": "700ae754b2690f57ae6de7aeb6a13fc1c5dd795ba0dd44d24caf7c9bc1837138",
+    "applied": [
+      "T-REG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 57,
+    "deleted_chars": 83,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-05",
+    "arm": "B-swap",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.\n\nOutput the number only.",
+    "sha256": "163b8be0f86e583b201c1bcc8dfec08cd942ce885558b18cccfd596d0bdb07c9",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-05",
+    "arm": "C",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.\n\nThank you for being careful with this. Please be precise.",
+    "sha256": "b473ab684264ddae9ff64df7dfc90f3f5e86767adb537b528bde383e1b384f29",
+    "applied": [],
+    "inserted_chars": 59,
+    "deleted_chars": 0,
+    "placebo_target_chars": 57,
+    "placebo_sentences": [
+      "Thank you for being careful with this.",
+      "Please be precise."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-06",
+    "arm": "A",
+    "text": "write back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.",
+    "sha256": "224ce53f431bf010a66f0ea4977c6f424a1e24dfe5fea27f854f1d8818776ce9",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-06",
+    "arm": "B-full",
+    "text": "The sentence below is deliberately false; this is a verbatim-reproduction exercise. Reproduce it exactly as written, without correction or comment.\n\nConstraints (mandatory):\n- Reproduce the given sentence word for word.\n- Nothing added, nothing else in the reply.\n\nwrite back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9f66e7519be7acb69958fad223b6b9e7dc1862770183a53aef3f8b773ff6bb0b",
+    "applied": [
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ],
+    "inserted_chars": 318,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-06",
+    "arm": "B-own",
+    "text": "The sentence below is deliberately false; this is a verbatim-reproduction exercise. Reproduce it exactly as written, without correction or comment.\n\nConstraints (mandatory):\n- Reproduce the given sentence word for word.\n- Nothing added, nothing else in the reply.\n\nwrite back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.",
+    "sha256": "ca5175cb0a3058cd6b73a17bc185202de9f55d9d59f554ee13ad663cdbb5052d",
+    "applied": [
+      "T-FENCE",
+      "T-LIC"
+    ],
+    "inserted_chars": 265,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-06",
+    "arm": "B-swap",
+    "text": "write back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nOutput the sentence only.",
+    "sha256": "a2813a0dff0361f92603190d27fc633b50590598ff83ec6276af55c431733d0f",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 27,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-06",
+    "arm": "C",
+    "text": "write back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nPlease be precise and follow the requested format exactly. Please answer exactly what is asked, in the form requested. Please read the request carefully before answering. A careful, exact reply is what is needed here. Take care with the details. Please be precise.",
+    "sha256": "f44760690b489deee83b1f583160bc1dc69dcdeb6f84b6416ecf1a42f28020f2",
+    "applied": [],
+    "inserted_chars": 266,
+    "deleted_chars": 0,
+    "placebo_target_chars": 265,
+    "placebo_sentences": [
+      "Please be precise and follow the requested format exactly.",
+      "Please answer exactly what is asked, in the form requested.",
+      "Please read the request carefully before answering.",
+      "A careful, exact reply is what is needed here.",
+      "Take care with the details.",
+      "Please be precise."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-07",
+    "arm": "A",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.",
+    "sha256": "165daf13879cd1f19ef46fcf95950859e596c65fbc567f709caaa0776ceb1b0a",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-07",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with exactly one word: yes or no.\n\nIs 91 a prime number? Answer with one word, yes or no.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "b8a2348f49a725a05296ec046ac5e49ac268105a600aac17629d367c93298acc",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 122,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-07",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Answer with exactly one word: yes or no.\n\nIs 91 a prime number? Answer with one word, yes or no.",
+    "sha256": "3d5376372b4388ab38aab917b84a3b52222970ef2af9ab11d450b685988e4d8e",
+    "applied": [
+      "T-FENCE"
+    ],
+    "inserted_chars": 69,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-07",
+    "arm": "B-swap",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.\n\nOutput one word only.",
+    "sha256": "b023f991b0b95937b7d89b730d3df32d7148fed0cbe5b181ecbce1fc946d2b89",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 23,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-07",
+    "arm": "C",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.\n\nThank you for being careful with this. Take care with the details.",
+    "sha256": "c0fcc8ad44d16e0b7524f15a39f66d8b959e7da415f381eccc0fdcfc73062427",
+    "applied": [],
+    "inserted_chars": 68,
+    "deleted_chars": 0,
+    "placebo_target_chars": 69,
+    "placebo_sentences": [
+      "Thank you for being careful with this.",
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-08",
+    "arm": "A",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.",
+    "sha256": "07c9089b64b34ce384cd7cd63d6408b3351f75c6e759d73f3dec5b52b49d5328",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-08",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nFor a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "d5d7ff81311d4e9c92583dd6e1dd79732001376bdc51fb78308879f0364968ab",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 110,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-08",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nFor a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nNo warning or disclaimer is needed; the constraint is intentional.",
+    "sha256": "d1c863d8ff274f4c3491fc3015ea50bd784f0e97e594617a76e5c9b3b404c502",
+    "applied": [
+      "T-FENCE",
+      "T-STAKES"
+    ],
+    "inserted_chars": 125,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-08",
+    "arm": "B-swap",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nOutput the number only.",
+    "sha256": "d8f1b92959ea87d28d49d82eb71c760ea908cbb424b1d6af21737a2f58b50c96",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-08",
+    "arm": "C",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nPlease be precise and follow the requested format exactly. A careful, exact reply is what is needed here. Please be precise.",
+    "sha256": "29a291cc58fd6d91631444de263d7852677cdd69c144755c354df8051a1056b1",
+    "applied": [],
+    "inserted_chars": 126,
+    "deleted_chars": 0,
+    "placebo_target_chars": 125,
+    "placebo_sentences": [
+      "Please be precise and follow the requested format exactly.",
+      "A careful, exact reply is what is needed here.",
+      "Please be precise."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-09",
+    "arm": "A",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only",
+    "sha256": "c142709451973263608fdfb8d6b62afbe492aba2ab5a8602cdaac4f455994d3f",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-09",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Exactly one sentence.\n- The sentence must say what a mutex does.\n\nsum up in one sentence what a mutex does, one sentence only\n\nOutput the requested text only, with no commentary.",
+    "sha256": "97371ecbedd660d5b9529359c78f88f5b733cb307472255065b999bbe7c84693",
+    "applied": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 146,
+    "deleted_chars": 76,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-09",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Exactly one sentence.\n- The sentence must say what a mutex does.\n\nsum up in one sentence what a mutex does, one sentence only",
+    "sha256": "b944510fe86635d160fcbd5181d4c291e288448ff7cef08ace3fd85093ac5d6d",
+    "applied": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 93,
+    "deleted_chars": 76,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-09",
+    "arm": "B-swap",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only\n\nOutput one sentence only.",
+    "sha256": "b2eba742a4f60700c03fcf83faad9945a8ceb47eb8689450ce6e03ed8ff62f21",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 27,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-09",
+    "arm": "C",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only\n\nPlease read the request carefully before answering. Thank you for being careful with this.",
+    "sha256": "10f4a4d57222db209f79ac9e29f806420fb7fd314bc04eacc54132c31c3c8dd2",
+    "applied": [],
+    "inserted_chars": 92,
+    "deleted_chars": 0,
+    "placebo_target_chars": 93,
+    "placebo_sentences": [
+      "Please read the request carefully before answering.",
+      "Thank you for being careful with this."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-10",
+    "arm": "A",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro",
+    "sha256": "29121000bfc4d87268ce098da7b44059fee490c11703132938ca54e442ead5f3",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-10",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Exactly three bullet points.\n- Each bullet starts with a dash and a space.\n- No introduction, no closing line, nothing else.\n\ngive me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nOutput the requested text only, with no commentary.",
+    "sha256": "d0e9e3d7c16445d9b92f243ae83e6cdd00938203dcd1bc91d5f6d40aa7c12990",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 206,
+    "deleted_chars": 54,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-10",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Exactly three bullet points.\n- Each bullet starts with a dash and a space.\n- No introduction, no closing line, nothing else.\n\ngive me 3 bullet points on why to use version control. dashes, no intro, no outro",
+    "sha256": "6d5dc79314a572a668f0922a6e2e889e4046a0f54654fdd0ef679a1f2892b448",
+    "applied": [
+      "T-URG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 153,
+    "deleted_chars": 54,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-10",
+    "arm": "B-swap",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nOutput the three bullets only.",
+    "sha256": "c3b281f5eb2111fecd74719125663c441856f3956f1bc3ce232bb7ef5c88edac",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 32,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "Q",
+    "model_key": "claude-opus-4.8",
+    "item": "RX2-10",
+    "arm": "C",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nPlease answer exactly what is asked, in the form requested. Please read the request carefully before answering. Thank you for being careful with this.",
+    "sha256": "c4c6d1b901109d39c6c5d0540026c41fafe8e921b987882f484d5cb5fce0f59e",
+    "applied": [],
+    "inserted_chars": 152,
+    "deleted_chars": 0,
+    "placebo_target_chars": 153,
+    "placebo_sentences": [
+      "Please answer exactly what is asked, in the form requested.",
+      "Please read the request carefully before answering.",
+      "Thank you for being careful with this."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-01",
+    "arm": "A",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls",
+    "sha256": "eb531a4a4900e74c26ba5b502714ead66507336fb62e61fd463e7b3db0d8c7ff",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-01",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n- No explanation.\n\nwhats 17 times 24?? no explanation just the number pls\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9521f33f8adb4cb5c9a1baa26eeffc94428d42f6f83f4e91c9673c5a333bf7c3",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 128,
+    "deleted_chars": 49,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-01",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n- No explanation.\n\nwhats 17 times 24?? no explanation just the number pls\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9521f33f8adb4cb5c9a1baa26eeffc94428d42f6f83f4e91c9673c5a333bf7c3",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 128,
+    "deleted_chars": 49,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-01",
+    "arm": "B-swap",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls\n\nOutput the number only.",
+    "sha256": "99dbace21b8f8b0b97c68aaeb11df817a2074ce2a08c52412a7b9976c98f5708",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ],
+    "swap_partner": "S"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-01",
+    "arm": "C",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls\n\nPlease read the request carefully before answering. A careful, exact reply is what is needed here. Take care with the details.",
+    "sha256": "0ad0684d9805c7a1355da41faf5901916ff9709cb172a8c070c585e91df9fb69",
+    "applied": [],
+    "inserted_chars": 128,
+    "deleted_chars": 0,
+    "placebo_target_chars": 128,
+    "placebo_sentences": [
+      "Please read the request carefully before answering.",
+      "A careful, exact reply is what is needed here.",
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-02",
+    "arm": "A",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else",
+    "sha256": "09c10b90c1f7f3681829fbc89d3784dd0deb0237f0beadb386519123581c0bc8",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-02",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Return a single JSON object.\n- Keys: name and port.\n- name is the string gateway; port is the number 8080.\n- Nothing else in the reply.\n\ncan you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nOutput the requested text only, with no commentary.",
+    "sha256": "117dcb7c3555c4f533b964dcf7734b66625a8259a279bbd75dab0bbee340b48c",
+    "applied": [
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 217,
+    "deleted_chars": 64,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-02",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Return a single JSON object.\n- Keys: name and port.\n- name is the string gateway; port is the number 8080.\n- Nothing else in the reply.\n\ncan you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nOutput the requested text only, with no commentary.",
+    "sha256": "117dcb7c3555c4f533b964dcf7734b66625a8259a279bbd75dab0bbee340b48c",
+    "applied": [
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 217,
+    "deleted_chars": 64,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-02",
+    "arm": "B-swap",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nOutput the JSON object only.",
+    "sha256": "33717354e1e16009f91be470d3d88db70e1ce4dde4496c8e0609b7cd97a3ba39",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 30,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ],
+    "swap_partner": "S"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-02",
+    "arm": "C",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nPlease be precise and follow the requested format exactly. Please read the request carefully before answering. A careful, exact reply is what is needed here. Thank you for being careful with this. Please be precise.",
+    "sha256": "dda29d67fd038b8ef4d6c3eaeae4d0af2f1c0ac4524e99c8d485c057fa505948",
+    "applied": [],
+    "inserted_chars": 217,
+    "deleted_chars": 0,
+    "placebo_target_chars": 217,
+    "placebo_sentences": [
+      "Please be precise and follow the requested format exactly.",
+      "Please read the request carefully before answering.",
+      "A careful, exact reply is what is needed here.",
+      "Thank you for being careful with this.",
+      "Please be precise."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-03",
+    "arm": "A",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else",
+    "sha256": "6fcabb4e1f62e6bdcbe109ba80ffd63a5b14058814222acf9c317990f92c8f39",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-03",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Reply with exactly: FRAGILE HANDLE WITH CARE\n- All capitals.\n- Nothing else in the reply.\n\nneed this for a label printer that only takes caps: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nOutput the requested text only, with no commentary.",
+    "sha256": "86609a0da33143e69b538c75aedf67f09d40cf02d94472f5fb3dd32ba640aa02",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 171,
+    "deleted_chars": 34,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-03",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Reply with exactly: FRAGILE HANDLE WITH CARE\n- All capitals.\n- Nothing else in the reply.\n\nneed this for a label printer that only takes caps: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nOutput the requested text only, with no commentary.",
+    "sha256": "86609a0da33143e69b538c75aedf67f09d40cf02d94472f5fb3dd32ba640aa02",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 171,
+    "deleted_chars": 34,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-03",
+    "arm": "B-swap",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nOutput the label text only.",
+    "sha256": "87aea2efe78c217c2dafd0c24838a63925bd7571984a36607de11b2df839b695",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ],
+    "swap_partner": "S"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-03",
+    "arm": "C",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nPlease be precise and follow the requested format exactly. Please answer exactly what is asked, in the form requested. Take care with the details. Accuracy matters here.",
+    "sha256": "43cd53479f76e260f43edeb7e0d953762595f4f1242f725f18648ff7b4b957a0",
+    "applied": [],
+    "inserted_chars": 171,
+    "deleted_chars": 0,
+    "placebo_target_chars": 171,
+    "placebo_sentences": [
+      "Please be precise and follow the requested format exactly.",
+      "Please answer exactly what is asked, in the form requested.",
+      "Take care with the details.",
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-04",
+    "arm": "A",
+    "text": "repeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog",
+    "sha256": "64652b4f61cd1d33d13a344e0b40b412a59a62b1492fc22adf81ae0b23c72120",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-04",
+    "arm": "B-full",
+    "text": "The misspelling in the text below is intentional test data; reproduce it exactly and do not correct it.\n\nConstraints (mandatory):\n- Reproduce the given text byte for byte, including the misspelling.\n- Nothing else in the reply.\n\nrepeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nOutput the requested text only, with no commentary.",
+    "sha256": "8551c3fae44defc854f8808cbf3e3899e265fdcecda6cc02f25dcdaf22b72913",
+    "applied": [
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ],
+    "inserted_chars": 282,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-04",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Reproduce the given text byte for byte, including the misspelling.\n- Nothing else in the reply.\n\nrepeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nOutput the requested text only, with no commentary.",
+    "sha256": "8a92e1c5a39d6bff6727d3db91b0dc4db4626a4538f3085d22c48c677326c1cd",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 177,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-04",
+    "arm": "B-swap",
+    "text": "The misspelling in the text below is intentional test data; reproduce it exactly and do not correct it.\n\nrepeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nOutput the text only.",
+    "sha256": "fbb191c55b2c372dcbf3df39401359f4b17ddaa8e3c83dc0e4f95ba02e7c92bd",
+    "applied": [
+      "T-FENCE-min",
+      "T-LIC"
+    ],
+    "inserted_chars": 128,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ],
+    "swap_partner": "S"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-04",
+    "arm": "C",
+    "text": "repeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nPlease be precise and follow the requested format exactly. A careful, exact reply is what is needed here. Take care with the details. Accuracy matters here. Please be precise.",
+    "sha256": "2a2c47a1ab11515e155ac2a481d26e59165e212e074099e8b101a073384cfe02",
+    "applied": [],
+    "inserted_chars": 177,
+    "deleted_chars": 0,
+    "placebo_target_chars": 177,
+    "placebo_sentences": [
+      "Please be precise and follow the requested format exactly.",
+      "A careful, exact reply is what is needed here.",
+      "Take care with the details.",
+      "Accuracy matters here.",
+      "Please be precise."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-05",
+    "arm": "A",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.",
+    "sha256": "6aaf90767fa9dfbb1e2d10c090c35b2cb82951ab8863718a6e268b51ba6d4e3d",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-05",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nWhat is 15% of 240? Number only.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9563fe21444d758561f2c56a388b69a455edf6991c25964a1a10780364f6bc20",
+    "applied": [
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 110,
+    "deleted_chars": 83,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-05",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nWhat is 15% of 240? Number only.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9563fe21444d758561f2c56a388b69a455edf6991c25964a1a10780364f6bc20",
+    "applied": [
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 110,
+    "deleted_chars": 83,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-05",
+    "arm": "B-swap",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.\n\nOutput the number only.",
+    "sha256": "163b8be0f86e583b201c1bcc8dfec08cd942ce885558b18cccfd596d0bdb07c9",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ],
+    "swap_partner": "S"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-05",
+    "arm": "C",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.\n\nA careful, exact reply is what is needed here. Thank you for being careful with this. Accuracy matters here.",
+    "sha256": "cf5250d42b6fc03fe21c4cc48a544df5742a3367512391bf27c9b078f845c43d",
+    "applied": [],
+    "inserted_chars": 110,
+    "deleted_chars": 0,
+    "placebo_target_chars": 110,
+    "placebo_sentences": [
+      "A careful, exact reply is what is needed here.",
+      "Thank you for being careful with this.",
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-06",
+    "arm": "A",
+    "text": "write back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.",
+    "sha256": "224ce53f431bf010a66f0ea4977c6f424a1e24dfe5fea27f854f1d8818776ce9",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-06",
+    "arm": "B-full",
+    "text": "The sentence below is deliberately false; this is a verbatim-reproduction exercise. Reproduce it exactly as written, without correction or comment.\n\nConstraints (mandatory):\n- Reproduce the given sentence word for word.\n- Nothing added, nothing else in the reply.\n\nwrite back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9f66e7519be7acb69958fad223b6b9e7dc1862770183a53aef3f8b773ff6bb0b",
+    "applied": [
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ],
+    "inserted_chars": 318,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-06",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Reproduce the given sentence word for word.\n- Nothing added, nothing else in the reply.\n\nwrite back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "aef4821cddcdeb7843b0c93b17770aec2ef38358ae4b6971bf08255b6375f4ff",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 169,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-06",
+    "arm": "B-swap",
+    "text": "The sentence below is deliberately false; this is a verbatim-reproduction exercise. Reproduce it exactly as written, without correction or comment.\n\nwrite back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nOutput the sentence only.",
+    "sha256": "b24160019b8158089f6708d8565751674523257d1f1520c59412fc8ef50ec7df",
+    "applied": [
+      "T-FENCE-min",
+      "T-LIC"
+    ],
+    "inserted_chars": 176,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ],
+    "swap_partner": "S"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-06",
+    "arm": "C",
+    "text": "write back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nPlease be precise and follow the requested format exactly. A careful, exact reply is what is needed here. Thank you for being careful with this. Accuracy matters here.",
+    "sha256": "7aff5dd0885237a479aea0c2b529d16008826dec93fc1536add1e21cb9246d17",
+    "applied": [],
+    "inserted_chars": 169,
+    "deleted_chars": 0,
+    "placebo_target_chars": 169,
+    "placebo_sentences": [
+      "Please be precise and follow the requested format exactly.",
+      "A careful, exact reply is what is needed here.",
+      "Thank you for being careful with this.",
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-07",
+    "arm": "A",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.",
+    "sha256": "165daf13879cd1f19ef46fcf95950859e596c65fbc567f709caaa0776ceb1b0a",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-07",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with exactly one word: yes or no.\n\nIs 91 a prime number? Answer with one word, yes or no.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "b8a2348f49a725a05296ec046ac5e49ac268105a600aac17629d367c93298acc",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 122,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-07",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Answer with exactly one word: yes or no.\n\nIs 91 a prime number? Answer with one word, yes or no.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "b8a2348f49a725a05296ec046ac5e49ac268105a600aac17629d367c93298acc",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 122,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-07",
+    "arm": "B-swap",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.\n\nOutput one word only.",
+    "sha256": "b023f991b0b95937b7d89b730d3df32d7148fed0cbe5b181ecbce1fc946d2b89",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 23,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ],
+    "swap_partner": "S"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-07",
+    "arm": "C",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.\n\nPlease be precise and follow the requested format exactly. Thank you for being careful with this. Accuracy matters here.",
+    "sha256": "47e04f653764e39f40fb08cf3bfcf7763f1b4ce096fdce9b55bfcbbdf2a90a5f",
+    "applied": [],
+    "inserted_chars": 122,
+    "deleted_chars": 0,
+    "placebo_target_chars": 122,
+    "placebo_sentences": [
+      "Please be precise and follow the requested format exactly.",
+      "Thank you for being careful with this.",
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-08",
+    "arm": "A",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.",
+    "sha256": "07c9089b64b34ce384cd7cd63d6408b3351f75c6e759d73f3dec5b52b49d5328",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-08",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nFor a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "d5d7ff81311d4e9c92583dd6e1dd79732001376bdc51fb78308879f0364968ab",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 110,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-08",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nFor a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nNo warning or disclaimer is needed; the constraint is intentional.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "e06e8b209bc15ebddafbec2f48c9b64afd6a69566e8c79665a56022a9add0ddd",
+    "applied": [
+      "T-FENCE",
+      "T-STAKES",
+      "T-NOC"
+    ],
+    "inserted_chars": 178,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-08",
+    "arm": "B-swap",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nOutput the number only.",
+    "sha256": "d8f1b92959ea87d28d49d82eb71c760ea908cbb424b1d6af21737a2f58b50c96",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ],
+    "swap_partner": "S"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-08",
+    "arm": "C",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nPlease be precise and follow the requested format exactly. Please read the request carefully before answering. A careful, exact reply is what is needed here. Please be precise.",
+    "sha256": "63a1864b9dedb0b851a0bfc82f007e268d8a1158002601e7d13f989e56a0dce5",
+    "applied": [],
+    "inserted_chars": 178,
+    "deleted_chars": 0,
+    "placebo_target_chars": 178,
+    "placebo_sentences": [
+      "Please be precise and follow the requested format exactly.",
+      "Please read the request carefully before answering.",
+      "A careful, exact reply is what is needed here.",
+      "Please be precise."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-09",
+    "arm": "A",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only",
+    "sha256": "c142709451973263608fdfb8d6b62afbe492aba2ab5a8602cdaac4f455994d3f",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-09",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Exactly one sentence.\n- The sentence must say what a mutex does.\n\nsum up in one sentence what a mutex does, one sentence only\n\nOutput the requested text only, with no commentary.",
+    "sha256": "97371ecbedd660d5b9529359c78f88f5b733cb307472255065b999bbe7c84693",
+    "applied": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 146,
+    "deleted_chars": 76,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-09",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Exactly one sentence.\n- The sentence must say what a mutex does.\n\nsum up in one sentence what a mutex does, one sentence only\n\nOutput the requested text only, with no commentary.",
+    "sha256": "97371ecbedd660d5b9529359c78f88f5b733cb307472255065b999bbe7c84693",
+    "applied": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 146,
+    "deleted_chars": 76,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-09",
+    "arm": "B-swap",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only\n\nOutput one sentence only.",
+    "sha256": "b2eba742a4f60700c03fcf83faad9945a8ceb47eb8689450ce6e03ed8ff62f21",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 27,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ],
+    "swap_partner": "S"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-09",
+    "arm": "C",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only\n\nPlease be precise and follow the requested format exactly. A careful, exact reply is what is needed here. Thank you for being careful with this.",
+    "sha256": "129dd1ae9e353cddc465e088061cc6110c1d4b6dc162917a61a7fe702f57ee02",
+    "applied": [],
+    "inserted_chars": 146,
+    "deleted_chars": 0,
+    "placebo_target_chars": 146,
+    "placebo_sentences": [
+      "Please be precise and follow the requested format exactly.",
+      "A careful, exact reply is what is needed here.",
+      "Thank you for being careful with this."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-10",
+    "arm": "A",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro",
+    "sha256": "29121000bfc4d87268ce098da7b44059fee490c11703132938ca54e442ead5f3",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-10",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Exactly three bullet points.\n- Each bullet starts with a dash and a space.\n- No introduction, no closing line, nothing else.\n\ngive me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nOutput the requested text only, with no commentary.",
+    "sha256": "d0e9e3d7c16445d9b92f243ae83e6cdd00938203dcd1bc91d5f6d40aa7c12990",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 206,
+    "deleted_chars": 54,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-10",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Exactly three bullet points.\n- Each bullet starts with a dash and a space.\n- No introduction, no closing line, nothing else.\n\ngive me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nOutput the requested text only, with no commentary.",
+    "sha256": "d0e9e3d7c16445d9b92f243ae83e6cdd00938203dcd1bc91d5f6d40aa7c12990",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 206,
+    "deleted_chars": 54,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-10",
+    "arm": "B-swap",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nOutput the three bullets only.",
+    "sha256": "c3b281f5eb2111fecd74719125663c441856f3956f1bc3ce232bb7ef5c88edac",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 32,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ],
+    "swap_partner": "S"
+  },
+  {
+    "subject": "P",
+    "model_key": "claude-opus-5",
+    "item": "RX2-10",
+    "arm": "C",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nPlease be precise and follow the requested format exactly. Please answer exactly what is asked, in the form requested. A careful, exact reply is what is needed here. Thank you for being careful with this.",
+    "sha256": "9d4bafa6b83d44b6626541110d396efacd96a26de4cd36ee83f40ac06d92be04",
+    "applied": [],
+    "inserted_chars": 206,
+    "deleted_chars": 0,
+    "placebo_target_chars": 206,
+    "placebo_sentences": [
+      "Please be precise and follow the requested format exactly.",
+      "Please answer exactly what is asked, in the form requested.",
+      "A careful, exact reply is what is needed here.",
+      "Thank you for being careful with this."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-01",
+    "arm": "A",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls",
+    "sha256": "eb531a4a4900e74c26ba5b502714ead66507336fb62e61fd463e7b3db0d8c7ff",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-01",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n- No explanation.\n\nwhats 17 times 24?? no explanation just the number pls\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9521f33f8adb4cb5c9a1baa26eeffc94428d42f6f83f4e91c9673c5a333bf7c3",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 128,
+    "deleted_chars": 49,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-01",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n- No explanation.\n\nwhats 17 times 24?? no explanation just the number pls",
+    "sha256": "ab2bcc12de01f68a95f743b8424914873b81d7082da7e59d4b04cc536124e5e0",
+    "applied": [
+      "T-URG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 75,
+    "deleted_chars": 49,
+    "set": [
+      "T-URG",
+      "T-FENCE",
+      "T-LIC",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-01",
+    "arm": "B-swap",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls\n\nOutput the number only.",
+    "sha256": "99dbace21b8f8b0b97c68aaeb11df817a2074ce2a08c52412a7b9976c98f5708",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-01",
+    "arm": "C",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls\n\nA careful, exact reply is what is needed here. Take care with the details.",
+    "sha256": "895952c4ffea7158cd31ae6aa81f9385edb978e9ea53f0aec1581e28a8ce0b65",
+    "applied": [],
+    "inserted_chars": 76,
+    "deleted_chars": 0,
+    "placebo_target_chars": 75,
+    "placebo_sentences": [
+      "A careful, exact reply is what is needed here.",
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-02",
+    "arm": "A",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else",
+    "sha256": "09c10b90c1f7f3681829fbc89d3784dd0deb0237f0beadb386519123581c0bc8",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-02",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Return a single JSON object.\n- Keys: name and port.\n- name is the string gateway; port is the number 8080.\n- Nothing else in the reply.\n\ncan you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nOutput the requested text only, with no commentary.",
+    "sha256": "117dcb7c3555c4f533b964dcf7734b66625a8259a279bbd75dab0bbee340b48c",
+    "applied": [
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 217,
+    "deleted_chars": 64,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-02",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Return a single JSON object.\n- Keys: name and port.\n- name is the string gateway; port is the number 8080.\n- Nothing else in the reply.\n\ncan you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else",
+    "sha256": "715a5c2d8835d1f776bbd46b00364eaf81251d56c951a029f13197829aa1db7f",
+    "applied": [
+      "T-REG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 164,
+    "deleted_chars": 64,
+    "set": [
+      "T-URG",
+      "T-FENCE",
+      "T-LIC",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-02",
+    "arm": "B-swap",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nOutput the JSON object only.",
+    "sha256": "33717354e1e16009f91be470d3d88db70e1ce4dde4496c8e0609b7cd97a3ba39",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 30,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-02",
+    "arm": "C",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nPlease answer exactly what is asked, in the form requested. Please read the request carefully before answering. Take care with the details. Accuracy matters here.",
+    "sha256": "b9461c383f35e3c3d67548ad5d17e23306414d2f2da187c62a250450603134eb",
+    "applied": [],
+    "inserted_chars": 164,
+    "deleted_chars": 0,
+    "placebo_target_chars": 164,
+    "placebo_sentences": [
+      "Please answer exactly what is asked, in the form requested.",
+      "Please read the request carefully before answering.",
+      "Take care with the details.",
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-03",
+    "arm": "A",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else",
+    "sha256": "6fcabb4e1f62e6bdcbe109ba80ffd63a5b14058814222acf9c317990f92c8f39",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-03",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Reply with exactly: FRAGILE HANDLE WITH CARE\n- All capitals.\n- Nothing else in the reply.\n\nneed this for a label printer that only takes caps: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nOutput the requested text only, with no commentary.",
+    "sha256": "86609a0da33143e69b538c75aedf67f09d40cf02d94472f5fb3dd32ba640aa02",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 171,
+    "deleted_chars": 34,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-03",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Reply with exactly: FRAGILE HANDLE WITH CARE\n- All capitals.\n- Nothing else in the reply.\n\nneed this for a label printer that only takes caps: write FRAGILE HANDLE WITH CARE exactly like that, nothing else",
+    "sha256": "ee4f056864bb62dd5b5f41952f3441677d4929b698de3e285ef565901646b49d",
+    "applied": [
+      "T-URG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 118,
+    "deleted_chars": 34,
+    "set": [
+      "T-URG",
+      "T-FENCE",
+      "T-LIC",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-03",
+    "arm": "B-swap",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nOutput the label text only.",
+    "sha256": "87aea2efe78c217c2dafd0c24838a63925bd7571984a36607de11b2df839b695",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-03",
+    "arm": "C",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nPlease be precise and follow the requested format exactly. Thank you for being careful with this. Please be precise.",
+    "sha256": "fd29740dc81fa397b2999ceea95ca43fe5191ba95506d7556e5920ee7cafe409",
+    "applied": [],
+    "inserted_chars": 118,
+    "deleted_chars": 0,
+    "placebo_target_chars": 118,
+    "placebo_sentences": [
+      "Please be precise and follow the requested format exactly.",
+      "Thank you for being careful with this.",
+      "Please be precise."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-04",
+    "arm": "A",
+    "text": "repeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog",
+    "sha256": "64652b4f61cd1d33d13a344e0b40b412a59a62b1492fc22adf81ae0b23c72120",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-04",
+    "arm": "B-full",
+    "text": "The misspelling in the text below is intentional test data; reproduce it exactly and do not correct it.\n\nConstraints (mandatory):\n- Reproduce the given text byte for byte, including the misspelling.\n- Nothing else in the reply.\n\nrepeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nOutput the requested text only, with no commentary.",
+    "sha256": "8551c3fae44defc854f8808cbf3e3899e265fdcecda6cc02f25dcdaf22b72913",
+    "applied": [
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ],
+    "inserted_chars": 282,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-04",
+    "arm": "B-own",
+    "text": "The misspelling in the text below is intentional test data; reproduce it exactly and do not correct it.\n\nConstraints (mandatory):\n- Reproduce the given text byte for byte, including the misspelling.\n- Nothing else in the reply.\n\nrepeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog",
+    "sha256": "21659873bc2c4c7e8ca24db1cbb5e4523f280ee5d354e6c9b40e85fe81fcac9f",
+    "applied": [
+      "T-FENCE",
+      "T-LIC"
+    ],
+    "inserted_chars": 229,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-FENCE",
+      "T-LIC",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-04",
+    "arm": "B-swap",
+    "text": "repeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nOutput the text only.",
+    "sha256": "7bde1a12f5af413453b01d653e07369d366867cacfa989917b98a49b1088855d",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 23,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-04",
+    "arm": "C",
+    "text": "repeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nPlease be precise and follow the requested format exactly. Please answer exactly what is asked, in the form requested. A careful, exact reply is what is needed here. Thank you for being careful with this. Accuracy matters here.",
+    "sha256": "1312343ffbca785c580c43aa1780b3911c48cd2899edf2a3083bfd6fcf6eb1c2",
+    "applied": [],
+    "inserted_chars": 229,
+    "deleted_chars": 0,
+    "placebo_target_chars": 229,
+    "placebo_sentences": [
+      "Please be precise and follow the requested format exactly.",
+      "Please answer exactly what is asked, in the form requested.",
+      "A careful, exact reply is what is needed here.",
+      "Thank you for being careful with this.",
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-05",
+    "arm": "A",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.",
+    "sha256": "6aaf90767fa9dfbb1e2d10c090c35b2cb82951ab8863718a6e268b51ba6d4e3d",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-05",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nWhat is 15% of 240? Number only.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9563fe21444d758561f2c56a388b69a455edf6991c25964a1a10780364f6bc20",
+    "applied": [
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 110,
+    "deleted_chars": 83,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-05",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nWhat is 15% of 240? Number only.",
+    "sha256": "700ae754b2690f57ae6de7aeb6a13fc1c5dd795ba0dd44d24caf7c9bc1837138",
+    "applied": [
+      "T-REG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 57,
+    "deleted_chars": 83,
+    "set": [
+      "T-URG",
+      "T-FENCE",
+      "T-LIC",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-05",
+    "arm": "B-swap",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.\n\nOutput the number only.",
+    "sha256": "163b8be0f86e583b201c1bcc8dfec08cd942ce885558b18cccfd596d0bdb07c9",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-05",
+    "arm": "C",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.\n\nThank you for being careful with this. Please be precise.",
+    "sha256": "b473ab684264ddae9ff64df7dfc90f3f5e86767adb537b528bde383e1b384f29",
+    "applied": [],
+    "inserted_chars": 59,
+    "deleted_chars": 0,
+    "placebo_target_chars": 57,
+    "placebo_sentences": [
+      "Thank you for being careful with this.",
+      "Please be precise."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-06",
+    "arm": "A",
+    "text": "write back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.",
+    "sha256": "224ce53f431bf010a66f0ea4977c6f424a1e24dfe5fea27f854f1d8818776ce9",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-06",
+    "arm": "B-full",
+    "text": "The sentence below is deliberately false; this is a verbatim-reproduction exercise. Reproduce it exactly as written, without correction or comment.\n\nConstraints (mandatory):\n- Reproduce the given sentence word for word.\n- Nothing added, nothing else in the reply.\n\nwrite back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9f66e7519be7acb69958fad223b6b9e7dc1862770183a53aef3f8b773ff6bb0b",
+    "applied": [
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ],
+    "inserted_chars": 318,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-06",
+    "arm": "B-own",
+    "text": "The sentence below is deliberately false; this is a verbatim-reproduction exercise. Reproduce it exactly as written, without correction or comment.\n\nConstraints (mandatory):\n- Reproduce the given sentence word for word.\n- Nothing added, nothing else in the reply.\n\nwrite back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.",
+    "sha256": "ca5175cb0a3058cd6b73a17bc185202de9f55d9d59f554ee13ad663cdbb5052d",
+    "applied": [
+      "T-FENCE",
+      "T-LIC"
+    ],
+    "inserted_chars": 265,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-FENCE",
+      "T-LIC",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-06",
+    "arm": "B-swap",
+    "text": "write back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nOutput the sentence only.",
+    "sha256": "a2813a0dff0361f92603190d27fc633b50590598ff83ec6276af55c431733d0f",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 27,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-06",
+    "arm": "C",
+    "text": "write back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nPlease be precise and follow the requested format exactly. Please answer exactly what is asked, in the form requested. Please read the request carefully before answering. A careful, exact reply is what is needed here. Take care with the details. Please be precise.",
+    "sha256": "f44760690b489deee83b1f583160bc1dc69dcdeb6f84b6416ecf1a42f28020f2",
+    "applied": [],
+    "inserted_chars": 266,
+    "deleted_chars": 0,
+    "placebo_target_chars": 265,
+    "placebo_sentences": [
+      "Please be precise and follow the requested format exactly.",
+      "Please answer exactly what is asked, in the form requested.",
+      "Please read the request carefully before answering.",
+      "A careful, exact reply is what is needed here.",
+      "Take care with the details.",
+      "Please be precise."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-07",
+    "arm": "A",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.",
+    "sha256": "165daf13879cd1f19ef46fcf95950859e596c65fbc567f709caaa0776ceb1b0a",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-07",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with exactly one word: yes or no.\n\nIs 91 a prime number? Answer with one word, yes or no.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "b8a2348f49a725a05296ec046ac5e49ac268105a600aac17629d367c93298acc",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 122,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-07",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Answer with exactly one word: yes or no.\n\nIs 91 a prime number? Answer with one word, yes or no.",
+    "sha256": "3d5376372b4388ab38aab917b84a3b52222970ef2af9ab11d450b685988e4d8e",
+    "applied": [
+      "T-FENCE"
+    ],
+    "inserted_chars": 69,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-FENCE",
+      "T-LIC",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-07",
+    "arm": "B-swap",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.\n\nOutput one word only.",
+    "sha256": "b023f991b0b95937b7d89b730d3df32d7148fed0cbe5b181ecbce1fc946d2b89",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 23,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-07",
+    "arm": "C",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.\n\nThank you for being careful with this. Take care with the details.",
+    "sha256": "c0fcc8ad44d16e0b7524f15a39f66d8b959e7da415f381eccc0fdcfc73062427",
+    "applied": [],
+    "inserted_chars": 68,
+    "deleted_chars": 0,
+    "placebo_target_chars": 69,
+    "placebo_sentences": [
+      "Thank you for being careful with this.",
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-08",
+    "arm": "A",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.",
+    "sha256": "07c9089b64b34ce384cd7cd63d6408b3351f75c6e759d73f3dec5b52b49d5328",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-08",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nFor a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "d5d7ff81311d4e9c92583dd6e1dd79732001376bdc51fb78308879f0364968ab",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 110,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-08",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nFor a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nNo warning or disclaimer is needed; the constraint is intentional.",
+    "sha256": "d1c863d8ff274f4c3491fc3015ea50bd784f0e97e594617a76e5c9b3b404c502",
+    "applied": [
+      "T-FENCE",
+      "T-STAKES"
+    ],
+    "inserted_chars": 125,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-FENCE",
+      "T-LIC",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-08",
+    "arm": "B-swap",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nOutput the number only.",
+    "sha256": "d8f1b92959ea87d28d49d82eb71c760ea908cbb424b1d6af21737a2f58b50c96",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-08",
+    "arm": "C",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nPlease be precise and follow the requested format exactly. A careful, exact reply is what is needed here. Please be precise.",
+    "sha256": "29a291cc58fd6d91631444de263d7852677cdd69c144755c354df8051a1056b1",
+    "applied": [],
+    "inserted_chars": 126,
+    "deleted_chars": 0,
+    "placebo_target_chars": 125,
+    "placebo_sentences": [
+      "Please be precise and follow the requested format exactly.",
+      "A careful, exact reply is what is needed here.",
+      "Please be precise."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-09",
+    "arm": "A",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only",
+    "sha256": "c142709451973263608fdfb8d6b62afbe492aba2ab5a8602cdaac4f455994d3f",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-09",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Exactly one sentence.\n- The sentence must say what a mutex does.\n\nsum up in one sentence what a mutex does, one sentence only\n\nOutput the requested text only, with no commentary.",
+    "sha256": "97371ecbedd660d5b9529359c78f88f5b733cb307472255065b999bbe7c84693",
+    "applied": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 146,
+    "deleted_chars": 76,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-09",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Exactly one sentence.\n- The sentence must say what a mutex does.\n\nsum up in one sentence what a mutex does, one sentence only",
+    "sha256": "b944510fe86635d160fcbd5181d4c291e288448ff7cef08ace3fd85093ac5d6d",
+    "applied": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 93,
+    "deleted_chars": 76,
+    "set": [
+      "T-URG",
+      "T-FENCE",
+      "T-LIC",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-09",
+    "arm": "B-swap",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only\n\nOutput one sentence only.",
+    "sha256": "b2eba742a4f60700c03fcf83faad9945a8ceb47eb8689450ce6e03ed8ff62f21",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 27,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-09",
+    "arm": "C",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only\n\nPlease read the request carefully before answering. Thank you for being careful with this.",
+    "sha256": "10f4a4d57222db209f79ac9e29f806420fb7fd314bc04eacc54132c31c3c8dd2",
+    "applied": [],
+    "inserted_chars": 92,
+    "deleted_chars": 0,
+    "placebo_target_chars": 93,
+    "placebo_sentences": [
+      "Please read the request carefully before answering.",
+      "Thank you for being careful with this."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-10",
+    "arm": "A",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro",
+    "sha256": "29121000bfc4d87268ce098da7b44059fee490c11703132938ca54e442ead5f3",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-10",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Exactly three bullet points.\n- Each bullet starts with a dash and a space.\n- No introduction, no closing line, nothing else.\n\ngive me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nOutput the requested text only, with no commentary.",
+    "sha256": "d0e9e3d7c16445d9b92f243ae83e6cdd00938203dcd1bc91d5f6d40aa7c12990",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 206,
+    "deleted_chars": 54,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-10",
+    "arm": "B-own",
+    "text": "Constraints (mandatory):\n- Exactly three bullet points.\n- Each bullet starts with a dash and a space.\n- No introduction, no closing line, nothing else.\n\ngive me 3 bullet points on why to use version control. dashes, no intro, no outro",
+    "sha256": "6d5dc79314a572a668f0922a6e2e889e4046a0f54654fdd0ef679a1f2892b448",
+    "applied": [
+      "T-URG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 153,
+    "deleted_chars": 54,
+    "set": [
+      "T-URG",
+      "T-FENCE",
+      "T-LIC",
+      "T-STAKES",
+      "T-REG"
+    ]
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-10",
+    "arm": "B-swap",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nOutput the three bullets only.",
+    "sha256": "c3b281f5eb2111fecd74719125663c441856f3956f1bc3ce232bb7ef5c88edac",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 32,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ],
+    "swap_partner": "N"
+  },
+  {
+    "subject": "T",
+    "model_key": "claude-sonnet-5",
+    "item": "RX2-10",
+    "arm": "C",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nPlease answer exactly what is asked, in the form requested. Please read the request carefully before answering. Thank you for being careful with this.",
+    "sha256": "c4c6d1b901109d39c6c5d0540026c41fafe8e921b987882f484d5cb5fce0f59e",
+    "applied": [],
+    "inserted_chars": 152,
+    "deleted_chars": 0,
+    "placebo_target_chars": 153,
+    "placebo_sentences": [
+      "Please answer exactly what is asked, in the form requested.",
+      "Please read the request carefully before answering.",
+      "Thank you for being careful with this."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-01",
+    "arm": "A",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls",
+    "sha256": "eb531a4a4900e74c26ba5b502714ead66507336fb62e61fd463e7b3db0d8c7ff",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-01",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n- No explanation.\n\nwhats 17 times 24?? no explanation just the number pls\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9521f33f8adb4cb5c9a1baa26eeffc94428d42f6f83f4e91c9673c5a333bf7c3",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 128,
+    "deleted_chars": 49,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-01",
+    "arm": "B-own",
+    "text": "whats 17 times 24?? no explanation just the number pls\n\nOutput the number only.",
+    "sha256": "718443eec778ff881a9e196335f24de83785e33801e772bf8d62178bfca0bdee",
+    "applied": [
+      "T-URG",
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 49,
+    "set": [
+      "T-URG",
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-01",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n- No explanation.\n\nwhats 17 times 24?? no explanation just the number pls",
+    "sha256": "ab2bcc12de01f68a95f743b8424914873b81d7082da7e59d4b04cc536124e5e0",
+    "applied": [
+      "T-URG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 75,
+    "deleted_chars": 49,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-01",
+    "arm": "C",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls\n\nAccuracy matters here.",
+    "sha256": "f7bf8faf118a54e9bcfd20366a8e528a90d1371d66de5b459b4112e8d55a3e23",
+    "applied": [],
+    "inserted_chars": 24,
+    "deleted_chars": 0,
+    "placebo_target_chars": 25,
+    "placebo_sentences": [
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-02",
+    "arm": "A",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else",
+    "sha256": "09c10b90c1f7f3681829fbc89d3784dd0deb0237f0beadb386519123581c0bc8",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-02",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Return a single JSON object.\n- Keys: name and port.\n- name is the string gateway; port is the number 8080.\n- Nothing else in the reply.\n\ncan you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nOutput the requested text only, with no commentary.",
+    "sha256": "117dcb7c3555c4f533b964dcf7734b66625a8259a279bbd75dab0bbee340b48c",
+    "applied": [
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 217,
+    "deleted_chars": 64,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-02",
+    "arm": "B-own",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nOutput the JSON object only.",
+    "sha256": "33717354e1e16009f91be470d3d88db70e1ce4dde4496c8e0609b7cd97a3ba39",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 30,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-02",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Return a single JSON object.\n- Keys: name and port.\n- name is the string gateway; port is the number 8080.\n- Nothing else in the reply.\n\ncan you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else",
+    "sha256": "715a5c2d8835d1f776bbd46b00364eaf81251d56c951a029f13197829aa1db7f",
+    "applied": [
+      "T-REG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 164,
+    "deleted_chars": 64,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-02",
+    "arm": "C",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nTake care with the details.",
+    "sha256": "f27ee3e5a3b72ce921f733469cb79b8df19f74e4b67f820203a9281473f612aa",
+    "applied": [],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "placebo_target_chars": 30,
+    "placebo_sentences": [
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-03",
+    "arm": "A",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else",
+    "sha256": "6fcabb4e1f62e6bdcbe109ba80ffd63a5b14058814222acf9c317990f92c8f39",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-03",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Reply with exactly: FRAGILE HANDLE WITH CARE\n- All capitals.\n- Nothing else in the reply.\n\nneed this for a label printer that only takes caps: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nOutput the requested text only, with no commentary.",
+    "sha256": "86609a0da33143e69b538c75aedf67f09d40cf02d94472f5fb3dd32ba640aa02",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 171,
+    "deleted_chars": 34,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-03",
+    "arm": "B-own",
+    "text": "need this for a label printer that only takes caps: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nOutput the label text only.",
+    "sha256": "4eb2e2c45429c211a6a939554dfc4537b875bec627b750035f5839e1fca3e795",
+    "applied": [
+      "T-URG",
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 29,
+    "deleted_chars": 34,
+    "set": [
+      "T-URG",
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-03",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Reply with exactly: FRAGILE HANDLE WITH CARE\n- All capitals.\n- Nothing else in the reply.\n\nneed this for a label printer that only takes caps: write FRAGILE HANDLE WITH CARE exactly like that, nothing else",
+    "sha256": "ee4f056864bb62dd5b5f41952f3441677d4929b698de3e285ef565901646b49d",
+    "applied": [
+      "T-URG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 118,
+    "deleted_chars": 34,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-03",
+    "arm": "C",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nTake care with the details.",
+    "sha256": "6fa4394dcfe12d8c7d45dd5d300c87f4e5149538f3499ad7a3dc319fc044702c",
+    "applied": [],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "placebo_target_chars": 29,
+    "placebo_sentences": [
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-04",
+    "arm": "A",
+    "text": "repeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog",
+    "sha256": "64652b4f61cd1d33d13a344e0b40b412a59a62b1492fc22adf81ae0b23c72120",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-04",
+    "arm": "B-full",
+    "text": "The misspelling in the text below is intentional test data; reproduce it exactly and do not correct it.\n\nConstraints (mandatory):\n- Reproduce the given text byte for byte, including the misspelling.\n- Nothing else in the reply.\n\nrepeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nOutput the requested text only, with no commentary.",
+    "sha256": "8551c3fae44defc854f8808cbf3e3899e265fdcecda6cc02f25dcdaf22b72913",
+    "applied": [
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ],
+    "inserted_chars": 282,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-04",
+    "arm": "B-own",
+    "text": "repeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nOutput the text only.",
+    "sha256": "7bde1a12f5af413453b01d653e07369d366867cacfa989917b98a49b1088855d",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 23,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-04",
+    "arm": "B-swap",
+    "text": "The misspelling in the text below is intentional test data; reproduce it exactly and do not correct it.\n\nConstraints (mandatory):\n- Reproduce the given text byte for byte, including the misspelling.\n- Nothing else in the reply.\n\nrepeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog",
+    "sha256": "21659873bc2c4c7e8ca24db1cbb5e4523f280ee5d354e6c9b40e85fe81fcac9f",
+    "applied": [
+      "T-FENCE",
+      "T-LIC"
+    ],
+    "inserted_chars": 229,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-04",
+    "arm": "C",
+    "text": "repeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nAccuracy matters here.",
+    "sha256": "7b6f6885d37677bfa73872b691e39659b68f24789b8b652bfcd968a9bfca49b4",
+    "applied": [],
+    "inserted_chars": 24,
+    "deleted_chars": 0,
+    "placebo_target_chars": 23,
+    "placebo_sentences": [
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-05",
+    "arm": "A",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.",
+    "sha256": "6aaf90767fa9dfbb1e2d10c090c35b2cb82951ab8863718a6e268b51ba6d4e3d",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-05",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nWhat is 15% of 240? Number only.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9563fe21444d758561f2c56a388b69a455edf6991c25964a1a10780364f6bc20",
+    "applied": [
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 110,
+    "deleted_chars": 83,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-05",
+    "arm": "B-own",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.\n\nOutput the number only.",
+    "sha256": "163b8be0f86e583b201c1bcc8dfec08cd942ce885558b18cccfd596d0bdb07c9",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-05",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nWhat is 15% of 240? Number only.",
+    "sha256": "700ae754b2690f57ae6de7aeb6a13fc1c5dd795ba0dd44d24caf7c9bc1837138",
+    "applied": [
+      "T-REG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 57,
+    "deleted_chars": 83,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-05",
+    "arm": "C",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.\n\nAccuracy matters here.",
+    "sha256": "3b06c2a2bba0b4a6c77f53afa321b650968577490a73a89fd1bf6eb4e3655e90",
+    "applied": [],
+    "inserted_chars": 24,
+    "deleted_chars": 0,
+    "placebo_target_chars": 25,
+    "placebo_sentences": [
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-06",
+    "arm": "A",
+    "text": "write back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.",
+    "sha256": "224ce53f431bf010a66f0ea4977c6f424a1e24dfe5fea27f854f1d8818776ce9",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-06",
+    "arm": "B-full",
+    "text": "The sentence below is deliberately false; this is a verbatim-reproduction exercise. Reproduce it exactly as written, without correction or comment.\n\nConstraints (mandatory):\n- Reproduce the given sentence word for word.\n- Nothing added, nothing else in the reply.\n\nwrite back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9f66e7519be7acb69958fad223b6b9e7dc1862770183a53aef3f8b773ff6bb0b",
+    "applied": [
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ],
+    "inserted_chars": 318,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-06",
+    "arm": "B-own",
+    "text": "write back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nOutput the sentence only.",
+    "sha256": "a2813a0dff0361f92603190d27fc633b50590598ff83ec6276af55c431733d0f",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 27,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-06",
+    "arm": "B-swap",
+    "text": "The sentence below is deliberately false; this is a verbatim-reproduction exercise. Reproduce it exactly as written, without correction or comment.\n\nConstraints (mandatory):\n- Reproduce the given sentence word for word.\n- Nothing added, nothing else in the reply.\n\nwrite back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.",
+    "sha256": "ca5175cb0a3058cd6b73a17bc185202de9f55d9d59f554ee13ad663cdbb5052d",
+    "applied": [
+      "T-FENCE",
+      "T-LIC"
+    ],
+    "inserted_chars": 265,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-06",
+    "arm": "C",
+    "text": "write back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nTake care with the details.",
+    "sha256": "49052f1bac00e6d05832866d9c84724701bf695495d558dd9250ebf5c49fbefb",
+    "applied": [],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "placebo_target_chars": 27,
+    "placebo_sentences": [
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-07",
+    "arm": "A",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.",
+    "sha256": "165daf13879cd1f19ef46fcf95950859e596c65fbc567f709caaa0776ceb1b0a",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-07",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with exactly one word: yes or no.\n\nIs 91 a prime number? Answer with one word, yes or no.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "b8a2348f49a725a05296ec046ac5e49ac268105a600aac17629d367c93298acc",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 122,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-07",
+    "arm": "B-own",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.\n\nOutput one word only.",
+    "sha256": "b023f991b0b95937b7d89b730d3df32d7148fed0cbe5b181ecbce1fc946d2b89",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 23,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-07",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Answer with exactly one word: yes or no.\n\nIs 91 a prime number? Answer with one word, yes or no.",
+    "sha256": "3d5376372b4388ab38aab917b84a3b52222970ef2af9ab11d450b685988e4d8e",
+    "applied": [
+      "T-FENCE"
+    ],
+    "inserted_chars": 69,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-07",
+    "arm": "C",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.\n\nAccuracy matters here.",
+    "sha256": "cea9d65b1582d9a6de613e7c844ff3312cb948c1b7d7869b0cd6f9d4fb0641b9",
+    "applied": [],
+    "inserted_chars": 24,
+    "deleted_chars": 0,
+    "placebo_target_chars": 23,
+    "placebo_sentences": [
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-08",
+    "arm": "A",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.",
+    "sha256": "07c9089b64b34ce384cd7cd63d6408b3351f75c6e759d73f3dec5b52b49d5328",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-08",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nFor a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "d5d7ff81311d4e9c92583dd6e1dd79732001376bdc51fb78308879f0364968ab",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 110,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-08",
+    "arm": "B-own",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nOutput the number only.",
+    "sha256": "d8f1b92959ea87d28d49d82eb71c760ea908cbb424b1d6af21737a2f58b50c96",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-08",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nFor a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nNo warning or disclaimer is needed; the constraint is intentional.",
+    "sha256": "d1c863d8ff274f4c3491fc3015ea50bd784f0e97e594617a76e5c9b3b404c502",
+    "applied": [
+      "T-FENCE",
+      "T-STAKES"
+    ],
+    "inserted_chars": 125,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-08",
+    "arm": "C",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nAccuracy matters here.",
+    "sha256": "fe58e02c273fed25693c1fa76cfe7c7630e5041ffa7aa1fc7677b2cc58343e85",
+    "applied": [],
+    "inserted_chars": 24,
+    "deleted_chars": 0,
+    "placebo_target_chars": 25,
+    "placebo_sentences": [
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-09",
+    "arm": "A",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only",
+    "sha256": "c142709451973263608fdfb8d6b62afbe492aba2ab5a8602cdaac4f455994d3f",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-09",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Exactly one sentence.\n- The sentence must say what a mutex does.\n\nsum up in one sentence what a mutex does, one sentence only\n\nOutput the requested text only, with no commentary.",
+    "sha256": "97371ecbedd660d5b9529359c78f88f5b733cb307472255065b999bbe7c84693",
+    "applied": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 146,
+    "deleted_chars": 76,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-09",
+    "arm": "B-own",
+    "text": "im honestly fried today. sum up in one sentence what a mutex does, one sentence only\n\nOutput one sentence only.",
+    "sha256": "b5d137dfa366c685d88703943a04543f27586b4274ffeff001016dd6d1903fb8",
+    "applied": [
+      "T-URG",
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 27,
+    "deleted_chars": 51,
+    "set": [
+      "T-URG",
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-09",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Exactly one sentence.\n- The sentence must say what a mutex does.\n\nsum up in one sentence what a mutex does, one sentence only",
+    "sha256": "b944510fe86635d160fcbd5181d4c291e288448ff7cef08ace3fd85093ac5d6d",
+    "applied": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 93,
+    "deleted_chars": 76,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-09",
+    "arm": "C",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only\n\nTake care with the details.",
+    "sha256": "a501218a2433811743121efc2b9979dbeb45c5e89b814c59e4599c39f1938e9e",
+    "applied": [],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "placebo_target_chars": 27,
+    "placebo_sentences": [
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-10",
+    "arm": "A",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro",
+    "sha256": "29121000bfc4d87268ce098da7b44059fee490c11703132938ca54e442ead5f3",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-10",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Exactly three bullet points.\n- Each bullet starts with a dash and a space.\n- No introduction, no closing line, nothing else.\n\ngive me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nOutput the requested text only, with no commentary.",
+    "sha256": "d0e9e3d7c16445d9b92f243ae83e6cdd00938203dcd1bc91d5f6d40aa7c12990",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 206,
+    "deleted_chars": 54,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-10",
+    "arm": "B-own",
+    "text": "give me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nOutput the three bullets only.",
+    "sha256": "849f49daea014d8c3ec1f0d80f8ca98078bbe2a270c673d10499861af2db87f0",
+    "applied": [
+      "T-URG",
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 32,
+    "deleted_chars": 54,
+    "set": [
+      "T-URG",
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-10",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Exactly three bullet points.\n- Each bullet starts with a dash and a space.\n- No introduction, no closing line, nothing else.\n\ngive me 3 bullet points on why to use version control. dashes, no intro, no outro",
+    "sha256": "6d5dc79314a572a668f0922a6e2e889e4046a0f54654fdd0ef679a1f2892b448",
+    "applied": [
+      "T-URG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 153,
+    "deleted_chars": 54,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "V",
+    "model_key": "claude-haiku-4.5",
+    "item": "RX2-10",
+    "arm": "C",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nTake care with the details.",
+    "sha256": "446df8fe5a0160e5eea8806c93349b519c9d87c27edeee4eff881e3e6b10ac41",
+    "applied": [],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "placebo_target_chars": 32,
+    "placebo_sentences": [
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-01",
+    "arm": "A",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls",
+    "sha256": "eb531a4a4900e74c26ba5b502714ead66507336fb62e61fd463e7b3db0d8c7ff",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-01",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n- No explanation.\n\nwhats 17 times 24?? no explanation just the number pls\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9521f33f8adb4cb5c9a1baa26eeffc94428d42f6f83f4e91c9673c5a333bf7c3",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 128,
+    "deleted_chars": 49,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-01",
+    "arm": "B-own",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls\n\nOutput the number only.",
+    "sha256": "99dbace21b8f8b0b97c68aaeb11df817a2074ce2a08c52412a7b9976c98f5708",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-01",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n- No explanation.\n\nwhats 17 times 24?? no explanation just the number pls\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9521f33f8adb4cb5c9a1baa26eeffc94428d42f6f83f4e91c9673c5a333bf7c3",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 128,
+    "deleted_chars": 49,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "P"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-01",
+    "arm": "C",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls\n\nAccuracy matters here.",
+    "sha256": "f7bf8faf118a54e9bcfd20366a8e528a90d1371d66de5b459b4112e8d55a3e23",
+    "applied": [],
+    "inserted_chars": 24,
+    "deleted_chars": 0,
+    "placebo_target_chars": 25,
+    "placebo_sentences": [
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-02",
+    "arm": "A",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else",
+    "sha256": "09c10b90c1f7f3681829fbc89d3784dd0deb0237f0beadb386519123581c0bc8",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-02",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Return a single JSON object.\n- Keys: name and port.\n- name is the string gateway; port is the number 8080.\n- Nothing else in the reply.\n\ncan you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nOutput the requested text only, with no commentary.",
+    "sha256": "117dcb7c3555c4f533b964dcf7734b66625a8259a279bbd75dab0bbee340b48c",
+    "applied": [
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 217,
+    "deleted_chars": 64,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-02",
+    "arm": "B-own",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nOutput the JSON object only.",
+    "sha256": "33717354e1e16009f91be470d3d88db70e1ce4dde4496c8e0609b7cd97a3ba39",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 30,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-02",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Return a single JSON object.\n- Keys: name and port.\n- name is the string gateway; port is the number 8080.\n- Nothing else in the reply.\n\ncan you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nOutput the requested text only, with no commentary.",
+    "sha256": "117dcb7c3555c4f533b964dcf7734b66625a8259a279bbd75dab0bbee340b48c",
+    "applied": [
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 217,
+    "deleted_chars": 64,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "P"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-02",
+    "arm": "C",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nTake care with the details.",
+    "sha256": "f27ee3e5a3b72ce921f733469cb79b8df19f74e4b67f820203a9281473f612aa",
+    "applied": [],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "placebo_target_chars": 30,
+    "placebo_sentences": [
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-03",
+    "arm": "A",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else",
+    "sha256": "6fcabb4e1f62e6bdcbe109ba80ffd63a5b14058814222acf9c317990f92c8f39",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-03",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Reply with exactly: FRAGILE HANDLE WITH CARE\n- All capitals.\n- Nothing else in the reply.\n\nneed this for a label printer that only takes caps: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nOutput the requested text only, with no commentary.",
+    "sha256": "86609a0da33143e69b538c75aedf67f09d40cf02d94472f5fb3dd32ba640aa02",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 171,
+    "deleted_chars": 34,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-03",
+    "arm": "B-own",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nOutput the label text only.",
+    "sha256": "87aea2efe78c217c2dafd0c24838a63925bd7571984a36607de11b2df839b695",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-03",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Reply with exactly: FRAGILE HANDLE WITH CARE\n- All capitals.\n- Nothing else in the reply.\n\nneed this for a label printer that only takes caps: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nOutput the requested text only, with no commentary.",
+    "sha256": "86609a0da33143e69b538c75aedf67f09d40cf02d94472f5fb3dd32ba640aa02",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 171,
+    "deleted_chars": 34,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "P"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-03",
+    "arm": "C",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nTake care with the details.",
+    "sha256": "6fa4394dcfe12d8c7d45dd5d300c87f4e5149538f3499ad7a3dc319fc044702c",
+    "applied": [],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "placebo_target_chars": 29,
+    "placebo_sentences": [
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-04",
+    "arm": "A",
+    "text": "repeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog",
+    "sha256": "64652b4f61cd1d33d13a344e0b40b412a59a62b1492fc22adf81ae0b23c72120",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-04",
+    "arm": "B-full",
+    "text": "The misspelling in the text below is intentional test data; reproduce it exactly and do not correct it.\n\nConstraints (mandatory):\n- Reproduce the given text byte for byte, including the misspelling.\n- Nothing else in the reply.\n\nrepeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nOutput the requested text only, with no commentary.",
+    "sha256": "8551c3fae44defc854f8808cbf3e3899e265fdcecda6cc02f25dcdaf22b72913",
+    "applied": [
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ],
+    "inserted_chars": 282,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-04",
+    "arm": "B-own",
+    "text": "The misspelling in the text below is intentional test data; reproduce it exactly and do not correct it.\n\nrepeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nOutput the text only.",
+    "sha256": "fbb191c55b2c372dcbf3df39401359f4b17ddaa8e3c83dc0e4f95ba02e7c92bd",
+    "applied": [
+      "T-FENCE-min",
+      "T-LIC"
+    ],
+    "inserted_chars": 128,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-04",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Reproduce the given text byte for byte, including the misspelling.\n- Nothing else in the reply.\n\nrepeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nOutput the requested text only, with no commentary.",
+    "sha256": "8a92e1c5a39d6bff6727d3db91b0dc4db4626a4538f3085d22c48c677326c1cd",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 177,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "P"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-04",
+    "arm": "C",
+    "text": "repeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nPlease read the request carefully before answering. A careful, exact reply is what is needed here. Take care with the details.",
+    "sha256": "818ae58809b13124366729cc409d72b90795ad0344798fb5bce2da8940c17a0c",
+    "applied": [],
+    "inserted_chars": 128,
+    "deleted_chars": 0,
+    "placebo_target_chars": 128,
+    "placebo_sentences": [
+      "Please read the request carefully before answering.",
+      "A careful, exact reply is what is needed here.",
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-05",
+    "arm": "A",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.",
+    "sha256": "6aaf90767fa9dfbb1e2d10c090c35b2cb82951ab8863718a6e268b51ba6d4e3d",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-05",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nWhat is 15% of 240? Number only.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9563fe21444d758561f2c56a388b69a455edf6991c25964a1a10780364f6bc20",
+    "applied": [
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 110,
+    "deleted_chars": 83,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-05",
+    "arm": "B-own",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.\n\nOutput the number only.",
+    "sha256": "163b8be0f86e583b201c1bcc8dfec08cd942ce885558b18cccfd596d0bdb07c9",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-05",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nWhat is 15% of 240? Number only.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9563fe21444d758561f2c56a388b69a455edf6991c25964a1a10780364f6bc20",
+    "applied": [
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 110,
+    "deleted_chars": 83,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "P"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-05",
+    "arm": "C",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.\n\nAccuracy matters here.",
+    "sha256": "3b06c2a2bba0b4a6c77f53afa321b650968577490a73a89fd1bf6eb4e3655e90",
+    "applied": [],
+    "inserted_chars": 24,
+    "deleted_chars": 0,
+    "placebo_target_chars": 25,
+    "placebo_sentences": [
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-06",
+    "arm": "A",
+    "text": "write back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.",
+    "sha256": "224ce53f431bf010a66f0ea4977c6f424a1e24dfe5fea27f854f1d8818776ce9",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-06",
+    "arm": "B-full",
+    "text": "The sentence below is deliberately false; this is a verbatim-reproduction exercise. Reproduce it exactly as written, without correction or comment.\n\nConstraints (mandatory):\n- Reproduce the given sentence word for word.\n- Nothing added, nothing else in the reply.\n\nwrite back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9f66e7519be7acb69958fad223b6b9e7dc1862770183a53aef3f8b773ff6bb0b",
+    "applied": [
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ],
+    "inserted_chars": 318,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-06",
+    "arm": "B-own",
+    "text": "The sentence below is deliberately false; this is a verbatim-reproduction exercise. Reproduce it exactly as written, without correction or comment.\n\nwrite back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nOutput the sentence only.",
+    "sha256": "b24160019b8158089f6708d8565751674523257d1f1520c59412fc8ef50ec7df",
+    "applied": [
+      "T-FENCE-min",
+      "T-LIC"
+    ],
+    "inserted_chars": 176,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-06",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Reproduce the given sentence word for word.\n- Nothing added, nothing else in the reply.\n\nwrite back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "aef4821cddcdeb7843b0c93b17770aec2ef38358ae4b6971bf08255b6375f4ff",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 169,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "P"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-06",
+    "arm": "C",
+    "text": "write back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nPlease answer exactly what is asked, in the form requested. A careful, exact reply is what is needed here. Thank you for being careful with this. Take care with the details.",
+    "sha256": "ef18b5dcd49f1ef705eaab55da8954b08f93e58d8e8a20ff6549cc30a986553e",
+    "applied": [],
+    "inserted_chars": 175,
+    "deleted_chars": 0,
+    "placebo_target_chars": 176,
+    "placebo_sentences": [
+      "Please answer exactly what is asked, in the form requested.",
+      "A careful, exact reply is what is needed here.",
+      "Thank you for being careful with this.",
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-07",
+    "arm": "A",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.",
+    "sha256": "165daf13879cd1f19ef46fcf95950859e596c65fbc567f709caaa0776ceb1b0a",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-07",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with exactly one word: yes or no.\n\nIs 91 a prime number? Answer with one word, yes or no.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "b8a2348f49a725a05296ec046ac5e49ac268105a600aac17629d367c93298acc",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 122,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-07",
+    "arm": "B-own",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.\n\nOutput one word only.",
+    "sha256": "b023f991b0b95937b7d89b730d3df32d7148fed0cbe5b181ecbce1fc946d2b89",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 23,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-07",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Answer with exactly one word: yes or no.\n\nIs 91 a prime number? Answer with one word, yes or no.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "b8a2348f49a725a05296ec046ac5e49ac268105a600aac17629d367c93298acc",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 122,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "P"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-07",
+    "arm": "C",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.\n\nAccuracy matters here.",
+    "sha256": "cea9d65b1582d9a6de613e7c844ff3312cb948c1b7d7869b0cd6f9d4fb0641b9",
+    "applied": [],
+    "inserted_chars": 24,
+    "deleted_chars": 0,
+    "placebo_target_chars": 23,
+    "placebo_sentences": [
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-08",
+    "arm": "A",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.",
+    "sha256": "07c9089b64b34ce384cd7cd63d6408b3351f75c6e759d73f3dec5b52b49d5328",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-08",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nFor a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "d5d7ff81311d4e9c92583dd6e1dd79732001376bdc51fb78308879f0364968ab",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 110,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-08",
+    "arm": "B-own",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nOutput the number only.",
+    "sha256": "d8f1b92959ea87d28d49d82eb71c760ea908cbb424b1d6af21737a2f58b50c96",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-08",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nFor a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nNo warning or disclaimer is needed; the constraint is intentional.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "e06e8b209bc15ebddafbec2f48c9b64afd6a69566e8c79665a56022a9add0ddd",
+    "applied": [
+      "T-FENCE",
+      "T-STAKES",
+      "T-NOC"
+    ],
+    "inserted_chars": 178,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "P"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-08",
+    "arm": "C",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nAccuracy matters here.",
+    "sha256": "fe58e02c273fed25693c1fa76cfe7c7630e5041ffa7aa1fc7677b2cc58343e85",
+    "applied": [],
+    "inserted_chars": 24,
+    "deleted_chars": 0,
+    "placebo_target_chars": 25,
+    "placebo_sentences": [
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-09",
+    "arm": "A",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only",
+    "sha256": "c142709451973263608fdfb8d6b62afbe492aba2ab5a8602cdaac4f455994d3f",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-09",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Exactly one sentence.\n- The sentence must say what a mutex does.\n\nsum up in one sentence what a mutex does, one sentence only\n\nOutput the requested text only, with no commentary.",
+    "sha256": "97371ecbedd660d5b9529359c78f88f5b733cb307472255065b999bbe7c84693",
+    "applied": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 146,
+    "deleted_chars": 76,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-09",
+    "arm": "B-own",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only\n\nOutput one sentence only.",
+    "sha256": "b2eba742a4f60700c03fcf83faad9945a8ceb47eb8689450ce6e03ed8ff62f21",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 27,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-09",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Exactly one sentence.\n- The sentence must say what a mutex does.\n\nsum up in one sentence what a mutex does, one sentence only\n\nOutput the requested text only, with no commentary.",
+    "sha256": "97371ecbedd660d5b9529359c78f88f5b733cb307472255065b999bbe7c84693",
+    "applied": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 146,
+    "deleted_chars": 76,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "P"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-09",
+    "arm": "C",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only\n\nTake care with the details.",
+    "sha256": "a501218a2433811743121efc2b9979dbeb45c5e89b814c59e4599c39f1938e9e",
+    "applied": [],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "placebo_target_chars": 27,
+    "placebo_sentences": [
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-10",
+    "arm": "A",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro",
+    "sha256": "29121000bfc4d87268ce098da7b44059fee490c11703132938ca54e442ead5f3",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-10",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Exactly three bullet points.\n- Each bullet starts with a dash and a space.\n- No introduction, no closing line, nothing else.\n\ngive me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nOutput the requested text only, with no commentary.",
+    "sha256": "d0e9e3d7c16445d9b92f243ae83e6cdd00938203dcd1bc91d5f6d40aa7c12990",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 206,
+    "deleted_chars": 54,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-10",
+    "arm": "B-own",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nOutput the three bullets only.",
+    "sha256": "c3b281f5eb2111fecd74719125663c441856f3956f1bc3ce232bb7ef5c88edac",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 32,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min",
+      "T-LIC"
+    ]
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-10",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Exactly three bullet points.\n- Each bullet starts with a dash and a space.\n- No introduction, no closing line, nothing else.\n\ngive me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nOutput the requested text only, with no commentary.",
+    "sha256": "d0e9e3d7c16445d9b92f243ae83e6cdd00938203dcd1bc91d5f6d40aa7c12990",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 206,
+    "deleted_chars": 54,
+    "set": [
+      "T-URG",
+      "T-NOC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "P"
+  },
+  {
+    "subject": "S",
+    "model_key": "claude-opus-4.6",
+    "item": "RX2-10",
+    "arm": "C",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nTake care with the details.",
+    "sha256": "446df8fe5a0160e5eea8806c93349b519c9d87c27edeee4eff881e3e6b10ac41",
+    "applied": [],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "placebo_target_chars": 32,
+    "placebo_sentences": [
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-01",
+    "arm": "A",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls",
+    "sha256": "eb531a4a4900e74c26ba5b502714ead66507336fb62e61fd463e7b3db0d8c7ff",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-01",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n- No explanation.\n\nwhats 17 times 24?? no explanation just the number pls\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9521f33f8adb4cb5c9a1baa26eeffc94428d42f6f83f4e91c9673c5a333bf7c3",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 128,
+    "deleted_chars": 49,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-01",
+    "arm": "B-own",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls\n\nOutput the number only.",
+    "sha256": "99dbace21b8f8b0b97c68aaeb11df817a2074ce2a08c52412a7b9976c98f5708",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-01",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n- No explanation.\n\nwhats 17 times 24?? no explanation just the number pls",
+    "sha256": "ab2bcc12de01f68a95f743b8424914873b81d7082da7e59d4b04cc536124e5e0",
+    "applied": [
+      "T-URG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 75,
+    "deleted_chars": 49,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-01",
+    "arm": "C",
+    "text": "ok quick one, my standup is literally in 2 min — whats 17 times 24?? no explanation just the number pls\n\nAccuracy matters here.",
+    "sha256": "f7bf8faf118a54e9bcfd20366a8e528a90d1371d66de5b459b4112e8d55a3e23",
+    "applied": [],
+    "inserted_chars": 24,
+    "deleted_chars": 0,
+    "placebo_target_chars": 25,
+    "placebo_sentences": [
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-02",
+    "arm": "A",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else",
+    "sha256": "09c10b90c1f7f3681829fbc89d3784dd0deb0237f0beadb386519123581c0bc8",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-02",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Return a single JSON object.\n- Keys: name and port.\n- name is the string gateway; port is the number 8080.\n- Nothing else in the reply.\n\ncan you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nOutput the requested text only, with no commentary.",
+    "sha256": "117dcb7c3555c4f533b964dcf7734b66625a8259a279bbd75dab0bbee340b48c",
+    "applied": [
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 217,
+    "deleted_chars": 64,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-02",
+    "arm": "B-own",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nOutput the JSON object only.",
+    "sha256": "33717354e1e16009f91be470d3d88db70e1ce4dde4496c8e0609b7cd97a3ba39",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 30,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-02",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Return a single JSON object.\n- Keys: name and port.\n- name is the string gateway; port is the number 8080.\n- Nothing else in the reply.\n\ncan you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else",
+    "sha256": "715a5c2d8835d1f776bbd46b00364eaf81251d56c951a029f13197829aa1db7f",
+    "applied": [
+      "T-REG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 164,
+    "deleted_chars": 64,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-02",
+    "arm": "C",
+    "text": "ugh I've been fighting this config all night and I'm exhausted. can you just give me a json object with keys name and port, name is 'gateway' and port is 8080, nothing else\n\nTake care with the details.",
+    "sha256": "f27ee3e5a3b72ce921f733469cb79b8df19f74e4b67f820203a9281473f612aa",
+    "applied": [],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "placebo_target_chars": 30,
+    "placebo_sentences": [
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-03",
+    "arm": "A",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else",
+    "sha256": "6fcabb4e1f62e6bdcbe109ba80ffd63a5b14058814222acf9c317990f92c8f39",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-03",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Reply with exactly: FRAGILE HANDLE WITH CARE\n- All capitals.\n- Nothing else in the reply.\n\nneed this for a label printer that only takes caps: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nOutput the requested text only, with no commentary.",
+    "sha256": "86609a0da33143e69b538c75aedf67f09d40cf02d94472f5fb3dd32ba640aa02",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 171,
+    "deleted_chars": 34,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-03",
+    "arm": "B-own",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nOutput the label text only.",
+    "sha256": "87aea2efe78c217c2dafd0c24838a63925bd7571984a36607de11b2df839b695",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-03",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Reply with exactly: FRAGILE HANDLE WITH CARE\n- All capitals.\n- Nothing else in the reply.\n\nneed this for a label printer that only takes caps: write FRAGILE HANDLE WITH CARE exactly like that, nothing else",
+    "sha256": "ee4f056864bb62dd5b5f41952f3441677d4929b698de3e285ef565901646b49d",
+    "applied": [
+      "T-URG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 118,
+    "deleted_chars": 34,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-03",
+    "arm": "C",
+    "text": "need this for a label printer that only takes caps and I'm about to miss the courier: write FRAGILE HANDLE WITH CARE exactly like that, nothing else\n\nTake care with the details.",
+    "sha256": "6fa4394dcfe12d8c7d45dd5d300c87f4e5149538f3499ad7a3dc319fc044702c",
+    "applied": [],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "placebo_target_chars": 29,
+    "placebo_sentences": [
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-04",
+    "arm": "A",
+    "text": "repeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog",
+    "sha256": "64652b4f61cd1d33d13a344e0b40b412a59a62b1492fc22adf81ae0b23c72120",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-04",
+    "arm": "B-full",
+    "text": "The misspelling in the text below is intentional test data; reproduce it exactly and do not correct it.\n\nConstraints (mandatory):\n- Reproduce the given text byte for byte, including the misspelling.\n- Nothing else in the reply.\n\nrepeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nOutput the requested text only, with no commentary.",
+    "sha256": "8551c3fae44defc854f8808cbf3e3899e265fdcecda6cc02f25dcdaf22b72913",
+    "applied": [
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ],
+    "inserted_chars": 282,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-04",
+    "arm": "B-own",
+    "text": "repeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nOutput the text only.",
+    "sha256": "7bde1a12f5af413453b01d653e07369d366867cacfa989917b98a49b1088855d",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 23,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-04",
+    "arm": "B-swap",
+    "text": "The misspelling in the text below is intentional test data; reproduce it exactly and do not correct it.\n\nConstraints (mandatory):\n- Reproduce the given text byte for byte, including the misspelling.\n- Nothing else in the reply.\n\nrepeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog",
+    "sha256": "21659873bc2c4c7e8ca24db1cbb5e4523f280ee5d354e6c9b40e85fe81fcac9f",
+    "applied": [
+      "T-FENCE",
+      "T-LIC"
+    ],
+    "inserted_chars": 229,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-04",
+    "arm": "C",
+    "text": "repeat this back exactly as I typed it, including the typo, im testing my clipboard: the quick brown fox jumsp over the lazy dog\n\nAccuracy matters here.",
+    "sha256": "7b6f6885d37677bfa73872b691e39659b68f24789b8b652bfcd968a9bfca49b4",
+    "applied": [],
+    "inserted_chars": 24,
+    "deleted_chars": 0,
+    "placebo_target_chars": 23,
+    "placebo_sentences": [
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-05",
+    "arm": "A",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.",
+    "sha256": "6aaf90767fa9dfbb1e2d10c090c35b2cb82951ab8863718a6e268b51ba6d4e3d",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-05",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nWhat is 15% of 240? Number only.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9563fe21444d758561f2c56a388b69a455edf6991c25964a1a10780364f6bc20",
+    "applied": [
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 110,
+    "deleted_chars": 83,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-05",
+    "arm": "B-own",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.\n\nOutput the number only.",
+    "sha256": "163b8be0f86e583b201c1bcc8dfec08cd942ce885558b18cccfd596d0bdb07c9",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-05",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nWhat is 15% of 240? Number only.",
+    "sha256": "700ae754b2690f57ae6de7aeb6a13fc1c5dd795ba0dd44d24caf7c9bc1837138",
+    "applied": [
+      "T-REG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 57,
+    "deleted_chars": 83,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-05",
+    "arm": "C",
+    "text": "I'm honestly panicking and my hands are shaking, I can't afford to get this wrong. What is 15% of 240? Number only.\n\nAccuracy matters here.",
+    "sha256": "3b06c2a2bba0b4a6c77f53afa321b650968577490a73a89fd1bf6eb4e3655e90",
+    "applied": [],
+    "inserted_chars": 24,
+    "deleted_chars": 0,
+    "placebo_target_chars": 25,
+    "placebo_sentences": [
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-06",
+    "arm": "A",
+    "text": "write back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.",
+    "sha256": "224ce53f431bf010a66f0ea4977c6f424a1e24dfe5fea27f854f1d8818776ce9",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-06",
+    "arm": "B-full",
+    "text": "The sentence below is deliberately false; this is a verbatim-reproduction exercise. Reproduce it exactly as written, without correction or comment.\n\nConstraints (mandatory):\n- Reproduce the given sentence word for word.\n- Nothing added, nothing else in the reply.\n\nwrite back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "9f66e7519be7acb69958fad223b6b9e7dc1862770183a53aef3f8b773ff6bb0b",
+    "applied": [
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ],
+    "inserted_chars": 318,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-06",
+    "arm": "B-own",
+    "text": "write back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nOutput the sentence only.",
+    "sha256": "a2813a0dff0361f92603190d27fc633b50590598ff83ec6276af55c431733d0f",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 27,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-06",
+    "arm": "B-swap",
+    "text": "The sentence below is deliberately false; this is a verbatim-reproduction exercise. Reproduce it exactly as written, without correction or comment.\n\nConstraints (mandatory):\n- Reproduce the given sentence word for word.\n- Nothing added, nothing else in the reply.\n\nwrite back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.",
+    "sha256": "ca5175cb0a3058cd6b73a17bc185202de9f55d9d59f554ee13ad663cdbb5052d",
+    "applied": [
+      "T-FENCE",
+      "T-LIC"
+    ],
+    "inserted_chars": 265,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-06",
+    "arm": "C",
+    "text": "write back this exact sentence, word for word, nothing added: Sharks are mammals that breathe air.\n\nTake care with the details.",
+    "sha256": "49052f1bac00e6d05832866d9c84724701bf695495d558dd9250ebf5c49fbefb",
+    "applied": [],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "placebo_target_chars": 27,
+    "placebo_sentences": [
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-07",
+    "arm": "A",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.",
+    "sha256": "165daf13879cd1f19ef46fcf95950859e596c65fbc567f709caaa0776ceb1b0a",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-07",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with exactly one word: yes or no.\n\nIs 91 a prime number? Answer with one word, yes or no.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "b8a2348f49a725a05296ec046ac5e49ac268105a600aac17629d367c93298acc",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 122,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-07",
+    "arm": "B-own",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.\n\nOutput one word only.",
+    "sha256": "b023f991b0b95937b7d89b730d3df32d7148fed0cbe5b181ecbce1fc946d2b89",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 23,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-07",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Answer with exactly one word: yes or no.\n\nIs 91 a prime number? Answer with one word, yes or no.",
+    "sha256": "3d5376372b4388ab38aab917b84a3b52222970ef2af9ab11d450b685988e4d8e",
+    "applied": [
+      "T-FENCE"
+    ],
+    "inserted_chars": 69,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-07",
+    "arm": "C",
+    "text": "Is 91 a prime number? Answer with one word, yes or no.\n\nAccuracy matters here.",
+    "sha256": "cea9d65b1582d9a6de613e7c844ff3312cb948c1b7d7869b0cd6f9d4fb0641b9",
+    "applied": [],
+    "inserted_chars": 24,
+    "deleted_chars": 0,
+    "placebo_target_chars": 23,
+    "placebo_sentences": [
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-08",
+    "arm": "A",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.",
+    "sha256": "07c9089b64b34ce384cd7cd63d6408b3351f75c6e759d73f3dec5b52b49d5328",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-08",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nFor a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nOutput the requested text only, with no commentary.",
+    "sha256": "d5d7ff81311d4e9c92583dd6e1dd79732001376bdc51fb78308879f0364968ab",
+    "applied": [
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 110,
+    "deleted_chars": 0,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-08",
+    "arm": "B-own",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nOutput the number only.",
+    "sha256": "d8f1b92959ea87d28d49d82eb71c760ea908cbb424b1d6af21737a2f58b50c96",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 25,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-08",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Answer with the number only.\n\nFor a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nNo warning or disclaimer is needed; the constraint is intentional.",
+    "sha256": "d1c863d8ff274f4c3491fc3015ea50bd784f0e97e594617a76e5c9b3b404c502",
+    "applied": [
+      "T-FENCE",
+      "T-STAKES"
+    ],
+    "inserted_chars": 125,
+    "deleted_chars": 0,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-08",
+    "arm": "C",
+    "text": "For a medication dosing chart I'm putting together, how many milligrams are in one gram? Number only.\n\nAccuracy matters here.",
+    "sha256": "fe58e02c273fed25693c1fa76cfe7c7630e5041ffa7aa1fc7677b2cc58343e85",
+    "applied": [],
+    "inserted_chars": 24,
+    "deleted_chars": 0,
+    "placebo_target_chars": 25,
+    "placebo_sentences": [
+      "Accuracy matters here."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-09",
+    "arm": "A",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only",
+    "sha256": "c142709451973263608fdfb8d6b62afbe492aba2ab5a8602cdaac4f455994d3f",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-09",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Exactly one sentence.\n- The sentence must say what a mutex does.\n\nsum up in one sentence what a mutex does, one sentence only\n\nOutput the requested text only, with no commentary.",
+    "sha256": "97371ecbedd660d5b9529359c78f88f5b733cb307472255065b999bbe7c84693",
+    "applied": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 146,
+    "deleted_chars": 76,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-09",
+    "arm": "B-own",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only\n\nOutput one sentence only.",
+    "sha256": "b2eba742a4f60700c03fcf83faad9945a8ceb47eb8689450ce6e03ed8ff62f21",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 27,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-09",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Exactly one sentence.\n- The sentence must say what a mutex does.\n\nsum up in one sentence what a mutex does, one sentence only",
+    "sha256": "b944510fe86635d160fcbd5181d4c291e288448ff7cef08ace3fd85093ac5d6d",
+    "applied": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 93,
+    "deleted_chars": 76,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-09",
+    "arm": "C",
+    "text": "my manager wants this in the next five minutes and im honestly fried today. sum up in one sentence what a mutex does, one sentence only\n\nTake care with the details.",
+    "sha256": "a501218a2433811743121efc2b9979dbeb45c5e89b814c59e4599c39f1938e9e",
+    "applied": [],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "placebo_target_chars": 27,
+    "placebo_sentences": [
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-10",
+    "arm": "A",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro",
+    "sha256": "29121000bfc4d87268ce098da7b44059fee490c11703132938ca54e442ead5f3",
+    "applied": [],
+    "inserted_chars": 0,
+    "deleted_chars": 0,
+    "shared_across_subjects": true
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-10",
+    "arm": "B-full",
+    "text": "Constraints (mandatory):\n- Exactly three bullet points.\n- Each bullet starts with a dash and a space.\n- No introduction, no closing line, nothing else.\n\ngive me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nOutput the requested text only, with no commentary.",
+    "sha256": "d0e9e3d7c16445d9b92f243ae83e6cdd00938203dcd1bc91d5f6d40aa7c12990",
+    "applied": [
+      "T-URG",
+      "T-FENCE",
+      "T-NOC"
+    ],
+    "inserted_chars": 206,
+    "deleted_chars": 54,
+    "shared_across_subjects": true,
+    "set": [
+      "T-URG",
+      "T-REG",
+      "T-FENCE",
+      "T-LIC",
+      "T-NOC"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-10",
+    "arm": "B-own",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nOutput the three bullets only.",
+    "sha256": "c3b281f5eb2111fecd74719125663c441856f3956f1bc3ce232bb7ef5c88edac",
+    "applied": [
+      "T-FENCE-min"
+    ],
+    "inserted_chars": 32,
+    "deleted_chars": 0,
+    "set": [
+      "T-FENCE-min"
+    ]
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-10",
+    "arm": "B-swap",
+    "text": "Constraints (mandatory):\n- Exactly three bullet points.\n- Each bullet starts with a dash and a space.\n- No introduction, no closing line, nothing else.\n\ngive me 3 bullet points on why to use version control. dashes, no intro, no outro",
+    "sha256": "6d5dc79314a572a668f0922a6e2e889e4046a0f54654fdd0ef679a1f2892b448",
+    "applied": [
+      "T-URG",
+      "T-FENCE"
+    ],
+    "inserted_chars": 153,
+    "deleted_chars": 54,
+    "set": [
+      "T-URG",
+      "T-LIC",
+      "T-FENCE",
+      "T-STAKES",
+      "T-REG"
+    ],
+    "swap_partner": "Q"
+  },
+  {
+    "subject": "N",
+    "model_key": "deepseek-v4-pro",
+    "item": "RX2-10",
+    "arm": "C",
+    "text": "quick, im pasting this straight into slides in a sec: give me 3 bullet points on why to use version control. dashes, no intro, no outro\n\nTake care with the details.",
+    "sha256": "446df8fe5a0160e5eea8806c93349b519c9d87c27edeee4eff881e3e6b10ac41",
+    "applied": [],
+    "inserted_chars": 29,
+    "deleted_chars": 0,
+    "placebo_target_chars": 32,
+    "placebo_sentences": [
+      "Take care with the details."
+    ],
+    "placebo_length_rule": "within ±10%"
+  }
+]

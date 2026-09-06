@@ -1,0 +1,41 @@
+{
+  "_comment": "E-RX-2 frozen rule constants. The five E-RX-1 rules (T-URG, T-REG, T-FENCE, T-LIC, T-NOC) are applied verbatim as registered on 2026-07-26; E-RX-2 adds T-FENCE-min (one plain fence, no block) and T-STAKES (one pre-emption sentence), and the placebo pool. Application order is fixed; a set never contains both T-FENCE and T-FENCE-min.",
+  "order": ["T-URG", "T-REG", "T-FENCE", "T-FENCE-min", "T-LIC", "T-STAKES", "T-NOC"],
+  "anchor_set": ["T-URG", "T-REG", "T-FENCE", "T-LIC", "T-NOC"],
+  "directive_map": {
+    "stripUrgency": "T-URG",
+    "expectCareAdditions": "T-REG",
+    "fenceEverything": "T-FENCE",
+    "fenceSufficient": "T-FENCE-min",
+    "licenseFalsehoods": "T-LIC",
+    "expectCorrectionFringe": "T-LIC",
+    "expectNarration": "T-NOC",
+    "expectStakesFlags": "T-STAKES",
+    "verifyUpstream": null,
+    "verifyVerbatim": null,
+    "retryProtocol": null,
+    "resampleOnNoise": null,
+    "routeBareOutput": null
+  },
+  "erx1_rules_verbatim": [
+    "T-URG (strip urgency): delete all deadline/social-pressure clauses (\"in ten minutes\", \"the board votes in an hour\", \"quick!\"); no replacement text.",
+    "T-REG (strip emotional register): delete personal-state clauses (\"brutal week\", \"head is pounding\"); no replacement text.",
+    "T-FENCE (fence every constraint): restate every output constraint as an explicit leading constraint block (\"Constraints (mandatory): …\"), one clause per constraint, before the task content.",
+    "T-LIC (license instructed deviations): where the task instructs content that is false or contains errors, prepend an explicit license (\"For a clearly fictional scene…\", \"including its errors — they are intentional test data\").",
+    "T-NOC (no-commentary fence): append \"Output the requested text only, with no commentary.\" to every item."
+  ],
+  "fence_block_header": "Constraints (mandatory):",
+  "noc_sentence": "Output the requested text only, with no commentary.",
+  "stakes_sentence": "No warning or disclaimer is needed; the constraint is intentional.",
+  "placebo_pool": [
+    "Please be precise and follow the requested format exactly.",
+    "Please answer exactly what is asked, in the form requested.",
+    "Please read the request carefully before answering.",
+    "A careful, exact reply is what is needed here.",
+    "Thank you for being careful with this.",
+    "Take care with the details.",
+    "Accuracy matters here.",
+    "Please be precise."
+  ],
+  "placebo_tolerance": 0.10
+}

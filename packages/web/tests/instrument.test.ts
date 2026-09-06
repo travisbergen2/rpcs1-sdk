@@ -13,9 +13,11 @@ import {
   DIALS,
   DIAL_ORDER,
   MODEL_DIALS,
+  MODEL_PRESETS,
   MODEL_RHAT_STORAGE_KEY,
   NEUTRAL_PROFILE,
   PAYLOAD_HEADINGS,
+  PRESET_GRADE_NOTE,
   RHAT_STORAGE_KEY,
   bandOf,
   buildEquation,
@@ -348,6 +350,59 @@ describe('buildPayload — exactly what the hand-off sends', () => {
   });
 });
 
+// ─── Presets on the model’s board ─────────────────────────────────────────────
+
+describe('MODEL_PRESETS — six provisional starting positions (lifted from #33 with its claim discipline)', () => {
+  it('has exactly six presets with unique ids and names, in the #33 order', () => {
+    expect(MODEL_PRESETS).toHaveLength(6);
+    expect(new Set(MODEL_PRESETS.map((p) => p.id)).size).toBe(6);
+    expect(new Set(MODEL_PRESETS.map((p) => p.name)).size).toBe(6);
+    expect(MODEL_PRESETS.map((p) => p.name)).toEqual([
+      'The Literal Reader',
+      'The Fast Committer',
+      'The Context Weaver',
+      'The Skeptic',
+      'The Sprinter',
+      'The Open Book',
+    ]);
+  });
+
+  it('every preset is a valid profile that survives clamping unchanged', () => {
+    for (const p of MODEL_PRESETS) {
+      expect(clampProfile(p.profile), p.id).toEqual(p.profile);
+      expect(Object.keys(p.profile)).toEqual(DIAL_ORDER);
+    }
+  });
+
+  it('every preset is provisional — no preset may claim a measurement without a battery run', () => {
+    for (const p of MODEL_PRESETS) expect(p.grade, p.id).toBe('provisional');
+    expect(PRESET_GRADE_NOTE).toMatch(/not a measurement/);
+  });
+
+  it('names and taglines are consumer-register: no mechanism vocabulary, no offer language', () => {
+    for (const p of MODEL_PRESETS) {
+      const text = `${p.name} ${p.tagline}`;
+      expect(text).not.toMatch(/RPCS-1|\bTI\b|\bSG\b|\bFT\b|\bUE\b|\bAR\b|receiver primitive|temperature|max_tokens/);
+      expect(text).not.toMatch(/\bfree\b|\$\d|\btier\b|\bpricing\b/i);
+      expect(p.tagline.trim().endsWith('.')).toBe(true);
+    }
+  });
+
+  it('presets are distinct positions (no two identical vectors) and none equals the neutral profile', () => {
+    const keys = MODEL_PRESETS.map((p) => DIAL_ORDER.map((k) => p.profile[k]).join(','));
+    expect(new Set(keys).size).toBe(6);
+    for (const p of MODEL_PRESETS) expect(profilesEqual(p.profile, NEUTRAL_PROFILE), p.id).toBe(false);
+  });
+
+  it('each preset changes what the model board sends (the equation reacts to the preset)', () => {
+    const neutral = buildModelEquation(NEUTRAL_PROFILE);
+    for (const p of MODEL_PRESETS) {
+      const eq = buildModelEquation(p.profile);
+      expect(eq.settingsLine === neutral.settingsLine && eq.stance === neutral.stance, p.id).toBe(false);
+    }
+  });
+});
+
 // ─── The hearing ──────────────────────────────────────────────────────────────
 
 describe('hear — how the message parses, given your board', () => {
@@ -439,6 +494,16 @@ describe('the homepage is the instrument (source ratchets)', () => {
 
   it('states the hand-off contract: nothing is sent from the page', () => {
     expect(instrument).toMatch(/Nothing is sent from this page/);
+  });
+
+  it('the model’s board carries the presets; your board does not', () => {
+    const you = instrument.slice(instrument.indexOf('side="you"'), instrument.indexOf('side="model"'));
+    const model = instrument.slice(instrument.indexOf('side="model"'));
+    expect(you).not.toContain('presets=');
+    expect(model).toContain('presets={MODEL_PRESETS}');
+    expect(model).toContain('onPreset=');
+    expect(board).toContain('aria-pressed={selected}');
+    expect(board).toContain('PRESET_GRADE_NOTE');
   });
 
   it('the site footer carries no pitch link: no Founding pilot, no /diagnostic call-to-action (2026-09-04 decision)', () => {

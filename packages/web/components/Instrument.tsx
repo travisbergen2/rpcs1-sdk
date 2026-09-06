@@ -39,6 +39,7 @@ import { BRAND_PROMISE } from '@/lib/brand';
 import {
   DIALS,
   MODEL_DIALS,
+  MODEL_PRESETS,
   buildEquation,
   buildModelEquation,
   buildPayload,
@@ -371,6 +372,8 @@ export default function Instrument() {
             vector={theirs.vector}
             extra={`regime: ${theirs.regime}`}
             onChange={setModelFader}
+            presets={MODEL_PRESETS}
+            onPreset={(p) => setModel(p)}
             footer={
               <Link href="/tuner" className="inline-flex min-h-9 items-center underline-offset-4 hover:text-white hover:underline">
                 Derive this board from a workload description →

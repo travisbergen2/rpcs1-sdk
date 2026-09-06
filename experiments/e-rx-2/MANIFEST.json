@@ -1,0 +1,19 @@
+{
+  "experiment": "E-RX-2",
+  "frozen_at": "2026-09-05T22:45:00-05:00",
+  "generator": "experiments/e-rx-2/generate.mjs",
+  "inputs": {
+    "items.json": "8e3f277207f379f9c1110e4419cb7178f84aeb65b9ac004e03b88d8bfd7d62fa",
+    "subjects.json": "34a5769e350e156101897482c0941180ffb199f3ec826e74a57771a046e73a00",
+    "rules.json": "623176fcde5ef867bf90c6183ccbc292f3acf4596df569c0d84581627feb3074",
+    "score.mjs": "99467d4e9a6c660993c852964df2a6154117389a2baf1b7791e4871f3f8a2aa9"
+  },
+  "arms.json": "4bf0ee7c462e110bc01121fae88f9fe5d85c7799c0e2a7fc718e99c718d500a8",
+  "counts": {
+    "arms": 300,
+    "distinct_texts": 81,
+    "subjects": 6,
+    "items": 10,
+    "differential_items": 4
+  }
+}

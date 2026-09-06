@@ -1,0 +1,71 @@
+{
+  "_comment": "E-RX-2 frozen subjects. Own sets are the transformations implied by each receiver's directive list in the pinned receiver table (mapping in rules.json); swap partner = the receiver whose implied set differs most (symmetric set difference; ties to the larger set), computed 2026-09-05 from the pinned table. p2_primary marks the members of the two MUTUAL swap pairs (Q⇄N, P⇄S): within a mutual pair each transformation set appears once as a subject's own set and once as the other's swap set, so the size of a set cannot favor either direction — the lock-and-key endpoint RX2-P2 is pooled over exactly these four. T (whose own set is identical to Q's) and V are reported descriptively.",
+  "table": {
+    "receivers_ts_blob_sha1": "83e2b7f10384bda697dd6af19fbdf6181205a957",
+    "table_version": "0.3.0",
+    "main_commit": "fcd30739b12d2f88a98e5bab915c1b90c2125dae",
+    "computed_on": "2026-09-05"
+  },
+  "subjects": [
+    {
+      "label": "Q",
+      "model_key": "claude-opus-4.8",
+      "display": "Claude Opus 4.8",
+      "directives": ["stripUrgency", "licenseFalsehoods", "fenceEverything", "expectStakesFlags", "expectCareAdditions", "routeBareOutput"],
+      "own_set": ["T-URG", "T-LIC", "T-FENCE", "T-STAKES", "T-REG"],
+      "swap_partner": "N",
+      "swap_set": ["T-FENCE-min"],
+      "p2_primary": true
+    },
+    {
+      "label": "P",
+      "model_key": "claude-opus-5",
+      "display": "Claude Opus 5",
+      "directives": ["stripUrgency", "expectNarration", "fenceEverything", "expectStakesFlags", "expectCareAdditions"],
+      "own_set": ["T-URG", "T-NOC", "T-FENCE", "T-STAKES", "T-REG"],
+      "swap_partner": "S",
+      "swap_set": ["T-FENCE-min", "T-LIC"],
+      "p2_primary": true
+    },
+    {
+      "label": "T",
+      "model_key": "claude-sonnet-5",
+      "display": "Claude Sonnet 5",
+      "directives": ["stripUrgency", "fenceEverything", "expectCorrectionFringe", "expectStakesFlags", "expectCareAdditions", "routeBareOutput"],
+      "own_set": ["T-URG", "T-FENCE", "T-LIC", "T-STAKES", "T-REG"],
+      "swap_partner": "N",
+      "swap_set": ["T-FENCE-min"],
+      "p2_primary": false
+    },
+    {
+      "label": "V",
+      "model_key": "claude-haiku-4.5",
+      "display": "Claude Haiku 4.5",
+      "directives": ["stripUrgency", "fenceSufficient", "verifyUpstream"],
+      "own_set": ["T-URG", "T-FENCE-min"],
+      "swap_partner": "Q",
+      "swap_set": ["T-URG", "T-LIC", "T-FENCE", "T-STAKES", "T-REG"],
+      "p2_primary": false
+    },
+    {
+      "label": "S",
+      "model_key": "claude-opus-4.6",
+      "display": "Claude Opus 4.6",
+      "directives": ["fenceSufficient", "expectCorrectionFringe"],
+      "own_set": ["T-FENCE-min", "T-LIC"],
+      "swap_partner": "P",
+      "swap_set": ["T-URG", "T-NOC", "T-FENCE", "T-STAKES", "T-REG"],
+      "p2_primary": true
+    },
+    {
+      "label": "N",
+      "model_key": "deepseek-v4-pro",
+      "display": "DeepSeek V4 Pro",
+      "directives": ["fenceSufficient", "verifyUpstream"],
+      "own_set": ["T-FENCE-min"],
+      "swap_partner": "Q",
+      "swap_set": ["T-URG", "T-LIC", "T-FENCE", "T-STAKES", "T-REG"],
+      "p2_primary": true
+    }
+  ]
+}

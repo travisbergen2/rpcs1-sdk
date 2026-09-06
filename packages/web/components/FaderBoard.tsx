@@ -13,7 +13,7 @@
 import { useState, type ReactNode } from 'react';
 import type { ReceiverProfile } from '@rpcs1/core';
 import { Fader } from '@/components/Fader';
-import type { DialKey, DialSpec } from '@/lib/instrument';
+import { PRESET_GRADE_NOTE, type BoardPreset, type DialKey, type DialSpec } from '@/lib/instrument';
 
 export interface FaderBoardProps {
   side: 'you' | 'model';
@@ -28,14 +28,44 @@ export interface FaderBoardProps {
   /** Extra idle-strip line (e.g. the model's regime). */
   extra?: string;
   onChange: (key: DialKey, value: number) => void;
+  /** One-tap starting positions (all five faders at once). Provisional sketches, labeled as such in the strip. */
+  presets?: BoardPreset[];
+  onPreset?: (profile: ReceiverProfile, preset: BoardPreset) => void;
   footer?: ReactNode;
 }
 
 const SCALE = [100, 75, 50, 25, 0] as const;
 
-export function FaderBoard({ side, title, accent, dials, profile, why, vector, extra, onChange, footer }: FaderBoardProps) {
+export function FaderBoard({
+  side,
+  title,
+  accent,
+  dials,
+  profile,
+  why,
+  vector,
+  extra,
+  onChange,
+  presets,
+  onPreset,
+  footer,
+}: FaderBoardProps) {
   const [active, setActive] = useState<DialKey | null>(null);
+  const [activePreset, setActivePreset] = useState<BoardPreset | null>(null);
   const spec = active ? dials.find((d) => d.key === active) ?? null : null;
+
+  // Touching a fader takes the board off the preset — the strip must never
+  // claim a preset the faders no longer match.
+  const touch = (key: DialKey) => {
+    setActive(key);
+    setActivePreset(null);
+  };
+
+  const choosePreset = (preset: BoardPreset) => {
+    setActive(null);
+    setActivePreset(preset);
+    onPreset?.(preset.profile, preset);
+  };
 
   return (
     <div
@@ -68,7 +98,7 @@ export function FaderBoard({ side, title, accent, dials, profile, why, vector, e
             accent={accent}
             valueText={`${profile[d.key]} — ${why[d.key]}`}
             onChange={(v) => onChange(d.key, v)}
-            onActive={() => setActive(d.key)}
+            onActive={() => touch(d.key)}
           />
         ))}
       </div>
@@ -91,6 +121,17 @@ export function FaderBoard({ side, title, accent, dials, profile, why, vector, e
             <br />
             <span style={{ color: accent }}>{why[spec.key]}</span>
           </>
+        ) : activePreset ? (
+          <>
+            <span className="text-white/90">
+              preset: {activePreset.name}
+            </span>
+            <span className="text-white/45"> · {PRESET_GRADE_NOTE}</span>
+            <br />
+            <span style={{ color: accent }}>{activePreset.tagline}</span>
+            <br />
+            <span className="text-white/45">{vector}</span>
+          </>
         ) : (
           <>
             <span className="text-white/45">{vector}</span>
@@ -103,6 +144,32 @@ export function FaderBoard({ side, title, accent, dials, profile, why, vector, e
           </>
         )}
       </div>
+
+      {presets && presets.length > 0 && (
+        <div className="mt-2 flex flex-wrap items-center gap-1.5" role="group" aria-label={`${title} presets`}>
+          <span className="mr-1 font-mono text-[10px] uppercase tracking-wider text-white/35">Presets</span>
+          {presets.map((p) => {
+            const selected = activePreset?.id === p.id;
+            return (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => choosePreset(p)}
+                aria-pressed={selected}
+                title={`${p.tagline} (${PRESET_GRADE_NOTE})`}
+                className="min-h-9 rounded-full border px-3 py-1 text-[11px] transition-colors"
+                style={
+                  selected
+                    ? { borderColor: accent, color: accent, background: 'rgba(255,255,255,0.04)' }
+                    : { borderColor: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.65)' }
+                }
+              >
+                {p.name}
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {footer && <div className="mt-2 text-[11px] text-white/45">{footer}</div>}
     </div>

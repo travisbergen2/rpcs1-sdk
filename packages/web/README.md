@@ -44,6 +44,15 @@ from FT and AR, retry from UE, plus `evaluateRegime`. Stored under its own key
 `localStorage['rpcs1.rhat.model.v1']`. Both stores live in
 `lib/rhat-store.ts` (`useSyncExternalStore`; the server renders neutral 50s).
 
+**Presets on the model's board.** Six one-tap starting positions — The
+Literal Reader, The Fast Committer, The Context Weaver, The Skeptic, The
+Sprinter, The Open Book — lifted from the closed Repaste branch (#33) with its
+claim discipline: each is a `ReceiverProfile` graded *provisional* (a sketch
+of how a class of receivers reads, not a measurement; the strip says so
+whenever one is selected). Choosing a preset sets all five faders; touching a
+fader clears the preset label so the strip never claims a position the faders
+no longer match. Your board has no presets — it has `/calibrate`.
+
 **The equations are literal.** `lib/instrument.ts` derives every displayed
 string from `@rpcs1/core`'s own functions. Your board: the instruction
 paragraph is `directivesToInstructions(deriveRenderingDirectives(R̂))` —

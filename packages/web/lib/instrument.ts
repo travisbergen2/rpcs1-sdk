@@ -390,6 +390,74 @@ export function buildPayload(
   ].join('\n\n');
 }
 
+// ─── Presets for THE MODEL'S board ───────────────────────────────────────────
+//
+// A preset is a starting position for the five faders — a sketch of how a
+// class of receivers reads, NOT a measurement. Lifted from the Repaste branch
+// (PR #33, 2026-07-23; closed as superseded 2026-09-05) together with its claim
+// discipline: exactly two grades exist, and every preset is 'provisional' until
+// a frozen, versioned battery run measures a named model+version. The strip
+// says so whenever a preset is selected.
+
+export type PresetGrade = 'provisional' | 'measured';
+
+export interface BoardPreset {
+  id: string;
+  /** The only name the surface shows. */
+  name: string;
+  /** One line, plain words: how this receiver reads what you send. */
+  tagline: string;
+  profile: ReceiverProfile;
+  grade: PresetGrade;
+}
+
+export const PRESET_GRADE_NOTE = 'a starting point, not a measurement';
+
+export const MODEL_PRESETS: BoardPreset[] = [
+  {
+    id: 'literal-reader',
+    name: 'The Literal Reader',
+    tagline: 'Takes every word at face value. Says so when something can be read two ways instead of guessing.',
+    profile: { TI: 70, SG: 45, FT: 70, UE: 55, AR: 35 },
+    grade: 'provisional',
+  },
+  {
+    id: 'fast-committer',
+    name: 'The Fast Committer',
+    tagline: 'Picks the most likely meaning and runs with it. Good when you want an answer, not a question back.',
+    profile: { TI: 55, SG: 60, FT: 40, UE: 60, AR: 85 },
+    grade: 'provisional',
+  },
+  {
+    id: 'context-weaver',
+    name: 'The Context Weaver',
+    tagline: 'Reads everything you give it and pulls the threads together. Feed it background; it will use all of it.',
+    profile: { TI: 90, SG: 55, FT: 50, UE: 65, AR: 60 },
+    grade: 'provisional',
+  },
+  {
+    id: 'skeptic',
+    name: 'The Skeptic',
+    tagline: 'Deliberates before answering and double-checks itself. Give it constraints and it will honor them.',
+    profile: { TI: 75, SG: 40, FT: 85, UE: 45, AR: 50 },
+    grade: 'provisional',
+  },
+  {
+    id: 'sprinter',
+    name: 'The Sprinter',
+    tagline: 'Quick and terse. Spell everything out — it will not stop to wonder what you meant.',
+    profile: { TI: 30, SG: 70, FT: 45, UE: 40, AR: 75 },
+    grade: 'provisional',
+  },
+  {
+    id: 'open-book',
+    name: 'The Open Book',
+    tagline: 'Behavior depends on where it is hosted. Maximum structure keeps it steady anywhere.',
+    profile: { TI: 50, SG: 50, FT: 50, UE: 70, AR: 55 },
+    grade: 'provisional',
+  },
+];
+
 // ─── The hearing: how the message parses, given YOUR board ────────────────────
 
 /** The risk category core's interpret() defaults to; the face runs at this fixed setting. */

@@ -36,25 +36,58 @@ const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/openai
  */
 export function getGatewayBackend(): GatewayBackend | null {
   if (backend !== undefined) return backend;
+  const cfg = getGatewayConfig();
+  backend = cfg ? new GatewayBackend({ apiKey: cfg.apiKey, baseUrl: cfg.baseUrl, model: cfg.model }) : null;
+  return backend;
+}
+
+const VERCEL_GATEWAY_BASE_URL = 'https://ai-gateway.vercel.sh/v1';
+const VERCEL_GATEWAY_DEFAULT_MODEL = 'openai/gpt-4o-mini';
+const GEMINI_DEFAULT_MODEL = 'gemini-2.5-flash-lite';
+
+/** The configured OpenAI-compatible chat endpoint — what getGatewayBackend wraps. */
+export interface GatewayConfig {
+  provider: 'override' | 'gemini' | 'vercel';
+  apiKey: string;
+  /** Base URL without a trailing slash; `/chat/completions` is appended by callers. */
+  baseUrl: string;
+  model: string;
+}
+
+/**
+ * Resolve the configured model provider from the environment — the same
+ * priority and defaults getGatewayBackend has always used, exposed so the
+ * streaming transcript route (app/api/transcript/route.ts) can speak to the
+ * same endpoint with `stream: true`. Not memoized (env reads are cheap);
+ * returns null when no key is configured.
+ */
+export function getGatewayConfig(): GatewayConfig | null {
   const overrideUrl = process.env.RPCS1_GATEWAY_BASE_URL;
   const overrideKey = process.env.RPCS1_GATEWAY_API_KEY;
   const geminiKey = process.env.GEMINI_API_KEY;
   const vercelKey = process.env.AI_GATEWAY_API_KEY;
+  const model = process.env.RPCS1_GATEWAY_MODEL;
 
   if (overrideUrl && overrideKey) {
-    backend = new GatewayBackend({ apiKey: overrideKey, baseUrl: overrideUrl, model: process.env.RPCS1_GATEWAY_MODEL });
-  } else if (geminiKey) {
-    backend = new GatewayBackend({
-      apiKey: geminiKey,
-      baseUrl: GEMINI_BASE_URL,
-      model: process.env.RPCS1_GATEWAY_MODEL ?? 'gemini-2.5-flash-lite',
-    });
-  } else if (vercelKey) {
-    backend = new GatewayBackend({ apiKey: vercelKey, model: process.env.RPCS1_GATEWAY_MODEL });
-  } else {
-    backend = null;
+    return {
+      provider: 'override',
+      apiKey: overrideKey,
+      baseUrl: overrideUrl.replace(/\/$/, ''),
+      model: model ?? VERCEL_GATEWAY_DEFAULT_MODEL,
+    };
   }
-  return backend;
+  if (geminiKey) {
+    return { provider: 'gemini', apiKey: geminiKey, baseUrl: GEMINI_BASE_URL, model: model ?? GEMINI_DEFAULT_MODEL };
+  }
+  if (vercelKey) {
+    return {
+      provider: 'vercel',
+      apiKey: vercelKey,
+      baseUrl: VERCEL_GATEWAY_BASE_URL,
+      model: model ?? VERCEL_GATEWAY_DEFAULT_MODEL,
+    };
+  }
+  return null;
 }
 
 interface Counter {

@@ -29,6 +29,7 @@ import {
   profilesEqual,
   serializeProfile,
 } from '../lib/instrument';
+import { WHAT_LEAVES } from '../lib/transcript';
 
 const read = (p: string) => readFileSync(join(__dirname, '..', p), 'utf8');
 
@@ -492,8 +493,58 @@ describe('the homepage is the instrument (source ratchets)', () => {
     expect(instrument).toMatch(/aria-expanded=\{showMath\}/);
   });
 
-  it('states the hand-off contract: nothing is sent from the page', () => {
-    expect(instrument).toMatch(/Nothing is sent from this page/);
+  it('states what leaves the machine — the 2026-09-07 contract that replaced "nothing is sent from this page" when the conversation went live', () => {
+    expect(instrument).toContain('WHAT_LEAVES');
+    expect(instrument).not.toMatch(/Nothing is sent from this page/);
+    expect(WHAT_LEAVES).toMatch(/does not store/);
+    expect(WHAT_LEAVES).toMatch(/this browser only/);
+    expect(WHAT_LEAVES).toMatch(/named under each reply/); // the provider is reported per reply, never asserted
+  });
+
+  it('is one conversation in two registers: the model’s context window on the right, your words and the re-rendered reply on the left, with Stop / correct / Go', () => {
+    expect(instrument).toMatch(/context window/i);
+    expect(instrument).toContain("step: 'read'");
+    expect(instrument).toContain("step: 'answer'");
+    expect(instrument).toContain("'/api/transcript'");
+    expect(instrument).toContain('const go = ');
+    expect(instrument).toContain('const stop = ');
+    expect(instrument).toContain('const correct = ');
+    expect(instrument).toContain('registerSample(');
+    expect(instrument).toContain('contextFor(');
+    // The hand-off to the visitor's own app survives as the zero-cost exit for a reading.
+    expect(instrument).toContain('buildHandoff(');
+  });
+
+  it('the face is quiet (2026-09-07: "simple enough not to need explanation") — boards collapsed into the text box’s toolbar, no explanatory prose on the face', () => {
+    // Both boards start collapsed and open from icon buttons in the composer's toolbar, like a chat box's options.
+    expect(instrument).toContain('useState<BoardsOpen>({ you: false, model: false })');
+    expect(instrument).toContain('label="Your board"');
+    expect(instrument).toContain(`label="The model's board"`);
+    expect(instrument).toContain('<SlidersGlyph');
+    // The info note is an icon, not a labeled button; its text survives as the accessible name.
+    expect(instrument).toContain('aria-label="What is this doing?"');
+    // The explanatory surfaces of the first 09-07 cut are gone from the face.
+    for (const gone of [
+      'Before you send',
+      'Edit it here, or type a correction',
+      'Nothing yet — type on the left',
+      'Answering — its own words are arriving',
+      'waiting for your Go',
+      'meaning held, wording yours',
+      'Reply · in your words',
+      'Reply · in its words',
+      'Try one:',
+    ]) {
+      expect(instrument, gone).not.toContain(gone);
+    }
+    // Column heads are one or two words; the context-window phrase lives in a title, not on the face.
+    expect(instrument).toMatch(/>\s*You\s*<\/h2>/);
+    expect(instrument).toMatch(/>\s*The model\s*<\/h2>/);
+    // The disclosure is one short line with the full text folded under it.
+    expect(instrument).toContain('Your words go to the model. Nothing is stored here.');
+    expect(instrument).toMatch(/<details[^>]*>\s*<summary[^>]*>\s*Your words go to the model/);
+    // The applied settings and their math open inside the model board, not on the face.
+    expect(instrument).toContain('applied to the call: temperature');
   });
 
   it('the model’s board carries the presets; your board does not', () => {

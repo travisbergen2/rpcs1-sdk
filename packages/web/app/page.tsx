@@ -21,7 +21,7 @@ export default function HomePage() {
               href="/connect"
               className="inline-flex min-h-11 items-center text-sky-300 underline-offset-4 hover:underline"
             >
-              Ground it in your notes — your Obsidian vault, inside the AI you already use →
+              Your notes, in Obsidian →
             </Link>
           </li>
           <li>
@@ -29,7 +29,7 @@ export default function HomePage() {
               href="/bridge"
               className="inline-flex min-h-11 items-center text-white/60 underline-offset-4 hover:text-white hover:underline"
             >
-              Bring a reply back and read it your way →
+              Bring a reply back →
             </Link>
           </li>
           <li>

@@ -515,6 +515,38 @@ describe('the homepage is the instrument (source ratchets)', () => {
     expect(instrument).toContain('buildHandoff(');
   });
 
+  it('the face is quiet (2026-09-07: "simple enough not to need explanation") — boards collapsed into the text box’s toolbar, no explanatory prose on the face', () => {
+    // Both boards start collapsed and open from icon buttons in the composer's toolbar, like a chat box's options.
+    expect(instrument).toContain('useState<BoardsOpen>({ you: false, model: false })');
+    expect(instrument).toContain('label="Your board"');
+    expect(instrument).toContain(`label="The model's board"`);
+    expect(instrument).toContain('<SlidersGlyph');
+    // The info note is an icon, not a labeled button; its text survives as the accessible name.
+    expect(instrument).toContain('aria-label="What is this doing?"');
+    // The explanatory surfaces of the first 09-07 cut are gone from the face.
+    for (const gone of [
+      'Before you send',
+      'Edit it here, or type a correction',
+      'Nothing yet — type on the left',
+      'Answering — its own words are arriving',
+      'waiting for your Go',
+      'meaning held, wording yours',
+      'Reply · in your words',
+      'Reply · in its words',
+      'Try one:',
+    ]) {
+      expect(instrument, gone).not.toContain(gone);
+    }
+    // Column heads are one or two words; the context-window phrase lives in a title, not on the face.
+    expect(instrument).toMatch(/>\s*You\s*<\/h2>/);
+    expect(instrument).toMatch(/>\s*The model\s*<\/h2>/);
+    // The disclosure is one short line with the full text folded under it.
+    expect(instrument).toContain('Your words go to the model. Nothing is stored here.');
+    expect(instrument).toMatch(/<details[^>]*>\s*<summary[^>]*>\s*Your words go to the model/);
+    // The applied settings and their math open inside the model board, not on the face.
+    expect(instrument).toContain('applied to the call: temperature');
+  });
+
   it('the model’s board carries the presets; your board does not', () => {
     const you = instrument.slice(instrument.indexOf('side="you"'), instrument.indexOf('side="model"'));
     const model = instrument.slice(instrument.indexOf('side="model"'));

@@ -65,12 +65,25 @@ becomes *awaiting*; a reply caught mid-stream becomes an error you can
 **Answer again** — a partial rendering is never shown as the reply. **Clear**
 removes it.
 
-**Still on the face:** both fader boards (unchanged), the deterministic fork
-squiggles and tap-to-lock chips in the composer, the pre-send whisper (core's
-`interpret()` parse — "before you send, no model yet"), the info bubble in the
-visitor's *Reading as* register, "Show the math" (now literal: the applied
-settings), and the zero-cost exit — *Take this reading to your own app*
-(`buildPayload` + `buildHandoff`) on any reading awaiting Go.
+**The face is quiet** (Travis, later the same day: "too much conversation …
+collapse the sliders down like the options in this text box; it should be
+simple enough not to need explanation"). On the face: the brand line, two
+column heads (*You* / *The model*), the conversation, and one text box.
+Everything else is in the text box's toolbar, collapsed by default like a chat
+composer's options: **your board** and **the model's board** (one sliders icon
+each, opening the fader bank above the text; a dot marks a board that is off
+neutral), the **info note** (an `i` icon; register copy unchanged), the
+**applied settings and their math** (inside the model board), and the
+**disclosure** (one line — "Your words go to the model. Nothing is stored
+here." — with `WHAT_LEAVES` folded under it). Turn rows carry almost no words:
+a one-word `reading` tag on the model's rewrite, the model's name under its
+reply, and the buttons themselves (*Go*, *Stop*, *drop*, *elsewhere*). Each
+turn is two grid rows — your words | its reading; your reply | its reply — so
+the stacked phone order reads naturally. The pre-send parse whisper is gone
+from the face (core's `hear()` remains exported and tested). The zero-cost
+exit — the reading, with both boards, into the visitor's own app
+(`buildPayload` + `buildHandoff`) — folds under *elsewhere* on any reading
+awaiting Go. Fork squiggles and tap-to-lock chips stay in the text box.
 
 **Tests:** `tests/transcript.test.ts` — reducers, context and register sample,
 storage normalization, the NDJSON and SSE codecs, `streamChatCompletion` with

@@ -29,6 +29,7 @@ import {
   profilesEqual,
   serializeProfile,
 } from '../lib/instrument';
+import { WHAT_LEAVES } from '../lib/transcript';
 
 const read = (p: string) => readFileSync(join(__dirname, '..', p), 'utf8');
 
@@ -492,8 +493,26 @@ describe('the homepage is the instrument (source ratchets)', () => {
     expect(instrument).toMatch(/aria-expanded=\{showMath\}/);
   });
 
-  it('states the hand-off contract: nothing is sent from the page', () => {
-    expect(instrument).toMatch(/Nothing is sent from this page/);
+  it('states what leaves the machine — the 2026-09-07 contract that replaced "nothing is sent from this page" when the conversation went live', () => {
+    expect(instrument).toContain('WHAT_LEAVES');
+    expect(instrument).not.toMatch(/Nothing is sent from this page/);
+    expect(WHAT_LEAVES).toMatch(/does not store/);
+    expect(WHAT_LEAVES).toMatch(/this browser only/);
+    expect(WHAT_LEAVES).toMatch(/named under each reply/); // the provider is reported per reply, never asserted
+  });
+
+  it('is one conversation in two registers: the model’s context window on the right, your words and the re-rendered reply on the left, with Stop / correct / Go', () => {
+    expect(instrument).toMatch(/context window/i);
+    expect(instrument).toContain("step: 'read'");
+    expect(instrument).toContain("step: 'answer'");
+    expect(instrument).toContain("'/api/transcript'");
+    expect(instrument).toContain('const go = ');
+    expect(instrument).toContain('const stop = ');
+    expect(instrument).toContain('const correct = ');
+    expect(instrument).toContain('registerSample(');
+    expect(instrument).toContain('contextFor(');
+    // The hand-off to the visitor's own app survives as the zero-cost exit for a reading.
+    expect(instrument).toContain('buildHandoff(');
   });
 
   it('the model’s board carries the presets; your board does not', () => {

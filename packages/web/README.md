@@ -3,7 +3,89 @@
 Next.js app serving explicitformula.com (and rpcs1.dev, the mechanism home):
 the `/loop` capture surface, the translator/tuner APIs, docs, and billing.
 
+## The homepage is one conversation in two registers (2026-09-07)
+
+Travis's correction of the 2026-09-04 build: the two panes are not "your words
+/ a parse of your words" — they are **two registers of one live conversation**.
+
+**The model's pane is its context window, made visible.** Each message you
+send appears there as the model's own rewrite of it — *the prompt it would
+write to itself* (the READ step, `READ_SYSTEM` in `lib/transcript.ts`),
+streamed token by token. While it streams you can **Stop** it; when it settles
+you can **edit it in place** or **type a correction in your own words** (the
+rewrite re-runs with your correction attached, `<previous-rewrite>` +
+`<correction>`); and **nothing runs until you press Go**. What you release is
+literally the user message the model is run on. Its reply appears in that pane
+in its own words (the ANSWER step), with the configured model's name under it.
+
+**Your pane is your words, and the reply in your words.** Your message as
+typed (plus any corrections — also your words), then the same reply
+re-rendered into your register (the RENDER step, `RENDER_GUARD`): meaning held
+fixed — every claim, number, negation, caveat, and question — wording changed
+to match how you write. The instruction is your board's paragraph
+(`renderInstruction(R̂you)` = core's `rewriteForProfile(...).rewrite_instructions`,
+pinned by test), and the register sample is your own messages from this
+conversation, newest first (`registerSample`, capped at 12 / 1500 chars), so
+it improves as you talk. That rendering **is** the reply you read; rows are
+aligned so the model's original is one glance to the right.
+
+**Both boards are applied for real** — the page is the app now, so it can do
+what a prefilled message never could. The model's board: `modelCallSettings`
+= `mapToParameters(R̂model, 'generic')` → temperature, top_p, max_tokens are
+the ANSWER call's parameters (pinned by test on a grid); `modelStance` =
+`system_prompt_additions` joined → the system prompt. Context/tool-use/retry
+strategies are still derived and shown but do nothing in a plain chat (the
+copy says so). Your board: the RENDER instruction, above.
+
+**Turn protocol** (`app/api/transcript/route.ts`, NDJSON frames):
+`{ step: 'read', you, prior, previousReading?, correction? }` →
+`{t:'reading',d}…{t:'done',engine}`; `{ step: 'answer', reading, prior, you:
+R̂you, model: R̂model, samples }` → `{t:'reply',d}…{t:'rendered',d}…{t:'done',
+engine}`; either may end in `{t:'error',code,message}`. Pre-stream JSON errors:
+400 bad request, 503 `model_unavailable` (no key — there is no rules fallback
+that can converse), 429 `budget_exhausted` (the same per-IP / global daily
+budget as the loop and translator, **one unit per request; a turn is two
+requests**). `prior` is the conversation **in the model's register** — prior
+readings and replies, never your raw words — capped at 12 turns
+(`contextFor`). Upstream: `lib/transcript-stream.ts` speaks OpenAI-compatible
+`stream: true` SSE to whatever `lib/gateway.ts#getGatewayConfig` resolves
+(Gemini 2.5 Flash-Lite by default; same env priority as `getGatewayBackend`),
+45 s timeout, provider error bodies never echoed. `maxDuration = 60`.
+
+**What leaves your machine** (`WHAT_LEAVES`, shown under the conversation and
+ratcheted in `tests/instrument.test.ts`): on Send/Correct/Go your words, the
+conversation so far, and both boards go to this site's server and on to the
+configured model (named under each reply — reported by the route, never
+asserted by the page; the provider's own data terms apply). The route stores
+nothing. The transcript lives in `localStorage['ef.transcript.v1']`
+(`lib/transcript-store.ts`, `useSyncExternalStore`, persisted on stable
+transitions only — never per token; cross-tab sync deliberately off so a
+second tab cannot clobber a stream). On reload, a reading caught mid-stream
+becomes *awaiting*; a reply caught mid-stream becomes an error you can
+**Answer again** — a partial rendering is never shown as the reply. **Clear**
+removes it.
+
+**Still on the face:** both fader boards (unchanged), the deterministic fork
+squiggles and tap-to-lock chips in the composer, the pre-send whisper (core's
+`interpret()` parse — "before you send, no model yet"), the info bubble in the
+visitor's *Reading as* register, "Show the math" (now literal: the applied
+settings), and the zero-cost exit — *Take this reading to your own app*
+(`buildPayload` + `buildHandoff`) on any reading awaiting Go.
+
+**Tests:** `tests/transcript.test.ts` — reducers, context and register sample,
+storage normalization, the NDJSON and SSE codecs, `streamChatCompletion` with
+an injected fetch serving canned SSE, the three prompt builders (guards,
+verbatim reading as the last user message, instruction equality with
+`rewriteForProfile`), the literal settings equality with `mapToParameters`,
+request validation, and route source ratchets.
+
 ## The homepage is the instrument (2026-09-04)
+
+> Superseded in part on 2026-09-07 (section above): the right pane is now the
+> model's live reading and reply, not the deterministic parse; the hand-off is
+> a secondary exit, not the send row; "Nothing is sent from the page" no longer
+> holds — see *What leaves your machine*. Boards, faders, presets, equations,
+> and info bubble below are unchanged.
 
 `app/page.tsx` renders `components/Instrument.tsx` and a three-link row —
 nothing else. No beats, no pitch sections, no offer copy on the face

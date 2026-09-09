@@ -46,24 +46,40 @@ const FRIENDLY: Record<string, { kind: LoopClientError['kind']; msg: string }> =
   unparseable: { kind: 'transient', msg: 'The model returned something unusable — try again.' },
 };
 
+/**
+ * The minimal transport the client needs. The global `fetch` satisfies it (the
+ * tests pass a fake one); the plugin passes an adapter over Obsidian's
+ * `requestUrl` (main.ts) so nothing here depends on `fetch` — which Obsidian's
+ * mobile guidelines ask plugins to avoid.
+ */
+export interface FetchLikeResponse {
+  ok: boolean;
+  status: number;
+  json(): Promise<unknown>;
+}
+export type FetchLike = (
+  url: string,
+  init: { method: 'POST'; headers: Record<string, string>; body: string },
+) => Promise<FetchLikeResponse>;
+
 export interface LoopClientOptions {
   /** Base site URL, e.g. https://www.explicitformula.com (no trailing slash needed). */
   endpoint: string;
-  /** Injectable fetch for testing. */
-  fetchImpl?: typeof fetch;
+  /** Transport: the requestUrl adapter in the plugin, a fake fetch in tests. */
+  fetchImpl: FetchLike;
 }
 
 export class LoopClient {
   private readonly base: string;
-  private readonly fetchImpl: typeof fetch;
+  private readonly fetchImpl: FetchLike;
 
   constructor(opts: LoopClientOptions) {
     this.base = opts.endpoint.replace(/\/+$/, '');
-    this.fetchImpl = opts.fetchImpl ?? fetch;
+    this.fetchImpl = opts.fetchImpl;
   }
 
   private async post(body: Record<string, unknown>): Promise<LoopApiResponse> {
-    let res: Response;
+    let res: FetchLikeResponse;
     try {
       res = await this.fetchImpl(`${this.base}/api/translate`, {
         method: 'POST',

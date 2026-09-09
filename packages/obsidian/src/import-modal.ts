@@ -46,19 +46,22 @@ export class ImportModal extends Modal {
     const status = contentEl.createEl('p', { cls: 'setting-item-description' });
     const results = contentEl.createDiv();
 
-    input.addEventListener('change', async () => {
+    input.addEventListener('change', () => {
       if (this.busy || !input.files || input.files.length === 0) return;
+      const files = Array.from(input.files);
       this.busy = true;
       input.disabled = true;
-      try {
-        await this.handleFiles(Array.from(input.files), status, results);
-      } catch (e) {
-        status.setText(`Import failed: ${e instanceof Error ? e.message : String(e)}`);
-      } finally {
-        this.busy = false;
-        input.disabled = false;
-        input.value = '';
-      }
+      void (async () => {
+        try {
+          await this.handleFiles(files, status, results);
+        } catch (e) {
+          status.setText(`Import failed: ${e instanceof Error ? e.message : String(e)}`);
+        } finally {
+          this.busy = false;
+          input.disabled = false;
+          input.value = '';
+        }
+      })();
     });
   }
 
@@ -153,7 +156,7 @@ export class ImportModal extends Modal {
       written++;
       if (written % 50 === 0) {
         status.setText(`Writing notes… ${written}/${all.length}`);
-        await new Promise((r) => setTimeout(r, 0));
+        await new Promise((r) => window.setTimeout(r, 0));
       }
     }
   }

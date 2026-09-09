@@ -50,7 +50,9 @@ export const VOCAB = [
 export const MIN_DISTINCT_TERMS = 3;
 
 const day = (iso: string) => (iso ? String(iso).slice(0, 10) : 'undated');
-const esc = (s: unknown) => String(s ?? '').replace(/\r\n/g, '\n');
+/** Export fields are untyped JSON: take a string when it is one, else the fallback. */
+const str = (v: unknown, fallback = ''): string => (typeof v === 'string' && v ? v : fallback);
+const esc = (s: unknown) => str(s).replace(/\r\n/g, '\n');
 
 // ── payload detection (tolerant across export vintages) ──────────────────────
 function listFrom(raw: unknown, looks: (c: Record<string, unknown>) => boolean): Record<string, unknown>[] | null {
@@ -90,8 +92,8 @@ export function detectPayload(raw: unknown): Payload {
     const obj = raw as Record<string, unknown>;
     if (Array.isArray(obj.data_files) && (obj.data_files as Record<string, unknown>[]).some((f) => f && typeof f === 'object' && 'export_url' in f)) {
       const files = obj.data_files as Record<string, unknown>[];
-      const conv = files.find((f) => f.category === 'conversations') || files.find((f) => String(f.filename || '').includes('conversation'));
-      return { kind: 'claude-manifest', conversationsUrl: conv ? String(conv.export_url) : null };
+      const conv = files.find((f) => f.category === 'conversations') || files.find((f) => str(f.filename).includes('conversation'));
+      return { kind: 'claude-manifest', conversationsUrl: conv ? str(conv.export_url) || null : null };
     }
   }
   const claudeList = listFrom(raw, looksClaude);
@@ -108,11 +110,11 @@ export function detectPayload(raw: unknown): Payload {
 // ── normalizers → RawConvo ────────────────────────────────────────────────────
 export function normalizeClaude(list: Record<string, unknown>[]): RawConvo[] {
   return list.map((c) => ({
-    title: String(c.name || '(untitled)'),
-    dateIso: String(c.created_at || ''),
+    title: str(c.name, '(untitled)'),
+    dateIso: str(c.created_at),
     turns: (Array.isArray(c.chat_messages) ? (c.chat_messages as Record<string, unknown>[]) : [])
-      .map((m) => ({
-        who: (m.sender === 'human' ? 'You' : 'Assistant') as RawTurn['who'],
+      .map((m): RawTurn => ({
+        who: m.sender === 'human' ? 'You' : 'Assistant',
         text: esc(m.text || ''),
       }))
       .filter((t) => t.text.trim()),
@@ -134,9 +136,9 @@ export function normalizeOpenAI(list: Record<string, unknown>[]): RawConvo[] {
       .filter((m) => m.text && (m.role === 'user' || m.role === 'assistant'))
       .sort((a, b) => a.t - b.t);
     return {
-      title: String(c.title || '(untitled)'),
+      title: str(c.title, '(untitled)'),
       dateIso: c.create_time ? new Date(Number(c.create_time) * 1000).toISOString() : '',
-      turns: msgs.map((m) => ({ who: (m.role === 'user' ? 'You' : 'Assistant') as RawTurn['who'], text: m.text })),
+      turns: msgs.map((m) => ({ who: m.role === 'user' ? 'You' : 'Assistant', text: m.text })),
     };
   });
 }

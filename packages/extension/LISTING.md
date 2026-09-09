@@ -38,7 +38,7 @@ What it never does:
 - It never needs an account. There is nothing to sign up for.
 - No ads. No selling data. Free for people.
 
-Privacy, said plainly: to check a draft, the text in the field you're typing in (up to the last 4,000 characters) is sent over an encrypted connection to our own server at rpcs1.dev, checked, and answered. It is not stored there beyond a short-lived cache, not shared with anyone, and not used for anything except answering you. The extension keeps a small local log of which suggestions you accepted or dismissed — on your machine only — to improve future suggestions. Full policy: https://www.explicitformula.com/privacy
+Privacy, said plainly: to check a draft, the text in the field you're typing in (up to the last 4,000 characters) is sent over an encrypted connection to our own server at rpcs1.dev, checked, and answered. Our server does not keep it. When you open the picker or ask "How could this read?", the deeper readings come from our model provider (currently OpenAI models, reached through Vercel's AI Gateway), which processes the text under its own API terms; it is used for nothing except answering you. The extension keeps a short-lived cache of recent checks and a small local log of which suggestions you accepted or dismissed — both in your browser only. Full policy: https://www.explicitformula.com/privacy
 
 Made by one person who has been misread his whole life, for anyone who has ever heard "that's not what I meant."
 

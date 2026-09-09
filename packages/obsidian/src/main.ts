@@ -13,11 +13,12 @@ import {
   Plugin,
   PluginSettingTab,
   Setting,
+  requestUrl,
   type TFile,
   type WorkspaceLeaf,
 } from 'obsidian';
 import type { LoopSpan } from '@rpcs1/core';
-import { LoopClient, LoopClientError, assembleFinalPrompt } from './api.js';
+import { LoopClient, LoopClientError, assembleFinalPrompt, type FetchLike } from './api.js';
 import {
   isAllowed,
   selectSnippets,
@@ -83,7 +84,21 @@ const DEFAULT_SETTINGS: LoopPluginSettings = {
   accommodationNotes: '',
 };
 
-const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+const sleep = (ms: number) => new Promise<void>((r) => window.setTimeout(r, ms));
+
+// Transport for the loop client: Obsidian's requestUrl — works on mobile, no
+// CORS, and it is what the community guidelines ask for instead of fetch.
+// `throw: false` returns non-2xx responses instead of throwing, so the client
+// can map the server's error codes to friendly messages.
+const obsidianFetch: FetchLike = async (url, init) => {
+  const res = await requestUrl({ url, method: init.method, headers: init.headers, body: init.body, throw: false });
+  return {
+    ok: res.status >= 200 && res.status < 300,
+    status: res.status,
+    // `res.json` is a lazy getter that throws on non-JSON — surface that as a rejection.
+    json: () => Promise.resolve().then((): unknown => res.json),
+  };
+};
 
 export default class LoopPlugin extends Plugin {
   settings: LoopPluginSettings = DEFAULT_SETTINGS;
@@ -206,7 +221,7 @@ export default class LoopPlugin extends Plugin {
           new Notice('Select some text first.');
           return;
         }
-        this.activateView(sel);
+        void this.activateView(sel);
       },
     });
 
@@ -239,7 +254,7 @@ export default class LoopPlugin extends Plugin {
           new Notice('Open a note with some text first.');
           return;
         }
-        this.activateView(text.slice(0, 8000));
+        void this.activateView(text.slice(0, 8000));
       },
     });
 
@@ -254,13 +269,15 @@ export default class LoopPlugin extends Plugin {
       if (!leaf) return;
       await leaf.setViewState({ type: VIEW_TYPE_LOOP, active: true });
     }
-    workspace.revealLeaf(leaf);
+    await workspace.revealLeaf(leaf);
     const view = leaf.view;
     if (view instanceof LoopView && initialDump) view.startWithDump(initialDump);
   }
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    const stored: unknown = await this.loadData();
+    const patch = stored && typeof stored === 'object' ? (stored as Partial<LoopPluginSettings>) : {};
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, patch);
     // Normalize defensively — data.json may predate these fields or hold junk.
     this.settings.textScale = normalizeTextScale(this.settings.textScale);
     this.settings.responseDelayMs = clampResponseDelay(this.settings.responseDelayMs);
@@ -359,7 +376,7 @@ class LoopView extends ItemView {
   }
 
   private client(): LoopClient {
-    return new LoopClient({ endpoint: this.plugin.settings.endpoint });
+    return new LoopClient({ endpoint: this.plugin.settings.endpoint, fetchImpl: obsidianFetch });
   }
 
   private allowedFolders(): string[] {
@@ -380,7 +397,7 @@ class LoopView extends ItemView {
     try {
       const app = this.plugin.app;
       const active = app.workspace.getActiveFile();
-      const resolved = app.metadataCache.resolvedLinks as Record<string, Record<string, number>>;
+      const resolved = app.metadataCache.resolvedLinks;
       const hopOf = new Map<string, 0 | 1 | 2 | 3>();
       if (active) {
         hopOf.set(active.path, 0);
@@ -405,7 +422,7 @@ class LoopView extends ItemView {
         if (!isAllowed(f.path, allow)) continue;
         if (f.stat.size > 200_000) continue; // skip huge notes
         const cache = app.metadataCache.getFileCache(f);
-        const fmAliases = (cache?.frontmatter as Record<string, unknown> | undefined)?.aliases;
+        const fmAliases: unknown = cache?.frontmatter?.aliases;
         const aliases = Array.isArray(fmAliases)
           ? fmAliases.map(String)
           : typeof fmAliases === 'string'
@@ -605,7 +622,7 @@ class LoopView extends ItemView {
     if (this.stage === 'rounds') {
       const orig = root.createEl('details');
       orig.createEl('summary', { text: 'What you said' });
-      orig.createEl('div', { cls: 'ef-orig-text', text: this.dump });
+      orig.createDiv({ cls: 'ef-orig-text', text: this.dump });
 
       // Disclosure strip — the what-left-your-machine law, rendered inline.
       // (Also announced via the persistent live region when a round lands.)
@@ -665,16 +682,15 @@ class LoopView extends ItemView {
     // final
     const prompt = assembleFinalPrompt(this.spans);
     root.createEl('p', { text: 'Your prompt, ready to land:' });
-    const box = root.createEl('div', {
+    const box = root.createDiv({
       cls: 'ef-prompt-box',
       text: prompt,
       attr: { tabindex: '0', 'aria-label': 'Your finished prompt' },
     });
     const row = root.createDiv({ cls: 'ef-actions' });
     const copy = row.createEl('button', { text: 'Copy it' });
-    copy.addEventListener('click', async () => {
-      await navigator.clipboard.writeText(prompt);
-      new Notice('Copied — paste it into any AI.');
+    copy.addEventListener('click', () => {
+      void navigator.clipboard.writeText(prompt).then(() => new Notice('Copied — paste it into any AI.'));
     });
     const insert = row.createEl('button', { text: 'Insert into note' });
     insert.addEventListener('click', () => this.insertIntoNote(prompt));
@@ -695,7 +711,7 @@ class LoopView extends ItemView {
     });
     if (this.answer) {
       root.createEl('p', { cls: 'ef-answer-label', text: 'The answer:' });
-      root.createEl('div', { cls: 'ef-answer', text: this.answer });
+      root.createDiv({ cls: 'ef-answer', text: this.answer });
     }
     if (this.pendingFocus === 'prompt') {
       this.pendingFocus = null;

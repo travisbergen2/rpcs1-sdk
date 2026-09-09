@@ -127,9 +127,9 @@ export function deriveRenderingDirectives(p: ReceiverProfile): RenderingDirectiv
   const structure = band(p.TI, 'bluf', 'balanced', 'context_first') as StructureMode;
   const warmth = band(p.SG, 'minimal', 'moderate', 'warm') as WarmthMode;
   // FT high = needs explicitness; FT low = subtext lands
-  const explicitness = (p.FT > 60 ? 'explicit_literal' : p.FT < 40 ? 'implication_ok' : 'moderate') as ExplicitnessMode;
+  const explicitness: ExplicitnessMode = p.FT > 60 ? 'explicit_literal' : p.FT < 40 ? 'implication_ok' : 'moderate';
   const revision = band(p.UE, 'consistent', 'balanced', 'open_challenge') as RevisionMode;
-  const ambiguity = (p.AR > 60 ? 'commit' : p.AR < 40 ? 'clarify' : 'commit_with_note') as AmbiguityMode;
+  const ambiguity: AmbiguityMode = p.AR > 60 ? 'commit' : p.AR < 40 ? 'clarify' : 'commit_with_note';
   return {
     structure, warmth, explicitness, revision, ambiguity,
     why: {

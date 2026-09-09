@@ -95,8 +95,8 @@ interface MaskResult {
 }
 
 const LOG_LINE_PATTERNS = [
-  /^\s*[[(\-]*\d{4}[-./]\d{1,2}[-./]\d{1,2}[ T]\d{1,2}:\d{2}/, // timestamped log line
-  /^\s*[[(\-]*\[?(INFO|WARN|WARNING|ERROR|DEBUG|TRACE|FATAL)\b/i, // level-prefixed line
+  /^\s*[[(-]*\d{4}[-./]\d{1,2}[-./]\d{1,2}[ T]\d{1,2}:\d{2}/, // timestamped log line
+  /^\s*[[(-]*\[?(INFO|WARN|WARNING|ERROR|DEBUG|TRACE|FATAL)\b/i, // level-prefixed line
   /^\s*[A-Za-z]\w*Error\b/, // "SyntaxError: …", "TypeError: …"
   /^\s*at\s+[\w.$<>[\]]+\s*\(/, // stack frame
   // Unfenced code lines (2026-08-18 census G3: raw .mq5/.js pastes with no

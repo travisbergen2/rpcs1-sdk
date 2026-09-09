@@ -95,8 +95,8 @@ const platformsConfig = {
 // Low SG (broad receptivity) maps to higher temperature (exploratory outputs).
 
 function mapSGToTemperature(SG: number, range: number[]): number {
-  const lo = range[0]!;
-  const hi = range[1]!;
+  const lo = range[0];
+  const hi = range[1];
   // SG 100 → temperature lo; SG 0 → temperature hi
   const raw = hi - (SG / 100) * (hi - lo);
   return Math.round(raw * 100) / 100;
@@ -107,8 +107,8 @@ function mapSGToTemperature(SG: number, range: number[]): number {
 // Low TI → shorter, faster outputs.
 
 function mapTIToMaxTokens(TI: number, range: number[]): number {
-  const lo = range[0]!;
-  const hi = range[1]!;
+  const lo = range[0];
+  const hi = range[1];
   const raw = lo + (TI / 100) * (hi - lo);
   return Math.round(raw / 256) * 256; // Round to nearest 256
 }

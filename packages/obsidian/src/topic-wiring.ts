@@ -51,8 +51,8 @@ export function planTopicWiring(stubs: StubIn[]): WiringPlan {
     const terms = parseStubTerms(stub.content);
     if (!terms.length) continue;
     considered++;
-    const title = (/^# (.+)$/m.exec(stub.content) ?? [, '(untitled)'])[1] as string;
-    const date = ((/^date: (.+)$/m.exec(stub.content) ?? [, '?'])[1] as string).slice(0, 10);
+    const title = /^# (.+)$/m.exec(stub.content)?.[1] ?? '(untitled)';
+    const date = (/^date: (.+)$/m.exec(stub.content)?.[1] ?? '?').slice(0, 10);
     for (const t of terms) {
       if (!members.has(t)) members.set(t, []);
       members.get(t)!.push({ path: stub.path.replace(/\.md$/, ''), title, date });

@@ -83,7 +83,7 @@ export default function ConnectPage() {
                   href="https://claude.ai/download"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sky-400 underline-offset-4 hover:underline"
+                  className="text-sky-400 underline underline-offset-4"
                 >
                   Get it here (free)
                 </a>
@@ -105,7 +105,7 @@ export default function ConnectPage() {
                     href={RELEASE_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sky-400 underline-offset-4 hover:underline"
+                    className="text-sky-400 underline underline-offset-4"
                   >
                     the release page
                   </a>
@@ -205,7 +205,7 @@ export default function ConnectPage() {
               href={SERVER_README_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sky-400 underline-offset-4 hover:underline"
+              className="text-sky-400 underline underline-offset-4"
             >
               the connector’s documentation
             </a>

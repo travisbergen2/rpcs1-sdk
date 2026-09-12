@@ -116,7 +116,7 @@ export default function RdPage() {
                 className="rounded-2xl border border-white/8 bg-white/[0.03] p-6"
               >
                 <div className="flex items-baseline justify-between">
-                  <span className="font-mono text-xs text-white/35">0{i + 1}</span>
+                  <span className="font-mono text-xs text-white/50">0{i + 1}</span>
                   <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 font-mono text-xs text-sky-300">
                     {b.primitives}
                   </span>
@@ -138,7 +138,7 @@ export default function RdPage() {
                   className="inline-flex items-baseline gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm"
                 >
                   <span className="font-medium text-white">{law}</span>
-                  <span className="text-xs text-white/45">{gloss}</span>
+                  <span className="text-xs text-white/60">{gloss}</span>
                 </span>
               ))}
             </div>
@@ -147,7 +147,7 @@ export default function RdPage() {
               pre-registered numerical checks — three of which failed and are reported in full,
               with the repairs. The exact exponents are conditional on the environment class.
               That level of disclosure is the point.{' '}
-              <Link href="/imm" className="text-sky-400 underline-offset-4 hover:underline">
+              <Link href="/imm" className="text-sky-400 underline underline-offset-4">
                 Read how the framework works →
               </Link>
             </p>
@@ -203,7 +203,7 @@ export default function RdPage() {
           cut from the claims entirely, one was traced to a discretization artifact. All three
           are reported in the paper — because a scorecard you can trust has to include the
           misses.{' '}
-          <Link href="/imm" className="text-sky-400 underline-offset-4 hover:underline">
+          <Link href="/imm" className="text-sky-400 underline underline-offset-4">
             Full claim ledger →
           </Link>
         </p>

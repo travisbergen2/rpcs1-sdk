@@ -114,7 +114,7 @@ export function FaderBoard({
             <span className="text-white/90">
               {spec.name} ({spec.key}) {profile[spec.key]}
             </span>
-            <span className="text-white/45">
+            <span className="text-white/60">
               {' '}
               · down = {spec.low} · up = {spec.high}
             </span>
@@ -126,15 +126,15 @@ export function FaderBoard({
             <span className="text-white/90">
               preset: {activePreset.name}
             </span>
-            <span className="text-white/45"> · {PRESET_GRADE_NOTE}</span>
+            <span className="text-white/60"> · {PRESET_GRADE_NOTE}</span>
             <br />
             <span style={{ color: accent }}>{activePreset.tagline}</span>
             <br />
-            <span className="text-white/45">{vector}</span>
+            <span className="text-white/60">{vector}</span>
           </>
         ) : (
           <>
-            <span className="text-white/45">{vector}</span>
+            <span className="text-white/60">{vector}</span>
             {extra && (
               <>
                 <br />
@@ -147,7 +147,7 @@ export function FaderBoard({
 
       {presets && presets.length > 0 && (
         <div className="mt-2 flex flex-wrap items-center gap-1.5" role="group" aria-label={`${title} presets`}>
-          <span className="mr-1 font-mono text-[10px] uppercase tracking-wider text-white/35">Presets</span>
+          <span className="mr-1 font-mono text-[10px] uppercase tracking-wider text-white/50">Presets</span>
           {presets.map((p) => {
             const selected = activePreset?.id === p.id;
             return (
@@ -171,7 +171,7 @@ export function FaderBoard({
         </div>
       )}
 
-      {footer && <div className="mt-2 text-[11px] text-white/45">{footer}</div>}
+      {footer && <div className="mt-2 text-[11px] text-white/60">{footer}</div>}
     </div>
   );
 }

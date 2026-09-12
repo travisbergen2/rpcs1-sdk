@@ -13,7 +13,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed';
 
     const variants = {
-      primary:   'bg-sky-500 hover:bg-sky-400 text-white focus:ring-sky-500 shadow-lg shadow-sky-500/20',
+      primary:   'bg-sky-500 hover:bg-sky-400 text-slate-950 focus:ring-sky-500 shadow-lg shadow-sky-500/20',
       cta:       'bg-amber-500 hover:bg-amber-400 text-slate-950 focus:ring-amber-500 shadow-lg shadow-amber-500/25',
       secondary: 'bg-gray-800 hover:bg-gray-700 text-gray-100 border border-gray-700 focus:ring-gray-500',
       ghost:     'hover:bg-gray-800 text-gray-300 hover:text-gray-100 focus:ring-gray-500',

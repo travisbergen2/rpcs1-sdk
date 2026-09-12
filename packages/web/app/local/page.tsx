@@ -87,7 +87,7 @@ export default function LocalPage() {
         </p>
         <a
           href="mailto:hello@rpcs1.dev?subject=Website%20speed%20fix"
-          className="mt-7 inline-flex items-center justify-center rounded-xl bg-sky-600 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-sky-500"
+          className="mt-7 inline-flex items-center justify-center rounded-xl bg-sky-500 px-7 py-3.5 text-base font-semibold text-slate-950 transition-colors hover:bg-sky-400"
         >
           Email us about your site
         </a>

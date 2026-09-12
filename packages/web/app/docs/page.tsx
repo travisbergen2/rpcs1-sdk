@@ -1,11 +1,18 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { FAQ_ITEMS } from '@/lib/faq';
+import { SITE_URL, buildFaqPage, serializeJsonLd } from '@/lib/structured-data';
 
 export const metadata: Metadata = {
   title: 'Documentation',
   description:
     'RPCS-1 docs — derived receiver laws, five-primitive measurement, tuner, and MCP integration.',
 };
+
+// The Questions section below and this FAQPage schema render from the same
+// array (lib/faq.ts), so the visible answers and the machine-readable ones
+// cannot drift.
+const FAQ_SCHEMA = serializeJsonLd(buildFaqPage(SITE_URL, '/docs', FAQ_ITEMS));
 
 export default function DocsPage() {
   return (
@@ -70,6 +77,23 @@ export default function DocsPage() {
         The <Link href="/tuner">interactive tuner</Link> requires no installation and no account.
         Start from support, coding, or research and get recommendations in under a minute.
       </p>
+
+      <h2 id="questions">Questions</h2>
+      {FAQ_ITEMS.map((item) => (
+        <section key={item.q}>
+          <h3>{item.q}</h3>
+          <p>
+            {item.a}
+            {item.href && item.label && (
+              <>
+                {' '}
+                <Link href={item.href}>{item.label} →</Link>
+              </>
+            )}
+          </p>
+        </section>
+      ))}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: FAQ_SCHEMA }} />
     </div>
   );
 }

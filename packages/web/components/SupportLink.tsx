@@ -14,7 +14,7 @@ export function SupportLink({ live = DONATIONS_LIVE, url = SUPPORT_URL }: { live
         href={url}
         target="_blank"
         rel="noreferrer"
-        className="font-medium text-amber-300 underline-offset-4 hover:text-amber-200 hover:underline"
+        className="font-medium text-amber-300 underline underline-offset-4 hover:text-amber-200"
       >
         Chip in if you&apos;re able
       </a>{' '}

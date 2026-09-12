@@ -201,7 +201,7 @@ export default function Instrument() {
           <ol className="mt-3 grid gap-3 sm:grid-cols-3">
             {BEAT_TITLES.map((title, i) => (
               <li key={title} className="rounded-xl border border-white/8 bg-white/[0.03] p-3">
-                <p className="font-mono text-[11px] text-white/40">{i + 1}</p>
+                <p className="font-mono text-[11px] text-white/55">{i + 1}</p>
                 <p className="mt-1 font-semibold text-white">{title}</p>
                 <p className="mt-1 text-xs text-white/60">{copy.beats[i]}</p>
               </li>
@@ -212,7 +212,7 @@ export default function Instrument() {
           <p className="mt-3 text-xs text-white/50">
             You&apos;re reading this in the <span className="text-sky-300">{register}</span> register — the &ldquo;Reading
             as&rdquo; switch in the header changes it. The mechanism, one click deep:{' '}
-            <Link href="/docs/primitives" className="text-sky-300 underline-offset-4 hover:underline">
+            <Link href="/docs/primitives" className="text-sky-300 underline underline-offset-4">
               the five primitives
             </Link>
             .
@@ -243,7 +243,7 @@ export default function Instrument() {
           <div className="rounded-2xl border border-white/10 bg-[#0a0f1a] p-4">
             <div className="flex items-baseline justify-between">
               <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/50">You</h2>
-              <span className="text-[11px] text-white/35">as typed</span>
+              <span className="text-[11px] text-white/50">as typed</span>
             </div>
 
             <div className="relative mt-3 rounded-xl border border-white/10 bg-[#070b14] focus-within:border-emerald-400/50">
@@ -342,7 +342,7 @@ export default function Instrument() {
             {/* Empty state — quiet, one line, three examples */}
             {text.trim().length === 0 && (
               <div className="mt-3" data-testid="empty-state">
-                <p className="text-xs text-white/45">Try one:</p>
+                <p className="text-xs text-white/60">Try one:</p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {EXAMPLES.map((ex) => (
                     <button
@@ -384,18 +384,18 @@ export default function Instrument() {
           <div className="rounded-2xl border border-white/10 bg-[#0a0f1a] p-4">
             <div className="flex items-baseline justify-between">
               <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/50">What the model hears</h2>
-              <span className="text-[11px] text-white/35">as it will receive it</span>
+              <span className="text-[11px] text-white/50">as it will receive it</span>
             </div>
 
             <div className="mt-3 space-y-3 text-sm">
               {hearing === null ? (
-                <p className="text-white/35">Nothing yet — type on the left.</p>
+                <p className="text-white/50">Nothing yet — type on the left.</p>
               ) : (
                 <>
                   <div>
-                    <p className="font-mono text-[11px] uppercase tracking-wider text-white/40">Reads as</p>
+                    <p className="font-mono text-[11px] uppercase tracking-wider text-white/55">Reads as</p>
                     <p className="mt-1 whitespace-pre-wrap leading-relaxed text-gray-100">{hearing.readsAs}</p>
-                    <p className="mt-1 text-[11px] text-white/40">
+                    <p className="mt-1 text-[11px] text-white/55">
                       taken as: {hearing.intent.replace('_', ' ')} (a guess)
                       {forked && <> · {result!.readings.length} readings — tap one on the left to lock it</>}
                     </p>
@@ -410,7 +410,7 @@ export default function Instrument() {
                       </ul>
                     </div>
                   )}
-                  <p className="text-[11px] text-white/40">
+                  <p className="text-[11px] text-white/55">
                     {hearing.playback
                       ? 'It should check its reading with you before answering.'
                       : 'It can answer without checking first.'}
@@ -423,7 +423,7 @@ export default function Instrument() {
                   How it will run — from its board
                 </p>
                 <p className="mt-1 leading-relaxed text-white/75">{theirs.stance}</p>
-                <p className="mt-1 break-words font-mono text-[11px] text-white/45">{theirs.settingsLine}</p>
+                <p className="mt-1 break-words font-mono text-[11px] text-white/60">{theirs.settingsLine}</p>
                 <button
                   type="button"
                   onClick={() => setShowMath((s) => !s)}
@@ -436,7 +436,7 @@ export default function Instrument() {
                 </button>
                 {showMath && (
                   <div id={mathId} className="mt-2 rounded-xl border border-white/8 bg-[#070b14] p-3">
-                    <p className="text-[11px] text-white/45">
+                    <p className="text-[11px] text-white/60">
                       The model board&apos;s five numbers through the engine&apos;s mapping (generic platform ranges). A chat app
                       cannot take the numeric settings from a prefilled message — the stance sentences are what it can
                       act on; the settings are listed for apps that can apply them. Each line states the rule and the
@@ -445,7 +445,7 @@ export default function Instrument() {
                     <pre className="mt-2 overflow-x-auto whitespace-pre-wrap break-words font-mono text-[11px] leading-relaxed text-white/70">
                       {theirs.lines.join('\n')}
                     </pre>
-                    <p className="mt-2 font-mono text-[11px] text-white/40">
+                    <p className="mt-2 font-mono text-[11px] text-white/55">
                       your board&apos;s band rule: value &lt; 40 → low · 40–60 → mid · value &gt; 60 → high
                       {hearing ? ` · commit-vs-clarify level: ${hearing.arLevel}` : ''}
                     </p>
@@ -459,13 +459,13 @@ export default function Instrument() {
                 </p>
                 <p className="mt-1 leading-relaxed text-white/75">{yours.instruction}</p>
                 {!includeDials && (
-                  <p className="mt-1 text-[11px] text-white/40">Not sent — &ldquo;send the boards&rdquo; is off.</p>
+                  <p className="mt-1 text-[11px] text-white/55">Not sent — &ldquo;send the boards&rdquo; is off.</p>
                 )}
               </div>
 
               {text.trim().length > 0 && (
                 <details className="border-t border-white/8 pt-3">
-                  <summary className="cursor-pointer text-[11px] text-white/45 hover:text-white/70">
+                  <summary className="cursor-pointer text-[11px] text-white/60 hover:text-white/70">
                     Exact text that will be sent
                   </summary>
                   <pre className="mt-2 whitespace-pre-wrap break-words rounded-xl border border-white/8 bg-[#070b14] p-3 font-mono text-[12px] leading-relaxed text-white/70">
@@ -513,7 +513,7 @@ export default function Instrument() {
         >
           Open in {vendorLabel}
         </button>
-        <p className="basis-full text-[11px] text-white/40">
+        <p className="basis-full text-[11px] text-white/55">
           Nothing is sent from this page. Your own app opens with the text filled in; you press send there. Your words
           and both boards stay in this browser until then.
         </p>

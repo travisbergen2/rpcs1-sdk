@@ -64,7 +64,7 @@ export function ProfileChooser() {
                 }`}
               >
                 <span className="block text-base font-semibold text-white">{p.label}</span>
-                <span className="mt-1 block text-xs leading-relaxed text-white/45">
+                <span className="mt-1 block text-xs leading-relaxed text-white/60">
                   {p.tagline}
                 </span>
                 <span className="mt-4 block space-y-1.5">
@@ -79,7 +79,7 @@ export function ProfileChooser() {
                           style={{ width: `${vector[d.key]}%` }}
                         />
                       </span>
-                      <span className="w-6 shrink-0 text-right font-mono text-[10px] text-white/45">
+                      <span className="w-6 shrink-0 text-right font-mono text-[10px] text-white/60">
                         {vector[d.key]}
                       </span>
                     </span>
@@ -90,12 +90,12 @@ export function ProfileChooser() {
           })}
         </div>
 
-        <p className="mx-auto mt-6 max-w-3xl text-center text-xs leading-relaxed text-white/35">
+        <p className="mx-auto mt-6 max-w-3xl text-center text-xs leading-relaxed text-white/50">
           Profiles change the explanations only — pricing, deliverables, and limitations are
           identical in every register. The values shown are the typical calibration for readers
           who prefer that register, not a measurement of you: axes a register says nothing about
           sit at the neutral prior (50). Want your own numbers? Take the{' '}
-          <Link href="/calibrate" className="text-sky-400/80 underline-offset-4 hover:underline">
+          <Link href="/calibrate" className="text-sky-400/80 underline underline-offset-4">
             60-second calibration
           </Link>
           .

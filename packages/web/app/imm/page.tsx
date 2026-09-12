@@ -199,7 +199,7 @@ export default function ImmPage() {
             — the research corpus behind the product.
           </li>
           <li>
-            <Link href="/pricing#diagnostic" className="text-amber-400 hover:text-amber-300">
+            <Link href="/pricing#diagnostic" className="text-amber-400 underline underline-offset-4 hover:text-amber-300">
               Paid diagnostic
             </Link>{' '}
             — a written memo for your team&apos;s agent.

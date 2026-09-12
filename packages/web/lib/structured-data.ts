@@ -13,11 +13,12 @@
 import { BRAND_NAME } from './brand';
 
 /**
- * Canonical origin of the deployment: the consumer domain when it is set at
- * build time, rpcs1.dev (the mechanism home) otherwise. Shared with
- * `metadataBase` in the root layout.
+ * Canonical origin of the deployment — defined in lib/site.ts (it folds the
+ * explicitformula.com apex onto www, the host the edge actually serves) and
+ * re-exported here for the graph builders and existing importers.
  */
-export const SITE_URL: string = process.env.NEXT_PUBLIC_APP_URL || 'https://rpcs1.dev';
+import { SITE_URL } from './site';
+export { SITE_URL };
 
 /** The one-paragraph description shared by <meta name="description"> and the graph. */
 export const SITE_DESCRIPTION =

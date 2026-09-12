@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/privacy' },
   title: 'Privacy',
   description:
     'Privacy information for Explicit Formula — the browser extension, the Loop plugin for Obsidian, the site — and for the RPCS1 API and MCP server.',

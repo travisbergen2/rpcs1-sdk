@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/imm' },
   title: 'The Framework — IMM & the Derived Receiver Laws',
   description:
     'How RPCS-1 is derived: IMM Paper 18 rebuilds the receiver framework from observer requirements — three forced blocks (estimate, detect, commit), five primitives as measurement coordinates, and matching laws with pre-registered checks.',

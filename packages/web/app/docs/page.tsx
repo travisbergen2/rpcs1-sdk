@@ -4,6 +4,7 @@ import { FAQ_ITEMS } from '@/lib/faq';
 import { SITE_URL, buildFaqPage, serializeJsonLd } from '@/lib/structured-data';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/docs' },
   title: 'Documentation',
   description:
     'RPCS-1 docs — derived receiver laws, five-primitive measurement, tuner, and MCP integration.',

@@ -1,29 +1,10 @@
 import type { MetadataRoute } from 'next';
+import { headers } from 'next/headers';
+import { buildSitemap, originFromHost } from '@/lib/site';
 
-const BASE = 'https://rpcs1.dev';
-
-export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
-  const routes: Array<[path: string, priority: number]> = [
-    ['/', 1.0],
-    ['/send', 0.9],
-    ['/tuner', 0.9],
-    ['/bridge', 0.9],
-    ['/connect', 0.8],
-    ['/translator', 0.8],
-    ['/calibrate', 0.8],
-    ['/pricing', 0.8],
-    ['/imm', 0.7],
-    ['/diagnostic', 0.7],
-    ['/docs', 0.7],
-    ['/mismatch', 0.5],
-    ['/privacy', 0.2],
-    ['/terms', 0.2],
-  ];
-  return routes.map(([path, priority]) => ({
-    url: `${BASE}${path}`,
-    lastModified,
-    changeFrequency: 'weekly' as const,
-    priority,
-  }));
+// Same host rule as robots.ts: the sitemap lists the URLs of the host that
+// asked for it. The route table itself lives in lib/site.ts (tested there).
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const h = await headers();
+  return buildSitemap(originFromHost(h.get('x-forwarded-host') ?? h.get('host')));
 }

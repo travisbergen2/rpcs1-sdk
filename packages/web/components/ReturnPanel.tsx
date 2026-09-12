@@ -243,7 +243,7 @@ export default function ReturnPanel({ ownText }: { ownText: string }) {
             {!usedRhat && (
               <p className="mt-2 text-xs text-neutral-400">
                 That used the {styleKey} register.{' '}
-                <a href="/calibrate" className="text-sky-500 underline-offset-4 hover:underline">
+                <a href="/calibrate" className="text-sky-500 underline underline-offset-4">
                   Calibrate once
                 </a>{' '}
                 and replies get tuned to your own profile instead.

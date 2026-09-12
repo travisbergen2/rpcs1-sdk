@@ -171,7 +171,7 @@ export default function BridgePage() {
           <p className="mt-6 text-sm text-white/50">
             Same blocks, same laws, different receiver. That is the whole trick — and why the
             profile is coordinates on a derived chart, not a personality quiz.{' '}
-            <Link href="/imm" className="text-sky-400 hover:underline">
+            <Link href="/imm" className="text-sky-400 underline underline-offset-4">
               Read the framework →
             </Link>
           </p>
@@ -252,7 +252,7 @@ export default function BridgePage() {
                 </h3>
                 <p className="mt-2.5 text-sm leading-relaxed text-white/60">{f.d}</p>
                 {f.href && (
-                  <Link href={f.href} className="mt-3 inline-block text-sm text-sky-400 hover:underline">
+                  <Link href={f.href} className="mt-3 inline-block text-sm text-sky-400 underline underline-offset-4">
                     {f.href} →
                   </Link>
                 )}
@@ -285,7 +285,7 @@ export default function BridgePage() {
           </pre>
           <p className="mt-3 font-mono text-xs text-white/60">
             {'// matches ReceiverProfile + deriveRenderingDirectives in @rpcs1/core · schema: '}
-            <a href="/v1/receiver-profile.json" className="text-sky-400 hover:underline">
+            <a href="/v1/receiver-profile.json" className="text-sky-400 underline underline-offset-4">
               /v1/receiver-profile.json
             </a>
           </p>
@@ -319,10 +319,10 @@ export default function BridgePage() {
           </div>
         </section>
 
-        <footer className="flex flex-wrap justify-between gap-4 py-12 text-xs text-white/35">
+        <footer className="flex flex-wrap justify-between gap-4 py-12 text-xs text-white/50">
           <p>
             RPCS-1 Translation Bridge · part of{' '}
-            <Link href="/" className="text-sky-400 hover:underline">
+            <Link href="/" className="text-sky-400 underline underline-offset-4">
               rpcs1.dev
             </Link>{' '}
             · MIT licensed · not affiliated with RPCS3 (the PlayStation 3 emulator)
@@ -333,7 +333,7 @@ export default function BridgePage() {
               href="https://github.com/travisbergen2/rpcs1-sdk"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sky-400 hover:underline"
+              className="text-sky-400 underline underline-offset-4"
             >
               travisbergen2/rpcs1-sdk
             </a>

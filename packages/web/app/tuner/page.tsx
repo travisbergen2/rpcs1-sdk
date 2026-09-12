@@ -142,6 +142,49 @@ function TunerPageContent() {
   }, [handleSubmit, preset]);
 
   return (
+    <TunerFrame
+      note={
+        isPresetKey(preset) && (
+          <p className="mt-3 text-sm text-sky-400">
+            Running the {preset} example automatically. You can adjust any field and run it again.
+          </p>
+        )
+      }
+      alert={
+        error && (
+          <div role="alert" className="mb-6 rounded-lg border border-red-500/30 bg-red-500/5 px-4 py-3">
+            <p className="text-sm text-red-400">{error}</p>
+          </div>
+        )
+      }
+      form={<TunerForm onSubmit={handleSubmit} loading={loading} defaultValues={defaultValues} />}
+      results={recommendation ? <RecommendationOutput recommendation={recommendation} /> : <ResultsPlaceholder />}
+    />
+  );
+}
+
+/**
+ * The page's static frame — heading, evidence card, the two panels and the
+ * rate-limit note. Rendered by the live page AND by the Suspense fallback so
+ * the server HTML already carries the page's full height.
+ *
+ * Why: `useSearchParams` makes this tree client-render, and a `null` fallback
+ * shipped an empty <main>. The footer painted at the top of the screen, then
+ * jumped 400+ px once the tool mounted — CLS 0.50 on the 2026-09-12 audit,
+ * the only failing performance score on the site.
+ */
+function TunerFrame({
+  note,
+  alert,
+  form,
+  results,
+}: {
+  note?: React.ReactNode;
+  alert?: React.ReactNode;
+  form: React.ReactNode;
+  results: React.ReactNode;
+}) {
+  return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
       <div className="mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Run the tuner.</h1>
@@ -149,56 +192,65 @@ function TunerPageContent() {
           Describe one workflow and its operating conditions. RPCS-1 will flag likely quality risks,
           recommend a runtime posture, and show the implementation settings behind it.
         </p>
-        {isPresetKey(preset) && (
-          <p className="mt-3 text-sm text-sky-400">
-            Running the {preset} example automatically. You can adjust any field and run it again.
-          </p>
-        )}
+        {note}
         <div className="mt-6">
           <EvidenceCard compact />
         </div>
       </div>
 
-      {error && (
-        <div role="alert" className="mb-6 rounded-lg border border-red-500/30 bg-red-500/5 px-4 py-3">
-          <p className="text-sm text-red-400">{error}</p>
-        </div>
-      )}
+      {alert}
 
       <div className="grid lg:grid-cols-2 gap-8 items-start">
-        <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
-          <TunerForm onSubmit={handleSubmit} loading={loading} defaultValues={defaultValues} />
-        </div>
+        <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">{form}</div>
 
-        <div id="results">
-          {recommendation ? (
-            <RecommendationOutput recommendation={recommendation} />
-          ) : (
-            <div className="border border-dashed border-gray-800 rounded-xl p-12 text-center text-gray-400">
-              <div className="text-4xl mb-3">⟳</div>
-              <p className="text-sm">Complete the assessment to see the diagnosis and recommendations.</p>
-              <p className="text-xs mt-2 text-gray-400">
-                Results include likely failure mode, plain-English reasoning, receiver profile,
-                and platform-specific implementation settings.
-              </p>
-            </div>
-          )}
-        </div>
+        <div id="results">{results}</div>
       </div>
 
       <div className="mt-12 pt-8 border-t border-gray-800">
         <p className="mt-3 text-xs text-gray-400">
           Web tuner: 10 recommendations per hour. Python SDK: 5 free calls per day.{' '}
-          <a href="/pricing" className="text-sky-500 hover:text-sky-400">See pricing →</a>
+          <a href="/pricing" className="text-sky-500 underline underline-offset-4 hover:text-sky-400">See pricing →</a>
         </p>
       </div>
     </div>
   );
 }
 
+function ResultsPlaceholder() {
+  return (
+    <div className="border border-dashed border-gray-800 rounded-xl p-12 text-center text-gray-400">
+      <div className="text-4xl mb-3">⟳</div>
+      <p className="text-sm">Complete the assessment to see the diagnosis and recommendations.</p>
+      <p className="text-xs mt-2 text-gray-400">
+        Results include likely failure mode, plain-English reasoning, receiver profile,
+        and platform-specific implementation settings.
+      </p>
+    </div>
+  );
+}
+
+/**
+ * Exact-height stand-in until the client renders: the same frame with a real,
+ * inert form (identical layout, not focusable, hidden from assistive tech) and
+ * the same results placeholder. Only the one-line preset note is absent, so a
+ * `?preset=` visit shifts by that line and nothing else.
+ */
+function TunerFallback() {
+  return (
+    <TunerFrame
+      form={
+        <div inert>
+          <TunerForm onSubmit={async () => undefined} loading={false} />
+        </div>
+      }
+      results={<ResultsPlaceholder />}
+    />
+  );
+}
+
 export default function TunerPage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<TunerFallback />}>
       <TunerPageContent />
     </Suspense>
   );

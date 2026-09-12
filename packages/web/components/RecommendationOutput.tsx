@@ -250,7 +250,7 @@ export function RecommendationOutput({ recommendation: rec }: Props) {
       {/* Written diagnostic (organizations) — plain pointer, no pitch */}
       <p className="text-xs leading-relaxed text-gray-400">
         Organizations can get this as a written memo for a deployed agent —{' '}
-        <Link href="/pricing" className="text-gray-400 underline-offset-4 hover:text-gray-300 hover:underline">
+        <Link href="/pricing" className="text-gray-400 underline underline-offset-4 hover:text-gray-300">
           part of licensing
         </Link>
         .

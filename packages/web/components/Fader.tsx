@@ -55,7 +55,7 @@ export function Fader({ id, name, abbr, value, accent, valueText, onChange, onAc
       </div>
       <label htmlFor={id} className="mt-1 text-center leading-tight">
         <span className="block text-[11px] font-semibold text-white/85">{name}</span>
-        <span className="block font-mono text-[10px] text-white/40">{abbr}</span>
+        <span className="block font-mono text-[10px] text-white/55">{abbr}</span>
       </label>
     </div>
   );

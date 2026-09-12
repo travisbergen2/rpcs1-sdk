@@ -21,7 +21,7 @@ export function EvidenceCard({ compact = false }: { compact?: boolean }) {
           rpcs1 directive bundle
         </span>{' '}
         (n=192 paired prompts, p&lt;0.00001, registered test — criteria frozen before data).{' '}
-        <Link href="/rd#erx1" className="text-sky-500 underline-offset-4 hover:underline">
+        <Link href="/rd#erx1" className="text-sky-500 underline underline-offset-4">
           See the full result, including what failed →
         </Link>
       </p>
@@ -42,7 +42,7 @@ export function EvidenceCard({ compact = false }: { compact?: boolean }) {
       <p className="mt-2 text-xs leading-relaxed text-gray-400">
         Criteria were frozen before any data. One registered sub-prediction failed and its claim
         was withdrawn — that&apos;s part of the record too.{' '}
-        <Link href="/rd#erx1" className="text-sky-500 underline-offset-4 hover:underline">
+        <Link href="/rd#erx1" className="text-sky-500 underline underline-offset-4">
           Read the full result →
         </Link>
       </p>

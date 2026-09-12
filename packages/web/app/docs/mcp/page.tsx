@@ -87,7 +87,7 @@ export default function McpIntegrationPage() {
                 <code>render_reply</code> returns deterministic rendering instructions for the
                 user&apos;s profile on the way out. The profile travels as a parameter — nothing is
                 stored server-side. Schema:{' '}
-                <a href="/v1/receiver-profile.json" className="text-sky-400 hover:underline">
+                <a href="/v1/receiver-profile.json" className="text-sky-400 underline underline-offset-4">
                   /v1/receiver-profile.json
                 </a>
               </p>

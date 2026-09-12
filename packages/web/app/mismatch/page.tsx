@@ -164,7 +164,7 @@ relevant distinctions preserved / compression cost increases`}
           <Link href="/imm" className="rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-300 hover:border-gray-600 hover:text-white">
             Read the IMM primer
           </Link>
-          <Link href="/tuner?preset=support" className="rounded-lg bg-sky-500 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-400">
+          <Link href="/tuner?preset=support" className="rounded-lg bg-sky-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-sky-400">
             Run a support example
           </Link>
         </div>

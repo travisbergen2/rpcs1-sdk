@@ -136,9 +136,9 @@ export function GuessTest() {
               This check ran entirely on your device, with no AI involved — which is the point:
               catching the fork <span className="font-semibold text-slate-100">before you send</span> doesn&apos;t
               need anyone&apos;s permission. Check your own messages in{' '}
-              <Link href="/send" className="text-sky-400 underline-offset-2 hover:underline">the send box</Link>,
+              <Link href="/send" className="text-sky-400 underline underline-offset-2">the send box</Link>,
               or give your AI the same reflex with{' '}
-              <Link href="/docs" className="text-sky-400 underline-offset-2 hover:underline">the connector</Link>.
+              <Link href="/docs" className="text-sky-400 underline underline-offset-2">the connector</Link>.
             </p>
           </div>
         </div>

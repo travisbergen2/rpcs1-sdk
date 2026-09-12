@@ -169,19 +169,19 @@ export default function ImmPage() {
         <h2 className="mb-3 text-xl font-semibold text-white">Go deeper</h2>
         <ul className="space-y-2 text-gray-400">
           <li>
-            <Link href="/tuner" className="text-sky-400 hover:text-sky-300">
+            <Link href="/tuner" className="text-sky-400 underline underline-offset-4 hover:text-sky-300">
               Interactive tuner
             </Link>{' '}
             — the laws, operationalized: get a concrete recommendation.
           </li>
           <li>
-            <Link href="/docs/matching" className="text-sky-400 hover:text-sky-300">
+            <Link href="/docs/matching" className="text-sky-400 underline underline-offset-4 hover:text-sky-300">
               The matching laws in the SDK
             </Link>{' '}
             — how the derived laws become lookup tables and warnings.
           </li>
           <li>
-            <Link href="/docs/primitives" className="text-sky-400 hover:text-sky-300">
+            <Link href="/docs/primitives" className="text-sky-400 underline underline-offset-4 hover:text-sky-300">
               Five primitives
             </Link>{' '}
             — the measurement coordinates: TI, SG, FT, UE, AR.
@@ -191,7 +191,7 @@ export default function ImmPage() {
               href="https://doi.org/10.5281/zenodo.19697792"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sky-400 hover:text-sky-300"
+              className="text-sky-400 underline underline-offset-4 hover:text-sky-300"
             >
               The IMM paper series (Zenodo)
             </a>{' '}

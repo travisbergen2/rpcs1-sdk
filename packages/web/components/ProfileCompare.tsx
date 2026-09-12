@@ -60,7 +60,7 @@ export function ProfileCompare() {
           </div>
         </div>
 
-        <p className="mt-6 max-w-3xl text-sm leading-relaxed text-white/45">
+        <p className="mt-6 max-w-3xl text-sm leading-relaxed text-white/60">
           What never moves: the free tuner is $0 with no account, the founding diagnostic is
           first-3-free then $99, and the deliverables lists are word-for-word identical in every
           profile. We translate the explanation. We never translate the deal.

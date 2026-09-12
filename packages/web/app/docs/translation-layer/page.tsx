@@ -138,7 +138,7 @@ export default function TranslationLayerPage() {
         <div className="flex flex-col sm:flex-row gap-3">
           <Link
             href="/tuner?preset=research"
-            className="inline-flex items-center justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition-colors"
+            className="inline-flex items-center justify-center rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-sky-400 transition-colors"
           >
             Tune a careful response
           </Link>

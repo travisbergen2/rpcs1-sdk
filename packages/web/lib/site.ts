@@ -6,10 +6,13 @@
  * One deployment serves two hosts — rpcs1.dev (the mechanism home) and
  * explicitformula.com (the consumer domain, whose apex the edge 308s to www).
  * `NEXT_PUBLIC_APP_URL` names the canonical origin; `canonicalOrigin` folds it
- * onto the host the edge actually serves, so canonical links and og:url never
- * name an address that redirects. robots.txt and the sitemap, by contrast,
- * describe whichever host was asked (`originFromHost`), so each host
- * advertises its own sitemap and lists its own URLs.
+ * onto the host the edge actually serves, so canonical links, og:url, the
+ * sitemap's URLs and the JSON-LD @ids never name an address that redirects.
+ *
+ * robots.txt on BOTH hosts points crawlers at the canonical origin's sitemap,
+ * and that sitemap lists canonical URLs only — the sitemaps.org cross-submission
+ * pattern (a sitemap may list another host's URLs when that host's robots.txt
+ * names it). Both routes stay static.
  */
 
 /** Apex hosts the edge redirects to their www form. Extend when a domain is added. */
@@ -31,23 +34,8 @@ export function canonicalOrigin(input: string): string {
   return `${local ? 'http' : 'https'}://${hostname}${port}`;
 }
 
-/** The canonical origin of this deployment (metadataBase, og:url, JSON-LD @ids). */
+/** The canonical origin of this deployment (metadataBase, og:url, sitemap, JSON-LD @ids). */
 export const SITE_URL: string = canonicalOrigin(process.env.NEXT_PUBLIC_APP_URL || 'https://rpcs1.dev');
-
-/**
- * Origin for a request, from its Host / X-Forwarded-Host header. Falls back to
- * SITE_URL when the header is missing or unusable.
- */
-export function originFromHost(host: string | null | undefined): string {
-  const bare = (host ?? '').split(',')[0].trim();
-  if (!bare) return SITE_URL;
-  const local = bare.startsWith('localhost') || bare.startsWith('127.0.0.1');
-  try {
-    return canonicalOrigin(`${local ? 'http' : 'https'}://${bare}`);
-  } catch {
-    return SITE_URL;
-  }
-}
 
 /** Public routes, in sitemap order, with their sitemap priority. */
 export const SITE_ROUTES: ReadonlyArray<readonly [path: string, priority: number]> = [
@@ -70,7 +58,7 @@ export const SITE_ROUTES: ReadonlyArray<readonly [path: string, priority: number
 /** Paths crawlers must not index: the API, the OAuth handshake, checkout. */
 export const DISALLOWED_PATHS: readonly string[] = ['/api/', '/oauth/', '/checkout/'];
 
-/** robots.txt for the asked host: same rules everywhere, that host's own sitemap. */
+/** robots.txt: same rules on every host, one sitemap — the canonical origin's. */
 export function buildRobots(origin: string) {
   return {
     rules: {
@@ -82,7 +70,7 @@ export function buildRobots(origin: string) {
   };
 }
 
-/** Sitemap entries for the asked host — every public route, once. */
+/** Sitemap entries — every public route, once, on the canonical origin. */
 export function buildSitemap(origin: string, lastModified: Date = new Date()) {
   return SITE_ROUTES.map(([path, priority]) => ({
     url: `${origin}${path}`,

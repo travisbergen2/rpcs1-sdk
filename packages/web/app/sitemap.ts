@@ -1,10 +1,7 @@
 import type { MetadataRoute } from 'next';
-import { headers } from 'next/headers';
-import { buildSitemap, originFromHost } from '@/lib/site';
+import { SITE_URL, buildSitemap } from '@/lib/site';
 
-// Same host rule as robots.ts: the sitemap lists the URLs of the host that
-// asked for it. The route table itself lives in lib/site.ts (tested there).
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const h = await headers();
-  return buildSitemap(originFromHost(h.get('x-forwarded-host') ?? h.get('host')));
+// Canonical URLs only (see lib/site.ts for the route table and the origin rule).
+export default function sitemap(): MetadataRoute.Sitemap {
+  return buildSitemap(SITE_URL);
 }

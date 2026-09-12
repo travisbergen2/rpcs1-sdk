@@ -1,6 +1,8 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import robots from '../app/robots';
+import sitemap from '../app/sitemap';
 import {
   DISALLOWED_PATHS,
   SITE_ROUTES,
@@ -8,7 +10,6 @@ import {
   buildRobots,
   buildSitemap,
   canonicalOrigin,
-  originFromHost,
 } from '../lib/site';
 import { SITE_URL as STRUCTURED_DATA_SITE_URL } from '../lib/structured-data';
 
@@ -59,32 +60,8 @@ describe('canonicalOrigin', () => {
   });
 });
 
-describe('originFromHost (robots.txt and the sitemap describe the host that asked)', () => {
-  it('serves each host its own origin, folding the apex onto www', () => {
-    expect(originFromHost('rpcs1.dev')).toBe('https://rpcs1.dev');
-    expect(originFromHost('www.explicitformula.com')).toBe('https://www.explicitformula.com');
-    expect(originFromHost('explicitformula.com')).toBe('https://www.explicitformula.com');
-  });
-
-  it('takes the first entry of a comma-separated X-Forwarded-Host', () => {
-    expect(originFromHost('www.explicitformula.com, 10.0.0.1')).toBe('https://www.explicitformula.com');
-  });
-
-  it('falls back to SITE_URL when the header is missing, empty or unusable', () => {
-    expect(originFromHost(null)).toBe(SITE_URL);
-    expect(originFromHost(undefined)).toBe(SITE_URL);
-    expect(originFromHost('')).toBe(SITE_URL);
-    expect(originFromHost('   ')).toBe(SITE_URL);
-    expect(originFromHost('not a host name')).toBe(SITE_URL);
-  });
-
-  it('keeps localhost on http', () => {
-    expect(originFromHost('localhost:3000')).toBe('http://localhost:3000');
-  });
-});
-
 describe('robots.txt and sitemap builders', () => {
-  it('robots advertises the sitemap on the asked host and keeps the disallow list', () => {
+  it('robots names the sitemap on the given origin and keeps the disallow list', () => {
     for (const origin of ['https://rpcs1.dev', 'https://www.explicitformula.com']) {
       const r = buildRobots(origin);
       expect(r.sitemap).toBe(`${origin}/sitemap.xml`);
@@ -95,7 +72,7 @@ describe('robots.txt and sitemap builders', () => {
     expect(DISALLOWED_PATHS).toEqual(['/api/', '/oauth/', '/checkout/']);
   });
 
-  it('sitemap lists every public route on the asked host, once, with priorities in (0, 1]', () => {
+  it('sitemap lists every public route on the given origin, once, with priorities in (0, 1]', () => {
     const when = new Date('2026-09-12T00:00:00Z');
     const entries = buildSitemap('https://www.explicitformula.com', when);
     expect(entries).toHaveLength(SITE_ROUTES.length);
@@ -115,6 +92,31 @@ describe('robots.txt and sitemap builders', () => {
       const seg = path.replace(/^\//, '');
       const page = seg ? `app/${seg}/page.tsx` : 'app/page.tsx';
       expect(existsSync(join(ROOT, page)), `${path} → ${page}`).toBe(true);
+    }
+  });
+});
+
+describe('the served routes (app/robots.ts, app/sitemap.ts)', () => {
+  it('robots.txt is static, synchronous, and names the canonical origin’s sitemap on every host', () => {
+    const r = robots();
+    expect(r.sitemap).toBe(`${SITE_URL}/sitemap.xml`);
+    expect(r.rules).toEqual(buildRobots(SITE_URL).rules);
+  });
+
+  it('the sitemap is static, synchronous, and lists canonical URLs only', () => {
+    const urls = sitemap().map((e) => e.url);
+    expect(urls).toHaveLength(SITE_ROUTES.length);
+    for (const u of urls) expect(u.startsWith(`${SITE_URL}/`), u).toBe(true);
+    expect(urls).toContain(`${SITE_URL}/connect`);
+  });
+
+  it('neither route hardcodes a host or reads request headers — both build from SITE_URL through lib/site', () => {
+    for (const file of ['app/robots.ts', 'app/sitemap.ts']) {
+      const src = read(file);
+      expect(src, file).toMatch(/from '@\/lib\/site'/);
+      expect(src, file).toMatch(/SITE_URL/);
+      expect(src, file).not.toMatch(/https?:\/\//);
+      expect(src, file).not.toMatch(/next\/headers/);
     }
   });
 });
@@ -139,14 +141,5 @@ describe('canonical links (source guards)', () => {
     expect(layout).toMatch(/url: SITE_URL/);
     // A canonical in the root layout would declare every page's canonical as "/".
     expect(layout).not.toMatch(/canonical/);
-  });
-
-  it('robots.ts and sitemap.ts read the request host through lib/site', () => {
-    for (const file of ['app/robots.ts', 'app/sitemap.ts']) {
-      const src = read(file);
-      expect(src, file).toMatch(/from 'next\/headers'/);
-      expect(src, file).toMatch(/originFromHost\(h\.get\('x-forwarded-host'\) \?\? h\.get\('host'\)\)/);
-      expect(src, file).not.toMatch(/https?:\/\//);
-    }
   });
 });

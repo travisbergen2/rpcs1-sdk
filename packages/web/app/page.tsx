@@ -1,5 +1,10 @@
 import Link from 'next/link';
 import Instrument from '@/components/Instrument';
+import type { Metadata } from 'next';
+
+// The homepage is one of the two served hosts’ roots; metadataBase (the
+// canonical origin) supplies the host, so this stays relative.
+export const metadata: Metadata = { alternates: { canonical: '/' } };
 
 /**
  * The homepage is the instrument, not a description of it (Travis, 2026-09-04:

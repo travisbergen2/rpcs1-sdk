@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/mismatch' },
   title: 'AI-Human Mismatch',
   description:
     'RPCS-1 as an AI-human collaboration framework: destructive many-to-one collapse, distinction preservation, matching analysis, and shared representation.',

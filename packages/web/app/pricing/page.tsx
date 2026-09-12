@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/Badge';
 import { SupportLink } from '@/components/SupportLink';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/pricing' },
   title: 'Pricing',
   description:
     'Free for people. Licensed for organizations. Everything an individual touches is free — no account, no ads, no tiers. Companies, schools, and agencies license it for their people.',

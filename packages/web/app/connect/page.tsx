@@ -12,6 +12,7 @@ import {
 } from '@/lib/connect';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/connect' },
   title: 'Connect your AI to your notes',
   description:
     'Give every AI you use your second brain. Your notes stay on your computer; the AI can search them, quote them by name, and save new notes back — nothing is shared until you choose which folders. One-click setup for Claude Desktop, Cursor, VS Code, and more.',

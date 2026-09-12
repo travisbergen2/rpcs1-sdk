@@ -24,6 +24,7 @@ import {
 } from '../lib/connect';
 import { LABS } from '../lib/labs';
 import sitemap from '../app/sitemap';
+import { SITE_URL } from '../lib/site';
 
 const read = (p: string) => readFileSync(join(__dirname, '..', p), 'utf8');
 
@@ -198,6 +199,6 @@ describe('/connect — wired into the site', () => {
     expect(read('components/Footer.tsx')).toContain('href="/connect"');
     expect(read('app/docs/page.tsx')).toContain('href="/connect"');
     expect(LABS.some((l) => l.href === '/connect')).toBe(true);
-    expect(sitemap().map((e) => e.url)).toContain('https://rpcs1.dev/connect');
+    expect(sitemap().map((e) => e.url)).toContain(`${SITE_URL}/connect`);
   });
 });

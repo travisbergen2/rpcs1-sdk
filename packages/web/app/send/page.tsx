@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import SendBox from '@/components/SendBox';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/send' },
   title: 'SendRight — Say it your way. Send it right.',
   description:
     'Type your prompt the way you would say it out loud. SendRight shows you what your words actually say — before the AI picks the wrong reading — then opens your own AI app with the clear version filled in.',

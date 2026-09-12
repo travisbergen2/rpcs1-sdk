@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { DiagnosticIntakeForm } from '@/components/DiagnosticIntakeForm';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/diagnostic' },
   title: 'Diagnostic Brief',
   description: 'Submit the single agent or workflow details needed for an RPCS-1 paid diagnostic report.',
 };
